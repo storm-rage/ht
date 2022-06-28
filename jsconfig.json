@@ -1,0 +1,16 @@
+{ 
+  "compilerOptions": {
+    "baseUrl": "./",
+    "paths": {
+      "@configs/*": ["src/configs/*"],
+      "@common/*": ["src/common/*"],
+      "@utils/*": ["src/common/utils/*"],
+      "@assets/*": ["src/common/assets/*"],
+      "@views/*": ["src/views/*"],
+      "@pubComponent/*": ["src/common/components/*"],
+      "@errorPage/*": ["src/common/errorPage/*"],
+      "@static/*": ["static/*"]
+    }
+  },
+  "exclude": ["node_modules", "dist"]
+}

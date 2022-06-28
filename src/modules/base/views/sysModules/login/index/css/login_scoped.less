@@ -1,0 +1,409 @@
+@import "~@assets/less/variables";
+.login{
+  min-width: 970px;
+  min-height: 720px;
+}
+.LoginHeader{
+  //height: 68px;
+  height: 8.982826948480845%;
+  box-shadow: none;
+  /*border-bottom: 8px solid red;
+  border-image: url("~@assets/img/layout/LoginHeaderBorderImage.png") 10 stretch;*/
+}
+.sw_footer{
+  //height: 183px;
+  height: 19.17437252311757%;
+  box-shadow: none;
+  /*border-top: 4px solid green;
+  border-image: url("~@assets/img/layout/LoginFooterBorderImage.png") 10 stretch;*/
+}
+.ent-title-box {
+  .ent-title {
+    display: flex;
+    align-items: flex-end;
+    .ent-title-msg {
+      font-size: 52px;
+      font-weight: 500;
+      color: #fff;
+      margin-left: 16px;
+    }
+    .imgbox {
+      width: 137px;
+      height: 62px;
+      display: inline-block;
+      img {
+        width: 100%;
+        height: 100%;
+      }
+    }
+  }
+  .row-block {
+    width: 60px;
+    margin: 23px auto 0;
+    border-top: 5px solid #fff;
+  }
+  .ent-title-tips {
+    color: #fff;
+    font-size: 24px;
+    text-align: center;
+    margin-top: 31px;
+  }
+}
+///deep/.el-card__body {
+//  padding: 0 20px 20px 20px;
+//}
+//.bottom-tips {
+//  position: absolute;
+//  bottom: 32px;
+//  left: 50%;
+//  margin-left: -162px;
+//  width: 324px;
+//  height: 20px;
+//  font-size: 14px;
+//  font-family: PingFangSC-Regular, PingFang SC;
+//  font-weight: 400;
+//  color: #949699;
+//  line-height: 20px;
+//}
+.loginBodyBoe {
+  /*height: 506px;*/
+  //height: calc(100% - 251px);
+  //height: -webkit-calc(100% - 251px);
+  //height: -moz-calc(100% - 251px);
+  //height: 69%;
+
+  display: flex;  //boe-login-style
+  height: 100%;//boe-login-style
+  justify-content: space-around;//boe-login-style
+  @media screen and (min-width: 1920px){
+    justify-content: center;
+  }
+  align-items: center;//boe-login-style
+
+  box-sizing: content-box;
+  min-height: 500px;
+  background: url("~@assets/img/login/login-bg.jpg") no-repeat;//boe-login-style
+  background-size: 100% 100%;
+  .content{
+    width: 320px;
+    display: inline-block;
+    float: left;
+    margin: 130px 0 0 13%;
+    /* 禁止复制文字 */
+    -moz-user-select: none;
+    -webkit-user-select: none;
+    -ms-user-select: none;
+    -khtml-user-select: none;
+    user-select: none;
+    .title{
+      font-family: PingFangTC-Regular;
+      font-size: 22px;
+      color: #156bd0;
+      letter-spacing: 10px;
+      text-align: center;
+      font-weight: normal;
+      margin-left: 20px;
+    }
+    .theme{
+      font-family: SimHei;
+      font-size: 80px;
+      color: #156bd0;
+      letter-spacing: 11.76px;
+      text-align: center;
+    }
+    .attached{
+      font-family: PingFangTC-Regular;
+      font-size: 20px;
+      color: #FFFFFF;
+      width: 300px;
+      text-align: center;
+      background: #D3B366;
+      border-radius: 15px;
+      margin-left: 23px;
+    }
+  }
+  .el-card{
+    /*width: 350px;
+    float: right;
+    margin: 80px 13% 0 0;*/
+    width: 28%;
+    //height: 86%;
+    //float: right;
+    //margin: 32px 13.4% 0 0;
+    border: 1px solid #e8eaec;
+    padding: 35px;
+    min-width: 370px;
+    .title{
+      font-weight: bold;
+      text-align: center;
+      font-size: 20px;
+      letter-spacing: 2px;
+      margin-bottom: 15px;
+    }
+    .el-form-item,.el-input,.loginBtn{
+      width: 100%;
+    }
+    .smsCode{
+      color:#fff;
+      float:right;
+      margin-left:5px;
+      border:none;
+      background: linear-gradient(to bottom right,#58DDE6, #2A98E8);
+      &.jinyong{
+        background: #909399!important;
+      }
+      &:active{
+        border: none;
+        outline: none;
+        transform: translateY(2px);
+      }
+      &:focus{
+        box-shadow: none;
+      }
+    }
+    .loginBtn{
+      margin-top: 16px;
+      padding: 5px 0!important;
+      height: 34px!important;
+      //line-height: 28px!important;
+      line-height: 20px!important;//boe-login-style
+      font-size: 16px!important;
+      letter-spacing: 4px!important;
+     /* box-shadow: 0 2px 4px 0 @primary-main-color;*/
+     /* background: @primary-main-color!important;*/
+      //background: linear-gradient(to bottom right,#58DDE6, #2A98E8);
+      background: #005eba;//boe-login-style
+      border: none;
+      outline: none!important;
+      &:active{
+        transform: translateY(1px);
+      }
+      &:focus{
+        box-shadow: none;
+      }
+    }
+    .verification{
+      width: 55%;
+      float: left;
+    }
+    /*小屏适配问题*/
+    @media only screen and (max-width: 1400px) {
+      .verification {
+        width: 45%;;
+      }
+    }
+    .code{
+      float: right;
+      height: 30px;
+      transform: translateY(-2px);
+      .code-img{
+        width: auto;
+        height: 40px;
+      }
+      .refreshIcon{
+        font-size: 22px;
+        line-height: 40px;
+        margin-left: 5px;
+        color: #434343;
+        opacity: 0.6;
+        cursor: pointer;
+      }
+      label{
+        display: block;
+        font-size: 10px;
+        -webkit-transform: scale(0.8);
+        color: #434343;
+        opacity: 0.6;
+        transform: translate(-5px,-5px);
+      }
+    }
+    a,.advice{
+      color: #666;
+      font-size: 10px;
+      opacity: 0.6;
+    }
+    .login_pass{
+      //transform: translateY(-13px);
+      color: #949699;
+      a{
+        transform: translateY(2px);
+        margin: 0 5px;
+      }
+    }
+    .right-text {
+      font-size: 14px;
+      opacity: 1;
+      color: #949996;
+      &:hover {
+        color: @primary-main-color!important;;
+      }
+    }
+  }
+}
+///deep/.check-text .el-checkbox__input.is-checked + .el-checkbox__label {
+//  color: #949996;//boe-login-style
+//}
+.loginBody{
+  /*height: 506px;*/
+  //height: calc(100% - 251px);
+  //height: -webkit-calc(100% - 251px);
+  //height: -moz-calc(100% - 251px);
+  height: 69%;
+  box-sizing: content-box;
+  min-height: 500px;
+  background: url("~@assets/img/login/login-bg.png") no-repeat;
+  background-size: 100% 100%;
+  .content{
+    width: 320px;
+    display: inline-block;
+    float: left;
+    margin: 130px 0 0 13%;
+    /* 禁止复制文字 */
+    -moz-user-select: none;
+    -webkit-user-select: none;
+    -ms-user-select: none;
+    -khtml-user-select: none;
+    user-select: none;
+    .title{
+      font-family: PingFangTC-Regular;
+      font-size: 22px;
+      color: #156bd0;
+      letter-spacing: 10px;
+      text-align: center;
+      font-weight: normal;
+      margin-left: 20px;
+    }
+    .theme{
+      font-family: SimHei;
+      font-size: 80px;
+      color: #156bd0;
+      letter-spacing: 11.76px;
+      text-align: center;
+    }
+    .attached{
+      font-family: PingFangTC-Regular;
+      font-size: 20px;
+      color: #FFFFFF;
+      width: 300px;
+      text-align: center;
+      background: #D3B366;
+      border-radius: 15px;
+      margin-left: 23px;
+    }
+  }
+  .el-card{
+    /*width: 350px;
+    float: right;
+    margin: 80px 13% 0 0;*/
+    width: 28%;
+    height: 86%;
+    float: right;
+    margin: 32px 13.4% 0 0;
+    border: 1px solid #e8eaec;
+    padding: 35px;
+    min-width: 370px;
+    .title{
+      font-weight: bold;
+      text-align: center;
+      font-size: 20px;
+      letter-spacing: 2px;
+      margin-bottom: 15px;
+    }
+    .el-form-item,.el-input,.loginBtn{
+      width: 100%;
+    }
+    .smsCode{
+      color:#fff;
+      float:right;
+      margin-left:5px;
+      border:none;
+      background: linear-gradient(to bottom right,#58DDE6, #2A98E8);
+      &.jinyong{
+        background: #909399!important;
+      }
+      &:active{
+        border: none;
+        outline: none;
+        transform: translateY(2px);
+      }
+      &:focus{
+        box-shadow: none;
+      }
+    }
+    .loginBtn{
+      margin-top: 4px;
+      padding: 5px 0!important;
+      height: 34px!important;
+      line-height: 28px!important;
+      font-size: 16px!important;
+      letter-spacing: 4px!important;
+     /* box-shadow: 0 2px 4px 0 @primary-main-color;*/
+     /* background: @primary-main-color!important;*/
+      background: linear-gradient(to bottom right,#58DDE6, #2A98E8);
+      border: none;
+      outline: none!important;
+      &:active{
+        transform: translateY(1px);
+      }
+      &:focus{
+        box-shadow: none;
+      }
+    }
+    .verification{
+      width: 55%;
+      float: left;
+    }
+    /*小屏适配问题*/
+    @media only screen and (max-width: 1400px) {
+      .verification {
+        width: 45%;;
+      }
+    }
+    .code{
+      float: right;
+      height: 30px;
+      transform: translateY(-2px);
+      .code-img{
+        width: auto;
+        height: 40px;
+      }
+      .refreshIcon{
+        font-size: 22px;
+        line-height: 40px;
+        margin-left: 5px;
+        color: #434343;
+        opacity: 0.6;
+        cursor: pointer;
+      }
+      label{
+        display: block;
+        font-size: 10px;
+        -webkit-transform: scale(0.8);
+        color: #434343;
+        opacity: 0.6;
+        transform: translate(-5px,-5px);
+      }
+    }
+    a,.advice{
+      color: #666;
+      font-size: 10px;
+      opacity: 0.6;
+    }
+    .login_pass{
+      transform: translateY(-13px);
+      a{
+        transform: translateY(2px);
+        margin: 0 5px;
+      }
+    }
+    .right-text {
+      font-size: 14px;
+      opacity: 1;
+      color: #7E7E7E;
+      &:hover {
+        color: @primary-main-color!important;;
+      }
+    }
+  }
+
+}

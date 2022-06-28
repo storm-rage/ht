@@ -1,0 +1,280 @@
+@menu-activate-lr:6px;
+@menu-activate-radius:5px;
+.siderbar{
+  height: 100%;
+  overflow: hidden;
+  background-color: #FFFFFF!important;
+  /*background-color: #223245!important;*/
+  //图标--打开时的颜色
+  .el-submenu__icon-arrow{
+    font-weight: bold!important;
+    font-size: 14px!important;
+    margin-top: -6px!important;
+    /*color: burlywood!important;*/
+    color: #BDCFDF !important;
+    transform: rotate(-90deg);
+  }
+  .el-submenu.is-active.is-opened{
+    .el-submenu__icon-arrow{
+      color: rgba(222, 184, 135, 0.71) !important;
+    }
+  }
+  .el-submenu.is-opened{
+    .el-submenu__title{
+      .el-submenu__icon-arrow.el-icon-arrow-down{
+        /*color: #f56c6c!important;*/
+        /*color: white!important;*/
+        color: #BDCFDF !important;
+        transform: rotate(0deg);
+      }
+    }
+  }
+
+  /*width: 220px!important;*/
+  .el-scrollbar__view{
+    > .el-menu{
+      &>div{
+        &>label{
+          //下方有孩子
+          >.el-submenu{
+            //第一层级
+            >.el-submenu__title{
+              height: @menu-title-hg!important;
+              line-height: @menu-title-hg!important;
+              /*background-color:#223245!important;*/
+              background-color:@menu-color!important;
+              color: #333!important;
+              padding-left: 20px!important;
+            }
+            //第一层级选中
+            &.is-active{
+              >.el-submenu__title{
+                /*background-color: #3C4D61;*/
+                background-color: @menu-color-activate!important;
+                //color: @menu-activate-font-color!important;
+                color: #333!important;
+                font-weight: bold;
+                margin-left: @menu-activate-lr;
+                margin-right: @menu-activate-lr;
+                border-radius: @menu-activate-radius;
+                padding-left: calc(20px - @menu-activate-lr)!important;
+              }
+            }
+            //查找二层级
+            >.el-menu{
+              &>div{
+                &>label{
+                  //下方有孩子
+                  >.el-submenu{
+                    // 第二层级
+                    >.el-submenu__title{
+                      background-color: #ECECEC!important;
+                      /*background-color: #3C4D61!important;*/
+                      //color: #999999!important;
+                      font-weight: bold!important;
+                      line-height: @sub-menu-title-hg!important;
+                      height: @sub-menu-title-hg!important;
+                      // 暫時這樣寫
+                      padding-left: 60px!important;
+                      color: #333!important;
+                    }
+                    //第二层级选中
+                    &.is-opened{
+                      >.el-submenu__title{
+                        background-color: #546880!important;
+                        color: #5494F2!important;
+                        font-weight: bold;
+                        /*&.is-active{*/
+                        /*    background-color: white!important;*/
+                        /*}*/
+                      }
+                    }
+
+                    //查找三层级--------------------------------------------------------------------
+                    >.el-menu{
+                      &>div{
+                        &>label{
+                          //下方还有孩子
+                          &>.el-submenu{
+                            // 第三层级
+                            >.el-submenu__title{
+                              background-color: green!important;
+                              color: #A9BFD3!important;
+                            }
+                            //第三层级选中
+                            &.is-active{
+                              >.el-submenu__title{
+                                background-color: wheat!important;
+                                color: #333333!important;
+                              }
+                            }
+                          }
+                          //下方无孩子
+                          >.el-menu-item{
+                            background-color: #9F9F9F;
+                            &.is-active{ //选中
+                              background-color: #008489;
+                              color: pink;
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                  //下方无孩子
+                  >.el-menu-item{
+                    /*background-color: #3C4D61!important;*/
+                    background-color: @menu-color!important;
+                    //color: #95A9BE!important;
+                    color: #333!important;
+                    line-height: @sub-menu-title-hg!important;
+                    height: @sub-menu-title-hg!important;
+                    // 暫時這樣寫
+                    padding-left: 60px!important;
+                    /*解决切换边框bug*/
+                    border-right: 1px solid transparent;
+                    &:hover{
+                      opacity: 0.8;
+                    }
+                    &.is-active { //选中
+                      /*background-color: #e0e0e0 !important;*/
+                      background-color: @sub-menu-color-activate !important;
+                      color: @sub-menu-activate-font-color!important;
+                      /*color: #5494F2!important;*/
+                      //border-right: 1px solid #A9BFD3;
+                      border-right: 1px solid @sub-menu-color-activate;
+                      margin-left: @menu-activate-lr;
+                      margin-right: @menu-activate-lr;
+                      border-radius: @menu-activate-radius;
+                      padding-left: calc(60px - @menu-activate-lr)!important;
+                      &:first-child {
+                        margin-top: 2px;
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+          //下方无孩子
+          >.el-menu-item{
+            /* background-color:#223245!important;*/
+            background-color:@menu-color!important;
+            color: #333!important;
+            height: @menu-title-hg!important;
+            line-height: @menu-title-hg!important;
+            &:hover{
+              opacity: 0.8;
+            }
+            &.is-active{
+              /*background-color: #3C4D61;*/
+              background-color: @sign-menu-background-color-activate !important;
+              color: @sign-menu-font-color-activate!important;
+              margin-left: @menu-activate-lr;
+              margin-right: @menu-activate-lr;
+              border-radius: @menu-activate-radius;
+              padding-left: calc(20px - @menu-activate-lr)!important;
+            }
+          }
+        }
+      }
+    }
+  }
+}
+/*icon样式*/
+.menu-tree {
+  .icon-img {
+    margin-right: 5px;
+    width: 14px;
+    height: 14px;
+    color: @menu-icon-color;
+    &.menu-collapse {
+      &:hover {
+        color: @menu-icon-hove-color;
+      }
+    }
+  }
+  .el-menu-item {
+    &.is-active {
+      i {
+        color: @sign-menu-icon-color-activate;
+      }
+    }
+  }
+  .el-submenu {
+    &.is-opened {
+      .menu-collapse {
+        color: @menu-icon-hove-color;
+      }
+    }
+  }
+}
+//折叠小图标
+.zj-aside-shrink{
+  position: relative;
+  .shrinkBox{
+    width: 12px;
+    height: 32px;
+    background-color: white;
+    line-height: 30px;
+    cursor: pointer;
+    position: absolute;
+    left: 0%;
+    top: 50%;
+    transform: translate(-1px,-50%);
+    border-right: 0.8px solid rgba(0,0,0,0.2);
+    &:before,&:after{
+      content: ' ';
+      background-color: white;
+      width: 15px;
+      height: 14px;
+      position: absolute;
+      left: -6px;
+      transform: rotate(45deg);
+    }
+    &:before{
+      top: -5.8px;
+      border-top: 0.8px solid rgba(0,0,0,0.2);
+    }
+    &:after{
+      border-right: 0.8px solid rgba(0,0,0,0.2);
+      bottom:-6px
+    }
+    i{
+      color:#b0c5d8;
+    }
+    &:hover{
+      //border-color:  @primary-main-color;
+      //&:after,&:before{
+      //  border-color: @primary-main-color ;
+      //}
+      i{
+        color: @primary-main-color;
+        font-weight: bold;
+      }
+    }
+  }
+}
+/*收起状态样式覆盖*/
+.el-menu--popup {
+  .menu-tree {
+    margin-left: 10px;
+    margin-right: 10px;
+  }
+  .el-menu-item {
+    height: @sub-menu-title-hg;
+    line-height: @sub-menu-title-hg;
+    padding-left: 10px!important;
+    padding-right: 10px;
+    &:hover {
+      //background-color: @primary-main-color;
+      //border-radius: 5px;
+      //color: #fff;
+    }
+    &.is-active {
+      background-color: @primary-main-color;
+      border-radius: @menu-activate-radius;
+      color: #fff;
+    }
+  }
+}

@@ -1,0 +1,44 @@
+.table-mixin (@minWidth:1000px) {
+  /*小屏适配问题*/
+  @media only screen and (min-width: 1300px) {
+    min-width: @minWidth;
+  }
+  .vxe-table--main-wrapper{
+    border-radius: 0;
+  }
+  .vxe-table--header-wrapper{
+    //background-color: rgba(0,0,0,0)!important;
+    //background: rgba(0,0,0,0)!important;
+    .vxe-header--row{
+      //background-color: rgba(0,0,0,0)!important;
+      .vxe-header--column{
+        //background-color: rgba(0,0,0,0)!important;
+        //background: transparent!important;
+        //&:hover{
+        //  background-color: rgba(0,0,0,0)!important;
+        //}
+        .vxe-resizable.is--line{
+          //height: 0;
+          height: 100%;
+          /*分割线颜色*/
+          &::before{
+            background-color: #E8E8E8;
+          }
+        }
+      }
+    }
+    .vxe-table--header{
+      border-radius: 0;
+    }
+  }
+  .vxe-table--body-wrapper{
+    padding-bottom: 0;
+    .vxe-body--row {
+      /*选中/悬浮底色*/
+      &.row--hover {
+        background-color: #F3F7FF;
+      }
+    }
+  }
+
+}

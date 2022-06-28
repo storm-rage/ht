@@ -1,0 +1,75 @@
+.zj-power .el-tree-node__content>.el-checkbox {
+  margin-right: 8px !important;
+}
+
+.rolePower{
+  padding: 20px 0 15px 120px!important;
+  display: flex;
+  min-width: 640px;
+  margin-bottom: 15px;
+  &:after{
+    content: "";
+    display: block;
+    clear: both;
+  }
+  /*左侧*/
+  .role-left{
+    width: 302px;
+    overflow-y: auto;
+    border: 1px solid rgba(159, 159, 159, 0.56);
+    .role-title{
+      font-size: 14px;
+      line-height: 3;
+      font-weight: bold;
+      h3{
+        margin: 0;
+        //height: 45px;
+        //padding:0 0 15px 10px;
+        color: #F5F5F5;
+        text-indent: 1em;
+        background-color: rgba(58, 143, 231, 0.71);
+      }
+      .el-row{
+        border-bottom: 1px solid #9F9F9F;
+        .el-input{
+          width:220px!important;
+          margin:0 5px 0 20px!important;
+        }
+        .el-icon-search{
+          font-weight: bold;
+        }
+      }
+    }
+    .role-item{
+      padding: 8px 18px;
+      color: #515a6e;
+      cursor: pointer;
+      &:hover{
+        color: #F5F5F5;
+        background-color: rgba(61, 150, 241, 0.38);
+      }
+      &.active{
+        color: rgba(252, 249, 249, 0.89);
+        background: rgba(64, 158, 255, 0.6);
+        border-right: 5px solid #409EFF;
+      }
+    }
+  }
+  /*中间图标*/
+  .role-center{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 180px;
+    .el-icon-d-arrow-right{
+      font-size: 30px;
+      color: #409EFF;
+      //margin-top: 15%;
+    }
+  }
+  /*右侧*/
+  .role-right{
+    flex: 1;
+    padding-top: 30px;
+  }
+}

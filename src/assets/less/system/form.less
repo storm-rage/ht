@@ -1,0 +1,239 @@
+//表单提示语句
+.formTips{
+  margin-bottom: -13px;
+  font-size: 6px;
+  .iconSuccess{
+    color:#52aa3a;
+    margin-right: 5px;
+  }
+  .iconError{
+    color:#FF5046;
+    margin-right: 5px;
+  }
+  .tipsInfo{
+    color:#999999;
+  }
+  .tipsWarning{
+    color:#FF5046;
+  }
+  .tipsSuccess{
+    color:#52aa3a;
+  }
+}
+.form-audit-list {
+  padding-left: 20px;
+  li {
+    line-height: 30px;
+    margin-bottom: 5px;
+    overflow: hidden;
+  }
+  label {
+    margin-right: 5px!important;
+  }
+  .el-checkbox__label {
+    font-size: 15px;
+  }
+  .form-input {
+    border: 1px solid @primary-main-color;
+    border-radius: 3px;
+    height: 28px;
+    line-height: 28px;
+    padding-left: 8px;
+    margin-right: 5px;
+    &:focus {
+      border: 1px solid @primary-main-color;
+    }
+  }
+  .icon-btn {
+    margin: 0 3px;
+    cursor: pointer;
+    font-size: 20px;
+    color: @primary-main-color;
+    &.fa.fa-mail-reply {
+      color: @primary-main-color;
+      font-size: 18px;
+    }
+  }
+}
+
+.audit-form-line {
+  clear: both;
+  overflow: hidden;
+  margin-bottom: 10px;
+  .el-radio {
+    margin-right: 10px;
+  }
+  label, .form-line-label {
+    line-height: 35px;
+  }
+  .change-btn {
+    border: 1px solid @primary-main-color;
+    padding: 3px 8px;
+    border-radius: 10px;
+    background-color: #e6eff9;
+    margin-right: 10px;
+    &:hover {
+      background-color: #76aeef;
+      color: #fff;
+      cursor: pointer;
+    }
+  }
+  .sub-form-row {
+    border: 1px dashed #ddd;
+    padding: 15px;
+  }
+}
+/*--------------------- el-form必填星号 -----------------*/
+.required{
+  .el-form-item__label{
+    &:before{
+      content: '*';
+      color: #F56C6C;
+      margin-right: 4px;
+    }
+  }
+}
+.no-required{
+  .el-form-item__label{
+    &::before{
+      content: " "!important;
+    }
+  }
+}
+.dialog-form-wrap {
+  padding-left: 100px;
+  .text-label {
+    color: #555;
+  }
+  .text-value {
+    margin-left: 8px;
+    color: #888;
+  }
+}
+
+/**静态表单*/
+.static-detail {
+  margin: 10px 0;
+  padding: 15px 0 10px;
+  border: 1px solid #d0d0d0;
+  &.not-border {
+    border: none;
+  }
+  .el-row{
+    .el-col{
+      padding: 4px 0;
+    }
+    label,span{
+      display: inline-block;
+    }
+    label{
+      width: 220px;
+      text-align: right;
+      color: #999;
+    }
+    .text--tip {
+      //float: left;
+      width: 250px;
+      padding: 5px 12px;
+      font-size: 12px;
+      margin-right: 15px;
+      background-color: #ECF5FD;
+      box-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+    }
+    span{
+      width: 66%;
+      text-align: left;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      vertical-align: bottom;
+      color: #333;
+    }
+  }
+}
+/*开单信息表单*/
+.orderDetail{
+  margin: 10px 0;
+  padding: 15px 0 10px;
+  border: 1px solid #d0d0d0;
+  &.noBorder{
+    border:none!important;
+  }
+  .el-row{
+    .el-col{
+      padding: 4px 0;
+    }
+    label,span{
+      display: inline-block;
+      vertical-align: top;
+    }
+    label{
+      width: 50%;
+      text-align: right;
+      color: #999;
+    }
+
+    span{
+      width: 50%;
+      text-align: left;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      vertical-align: bottom;
+      //word-break: break-all;
+      color: #333;
+    }
+    .el-col-24{
+      label{
+        width: 16.4%;
+      }
+      span{
+        width: calc(100% - 16.4%);
+      }
+    }
+    .el-col-16{
+      label{
+        width: 25%;
+      }
+      span{
+        width: calc(100% - 25%);
+      }
+    }
+  }
+  .bankTable{
+    width: 80%;
+    margin: auto;
+    border-top: 1px solid #eee;
+    margin-bottom: 15px;
+    margin-top: 10px;
+    th{
+      background-color: #f1f1f1!important;
+      border: 1px solid #eee;
+      border-top: none;
+    }
+    td{
+      border: 1px solid #eee;
+      border-left: none;
+      border-top: none;
+      padding-left: 15px;
+    }
+  }
+}
+//表单--详情页面
+.el-form-detail{
+  .el-form{
+
+  }
+}
+//文本域
+.el-textarea{
+  textarea{
+    height: 100%;
+  }
+}
+//必填label
+.required-label::before {
+  content: '*';
+  color: #F56C6C;
+  margin-right: 4px;
+}
