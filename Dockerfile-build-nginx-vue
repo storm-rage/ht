@@ -1,0 +1,5 @@
+FROM registry-vpc.cn-shenzhen-finance-1.aliyuncs.com/bk/nginx-vue-default:latest
+RUN mkdir -pv /opt/web/dist
+#ARG DIST
+#ADD ${DIST} /opt/web/dist/
+COPY dist /opt/web/dist/

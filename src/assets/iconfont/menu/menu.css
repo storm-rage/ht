@@ -1,0 +1,114 @@
+@font-face {
+    font-family: 'izejin';
+    src:  url('fonts/izejin.eot?tb55pj');
+    src:  url('fonts/izejin.eot?tb55pj#iefix') format('embedded-opentype'),
+    url('fonts/izejin.ttf?tb55pj') format('truetype'),
+    url('fonts/izejin.woff?tb55pj') format('woff'),
+    url('fonts/izejin.svg?tb55pj#izejin') format('svg');
+    font-weight: normal;
+    font-style: normal;
+    font-display: block;
+}
+
+[class^="icon-izejin"], [class*=" icon-izejin"] {
+    /* use !important to prevent issues with browser extensions that change fonts */
+    font-family: 'izejin' !important;
+    speak: never;
+    font-style: normal;
+    font-weight: normal;
+    font-variant: normal;
+    text-transform: none;
+    line-height: 1;
+
+    /* Better Font Rendering =========== */
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+.icon-izejin-2x:before {
+    content: "\e900";
+}
+.icon-izejin-tradeManager:before {
+    content: "\e901";
+}
+.icon-izejin-securityCertificate:before {
+    content: "\e902";
+}
+.icon-izejin-todoList:before {
+    content: "\e903";
+}
+.icon-izejin-orderManager:before {
+    content: "\e904";
+}
+.icon-izejin-orderConfirm:before {
+    content: "\e905";
+}
+.icon-izejin-infoConfirm:before {
+    content: "\e906";
+}
+.icon-izejin-invoiceManager:before {
+    content: "\e907";
+}
+.icon-izejin-gys:before {
+    content: "\e908";
+}
+.icon-izejin-query:before {
+    content: "\e909";
+}
+.icon-izejin-import:before {
+    content: "\e90a";
+}
+.icon-izejin-voucherManager:before {
+    content: "\e90b";
+}
+.icon-izejin-entInvocieManager:before {
+    content: "\e90c";
+}
+.icon-izejin-entAuth:before {
+    content: "\e90d";
+}
+.icon-izejin-entInfo:before {
+    content: "\e90e";
+}
+.icon-izejin-enterpirse:before {
+    content: "\e90f";
+}
+.icon-izejin-dataManager:before {
+    content: "\e910";
+}
+.icon-izejin-myCredit:before {
+    content: "\e911";
+}
+.icon-izejin-myBill:before {
+    content: "\e912";
+}
+.icon-izejin-managerTool:before {
+    content: "\e913";
+}
+.icon-izejin-ybgl:before {
+    content: "\e914";
+}
+.icon-izejin-bankManager:before {
+    content: "\e915";
+}
+.icon-izejin-detailManager:before {
+    content: "\e916";
+}
+.icon-izejin-financingManager:before {
+    content: "\e917";
+}
+.icon-izejin-financingManager2:before {
+    content: "\e918";
+}
+.icon-izejin-userManager:before {
+    content: "\e919";
+}
+.icon-izejin-ybl:before {
+    content: "\e91a";
+}
+.icon-izejin-voucherPrint:before {
+    content: "\e91b";
+}
+.icon-izejin-setting:before {
+    content: "\e91c";
+}

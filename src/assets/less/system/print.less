@@ -1,0 +1,60 @@
+/** 打印样式 **/
+.fcLendingVoucher-viewVoucher-box{
+  margin: 40px auto;
+}
+.fcLendingVoucher-viewVoucher-box .viewVoucherTitle{
+  position: relative;
+  border-bottom: 2px double black;
+  font-size: 26px;
+}
+.fcLendingVoucher-viewVoucher-box .viewVoucherTitle:after{
+  content: "";
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  left: 0;
+  top: 6px;
+  border-bottom: 2px double black;
+}
+.fcLendingVoucher-viewVoucher-box .fcLendingVoucher-viewVouche .voucherPrint tr td{
+  line-height: 40px;
+}
+.fcLendingVoucher-viewVoucher-box .fcLendingVoucher-viewVouche .voucherPrint td{
+  line-height: 40px;
+  font-size: 12px;
+  padding: 5px 2px;
+}
+.fcLendingVoucher-viewVoucher-box .fcLendingVoucher-viewVouche .voucherPrint .left{
+  border-left:1px solid #303133;
+}
+.fcLendingVoucher-viewVoucher-box .fcLendingVoucher-viewVouche .voucherPrint .right{
+  border-right:1px solid #303133;
+}
+.fcLendingVoucher-viewVoucher-box .fcLendingVoucher-viewVouche .voucherPrint .top{
+  border-top:1px solid #303133;
+}
+.fcLendingVoucher-viewVoucher-box .fcLendingVoucher-viewVouche .voucherPrint .bottom{
+  border-bottom:1px solid #303133;
+}
+//
+.fcLendingVoucher-viewVoucher-box .openTable{
+  border-collapse: collapse;
+  border: none;
+  td{
+    border:solid #000 1px;
+  }
+}
+.fcLendingVoucher-viewVoucher-box img{
+  width: 150px;
+  height: 150px;
+}
+.td-breakAll{
+  td{
+    word-break: break-all!important;
+  }
+}
+/** 隐藏打印节点 **/
+.printNode {
+  position: fixed;
+  z-index: -10;
+}

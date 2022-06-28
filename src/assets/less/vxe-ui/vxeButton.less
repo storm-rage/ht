@@ -1,0 +1,526 @@
+/* vxe按钮 */
+.vxe-button.type--button {
+  height: 28px;
+  color: @primary-main-color;
+  border: 1px solid @primary-main-color;
+}
+.vxe-button.type--button:not(.is--disabled):hover {
+  color: #FFFFFF;
+  background-color: @primary-main-color;
+}
+.vxe-button.size--mini.type--button {
+  height: 20px;
+}
+.vxe-button.type--button.theme--primary:not(.is--disabled) {
+  background-color: @primary-main-color;
+  border-color: @primary-main-color;
+}
+.vxe-button.type--button.theme--primary:not(.is--disabled):hover {
+  background-color: @primary-main-color;
+  border-color: @primary-main-color;
+}
+
+
+
+
+.vxe-table.border--full .vxe-footer--column, .vxe-table.border--full .vxe-header--column {
+  background-color: #E5F0F7!important;
+}
+
+//w-------------------------------------------- 按钮统一 ----------------------------------------------
+.update-file.vxe-button.type--button{ // 上传
+  color: #999999;
+  background-color: #FFF;
+  border-color:#d7dde4;
+  &:hover{
+    background-color: @primary-main-color;
+    color: white;
+  }
+  &:active{
+    //color: #00CC66!important;
+    //background-color: #EFFCE6!important;
+    background-color: @primary-main-color;
+    color: white;
+    border-color:@primary-main-color!important;
+    transform: translateY(1px);
+  }
+  &:focus{
+    border-color:@primary-main-color!important;
+    box-shadow: none!important;
+    -webkit-box-shadow: none!important;
+  }
+  //禁用状态
+  &[disabled]{
+    &:hover{
+      color: @primary-main-color;
+      background-color: #FFF;
+      border-color:@primary-main-color;
+    }
+    &:active{
+      transform: translateY(0px);
+    }
+  }
+}
+
+.pass.vxe-button.type--button{ //通过 pass
+  color: #00CC66;
+  background-color: #EFFCE6;
+  border-color:#00CC66;
+  &:hover{
+    background-color: #00CC66;
+    color: white;
+  }
+  &:active{
+    //color: #00CC66!important;
+    //background-color: #EFFCE6!important;
+    background-color: #00CC66;
+    color: white;
+    border-color:#00CC66!important;
+    transform: translateY(1px);
+  }
+  &:focus{
+    border-color:#00CC66!important;
+    box-shadow: none!important;
+    -webkit-box-shadow: none!important;
+  }
+  //禁用状态
+  &[disabled]{
+    &:hover{
+      color: #00CC66;
+      background-color: #EFFCE6;
+      border-color:#00CC66;
+    }
+    &:active{
+      transform: translateY(0px);
+    }
+  }
+}
+.retort.vxe-button.type--button{ //驳回
+  color: #D3B366;
+  background-color: rgba(211, 179, 102, 0.2);
+  border-color:#D3B366;
+  &:hover{
+    background-color: #D3B366;
+    color: white;
+  }
+  &:active{
+    color: white;
+    border-color:#D3B366!important;
+    transform: translateY(1px);
+  }
+  &:focus{
+    border-color:#D3B366!important;
+    box-shadow: none!important;
+    -webkit-box-shadow: none!important;
+  }
+  //禁用状态
+  &[disabled]{
+    &:hover{
+      color: #D3B366;
+      background-color: rgba(211, 179, 102, 0.2);
+      border-color:#D3B366;
+    }
+    &:active{
+      transform: translateY(0px);
+    }
+  }
+}
+.reject.vxe-button.type--button{ //拒绝 reject
+  color: #FF0000;
+  background-color: #f8e1e4;
+  border-color:#FF0000;
+  &:hover{
+    background-color: #FF0000;
+    color: white;
+  }
+  &:active{
+    //color: #FF0000!important;
+    //background-color: #f8e1e4!important;
+    background-color: #FF0000;
+    color: white;
+    border-color:#FF0000!important;
+    transform: translateY(1px);
+  }
+  &:focus{
+    border-color:#FF0000!important;
+    box-shadow: none!important;
+    -webkit-box-shadow: none!important;
+  }
+  //禁用状态
+  &[disabled]{
+    &:hover{
+      color: #FF0000;
+      background-color: #f8e1e4;
+      border-color:#FF0000;
+    }
+    &:active{
+      transform: translateY(0px);
+    }
+  }
+}
+.back.vxe-button.type--button,.cancel.vxe-button.type--button{ //返回back / 取消cancel
+  color: #666666;
+  background-color: #FFFFFF;
+  border-color:#E0E0E0;
+  &:hover{
+    background-color: #FFFFFF;
+    border-color:@primary-main-color;
+    color: @primary-main-color;
+  }
+  &:active{
+    color: @primary-main-color!important;
+    background-color: #FFFFFF!important;
+    border-color:@primary-main-color!important;
+    transform: translateY(1px);
+  }
+  &:focus{
+    border-color:@primary-main-color!important;
+    box-shadow: none!important;
+    -webkit-box-shadow: none!important;
+  }
+  //禁用状态
+  &[disabled]{
+    &:hover{
+      color: @primary-main-color;
+      background-color: #FFFFFF;
+      border-color:@primary-main-color;
+    }
+    &:active{
+      transform: translateY(0px);
+    }
+  }
+}
+.save-btn.vxe-button.type--button,.cancel.vxe-button.type--button{ //保存 / 暂存
+  color: #FFFFFF;
+  background-color: @primary-main-color;
+  border-color:@primary-main-color;
+  &:hover{
+    background-color: @primary-main-color;
+  }
+  &:active{
+    background-color: @primary-main-color!important;
+    transform: translateY(1px);
+  }
+  &:focus{
+    border-color:@primary-main-color!important;
+    box-shadow: none!important;
+    -webkit-box-shadow: none!important;
+  }
+  //禁用状态
+  &[disabled]{
+    &:hover{
+      color: #FFFFFF;
+      background-color: @primary-main-color;
+      border-color:@primary-main-color;
+    }
+    &:active{
+      transform: translateY(0px);
+    }
+  }
+}
+.confirm.vxe-button.type--button{ //确认 confirm
+  color: #ffffff;
+  background-color: @primary-main-color;
+  border-color:@primary-main-color;
+  &:hover{
+    background-color: rgba(84,148,242,0.8);
+    border-color:@primary-main-color;
+    color: white;
+  }
+  &:active{
+    color: #ffffff!important;
+    background-color: rgba(84,148,242,0.8)!important;
+    border-color:@primary-main-color!important;
+    transform: translateY(1px);
+  }
+  &:focus{
+    border-color:@primary-main-color!important;
+    box-shadow: none!important;
+    -webkit-box-shadow: none!important;
+    &.noFocus{
+      border-color: rgba(0,0,0,0) !important;
+    }
+  }
+  //禁用状态
+  &[disabled]{
+    &:hover{
+      color: #ffffff;
+      background-color: @primary-main-color;
+      border-color:@primary-main-color;
+    }
+    &:active{
+      transform: translateY(0px);
+    }
+  }
+}
+.noFocus.vxe-button.type--button{
+  color: #666666;
+  background-color: #FFFFFF;
+  border-color:#666666;
+  &:hover{
+    border-color: @primary-main-color;
+  }
+  &:focus{
+    border-color:#666666;
+    box-shadow: none!important;
+    -webkit-box-shadow: none!important;
+  }
+  &:active{
+    border-color:@primary-main-color;
+    color: #FFFFFF;
+    background-color: @primary-main-color;
+    box-shadow: none!important;
+    -webkit-box-shadow: none!important;
+  }
+}
+.search.vxe-button.type--button,.reset.vxe-button.type--button{ //查询search / 重置reset
+  color: #33649d;
+  padding: 0 6px;
+  margin-left: 8px;
+  span{
+    margin-left: 1px;
+  }
+  &:hover{
+    color: rgba(51,100,157,0.8);
+  }
+  &:active{
+    color: rgba(51,100,157,0.8);
+    transform: translateY(1px);
+  }
+  &:focus{
+    box-shadow: none!important;
+    -webkit-box-shadow: none!important;
+  }
+}
+.export.vxe-button.type--button,.import.vxe-button.type--button,
+.append.vxe-button.type--button,.trend.vxe-button.type--button,
+.down.vxe-button.type--button{ //导出export / 导入import / 新增append / 趋势trend /下载down
+  margin-left: 1.2em;
+  border: none;
+  color: #333333;
+  padding: 0 0.2em;
+  i{
+    font-size: 18px;
+    transform: translateY(2px);
+  }
+  span{
+    margin-left: 1px;
+  }
+  &:hover{
+    background:none;
+    color: rgba(51,51,51,0.8);
+  }
+  &:active{
+    color: rgba(51,51,51,0.8);
+    border: none;
+    background: none;
+    transform: translateY(1px);
+  }
+  &:focus{
+    border:none;
+    box-shadow: none!important;
+    -webkit-box-shadow: none!important;
+  }
+}
+//带图片类型-left
+.img.vxe-button.type--button{
+  background-repeat: no-repeat!important;
+  background-position: 1em center;
+  background-size: 20px 20px;
+  padding-left: 2.8em;
+  color: #999999;
+  border: 1px solid #d0d0d0;
+  height: 36px;
+  &:hover{
+    background-color: rgba(0,0,0,0) !important;
+    color: @primary-main-color;
+    border: 1px solid @primary-main-color;
+  }
+}
+//流程
+.orderBusinessFlow.vxe-button.type--button{
+  background-image: url("../../img/button/orderBusinessFlow.png");
+  &:hover{
+    background-image: url("../../img/button/orderBusinessFlowO.png");
+  }
+}
+//开单确认书
+.orderOpenConfim.vxe-button.type--button{
+  background-image: url("../../img/button/orderOpenConfim.png");
+}
+//开单凭证
+.orderOpenVoucher.vxe-button.type--button{
+  background-image: url("../../img/button/orderOpenVoucher.png");
+}
+//带图片类型-left_right
+.downAgre.vxe-button.type--button{
+  height: 36px;
+  padding: 0;
+  line-height: 34px;
+  color: #999999;
+  border: 1px solid #d0d0d0;
+  .vxe-button--content{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding-right: 20px;
+    &:hover{
+      background-color: #EBF3FF;
+    }
+    div{
+      display: inline-block;
+      &.left,&.right{
+        background-repeat: no-repeat!important;
+        display: inline-block;
+        height: 34px;
+      }
+      &.left{
+        margin-right: 8px;
+        background-position: left top;
+        border-radius: 4px 0 0 4px;
+        width: 34px;
+        background-size: 100%;
+        //开单确认书
+        &.orderOpenConfim{
+          background-image: url("../../img/button/orderOpenConfim.png");
+        }
+        //开单凭证
+        &.orderOpenVoucher{
+          background-image: url("../../img/button/orderOpenVoucher.png");
+        }
+        //转让凭证
+        &.orderTranferVoucher{
+          background-image: url("../../img/button/orderTranferVoucher.png");
+        }
+        //转让协议
+        &.orderTranferAgreement{
+          background-image: url("../../img/button/orderTranferAgreement.png");
+        }
+        //银行回单
+        &.bankSlip{
+          background-image: url("../../img/button/bankSlip.png");
+        }
+        //融单融资凭证
+        &.orderFinanVoucher{
+          background-image: url("../../img/button/orderFinanVoucher.png");
+        }
+        //融单放款凭证
+        &.orderLoanVoucher{
+          background-image: url("../../img/button/orderLoanVoucher.png");
+        }
+      }
+      &.right{
+        width: 14px;
+        margin-left: 8px;
+        background-image: url("../../img/button/down.png");
+        background-position: center center;
+        background-size: 14px 14px;
+      }
+    }
+  }
+  &:hover{
+    background-color: rgba(0,0,0,0) !important;
+    color: @primary-main-color;
+    border: 1px solid @primary-main-color;
+    .right{
+      background-image: url("../../img/button/downO.png") !important;
+    }
+  }
+}
+// 特殊表格列表样式
+.customer-special-table-el {
+  .vxe-cell {
+    max-height: 150px!important;
+  }
+  .cell-ellipsis {
+    font-size: 24px;
+    line-height: 0px;
+    height: 20px;
+    margin-left: 34px;
+    color: #999999;
+  }
+}
+
+/** 通用按钮样式 **/
+.vxe-button.type--button.btn-sucess {
+  color: #fff;
+  border: 1px solid @primary-main-color;
+  background-color: @primary-main-color;
+  &:hover {
+    background-color: rgba(84, 148, 242, 0.8);
+  }
+}
+.vxe-button.type--button.btn-success {
+  border: 1px solid @primary-main-color;
+  color: @primary-main-color;
+  &:hover {
+    color: #00CC66;
+    background-color: #EFFCE6;
+    border-color:#00CC66;
+  }
+}
+
+.vxe-button.type--button.btn-warning {
+  border: 1px solid #d0d0d0;
+  color: #333;
+  background-color: #fff;
+  &:hover {
+    background-color: #f8e1e4;
+    color: red;
+    border-color: #FF0000
+  }
+}
+
+.vxe-button.type--button.btn-delete {
+  border: 1px solid #d0d0d0;
+  color: #333;
+  background-color: #fff;
+  &:hover {
+    background-color: #fff;
+    color: red;
+    border-color: #FF0000
+  }
+}
+
+.vxe-button.type--button.review-success {
+  border: 1px solid @primary-main-color;
+  color: @primary-main-color;
+  &:hover {
+    color: #fff;
+    background-color: @primary-main-color;
+  }
+}
+
+.submit-button.vxe-button.type--button {
+  padding-left: 18px;
+  padding-right: 18px;
+  height: 40px;
+  font-size: 16px;
+  border-radius: 5px;
+  border: 1px solid @primary-main-color;
+  background: @primary-main-color;
+  color: #FFFFFF;
+}
+
+.submit-button.vxe-button.type--button:hover {
+  opacity: 0.8;
+  background: @primary-main-color;
+  color: #FFFFFF;
+}
+
+
+.menu-button.vxe-button.type--button {
+  padding-left: 12px;
+  padding-right: 12px;
+  height: 32px;
+  border-radius: 4px;
+  border: 1px solid @primary-main-color;
+  background: @primary-main-color;
+  color: #FFFFFF;
+}
+
+.menu-button.vxe-button.type--button:hover {
+  opacity: 0.8;
+  background: @primary-main-color;
+  color: #FFFFFF;
+}

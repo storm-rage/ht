@@ -1,0 +1,442 @@
+@import "~@assets/less/variables.less";
+/** element-ui */
+/*form*/
+.el-form-item--small .el-form-item__content, .el-form-item--small .el-form-item__label {
+  line-height: 28px;
+}
+.el-form-item__label {
+  color: #707070;
+}
+/* input */
+.el-input {
+  width: 220px;
+}
+
+.el-input__inner:focus{
+  border-color: @primary-main-color !important;
+}
+.el-select-dropdown__item.selected{
+  color: @primary-main-color !important;
+}
+.el-radio__input.is-checked+.el-radio__label{
+  color: @primary-main-color !important;
+}
+.radio-btns /deep/ .el-radio.is-checked .el-radio__inner{
+  border-color: @primary-main-color !important;
+}
+.radio-btns /deep/ .el-radio:hover .el-radio__inner:after{
+  background-color: #FFF !important;
+}
+.radio-btns /deep/ .el-radio:hover .el-radio__inner{
+  border:2px solid @primary-main-color !important;
+}
+.radio-btns /deep/ .el-radio.is-checked .el-radio__inner:after{
+  background-color:@primary-main-color !important;
+}
+#app /deep/ .el-radio.is-checked .el-radio__inner{
+  border-color: @primary-main-color !important;
+}
+#app /deep/ .el-radio:hover .el-radio__inner:after{
+  background-color: #FFF !important;
+}
+#app /deep/ .el-radio:hover .el-radio__inner{
+  border:2px solid @primary-main-color !important;
+}
+#app /deep/ .el-radio.is-checked .el-radio__inner:after{
+  background-color:@primary-main-color !important;
+}
+.el-loading-spinner i {
+  color: @primary-main-color !important;
+}
+.el-loading-spinner .el-loading-text {
+  color: @primary-main-color !important;
+}
+.el-loading-spinner .path{
+  stroke:@primary-main-color !important;
+}
+.el-input--small .el-input__inner {
+  height: 28px;
+  line-height: 28px;
+}
+.el-input--small .el-input__icon {
+  line-height: 28px;
+}
+.el-icon-circle-close {
+  margin-top: 1px;
+  height: 20px;
+  background-color: #FFFFFF;
+}
+.el-select .el-icon-circle-close {
+  margin-top: 2px;
+}
+.el-checkbox__input.is-checked .el-checkbox__inner{
+  background-color:@primary-main-color !important;
+  border-color: @primary-main-color !important;
+}
+.el-checkbox__input.is-checked+.el-checkbox__label{
+  color: @primary-main-color !important;
+}
+/* datePicker */
+.el-input__prefix {
+  left: auto;
+  right: 5px;
+  transition: all .3s;
+}
+.el-input--prefix .el-input__inner {
+  padding-left: 15px;
+}
+/* cascader */
+.el-cascader--small {
+  width: 220px;
+  line-height: 28px;
+}
+//公共el-select
+.el-select{
+  .el-select-dropdown.el-popper{
+    width: 100% !important;
+    position: absolute!important;
+    top: 28px!important;
+  }
+  &.noTop{
+    .el-select-dropdown{
+      top: unset!important;
+    }
+
+  }
+}
+/** el-dialog **/
+.el-dialog {
+  position: relative;
+  border-radius: 2px;
+  box-shadow: 0 2px 9px #91a1b180;
+  box-sizing: border-box;
+  width: 50%;
+  border: 1px solid #d4d4d4;
+  .el-dialog__header {
+    text-align: center;
+    padding: 10px 20px 10px;
+  }
+  .el-dialog__headerbtn {
+    top: 10px;
+    /*right: 10px;*/
+  }
+  &.header-shadow {
+    .el-dialog__header {
+      padding: 8px 20px 8px;
+      border-bottom: 1px solid #DCDFE6;
+      .el-dialog__headerbtn {
+        top: 13px;
+      }
+    }
+  }
+  .el-dialog__body {
+    padding-bottom: 10px;
+  }
+  .el-dialog__footer {
+    .el-button+.el-button {
+      margin-left: 20px;
+    }
+  }
+}
+
+.el-button {
+  &.el-button--primary {
+    &:hover {
+      background-color: @primary-main-color !important;
+      color: #fff;
+      opacity: 0.8;
+    }
+  }
+}
+
+.el-button:focus, .el-button:hover {
+  color: #409EFF;
+  border-color: #c6e2ff;
+  background-color: #fff!important;
+}
+
+.el-dialog__wrapper{
+  &.header{
+    .el-dialog{
+      box-shadow: none;
+      border-radius: 0;
+      border: none;
+    }
+    .el-dialog__body {
+      padding: 10px 20px 20px;
+    }
+    .el-dialog__header{
+      background-color: #169BD5;
+      .el-dialog__title{
+        color: white;
+      }
+      .el-dialog__close{
+        color: white;
+      }
+    }
+  }
+}
+
+/*协议*/
+.view-pdf{
+  .el-dialog__body{
+    overflow-y: scroll;
+  }
+}
+
+/*el-radio*/
+.el-radio{
+  border-color:#C0C4CC!important;
+  .el-radio__label{
+    color: #666666;
+  }
+  .el-radio__inner{
+    &:after {
+      width: 6px;
+      height: 6px;
+    }
+  }
+  //移入
+  &:hover{
+    .el-radio__inner{
+      border-color:#DCDFE6!important;
+      &:after{
+        background: #C0C4CC!important;
+        transform:translate(-50%,-50%) scale(1);
+      }
+    }
+  }
+  //选中
+  &.is-checked{
+    .el-radio__inner{
+      background: none!important;
+      border:2px solid @el-radio-check-bg!important;
+      &:after{
+        width: 6px;
+        height: 6px;
+        background: @el-radio-check-inner-bg!important;
+      }
+    }
+    .el-radio__label {
+      color: @el-radio-check-text-color;
+    }
+    //移入
+    &:hover{
+      .el-radio__inner{
+        &:after{
+          background: @el-radio-check-inner-bg;
+        }
+      }
+    }
+  }
+  &.is-disabled{
+    &:hover{
+      .el-radio__inner{
+        &:after{
+          background: rgba(0,0,0,0)!important;
+        }
+      }
+    }
+    &.is-checked{
+      .el-radio__inner{
+        border-color:#C0C4CC!important;
+        &:after{
+          background:#C0C4CC!important;
+        }
+      }
+    }
+  }
+}
+
+#app /deep/ .el-input__inner:focus{
+  border-color: @date-primary-color !important;
+}
+.el-picker-panel .el-picker-panel__icon-btn:hover{
+  color: @date-primary-color !important;
+}
+.el-picker-panel .el-date-picker__header-label:hover{
+  color:  @date-primary-color !important;
+}
+.el-picker-panel .cell:hover{
+  color:  @date-primary-color !important;
+  background-color:@date-hover-color !important;
+}
+.el-picker-panel .today .cell{
+  color: @date-primary-color !important;
+  background-color:@date-hover-color !important;
+}
+.el-picker-panel .available:hover{
+  span{
+    color:  @date-primary-color !important;
+    background-color:@date-hover-color !important;
+  }
+}
+.el-date-table td.today span{
+  color:  @date-primary-color !important;
+  background-color:@date-hover-color !important;
+}
+.el-picker-panel .el-date-table td.current:not(.disabled) span{
+  background-color: @date-primary-color !important;
+  color: #FFF !important;
+}
+.el-year-table td.current:not(.disabled) .cell{
+  color: #FFF !important;
+  background-color:@date-primary-color !important;
+}
+.el-date-table td span{
+  border-radius: 0;
+}
+.el-month-table td .cell{
+  border-radius: 0;
+}
+.el-month-table td.current:not(.disabled) .cell{
+  background-color: @date-primary-color !important;
+  color: #FFF !important;
+// checkbox相关
+//el-checkbox
+.el-checkbox__label{
+  color:#666;
+}
+//复选框
+.el-checkbox{
+  .el-checkbox__inner{
+    border: 1px solid gray;
+  }
+  &:hover{
+    .el-checkbox__inner{
+      border-color: @primary-main-color;
+    }
+  }
+  &.is-checked {
+    .el-checkbox__inner{
+      background-color: @el-checkbox-check-bg;
+      border-color: @el-checkbox-check-bg;
+    }
+    .el-checkbox__label {
+      color: @el-checkbox-check-text-color;
+    }
+
+  }
+  &.is-disabled {
+    .el-checkbox__inner{
+      background-color: @el-checkbox-disabled-bg;
+      border-color: @el-checkbox-disabled-border-color;
+    }
+    .el-checkbox__label {
+      color: @el-checkbox-disabled-text-color;
+    }
+  }
+}
+/** 复选框勾选距离文字的距离 **/
+.el-checkbox__label {
+  padding-left: 8px;
+}
+/** 勾选协议文字 **/
+.check-text {
+  color: #999;
+  .el-checkbox__input.is-checked+.el-checkbox__label {
+    color: #333;
+  }
+}
+.quick-check-wrap {
+  padding-top: 5px;
+  .el-checkbox-group {
+    display: inline-block;
+  }
+  .el-checkbox {
+    margin-right: 0px;
+    margin-left: 10px;
+    &.is-checked {
+      .el-checkbox__label {
+        color: #333;
+      }
+    }
+  }
+  .el-checkbox__label {
+    color: #999;
+    font-size: 12px;
+  }
+  .el-checkbox .el-checkbox__inner {
+    margin-left: 8px;
+  }
+}
+}
+
+// 平台项目设置tab切换
+.el-radio-button__orig-radio:checked+.el-radio-button__inner{
+  background-color: @primary-main-color;
+  border-color: @primary-main-color;
+}
+
+//按钮
+.vxe-button.type--button.theme--primary:not(.is--disabled){
+  background-color: @primary-main-color;
+  border-color: @primary-main-color;
+}
+.vxe-button.type--button{
+  color: @primary-main-color;
+}
+
+.el-button--primary{
+  background-color: @primary-main-color;
+  border-color: @primary-main-color;
+}
+
+.el-button:focus, .el-button:hover{
+  color: @primary-main-color;
+  border-color: @primary-main-color;
+}
+//时间选择器
+.el-time-panel__btn.confirm{
+  color: @primary-main-color;
+}
+
+.el-time-spinner__item.active:not(.disabled){
+  color: @primary-main-color;
+}
+
+.el-time-spinner__item:hover:not(.disabled):not(.active){
+  background: @time-hover-color;
+  color: @time-primary-color;
+}
+
+// 弹窗
+.el-dialog__header{
+  background-color: #FFFFFF !important;
+  text-align: left !important;
+}
+
+.el-dialog.header-shadow .el-dialog__header{
+  border-bottom: 1px solid @alert-boder-color;
+}
+.el-dialog--center .el-dialog__footer{
+  text-align: right;
+  border-top: 1px solid @alert-boder-color;
+}
+
+.el-dialog__headerbtn .el-dialog__close:hover{
+  color: @alert-primary-color;
+}
+
+//下拉菜单
+.el-dropdown-menu__item:hover{
+  background: @drop-hover-color !important;
+  color:@drop-primary-color !important;
+}
+.el-dialog__header{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.el-dialog__footer{
+  display: flex;
+  flex-direction: row-reverse;
+  >div{
+    display: flex;
+    align-items: center;
+    flex-direction: row-reverse;
+    button:nth-child(1){
+      margin-left: 20px;
+    }
+  }
+}

@@ -1,0 +1,213 @@
+/***
+重要提示：请不要随意在里面定义样式
+重要提示：请不要随意在里面定义样式
+重要提示：请不要随意在里面定义样式
+ */
+body {
+  color: #303133;
+  font-size: 14px;
+  font-family: "Helvetica Neue",Helvetica,"PingFang SC","Hiragino Sans GB","Microsoft YaHei","微软雅黑",Arial,sans-serif;
+  min-width: 1024px;
+}
+/*根据浏览器自动调整分辨率*/
+html,body,#app,#app>div{
+  width: 100%;
+  height: 100%;
+}
+
+/*修改原生默认样式*/
+*{
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+img{
+  vertical-align: top;
+}
+a{
+  text-decoration: none;
+}
+ul{
+  list-style: none;
+}
+
+.no-border {
+  border: 0!important;
+}
+.underline {
+  text-decoration: underline;
+}
+/*  ---------------------------------查询页-------------------------------------------------- */
+html,body,#app{
+  width: 100%;
+  height: 100%;
+}
+input[type=number] {
+  -moz-appearance:textfield;
+  &::-webkit-inner-spin-button,&::-webkit-outer-spin-button{
+    -webkit-appearance: none;
+    margin: 0;
+  }
+}
+
+//----阻止浏览器修改input样式
+input:-webkit-autofill,.el-input__inner:-webkit-autofill{
+  background-color: white!important;
+  -webkit-box-shadow: 0 0 0px 1000px white inset;
+}
+////----input-placeholder
+///* WebKit browsers */
+//input:focus::-webkit-input-placeholder { color:transparent; }
+///* Mozilla Firefox 4 to 18 */
+//input:focus:-moz-placeholder { color:transparent; }
+///* Mozilla Firefox 19+ */
+//input:focus::-moz-placeholder { color:transparent; }
+///* Internet Explorer 10+ */
+//input:focus:-ms-input-placeholder { color:transparent; }
+
+/*------文字颜色------*/
+.el-textarea__inner::-webkit-input-placeholder,.el-input__inner::-webkit-input-placeholder{ //输入框提示说明文字色号
+  //color: red;
+  color: #C2C2C2!important;
+}
+.el-textarea__inner::-webkit-input-placeholder{
+  font-family:Arial;
+}
+//标签页
+.el-tabs__content{
+  overflow: inherit !important;
+}
+
+.el-form-item__label {
+  color: #999;
+}
+
+/** 公共的底部按钮 **/
+.detailButtons {
+  margin: 15px 0;
+}
+.content-wrap {
+  padding: 15px;
+  background-color: #fff;
+}
+.el-main {
+  padding: 15px;
+}
+
+//.leftTitle{
+//  font-size: 14px;
+//  height: 22px;
+//  line-height: 22px;
+//  color:#333333;
+//  border-left:6px solid @left-title-border-color;
+//  width: 100%;
+//  padding:0 10px 5px 10px;
+//}
+
+
+/** 滚动条颜色 **/
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+/* 整个滚动条去除button剩下的部分 */
+::-webkit-scrollbar-track {
+  border-radius: 8px;
+  background-color: #d8dce5
+}
+/* 滚动条可拖拽的部分 */
+::-webkit-scrollbar-thumb {
+  border-radius: 5px;
+  /*background-color: #adadad;*/
+  background-color: rgba(102, 99, 99, 0.16);
+}
+::-webkit-scrollbar-thumb:hover {
+  background-color: #929292;
+}
+::-webkit-scrollbar-thumb:active {
+  background-color: #adadad;
+}
+::-webkit-scrollbar-corner {
+  background-color: #535353
+}
+
+/** 输入框获得焦点隐藏提示文字 **/
+input:focus::-ms-input-placeholder, textarea:focus::-ms-input-placeholder {
+  color: transparent!important;
+}
+input:focus::-webkit-input-placeholder, textarea:focus::-webkit-input-placeholder {
+  color: transparent!important;
+}
+input:focus::-moz-placeholder, textarea:focus::-moz-placeholder {
+  color: transparent!important;
+}
+
+/** 不可编辑的下拉框 **/
+.el-input.is-disabled .el-input__inner {
+  background-color: #e6e6e6;
+  border-color: #e6e6e6;
+}
+
+.el-tooltip__popper {
+  max-width: unset!important;
+  //display: block!important;
+  //top: 200px;
+  //left: 500px;
+}
+
+//贸易背景 -----
+.state{
+  display: inline-block;
+  height: 24px;
+  line-height: 24px;
+  img{
+    width: 24px;
+    height: 24px;
+  }
+}
+//片段标题
+.sec-title {
+  font-size: 14px;
+  height: 22px;
+  line-height: 22px;
+  color: #333333;
+  border-left: 6px solid @left-title-border-color;
+  width: 100%;
+  padding: 0 10px 5px 10px;
+  margin-bottom: 16px;
+}
+/*加粗文字*/
+.jc20{
+  font-weight: bold!important;
+  color: #666!important;
+  font-size: 20px!important;
+}
+.jc18{
+  font-weight: bold!important;
+  color: #666!important;
+  font-size: 18px!important;
+}
+.jc16{
+  font-weight: bold!important;
+  color: #666!important;
+  font-size: 16px!important;
+}
+.jc14{
+  font-weight: bold!important;
+  color: #666!important;
+  font-size: 14px!important;
+}
+
+//不要随便移动位置
+@import "mixin";
+@import "variables";
+@import "system/index";
+@import "element-ui/element-reset";
+@import "menu/menu";
+@import "menu/menuTab";
+@import "vxe-ui/vxeTable";
+@import "vxe-ui/vxeButton";
+@import "search/search.less";
+@import "element-ui/tabs.less";
+@import "header/index.less";
+@import "workflow.less";

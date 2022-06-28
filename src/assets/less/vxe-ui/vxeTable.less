@@ -1,0 +1,332 @@
+// 特殊表格列表样式
+.customer-special-table-el {
+  .vxe-cell {
+    max-height: 150px!important;
+  }
+  .cell-ellipsis {
+    font-size: 24px;
+    line-height: 0px;
+    height: 20px;
+    margin-left: 34px;
+    color: #999999;
+  }
+}
+//vxe-table禁用样式
+.vxe-cell{
+  //下拉
+  .vxe-select.is--disabled,.vxe-input.is--disabled{
+    &&&:before{
+      content: " ";
+      display: none!important;
+      border: none!important;
+    }
+    width: 100% !important;
+    .vxe-input--inner[disabled="disabled"]{
+      padding: 0!important;
+      text-align: center!important;
+      border: none!important;
+      background-color: rgba(0,0,0,0) !important;
+    }
+    //三角
+    .vxe-input--suffix{
+      display: none!important;
+    }
+    //日历
+    .vxe-input--extra-suffix{
+      display: none!important;
+    }
+  }
+}
+//el
+.vxe-cell-edit-div{
+  position: relative;
+  .vxe-cell-edit-div_tooltip{
+  }
+}
+.vxe-table.border--full .vxe-footer--column, .vxe-table.border--full .vxe-header--column {
+  background-color: #E5F0F7!important;
+}
+/** vxe表格的边框颜色 **/
+.vxe-table .vxe-table--border-line{
+  border: 1px solid #eee;
+}
+.vxe-table .vxe-table--header-wrapper .vxe-table--header-border-line {
+  border-bottom: 1px solid #eee;
+}
+.vxe-table.border--full .vxe-body--column, .vxe-table.border--full .vxe-footer--column, .vxe-table.border--full .vxe-header--column {
+  background-image: -webkit-gradient(linear,left top, left bottom,from(#eee),to(#eee)),-webkit-gradient(linear,left top, left bottom,from(#eee),to(#eee));
+  background-image: linear-gradient(#eee,#eee),linear-gradient(#eee,#eee);
+  background-repeat: no-repeat;
+  background-size: 1px 100%,100% 1px;
+  background-position: 100% 0,100% 100%;
+}
+
+.vxe-table.border--full .vxe-table--fixed-left-wrapper{
+  border-color: #e2e2e2;
+}
+
+/** vxe圆角 **/
+.vxe-table--main-wrapper, .vxe-table .vxe-table--border-line, .vxe-table .vxe-table--header {
+  border-radius: 6px;
+  overflow: hidden;
+}
+/** 固定列的阴影 **/
+.vxe-table .vxe-table--fixed-right-wrapper.scrolling--middle {
+  webkit-box-shadow: 0px 0px 0px 0 rgba(0,0,0,1);
+  box-shadow: 0px 0px 0px 0 rgba(0,0,0,1);
+  border-left: 2px solid #eee;
+}
+/** 主体表格默认颜色 **/
+.vxe-table .vxe-cell {
+  color: #333;
+}
+
+.vxe-table--body {
+  tr{
+    &.grey {
+      .vxe-cell {
+        color: #999;
+      }
+    }
+    &.red {
+      .vxe-cell {
+        color: red;
+      }
+    }
+  }
+}
+/** 表格地下的滚动条 **/
+.vxe-table--body-wrapper {
+  padding-bottom: 5px;
+}
+/*展示表格*/
+.zj-search-table{
+  /*min-width: 1000px!important;
+  text-align: center;
+  &.auto-table {
+    .vxe-cell {
+      max-height: unset!important;
+    }
+  }
+  .vxe-header--row{
+    background-color: #f1f1f1;
+    //background: #D3B366;
+    //灰色
+    //background-color: #e8e8e8;
+
+    //color: #f56c6c;
+  }*/
+  .table-mixin();
+  &.nm{
+    margin: 0;
+  }
+  &.nm-t{
+    margin-top: 0;
+  }
+  &.nm-b{
+    margin-bottom: 0;
+  }
+  &.nm-y{
+    margin-top: 0;
+    margin-bottom: 0;
+  }
+  &.tableNullCenter{
+    .vxe-table--empty-placeholder{
+      //display: flex;
+      //justify-content: center;
+      //align-items: center;
+      top: 60%!important;
+      left: 50%!important;
+      transform: translate(-50%,-50%);
+    }
+  }
+  .vxe-button.type--text.theme--primary {
+    color: @primary-main-color !important;
+    .vxe-button--content {
+      &:hover {
+        opacity: .8;
+      }
+    }
+
+  }
+}
+.vxe-button.type--text.theme--primary {
+  color: @primary-main-color !important;
+}
+//提示
+.vxe-table--tooltip-wrapper{
+  z-index: 9999!important;
+}
+
+//提示
+.vxe-table--tooltip-wrapper{
+  z-index: 9999!important;
+}
+/* vxe-table */
+.vxe-table.size--small .vxe-body--column:not(.col--ellipsis), .vxe-table.size--small .vxe-footer--column:not(.col--ellipsis), .vxe-table.size--small .vxe-header--column:not(.col--ellipsis) {
+  padding: 5px 0;
+}
+.vxe-table.size--small .vxe-body--column.col--ellipsis, .vxe-table.size--small .vxe-footer--column.col--ellipsis, .vxe-table.size--small .vxe-header--column.col--ellipsis, .vxe-table.vxe-editable.size--small .vxe-body--column {
+  height: 25px;
+}
+/*编辑表单高度*/
+.edit-table {
+  .vxe-table.size--small .vxe-body--column.col--ellipsis, .vxe-table.size--small .vxe-footer--column.col--ellipsis, .vxe-table.size--small .vxe-header--column.col--ellipsis, .vxe-table.vxe-editable.size--small .vxe-body--column {
+    height: 31px;
+  }
+}
+
+.vxe-cell{
+  padding: 0 0px 0 0 10px !important;
+  min-height: 34px!important;//最小高度
+  /*max-height: 300px!important; //最大高度*/
+  line-height: 2.3!important; //行高
+  /*overflow: visible!important; //溢出不隐藏*/
+  /*white-space: pre-wrap!important; //换行*/
+}
+/*table的样式*/
+.zj-vxe-table {
+  .vxe-table--header-wrapper {
+    background-color: rgba(0,0,0,0) !important;
+    .vxe-header--row{
+      background-color: rgba(0,0,0,0)!important;
+    }
+    .vxe-header--column {
+      background-color: rgb(247,247,247);
+      padding: 0!important;
+      text-align: center !important;
+      /*选中/悬浮无变化*/
+      &:hover{
+        // background-color: #F3F7FF!important;
+      }
+    }
+  }
+  .vxe-table--empty-placeholder {
+    .vxe-table--empty-content {
+      color: #999999;
+    }
+  }
+}
+.vxe-table--render-default .is--checked.vxe-cell--checkbox .vxe-checkbox--checked-icon:before{
+  border-color:@primary-main-color;
+  background-color:@primary-main-color;
+}
+// .vxe-checkbox--icon .vxe-checkbox--checked-icon{
+//   border:2px solid @primary-main-color !important;
+// }
+// .row-hover .vxe-checkbox--icon .vxe-checkbox--unchecked-icon{
+//   border:2px solid @primary-main-color !important;
+// }
+.vxe-cell--checkbox:hover{
+  .vxe-checkbox--icon:before{
+    border-color: @primary-main-color !important;
+  }
+}
+// .vxe-cell--checkbox .vxe-checkbox--checked-icon:before{
+//   border:2px solid @primary-main-color !important;
+// }
+.zj-table_pager{
+  margin-top:0;
+}
+
+.vxe-header--column .vxe-resizable{
+  //display: none;
+}
+
+.vxe-cell .vxe-input{
+  height: 24px;
+  line-height: 24px;
+}
+
+.vxe-header--row .vxe-cell .vxe-cell--title{
+  font-size: 14px !important;
+  color: #333333;
+  font-weight: 600;
+}
+.vxe-cell .vxe-cell--label{
+  font-size: 14px;
+  color: #333333;
+}
+
+.vxe-pager .vxe-pager--num-btn:not(.is--disabled).is--active {
+  background: @primary-main-color !important;
+  color: #FFFFFF !important;
+}
+
+.zj-table_pager{
+  margin-top: 20px;
+}
+.vxe-pager .size--small{
+  font-size: 14px;
+  height: 50px;
+  color: #333333;
+}
+.vxe-pager .vxe-pager--sizes{
+  margin-top: 0 !important;
+  height: 34px;
+}
+.zj-table_pager /deep/ .vxe-select .is--active .vxe-input--inner{
+  border-color: @primary-main-color !important;
+}
+.zj-table_pager /deep/ .vxe-select--panel{
+  bottom: -50px !important;
+}
+.zj-table_pager /deep/ .vxe-select-option.is--selected{
+  color: @primary-main-color !important;
+}
+.vxe-pager--goto:focus{
+  border-color: @primary-main-color !important;
+}
+.zj-table_pager /deep/ .vxe-pager--num-btn:hover{
+  color: @primary-main-color !important;
+}
+.zj-table_pager /deep/ .vxe-pager--prev-btn:hover{
+  .vxe-pager--btn-icon{
+    color: @primary-main-color !important;
+  }
+  
+}
+.zj-table_pager /deep/ .vxe-pager--next-btn:hover{
+  .vxe-pager--btn-icon{
+    color: @primary-main-color !important;
+  }
+}
+.zj-table_pager /deep/.vxe-pager--prev-btn.is--disabled{
+  .vxe-pager--btn-icon{
+    color: #bfbfbf !important;
+  }
+}
+.zj-table_pager /deep/ .vxe-pager--prev-btn.is--disabled{
+  .vxe-pager--btn-icon{
+    color: #bfbfbf !important;
+  }
+}
+.zj-table_pager /deep/ .vxe-pager--num-btn:not(.is--disabled).is--active:hover{
+  .zj-table_pager /deep/ .vxe-pager--num-btn:not(.is--disabled).is--active{
+    color: #FFFFFF !important;
+  }
+}
+.zj-table /deep/ .fixed-right--wrapper{
+  /deep/ .vxe-button.type--text{
+    padding: 0 !important;
+  }
+}
+.vxe-input:not(.is--disabled).is--active .vxe-input--inner{
+  border-color: @primary-main-color !important;
+}
+.vxe-select-option.is--selected{
+  color: @primary-main-color !important;
+}
+.vxe-pager.size--small{
+  font-size: 14px !important;
+}
+.zj-table_pager /deep/ .vxe-pager--jump-next:hover{
+  .vxe-icon--d-arrow-right{
+    color: @primary-main-color !important;
+  }
+}
+.zj-table_pager /deep/ .vxe-pager--jump-prev:hover{
+  .vxe-icon--d-arrow-left{
+    color: @primary-main-color !important;
+  }
+}

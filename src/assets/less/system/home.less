@@ -1,0 +1,25 @@
+//填充flex布局数量不足的问题
+.for-align {
+  height: 0 !important;
+  margin-bottom: 0 !important;
+  border: none !important;
+  padding: 0 !important;
+}
+//无数据内容时，提示居中
+.empty-content-box {
+  display: flex;
+  width: 100%;
+  height: 100%;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+  font-size: 13px;
+  color: #999
+}
+
+//超出行不换行并不显示
+.over-hidden {
+  overflow: hidden;
+  text-overflow: "..";
+  white-space: nowrap;
+}

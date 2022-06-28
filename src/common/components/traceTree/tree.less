@@ -1,0 +1,116 @@
+@noraml-bg:#CFDFF8;/*正常底色*/
+@reject-bg:#EEEEEE;/*作废底色*/
+@text-blue:#648AB5;/*文字蓝色*/
+@text-grey:#999999;/*文字灰色*/
+@text-black:#333333;/*文字黑色*/
+@active-border-color: #2ECC71;/*选择边框颜色*/
+/*容器*/
+.org-tree-node-label-inner{
+  box-shadow: 0 0 0 rgba(0,0,0,0);
+  position: relative;
+  padding-top: 1px;
+  &:before{
+    content: '';
+    position: absolute;
+    left: 86px;
+    top: 0px;
+    display: block;
+    width: 2px;
+    height: calc(100%);
+    border-left: 1px solid #bdbdbd;
+  }
+  &.disabled {
+    .field-label {
+      color: #999;
+    }
+  }
+  &.highlight {
+    border: 2px solid #2ECC71;
+  }
+  .field-label {
+    color:@text-blue;
+    margin-right: 8px;
+  }
+  .field-value {
+    max-width: calc(100% - 95px);
+    display: inline-block;
+    vertical-align: top;
+    word-break: break-all;
+    text-indent: 1em;
+  }
+  .org-tree-node-img {
+    position: absolute;
+    width: 50px;
+    height: 50px;
+    top: 0;
+    right: 0;
+  }
+  .field-pdf {
+    color: #5794e2;
+    cursor: pointer;
+    &:hover {
+      color: #3472c2;
+    }
+  }
+}
+/*div*/
+.tree-div,.tree-div-finish,.tree-div-split{
+  border:1px solid gray;
+  background-color: #f9f9f9;
+  text-align: left;
+  text-indent: 5px;
+  width: 300px;
+  color: #434343;
+  font-size: 12px;
+  label{
+    display: inline-block;
+    padding: 5px 0;
+    width: 33.3333333333%;
+    background-color: #98B6F1;
+    color: #fff;
+  }
+  span{
+    display: inline-block;
+    padding: 5px 0;
+    width: 66.6666666666%;
+    color: #434343;
+  }
+  .tree-info{
+    text-indent: 0;
+    color: #98B6F1;
+    font-size: 20px;
+    position: absolute;
+    top: 0;
+    right: 0;
+    transform: translate(30%,-35%) rotate(-12deg);
+    cursor: pointer;
+    z-index: 9;
+  }
+}
+/* 拆分状态 */
+.tree-div-split{
+  background: #fff;
+  label{
+    background-color: #e0e0e0;
+    color: #A6A6A6;
+  }
+}
+/*完成状态*/
+.tree-div-finish{
+  //background-color: white;
+  background: url("imgs/fanacing_icon.png") #f9f9f9 no-repeat right top;
+  label{
+    background-color: #98B6F1;
+  }
+}
+
+.org-tree-title {
+  font-weight: bold;
+  font-size: 18px;
+  margin-bottom: 8px;
+}
+
+.org-tree-sub-title {
+  color: #6FAEFF;
+  margin-bottom: 10px;
+}
