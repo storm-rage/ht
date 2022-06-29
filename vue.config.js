@@ -27,8 +27,8 @@ module.exports = {
         port: 8083,
         proxy: {
             '/api': {
-                 target: 'http://172.16.20.39:8080/',
-                // target: 'http://localhost:8080/', // 本地
+                 // target: 'http://172.16.20.39:8080/',
+                target: 'http://localhost:8080/', // 本地
                 // target: 'http://172.16.20.89:8083/', // 本地2
                 // target: 'http://172.16.20.57:8080/', // 天眼
                 // target: 'http://172.16.20.82:8080/', // 达
