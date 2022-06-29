@@ -136,6 +136,18 @@ const components = [
     name: 'ZjWorkflow',
     component: () => import('./workflow/ZjWorkflow.vue')
   },
+  {
+    name: 'ZjHeader',
+    component:() => import('./content/ZjHeader.vue')
+  },
+  {
+    name: 'ZjContentBlock',
+    component:() => import('./content/ZjContentBlock.vue')
+  },
+  {
+    name: 'ZjContentFooter',
+    component:() => import('./content/ZjContentFooter.vue')
+  }
 ]
 
 const install = function (Vue) {

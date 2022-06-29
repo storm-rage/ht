@@ -29,7 +29,8 @@
         </el-form-item>
       </el-form>
     <div style="padding-top: 20px">
-        <el-button type="primary" @click="$router.push('/productsOpenedApply')">产品开通申请</el-button>
+      <zj-button type="primary"  @click="$router.push('/productsOpenedApply')">产品开通申请</zj-button>
+<!--        <el-button type="primary">产品开通申请</el-button>-->
     </div>
     </div>
     <div class="zj-search-response">
@@ -44,11 +45,13 @@
 </template>
 <script>
 export default {
+  components: {},
+
   data() {
     return {
       zjControl: {},
       searchForm:{
-      
+
       }
     }
   },
