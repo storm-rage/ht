@@ -10,10 +10,23 @@ const businessApplyRouter = [
         isMock:true,
         title:`产品开通申请`,
         root:'业务申请',
+        notRequireAuth: true,
         keepAlive:true,
         refreshIndex:0
       }
     },
+  {
+    path: '/productsOpenedApply',
+    name: 'productsOpenedApply',
+    component: () => import('../views/businessApply/productsOpened/apply/index.vue'),
+    meta:{
+      isMock:false,
+      title:`产品开通申请`,
+      keepAlive:true,
+      refreshIndex:0,
+      notRequireAuth: true
+    }
+  },
     {
       path: '/transactionQuery',
       name: 'transactionQuery',
@@ -33,18 +46,6 @@ const businessApplyRouter = [
       meta:{
         isMock:false,
         title:`基础信息维护交易详情`,
-        keepAlive:true,
-        refreshIndex:0,
-        notRequireAuth: true
-      }
-    },
-    {
-      path: '/productsOpenedApply',
-      name: 'productsOpenedApply',
-      component: () => import('../views/businessApply/productsOpenedApply/index.vue'),
-      meta:{
-        isMock:false,
-        title:`产品开通申请`,
         keepAlive:true,
         refreshIndex:0,
         notRequireAuth: true
