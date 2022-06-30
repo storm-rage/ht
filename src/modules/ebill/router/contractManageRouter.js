@@ -85,7 +85,7 @@ const contractManageRouter = [
       root: '合同管理',
       keepAlive: true,
       refreshIndex: 0,
-      notRequireAuth: false
+      notRequireAuth: true
     },
   }
 ]

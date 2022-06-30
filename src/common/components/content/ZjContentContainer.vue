@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="zj-content-container bg-white">
     <slot></slot>
   </div>
 </template>

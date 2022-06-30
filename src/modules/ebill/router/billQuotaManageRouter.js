@@ -8,7 +8,8 @@ const billQuotaManageRouter = [
       title: `额度变更申请`,
       root: '合同管理',
       keepAlive: true,
-      refreshIndex: 0
+      refreshIndex: 0,
+      notRequireAuth: true
     },
   },
   {

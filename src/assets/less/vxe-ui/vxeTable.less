@@ -95,27 +95,9 @@
     }
   }
 }
-/** 表格地下的滚动条 **/
-.vxe-table--body-wrapper {
-  padding-bottom: 5px;
-}
+
 /*展示表格*/
 .zj-search-table{
-  /*min-width: 1000px!important;
-  text-align: center;
-  &.auto-table {
-    .vxe-cell {
-      max-height: unset!important;
-    }
-  }
-  .vxe-header--row{
-    background-color: #f1f1f1;
-    //background: #D3B366;
-    //灰色
-    //background-color: #e8e8e8;
-
-    //color: #f56c6c;
-  }*/
   .table-mixin();
   &.nm{
     margin: 0;
@@ -132,9 +114,6 @@
   }
   &.tableNullCenter{
     .vxe-table--empty-placeholder{
-      //display: flex;
-      //justify-content: center;
-      //align-items: center;
       top: 60%!important;
       left: 50%!important;
       transform: translate(-50%,-50%);
@@ -211,26 +190,13 @@
   border-color:@primary-main-color;
   background-color:@primary-main-color;
 }
-// .vxe-checkbox--icon .vxe-checkbox--checked-icon{
-//   border:2px solid @primary-main-color !important;
-// }
-// .row-hover .vxe-checkbox--icon .vxe-checkbox--unchecked-icon{
-//   border:2px solid @primary-main-color !important;
-// }
 .vxe-cell--checkbox:hover{
   .vxe-checkbox--icon:before{
     border-color: @primary-main-color !important;
   }
 }
-// .vxe-cell--checkbox .vxe-checkbox--checked-icon:before{
-//   border:2px solid @primary-main-color !important;
-// }
 .zj-table_pager{
   margin-top:0;
-}
-
-.vxe-header--column .vxe-resizable{
-  //display: none;
 }
 
 .vxe-cell .vxe-input{
