@@ -49,7 +49,7 @@ export default {
   .header-left-tip {
     background: #FCE8D8;
     border-radius: 2px;
-    margin-left: 30px;
+    margin-left: 43px;
     font-size: 12px;
     padding: 4px 25px 4px 16px;
     color: #222222;
