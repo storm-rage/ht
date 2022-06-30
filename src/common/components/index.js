@@ -147,6 +147,10 @@ const components = [
   {
     name: 'ZjContentFooter',
     component:() => import('./content/ZjContentFooter.vue')
+  },
+  {
+    name: 'ZjCollapse',
+    component:() => import('./collapse/ZjCollapse.vue')
   }
 ]
 
