@@ -1,17 +1,16 @@
 <template>
-  <div class="zj-content-block">
-   <slot></slot>
+  <div class="zj-content-container">
+    <slot></slot>
   </div>
 </template>
 <script>
 export default {
-  name: 'ZjContentBlock'
+  name: 'ZjContentContainer'
 }
 </script>
 <style lang="less" scoped>
-.zj-content-block{
-  padding: 12px;
-  background-color: #FFFFFF;
-  border-radius: 4px;
+.zj-content-container {
+  padding-top:10px;
+  padding-bottom:10px
 }
 </style>

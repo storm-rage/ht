@@ -141,6 +141,10 @@ const components = [
     component:() => import('./content/ZjHeader.vue')
   },
   {
+    name: 'ZjContent',
+    component:() => import('./content/ZjContent.vue')
+  },
+  {
     name: 'ZjContentBlock',
     component:() => import('./content/ZjContentBlock.vue')
   },
@@ -151,6 +155,14 @@ const components = [
   {
     name: 'ZjCollapse',
     component:() => import('./collapse/ZjCollapse.vue')
+  },
+  {
+    name: 'ZjContentContainer',
+    component:() => import('./content/ZjContentContainer.vue')
+  },
+  {
+    name: 'ZjTopHeader',
+    component:() => import('./content/ZjTopHeader.vue')
   }
 ]
 
