@@ -58,7 +58,7 @@
             field="field2"
             title="应收账款转让期限"
           />
-          <zj-table-column field="field3" title="授信额度" />
+          <zj-table-column field="field3" title="授信额度" :formatter="money"/>
           <zj-table-column field="field4" title="额度期限（月）" />
         </zj-table>
       </zj-content>

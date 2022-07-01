@@ -6,7 +6,7 @@
         <select-items></select-items>
       </div>
     </div>
-    <zj-content-block>
+    <zj-content>
       <zj-collapse title="业务联系人" tipText="注：该联系人为签署商业保理合同业务联系人。">
         <el-row>
           <el-form ref="form" :model="form" :rules="rules" label-position="top">
@@ -25,9 +25,9 @@
           </el-form>
         </el-row>
       </zj-collapse>
-    </zj-content-block>
+    </zj-content>
     <zj-content-footer>
-      <zj-button type="primary" @click="submit" :api="zjBtn.passBillSignBatch">确认申请</zj-button>
+      <zj-button class="confirm" @click="submit" :api="zjBtn.passBillSignBatch">确认申请</zj-button>
       <zj-button class="back" @click="$router.push('/productsOpened')" :api="zjBtn.passBillSignBatch">返回</zj-button>
     </zj-content-footer>
   </div>

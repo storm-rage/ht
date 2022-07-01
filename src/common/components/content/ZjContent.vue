@@ -1,5 +1,5 @@
 <template>
-  <div class="zj-content-block">
+  <div class="zj-content">
     <slot></slot>
   </div>
 </template>
@@ -9,7 +9,7 @@ export default {
 }
 </script>
 <style lang="less" scoped>
-.zj-content-block{
+.zj-content{
   padding: 12px;
   background-color: #FFFFFF;
   border-radius: 4px;

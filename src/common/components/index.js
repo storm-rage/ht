@@ -136,33 +136,45 @@ const components = [
     name: 'ZjWorkflow',
     component: () => import('./workflow/ZjWorkflow.vue')
   },
+  // 左边子表头
   {
     name: 'ZjHeader',
     component:() => import('./content/ZjHeader.vue')
   },
+  // 内容
   {
     name: 'ZjContent',
     component:() => import('./content/ZjContent.vue')
   },
+  // 内容包含块
   {
     name: 'ZjContentBlock',
     component:() => import('./content/ZjContentBlock.vue')
   },
+  // 底部悬浮按钮
   {
     name: 'ZjContentFooter',
     component:() => import('./content/ZjContentFooter.vue')
   },
+  // 自定义的折叠组件
   {
     name: 'ZjCollapse',
     component:() => import('./collapse/ZjCollapse.vue')
   },
+  // 整体内容容器
   {
     name: 'ZjContentContainer',
     component:() => import('./content/ZjContentContainer.vue')
   },
+  // 顶部标题
   {
     name: 'ZjTopHeader',
     component:() => import('./content/ZjTopHeader.vue')
+  },
+  //多行提示文本
+  {
+    name: 'ZjContentTip',
+    component:() => import('./content/ZjContentTip.vue')
   }
 ]
 
