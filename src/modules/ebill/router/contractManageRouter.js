@@ -1,8 +1,8 @@
 const contractManageRouter = [
   {
-    path: '/myFactoringContractSigned',
-    name: 'myFactoringContractSigned',
-    component: () => import('../views/contractManage/factoringContract/index.vue'),
+    path: '/contractSignQuery',
+    name: 'contractSignQuery',
+    component: () => import('../views/contractManage/factoringContract/query/index.vue'),
     meta: {
       isMock: true,
       title: '我签约的保理合同',
@@ -13,66 +13,68 @@ const contractManageRouter = [
     },
   },
   {
-    path: '/applicationSigningFactoringContract',
-    name: 'applicationSigningFactoringContract',
-    component: () => import('../views/contractManage/factoringContract/apply/index.vue'),
-    meta: {
-      isMock: true,
-      title: '保理合同签约申请',
-      root: '合同管理',
-      keepAlive: true,
-      refreshIndex: 0
-    },
-  },
-  {
-    path: '/contractSingningDetails',
-    name: 'contractSingningDetails',
-    component: () => import('../views/contractManage/factoringContract/detail/contractSingningDetails.vue'),
+    path: '/mySignContractDetail',
+    name: 'mySignContractDetail',
+    component: () => import('../views/contractManage/factoringContract/query/detailPage/index.vue'),
     meta: {
       isMock: false,
       title: '合同签约详情',
       root: '合同管理',
       keepAlive: true,
       refreshIndex: 0,
-      notRequireAuth: false
+      notRequireAuth: true
     },
   },
   {
-    path: '/contractSingningApplication',
-    name: 'contractSingningApplication',
-    component: () => import('../views/contractManage/factoringContract/apply/contractSingningApplication.vue'),
+    path: '/contractSignApplyList',
+    name: 'contractSignApplyList',
+    component: () => import('../views/contractManage/factoringContract/apply/index.vue'),
+    meta: {
+      isMock: true,
+      title: '保理合同签约申请',
+      root: '合同管理',
+      keepAlive: true,
+      refreshIndex: 0,
+      notRequireAuth: true
+    },
+  },
+  {
+    path: '/contractSignApply',
+    name: 'contractSignApply',
+    component: () => import('../views/contractManage/factoringContract/apply/detailPage/index.vue'),
     meta: {
       isMock: false,
       title: '合同签约申请',
       root: '合同管理',
       keepAlive: true,
       refreshIndex: 0,
-      notRequireAuth: false
+      notRequireAuth: true
     },
   },
   {
-    path: '/reviewFactoringContractSigning',
-    name: 'reviewFactoringContractSigning',
+    path: '/contractSignReviewList',
+    name: 'contractSignReviewList',
     component: () => import('../views/contractManage/factoringContract/review/index.vue'),
     meta: {
       isMock: true,
       title: '保理合同签约复核',
       root: '合同管理',
       keepAlive: true,
-      refreshIndex: 0
+      refreshIndex: 0,
+      notRequireAuth: true
     },
   },
   {
-    path: '/contractSigningReview',
-    name: 'contractSigningReview',
-    component: () => import('../views/contractManage/factoringContract/review/contractSigningReview.vue'),
+    path: '/contractSignReview',
+    name: 'contractSignReview',
+    component: () => import('../views/contractManage/factoringContract/review/detailPage/index.vue'),
     meta: {
       isMock: false,
       title: '合同签约复核',
       root: '合同管理',
       keepAlive: true,
       refreshIndex: 0,
-      notRequireAuth: false
+      notRequireAuth: true
     },
   }
 ]

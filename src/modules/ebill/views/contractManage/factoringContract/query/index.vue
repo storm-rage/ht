@@ -32,7 +32,7 @@
             <el-option value="待复核"/>
           </el-select>
         </el-form-item>
-        
+
         <el-form-item label="申请流水号：">
           <el-input v-model="searchForm.issueEntName" @keyup.enter.native="enterSearch"/>
         </el-form-item>
@@ -47,24 +47,18 @@
       </el-form>
     </div>
     <div class="zj-search-response">
-      <zj-table ref="searchTable" :params="searchForm" :api="zjControl.tableApi">
-        <zj-table-column field="ebillCode" title="凭证编号">
-          <template v-slot="{row}">
-            <span class="table-elbill-code" @click="toBillDetails(row)">{{row.ebillCode}}</span>
-          </template>
-        </zj-table-column>
-        <zj-table-column field="issueEntName" title="序号"/>
-        <zj-table-column field="ebillAmt" title="申请流水号" :formatter="money"/>
-        <zj-table-column field="transferAmt" title="合同签署类型" :formatter="money"/>
-        <zj-table-column field="splusAmt" title="合同编号" :formatter="money"/>
-        <zj-table-column field="issueDate" title="合同名称" :formatter="date"/>
-        <zj-table-column field="receiveDate" title="申请状态" :formatter="date"/>
-        <zj-table-column field="expireDate" title="签约结果" :formatter="date"/>
-        <zj-table-column field="expireDate" title="申请时间" :formatter="date"/>
-        <zj-table-column field="state" title="凭证状态" :formatter="(obj) => typeMap(dictionary.enterpriseStateList, obj.cellValue)"/>
+      <zj-table ref="searchTable" :dataList="list" :params="searchForm" :api="zjControl.tableApi">
+        <zj-table-column type="seq" title="序号" width="60"/>
+        <zj-table-column field="field1" title="申请流水号" />
+        <zj-table-column field="field2" title="合同签署类型" />
+        <zj-table-column field="field3" title="合同编号" />
+        <zj-table-column field="field4" title="合同名称"/>
+        <zj-table-column field="field5" title="申请状态"/>
+        <zj-table-column field="field6" title="签约结果"/>
+        <zj-table-column field="field7" title="申请时间"/>
         <zj-table-column title="操作" fixed="right">
           <template v-slot="{row}">
-            <zj-button type="text" @click="goChild('entManageDetail',row)" :api="zjBtn.getEnterprise">详情</zj-button>
+            <zj-button type="text" @click="toViewDetail(row)" :api="zjBtn.getEnterprise">详情</zj-button>
           </template>
         </zj-table-column>
       </zj-table>
@@ -86,20 +80,25 @@ export default {
         issueDateStart: '',
         issueDateEnd: '',
       },
-      contractType: '',  // 合同签署类型
-      applicationStatus: '', // 申请状态
-      signingResults: ''    // 签约结果
+      list: [
+        {
+          field1: '5435455',
+          field2: '首次签约合同',
+          field3: '789797898',
+          field4: '国内商业保理合同',
+          field5: '待复核',
+          field6: '签约成功',
+          field7: '2021.01.01 11:11:22'
+        }
+      ]
     }
   },
   created() {
-    this.getApi()
+    // this.getApi()
   },
   methods: {
-    toBillDetails(row) {
-      console.log(row);
-    },
-    goChild() {
-      this.$router.push('/contractSingningDetails');
+    toViewDetail() {
+      this.$router.push({name: 'mySignContractDetail'});
     }
   }
 }
