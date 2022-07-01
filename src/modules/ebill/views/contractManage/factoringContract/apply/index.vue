@@ -11,31 +11,21 @@
       </el-row>
 
       <el-form ref="searchForm" :model="searchForm">
-        <el-form-item label="供应商：">
+        <el-form-item label="合同编号：">
           <el-input
             v-model="searchForm.issueEntName"
             @keyup.enter.native="enterSearch"
           />
         </el-form-item>
-
-        <el-form-item label="对账单编号：">
-          <el-input
-            v-model="searchForm.issueEntName"
-            @keyup.enter.native="enterSearch"
-          />
+        <el-form-item label="合同签署类型：">
+          <el-select v-model="searchForm.issueEntName">
+            <el-option value="全部" />
+          </el-select>
         </el-form-item>
-
-        <el-form-item label="申请日期：" class="col-right">
+        <el-form-item label="合同/协议文本生成日期：" class="col-right">
           <zj-date-range-picker
             :startDate.sync="searchForm.expireDateStart"
             :endDate.sync="searchForm.expireDateEnd"
-          />
-        </el-form-item>
-
-        <el-form-item label="凭证编号：">
-          <el-input
-            v-model="searchForm.issueEntName"
-            @keyup.enter.native="enterSearch"
           />
         </el-form-item>
       </el-form>
@@ -43,54 +33,26 @@
     <div class="zj-search-response">
       <zj-table
         ref="searchTable"
+        :dataList="list"
         :params="searchForm"
         :api="zjControl.tableApi"
       >
-        <zj-table-column field="ebillCode" title="凭证编号">
-          <template v-slot="{ row }">
-            <span class="table-elbill-code" @click="toBillDetails(row)">{{
-              row.ebillCode
-            }}</span>
-          </template>
-        </zj-table-column>
-        <zj-table-column field="issueEntName" title="签发人" />
-        <zj-table-column field="ebillAmt" title="凭证金额" :formatter="money" />
+        <zj-table-column type="seq" title="序号" width="60"/>
         <zj-table-column
-          field="transferAmt"
-          title="已转入金额"
-          :formatter="money"
-        />
+          field="field1"
+          title="合同签署类型"/>
         <zj-table-column
-          field="splusAmt"
-          title="已转入金额"
-          :formatter="money"
-        />
-        <zj-table-column field="issueDate" title="签发日期" :formatter="date" />
+          field="field2"
+          title="合同编号"/>
         <zj-table-column
-          field="receiveDate"
-          title="签收日期"
-          :formatter="date"
-        />
+          field="field3"
+          title="合同名称"/>
         <zj-table-column
-          field="expireDate"
-          title="到期日期"
-          :formatter="date"
-        />
-        <zj-table-column
-          field="state"
-          title="凭证状态"
-          :formatter="
-            (obj) => typeMap(dictionary.enterpriseStateList, obj.cellValue)
-          "
-        />
+          field="field4"
+          title="合同/协议文本生成时间"/>
         <zj-table-column title="操作" fixed="right">
           <template v-slot="{ row }">
-            <zj-button
-              type="text"
-              @click="goChild('entManageDetail', row)"
-              :api="zjBtn.getEnterprise"
-              >凭证打印</zj-button
-            >
+            <zj-button type="text" @click="toSign(row)">去签约</zj-button>
           </template>
         </zj-table-column>
       </zj-table>
@@ -116,21 +78,24 @@ export default {
         issueDateStart: "",
         issueDateEnd: "",
       },
-      agreementChecked: false, // 阅读同意协议
+      list: [
+        {
+          field1: '首次签约合同',
+          field2: '7676756765',
+          field3: '测试合同1',
+          field4: '2021.01.01 11:11:22',
+        }
+      ]
     };
   },
   created() {
-    this.getApi();
+    // this.getApi();
   },
   methods: {
-    toBillDetails(row) {
-      console.log(row);
-    },
-    // 复核通过
-    reviewApproved() {},
-    // 复核拒绝
-    refuse() {},
-  },
+    toSign(row) {
+      this.$router.push({name: 'contractSignApply'})
+    }
+  }
 };
 </script>
 

@@ -39,29 +39,27 @@
         </el-form-item>
       </el-form>
     </div>
-
     <div class="zj-search-response">
       <zj-table
         ref="searchTable"
+        :dataList="list"
         :params="searchForm"
         :api="zjControl.tableApi"
       >
-        <zj-table-column field="issueEntName" title="序号" />
-        <zj-table-column field="ebillCode" title="申请流水号"></zj-table-column>
-        <zj-table-column field="issueEntName" title="合同签署类型" />
-        <zj-table-column field="ebillAmt" title="合同编号" :formatter="money" />
+        <zj-table-column type="seq" width="60" title="序号" />
+        <zj-table-column field="field1" title="申请流水号"/>
+        <zj-table-column field="field2" title="合同签署类型" />
+        <zj-table-column field="field3" title="合同编号" />
         <zj-table-column
-          field="transferAmt"
-          title="合同名称"
-          :formatter="money"
-        />
-        <zj-table-column field="splusAmt" title="申请状态" :formatter="money" />
-        <zj-table-column field="issueDate" title="申请时间" :formatter="date" />
+          field="field4"
+          title="合同名称"/>
+        <zj-table-column field="field5" title="申请状态"/>
+        <zj-table-column field="field6" title="申请时间"/>
         <zj-table-column title="操作" fixed="right">
           <template v-slot="{ row }">
             <zj-button
               type="text"
-              @click="goChild('entManageDetail', row)"
+              @click="toReview(row)"
               :api="zjBtn.getEnterprise"
               >复核</zj-button
             >
@@ -86,23 +84,24 @@ export default {
         issueDateStart: "",
         issueDateEnd: "",
       },
-      applicationStatus: "",
-      agreementChecked: false, // 阅读同意协议
+      list: [
+        {
+          field1: '5435455',
+          field2: '首次签约合同',
+          field3: '789797898',
+          field4: '国内商业保理合同',
+          field5: '待复核',
+          field6: '2021.01.01 11:11:22'
+        }
+      ]
     };
   },
   created() {
-    this.getApi();
+    // this.getApi();
   },
   methods: {
-    toBillDetails(row) {
-      console.log(row);
-    },
-    // 复核通过
-    reviewApproved() {},
-    // 复核拒绝
-    refuse() {},
-    goChild() {
-      this.$router.push("/contractSigningReview");
+    toReview(row) {
+      this.$router.push({name: 'contractSignReview'});
     },
   },
 };

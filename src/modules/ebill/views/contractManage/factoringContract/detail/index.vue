@@ -1,0 +1,130 @@
+<template>
+  <zj-content-container>
+    <zj-top-header :title="title"></zj-top-header>
+    <zj-content-block>
+      <zj-content>
+        <el-steps :active="stepActive" process-status="finish" align-center>
+          <el-step v-for="(step,index) in stepList" :key="`${index}stp`">
+            <div slot="title">{{step.title}}</div>
+            <div slot="description" style="text-align: left">
+              <p v-if="step.time">提交时间：{{step.time}}</p>
+              <p v-if="step.user">提交人：{{step.user}}</p>
+              <p v-if="step.desc">{{step.desc}}</p>
+            </div>
+          </el-step>
+        </el-steps>
+      </zj-content>
+    </zj-content-block>
+    <!--  合同信息  -->
+    <zj-content-block>
+      <zj-header title="合同信息"></zj-header>
+      <zj-content>
+        <el-form label-width="140px" ref="form" size="mini">
+          <el-row>
+            <el-col :span="8">
+              <el-form-item label="待签署合同类型：">
+                <span>国内商业保理合同</span>
+              </el-form-item>
+            </el-col>
+            <el-col :span="8">
+              <el-form-item label="合同编号：">
+                <span>xxxxxxx</span>
+              </el-form-item>
+            </el-col>
+            <el-col :span="8">
+              <el-form-item label="合同生成时间：">
+                <span>2021.01.01 11:11:22</span>
+              </el-form-item>
+            </el-col>
+          </el-row>
+        </el-form>
+        <zj-table :dataList="quotaList">
+          <zj-table-column type="seq" title="序号" width="60"/>
+          <zj-table-column
+            field="field1"
+            title="买方企业名称"/>
+          <zj-table-column
+            field="field2"
+            title="应收账款转让期限"/>
+          <zj-table-column
+            field="field3"
+            title="授信额度" :formatter="money"/>
+          <zj-table-column
+            field="field4"
+            title="额度期限（月）"/>
+        </zj-table>
+      </zj-content>
+    </zj-content-block>
+    <!--  协议信息  -->
+    <zj-content-block>
+      <zj-header title="本次待签约合同/协议"></zj-header>
+      <zj-content>
+        <zj-table :dataList="fileList">
+          <zj-table-column type="seq" title="序号" width="60"/>
+          <zj-table-column
+            field="field1"
+            title="合同/协议编号"/>
+          <zj-table-column
+            field="field3"
+            title="买方企业名称"/>
+          <zj-table-column
+            field="field2"
+            title="合同/协议名称"/>
+          <zj-table-column
+            field="field4"
+            title="签署类型"/>
+          <zj-table-column
+            field="field5"
+            title="协议相关方"/>
+          <zj-table-column title="操作" fixed="right">
+            <template v-slot="{ row }">
+              <zj-button type="text" @click="toDownload(row)">下载</zj-button>
+            </template>
+          </zj-table-column>
+        </zj-table>
+      </zj-content>
+    </zj-content-block>
+  </zj-content-container>
+</template>
+<script>
+export default {
+  props: {
+    title: String,
+    stepActive: {
+      type: Number,
+      default: 0
+    },
+    stepList: {
+      type: Array,
+      require: true,
+      default: () => {
+        return [];
+      }
+    }
+  },
+  data() {
+    return {
+      quotaList: [
+        {
+          field1: '海天a公司',
+          field2: '2022-09-09 ～ 2023-09-08',
+          field3: '100,000,000.00',
+          field4: '4',
+        }
+      ],
+      fileList: [
+        {
+          field1: '123455',
+          field2: '《国内商业保理合同》',
+          field3: '海天a公司',
+          field4: '双签',
+          field5: '海天保理公司'
+        }
+      ]
+    }
+  },
+  methods: {
+    toDownload(row) {},
+  }
+};
+</script>
