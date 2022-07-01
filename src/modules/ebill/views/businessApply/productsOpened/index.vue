@@ -29,7 +29,7 @@
         </el-form-item>
       </el-form>
     <div style="padding-top: 20px">
-      <zj-button type="primary"  @click="$router.push('/productsOpenedApply')">产品开通申请</zj-button>
+      <zj-button class="confirm"  @click="$router.push('/productsOpenedApply')">产品开通申请</zj-button>
 <!--        <el-button type="primary">产品开通申请</el-button>-->
     </div>
     </div>

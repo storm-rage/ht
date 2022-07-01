@@ -91,9 +91,11 @@ export default {
   },
   methods: {
     toContractDetail(row) {
-      this.$router.push({name: 'domesticBusiness'})
+      this.$router.push({name: 'contractDetail'})
     },
-    toApplyPage(row) {}
+    toApplyPage(row) {
+      this.$router.push({name: 'quotaChangeApply'})
+    }
   }
 };
 </script>

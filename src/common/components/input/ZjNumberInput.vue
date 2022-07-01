@@ -119,6 +119,11 @@ export default {
       type: Number,
       default: 2
     },
+    //是否格式化成金额
+    formatterMoney: {
+      type: [Boolean,Function],
+      default: false
+    },
     formatter: {
       type: Function
     },
@@ -180,6 +185,12 @@ export default {
         } else {
           return this.precisionValue
         }
+      }else if(this.formatterMoney && this.precisionValue && !this.focused) {
+        if (typeof this.formatterMoney === 'function') {
+          return this.formatterMoney(this.precisionValue);
+        }else {
+          return String(this.money(this.precisionValue)).trim();
+        }
       } else {
         return this.precisionValue
       }
@@ -227,6 +238,7 @@ export default {
     },
     // input设置输入框value，并传出。
     setValue (val) {
+      // const r = new RegExp('\\d*(\\.\\d{0,'+this.precision+'})?');val = Number(r.exec(String(val))[0])
       if (val && !isNaN(this.precision)) val = Number(Number(val).toFixed(this.precision))
       const { min, max } = this
       if (val !== null) {
@@ -295,6 +307,10 @@ export default {
       }
       if (this.isNum) { // 如果是数字类型
         if (event.type === 'input' && val.match(/^-?\.?$|\.$/)) return
+        //存在千分符情况(copy情况下)
+        if (val.indexOf(',')) {
+          val = String(val).trim().replace(/,/g,'');
+        }
         val = Number(val)
         // console.log(isNaN(val), 'isNaN', val, 'val')
         if (!isNaN(val)) {

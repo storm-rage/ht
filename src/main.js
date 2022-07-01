@@ -7,55 +7,37 @@ import router from './router'
 import api from './modules/api'
 import store from './store'
 // plugin style import
-import ElementUI from 'element-ui'
-import 'element-ui/lib/theme-chalk/index.css'
-import XEUtils from 'xe-utils'
-import VXETable from 'vxe-table'
-import 'vxe-table/lib/index.css'
-import moment from 'moment'
-import bignumber from 'bignumber.js'
-import 'font-awesome/css/font-awesome.css'
+import ElementUI from './common/elementUI'
+import VxeTable from './common/vxeTable'
 import {
   ZjComponents,
   ZjDirectives,
   ZjI18N as i18n,
   ZjFilters,
-  ZjCommonMixins
+  ZjCommonMixins,
+  Moment
 } from './common';
+//图标
+import 'font-awesome/css/font-awesome.css';
 // 项目字体图标
 import '@assets/iconfont/index.css';
 // zejin plugin style import
 import format from '@utils/format.js'
 //项目less样式
 import '@assets/public.less'
-
-// resetMessage
 // 图片查看
-import 'viewerjs/dist/viewer.css'
-import VueViewer from 'v-viewer'
-// import mock from './mock'
+import Viewer from './common/viewer'
 
-Vue.use(ElementUI)
-Vue.prototype.XEUtils = XEUtils
-Vue.use(VXETable)
+Vue.use(ElementUI);
+Vue.use(VxeTable);
 Vue.use(ZjDirectives)
 Vue.use(ZjComponents)
 Vue.use(ZjCommonMixins.routerMixins)
 Vue.use(format)
-Vue.use(VueViewer, {
-  defaultOptions: {
-    zIndex: 9999
-  }
-})
-// Vue.use(mock)
-
+Vue.use(Viewer)
+Vue.use(api)
+Vue.use(Moment);
 Vue.config.productionTip = false
-Vue.prototype.$api = api
-Vue.prototype.$ELEMENT = { size: 'small' }
-Vue.prototype.$moment = moment
-Vue.prototype.$bignumber = bignumber
-Vue.prototype.back = () => router.back(-1)
-
 
 let vm = new Vue({
   el: '#app',

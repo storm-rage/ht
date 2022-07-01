@@ -48,7 +48,7 @@ export default {
 <style lang="less" scoped>
 .collapse {
   padding: 10px 15px;
-  border: 1px solid #8FACD1;
+  border: 1px solid #DCDFE6;
   border-radius: 4px;
   .collapse-header {
     text-align: left;
@@ -69,12 +69,12 @@ export default {
       }
     }
     .header-left-tip {
-      background: #FCE8D8;
+      background: rgba(250,171,12,0.20);
       border-radius: 2px;
       margin-left: 23px;
       font-size: 12px;
       padding: 4px 25px 4px 16px;
-      color: #222222;
+      color: #909399;
       min-width: 300px;
       font-weight: normal;
     }

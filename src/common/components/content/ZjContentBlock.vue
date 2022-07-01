@@ -1,15 +1,15 @@
 <template>
-  <div class="zj-content-container">
+  <div class="zj-content-block">
     <slot></slot>
   </div>
 </template>
 <script>
 export default {
-  name: 'ZjContentContainer'
+  name: 'ZjContentBlock'
 }
 </script>
 <style lang="less" scoped>
-.zj-content-container {
+.zj-content-block {
   padding-top:10px;
   padding-bottom:10px
 }

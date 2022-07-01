@@ -47,12 +47,12 @@ export default {
     margin-bottom: 16px;
   }
   .header-left-tip {
-    background: #FCE8D8;
+    background: rgba(250,171,12,0.20);
     border-radius: 2px;
     margin-left: 43px;
     font-size: 12px;
     padding: 4px 25px 4px 16px;
-    color: #222222;
+    color: #909399;
     min-width: 300px;
     font-weight: normal;
   }

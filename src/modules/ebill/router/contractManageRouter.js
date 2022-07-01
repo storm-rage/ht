@@ -18,7 +18,7 @@ const contractManageRouter = [
     component: () => import('../views/contractManage/factoringContract/apply/index.vue'),
     meta: {
       isMock: true,
-      title: `保理合同签约申请`,
+      title: '保理合同签约申请',
       root: '合同管理',
       keepAlive: true,
       refreshIndex: 0
@@ -30,7 +30,7 @@ const contractManageRouter = [
     component: () => import('../views/contractManage/factoringContract/detail/contractSingningDetails.vue'),
     meta: {
       isMock: false,
-      title: `合同签约详情`,
+      title: '合同签约详情',
       root: '合同管理',
       keepAlive: true,
       refreshIndex: 0,
@@ -43,7 +43,7 @@ const contractManageRouter = [
     component: () => import('../views/contractManage/factoringContract/apply/contractSingningApplication.vue'),
     meta: {
       isMock: false,
-      title: `合同签约申请`,
+      title: '合同签约申请',
       root: '合同管理',
       keepAlive: true,
       refreshIndex: 0,
@@ -56,7 +56,7 @@ const contractManageRouter = [
     component: () => import('../views/contractManage/factoringContract/review/index.vue'),
     meta: {
       isMock: true,
-      title: `保理合同签约复核`,
+      title: '保理合同签约复核',
       root: '合同管理',
       keepAlive: true,
       refreshIndex: 0
@@ -68,24 +68,11 @@ const contractManageRouter = [
     component: () => import('../views/contractManage/factoringContract/review/contractSigningReview.vue'),
     meta: {
       isMock: false,
-      title: `合同签约复核`,
+      title: '合同签约复核',
       root: '合同管理',
       keepAlive: true,
       refreshIndex: 0,
       notRequireAuth: false
-    },
-  },
-  {
-    path: '/domesticBusiness',
-    name: 'domesticBusiness',
-    component: () => import('../views/contractManage/billQuota/apply/domesticBusiness.vue'),
-    meta: {
-      isMock: false,
-      title: `国内商业保理合同详情`,
-      root: '合同管理',
-      keepAlive: true,
-      refreshIndex: 0,
-      notRequireAuth: true
     },
   }
 ]

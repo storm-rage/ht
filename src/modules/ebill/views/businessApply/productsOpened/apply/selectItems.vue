@@ -60,6 +60,7 @@ export default {
 }
 </script>
 <style lang="less" scoped>
+@import "~@assets/less/variables";
 .select-items{
   background: #FFFFFF;
   border-radius: 4px;
@@ -67,7 +68,7 @@ export default {
   min-height: 200px;
 
   &.select {
-    border: 1.5px solid #D83F43;
+    border: 1.5px solid @primary-main-color;
   }
   .check-box {
     text-align: right;
