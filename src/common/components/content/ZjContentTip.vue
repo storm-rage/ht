@@ -1,5 +1,5 @@
 <template>
-  <span class="header-left-tip"><i style="color:#F18C3C;margin-right: 5px;" class="el-icon-info"></i>{{text}}</span>
+  <span class="header-left-tip"><slot><i style="color:#F18C3C;margin-right: 5px;" class="el-icon-info"></i>{{text}}</slot></span>
 </template>
 <script>
 export default {
