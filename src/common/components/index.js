@@ -175,6 +175,11 @@ const components = [
   {
     name: 'ZjContentTip',
     component:() => import('./content/ZjContentTip.vue')
+  },
+  //文本提示
+  {
+    name: 'ZjTextTip',
+    component:() => import('./textTip/index.vue')
   }
 ]
 

@@ -14,12 +14,12 @@
     <span class="tab-nav left left-nav" @click="back">
       <i class="el-icon-arrow-left"/>
     </span>
-      <span class="tab-nav right right-nav" v-show="scrollable" @mouseenter.prevent="showRightNavMenu($event)">
+      <span class="tab-nav right right-nav" v-show="scrollable" @click="scrollToNext">
         <div class="arrow-one right"></div>
         <div class="arrow-one right"></div>
     </span>
       <div style="overflow: hidden" ref="navTab">
-        <div class="tabScroll" ref="tabScroll">
+        <div class="tabScroll" ref="tabScroll" :style="navScrollStyle">
           <!-- 缓存页签 -->
           <!--      <el-tag ref="tab" v-for="(item,index) in tabTagList" :key="index" :to="item"-->
           <!--              @click="routerCut(item)"-->
@@ -65,8 +65,6 @@
 <script>
 import {mapState} from "vuex";
 import {removeResizeListener} from "element-ui/src/utils/resize-event";
-import store from "@/store";
-// import TabScroll from "./TabScroll";
 export default {
   name: 'Tab',
   components: {
@@ -82,6 +80,8 @@ export default {
       rightNavLeft: 0,
       rightNavTop: 0,
       rightNavMenuFlag: false,
+      //偏移量
+      navOffset: 0
     }
   },
   methods: {
@@ -114,15 +114,7 @@ export default {
         currentIndex = Math.max(currentIndex-1, 0);
         const tab = {...this.tabTagList[currentIndex]};
         this.$router.push(tab);
-        // this.$store.commit('tab/tabAdd',tab);
-        /*let rItem = {
-          name:this.$route.name,
-          fullPath:this.$route.fullPath,
-          path:this.$route.path,
-          meta:this.$route.meta
-        }
-        this.$store.commit('tab/tabDel',rItem)*/
-
+        this.scrollToPrev();
       }
     },
     //切换
@@ -130,8 +122,13 @@ export default {
       this.$router.push({name:item.name})
     },
     //删除
-    deleteClick(item){
+    deleteClick(item,event){
       this.$store.commit('tab/tabDel',item)
+      if (event.currentTarget && event.currentTarget.parentElement) {
+        this.navOffset = this.navOffset - event.currentTarget.parentElement.offsetWidth;
+        this.navOffset = Math.max(this.navOffset, 0);
+        this.setScrollable();
+      }
       // console.info(event.currentTarget.parentElement.offsetWidth);
       // console.info(event.target.parentElement);
     },
@@ -183,7 +180,8 @@ export default {
     // 是否滚动
     setScrollable () {
       const navWidth = this.$refs.navTab.offsetWidth;
-      const tabScrollWidth = this.tabTagList.length*100;
+      // const tabScrollWidth = this.tabTagList.length*100;
+      const tabScrollWidth = this.$refs.tabScroll.offsetWidth;
       this.scrollable = tabScrollWidth >= navWidth;
       if (this.scrollable) {
         this.$refs.tabScroll.style.marginRight = '35px';
@@ -191,7 +189,81 @@ export default {
         this.$refs.tabScroll.style.marginRight = '';
       }
       return this.scrollable;
-    }
+    },
+    scrollToActiveTab() {
+      if (!this.setScrollable()) {
+        return;
+      }
+      const navBounding = this.$refs.navTab.getBoundingClientRect();
+      const activeTab = this.$el.querySelector('.active');
+      const activeTabBounding = activeTab.getBoundingClientRect();
+      if (!activeTab) return;
+      const currentOffset = this.navOffset;
+      if (activeTabBounding.right > navBounding.right) {
+        const navBounding = this.$refs.navTab.getBoundingClientRect();
+        const rightNavW = this.getRightNavW();
+        // 增加情况
+        this.navOffset += activeTabBounding.right - navBounding.right + rightNavW;
+      }else {
+        if (currentOffset > 0) {
+          this.navOffset = 0;
+        }
+      }
+    },
+    // 滚动到上一页
+    scrollToPrev () {
+      const navWidth = this.$refs.navTab.getBoundingClientRect().right;
+      const currentOffset = this.navOffset;
+      if (!currentOffset) return;
+      this.navOffset = currentOffset>navWidth?currentOffset - navWidth:0;
+    },
+    // 滚动倒是下一页
+    scrollToNext() {
+      const navWidth = this.$refs.navTab.offsetWidth;
+      const tabScrollWidth = this.$refs.tabScroll.offsetWidth;
+      const rightNavWidth = this.getRightNavW();
+      const currentOffset = this.navOffset;
+
+      if (tabScrollWidth - currentOffset <= navWidth) return;
+      this.navOffset = tabScrollWidth - currentOffset > navWidth * 2 ? currentOffset + navWidth : (tabScrollWidth - navWidth + rightNavWidth);
+    },
+    getRightNavW() {//计算右边距
+      const rightNav = this.$el.querySelector('.right-nav');
+      const rightNavW = rightNav.getBoundingClientRect().width;
+      if (rightNavW) {
+        return rightNavW + 10;
+      }else {
+        return 46;
+      }
+    },
+    // 计算左边距
+    getLeftNavW() {
+      const leftNav = this.$el.querySelector('.left-nav');
+      const leftNavW = leftNav.getBoundingClientRect().width;
+      if (leftNavW) {
+        return leftNavW + 10;
+      }else {
+        return 46;
+      }
+    },
+    // 更新滚动位移
+    updateTab() {
+      if (!this.setScrollable()) {
+        return;
+      }
+      const navBounding = this.$refs.navTab.getBoundingClientRect();
+      const activeTab = this.$el.querySelector('.active');
+      const activeTabBounding = activeTab.getBoundingClientRect();
+      if (!activeTab) return;
+      const leftNavW = this.getLeftNavW();
+      if (activeTabBounding.left < navBounding.left + leftNavW) {
+        this.navOffset = this.navOffset - (navBounding.left - activeTabBounding.left) - leftNavW;
+      }
+      if (activeTabBounding.right > navBounding.right) {
+        const rightNavW = this.getRightNavW();
+        this.navOffset += activeTabBounding.right - navBounding.right + rightNavW;
+      }
+    },
   },
   computed: {
     ...mapState({
@@ -199,6 +271,11 @@ export default {
       tabActive: state => state.tab.tabActive, //选中
       tabTagList: state => state.tab.tabTagList, //标签
     }),
+    navScrollStyle() {
+      return {
+        transform: `translateX(-${this.navOffset}px)`
+      }
+    },
     hasParent () {
       return this.$route.meta.newParent || this.$route.meta.parent;
     }
@@ -213,7 +290,8 @@ export default {
     this.$store.commit('tab/tabAdd',rItem)
   },
   mounted() {
-    this.setScrollable();
+    // this.setScrollable();
+    this.scrollToActiveTab();
     //--------状态
     // this.$nextTick(() => {
     //   // 监听路由 滚动条同步最新位置
@@ -257,7 +335,7 @@ export default {
       //   })
       // })
       this.$nextTick(() => {
-        this.setScrollable();
+        this.updateTab();
       });
       if(!this.$refs.tab){return}
       // 监听路由 滚动条同步最新位置

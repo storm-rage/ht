@@ -48,8 +48,8 @@
       <zj-header title="额度信息"></zj-header>
       <zj-content>
         <zj-table :dataList="quotaList"  @radio-change="handleRadioChange" :radio-config="{highlight: true}">
-          <zj-table-column type="radio"  width="60"/>
-          <zj-table-column type="seq" title="序号" width="60"/>
+          <zj-table-column type="radio"  width="50"/>
+          <zj-table-column type="seq" title="序号" width="50"/>
           <zj-table-column
             field="field1"
             title="买方企业名称"
