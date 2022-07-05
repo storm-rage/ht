@@ -84,8 +84,8 @@
           <zj-table-column field="field8" title="贸易关系状态"/>
           <zj-table-column title="操作" fixed="right">
             <template v-slot="{ row }">
-              <zj-button type="text" @click="toEdit(row)">维护</zj-button>
-              <zj-button type="text" @click="toEditQuota(row)">额度管理</zj-button>
+              <zj-button type="text" @click="toMaintenance(row)">维护</zj-button>
+              <zj-button type="text" @click="toMaintenanceQuota(row)">额度管理</zj-button>
             </template>
           </zj-table-column>
         </zj-table>
@@ -128,6 +128,7 @@ export default {
      */
     toContractSign(row) {
       console.log(row);
+      this.$router.push({name: 'contractReSign'});
     },
     handleRadioChange({row}) {
       this.tradeList.push({
@@ -141,8 +142,12 @@ export default {
         field8: '正常'
       })
     },
-    toEdit (row) {},
-    toEditQuota (row) {},
+    toMaintenance (row) {
+      this.$router.push({name: 'tradeRelationMaintenance'})
+    },
+    toMaintenanceQuota (row) {
+      this.$router.push({name: 'quotaMaintenance'})
+    },
   }
 };
 </script>

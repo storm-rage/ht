@@ -3,75 +3,76 @@
     <zj-top-header title="供应商业务设置详情"></zj-top-header>
     <el-form ref="form" label-width="160px">
       <!--  客户基本信息  -->
-      <zj-content-block>
-        <zj-header title="客户基本信息"></zj-header>
-        <zj-content>
-          <zj-table :dataList="customList">
-            <zj-table-column
-              field="field1"
-              title="供应商名称"/>
-            <zj-table-column
-              field="field2"
-              title="供应商编码"/>
-            <zj-table-column
-              field="field3"
-              title="供应商统一社会信用代码"/>
-            <zj-table-column
-              field="field4"
-              title="申请产品"/>
-          </zj-table>
-          <div>
-            <zj-collapse title="供应商业务联系人"  class="zj-m-t-10">
-              <el-row>
-                <el-col :span="8">
-                  <el-form-item label="联系人：" >
-                    {{form.field1}}
-                  </el-form-item>
-                </el-col>
-                <el-col :span="8">
-                  <el-form-item label="联系号码：">
-                    {{form.field2}}
-                  </el-form-item>
-                </el-col>
-                <el-col :span="8">
-                  <el-form-item label="联系邮箱：">
-                    {{form.field3}}
-                  </el-form-item>
-                </el-col>
-                <el-col :span="8">
-                  <el-form-item label="联系地址：">
-                    {{form.field4}}
-                  </el-form-item>
-                </el-col>
-              </el-row>
-            </zj-collapse>
-            <zj-collapse title="供应商收款账户" class="zj-m-t-10">
-              <el-row>
-                <el-col :span="8">
-                  <el-form-item label="银行账户名称：" >
-                    {{form.field5}}
-                  </el-form-item>
-                </el-col>
-                <el-col :span="8">
-                  <el-form-item label="开户银行：">
-                    {{form.field6}}
-                  </el-form-item>
-                </el-col>
-                <el-col :span="8">
-                  <el-form-item label="银行账号：">
-                    {{form.field7}}
-                  </el-form-item>
-                </el-col>
-              </el-row>
-            </zj-collapse>
-          </div>
-        </zj-content>
-      </zj-content-block>
+      <supplier-base-info title="客户基本信息"></supplier-base-info>
+<!--      <zj-content-block>-->
+<!--        <zj-header title="客户基本信息"></zj-header>-->
+<!--        <zj-content>-->
+<!--          <zj-table :dataList="customList">-->
+<!--            <zj-table-column-->
+<!--              field="field1"-->
+<!--              title="供应商名称"/>-->
+<!--            <zj-table-column-->
+<!--              field="field2"-->
+<!--              title="供应商编码"/>-->
+<!--            <zj-table-column-->
+<!--              field="field3"-->
+<!--              title="供应商统一社会信用代码"/>-->
+<!--            <zj-table-column-->
+<!--              field="field4"-->
+<!--              title="申请产品"/>-->
+<!--          </zj-table>-->
+<!--          <div>-->
+<!--            <zj-collapse title="供应商业务联系人"  class="zj-m-t-10">-->
+<!--              <el-row>-->
+<!--                <el-col :span="8">-->
+<!--                  <el-form-item label="联系人：" >-->
+<!--                    {{form.field1}}-->
+<!--                  </el-form-item>-->
+<!--                </el-col>-->
+<!--                <el-col :span="8">-->
+<!--                  <el-form-item label="联系号码：">-->
+<!--                    {{form.field2}}-->
+<!--                  </el-form-item>-->
+<!--                </el-col>-->
+<!--                <el-col :span="8">-->
+<!--                  <el-form-item label="联系邮箱：">-->
+<!--                    {{form.field3}}-->
+<!--                  </el-form-item>-->
+<!--                </el-col>-->
+<!--                <el-col :span="8">-->
+<!--                  <el-form-item label="联系地址：">-->
+<!--                    {{form.field4}}-->
+<!--                  </el-form-item>-->
+<!--                </el-col>-->
+<!--              </el-row>-->
+<!--            </zj-collapse>-->
+<!--            <zj-collapse title="供应商收款账户" class="zj-m-t-10">-->
+<!--              <el-row>-->
+<!--                <el-col :span="8">-->
+<!--                  <el-form-item label="银行账户名称：" >-->
+<!--                    {{form.field5}}-->
+<!--                  </el-form-item>-->
+<!--                </el-col>-->
+<!--                <el-col :span="8">-->
+<!--                  <el-form-item label="开户银行：">-->
+<!--                    {{form.field6}}-->
+<!--                  </el-form-item>-->
+<!--                </el-col>-->
+<!--                <el-col :span="8">-->
+<!--                  <el-form-item label="银行账号：">-->
+<!--                    {{form.field7}}-->
+<!--                  </el-form-item>-->
+<!--                </el-col>-->
+<!--              </el-row>-->
+<!--            </zj-collapse>-->
+<!--          </div>-->
+<!--        </zj-content>-->
+<!--      </zj-content-block>-->
       <!--  贸易关系  -->
       <zj-content-block>
         <zj-header title="贸易关系"></zj-header>
         <zj-content>
-          <zj-table ref="searchContractTable"  :dataList="tradeList"  @radio-change="handleRadioChange" :radio-config="{highlight: true}">
+          <zj-table ref="tradeTable"  :dataList="tradeList"  @radio-change="handleRadioChange" :radio-config="{highlight: true}">
             <zj-table-column type="radio"  width="50"/>
             <zj-table-column field="field1" title="核心企业名称"/>
             <zj-table-column field="field2" title="核心企业是否海天集团"/>
@@ -160,15 +161,7 @@
                 field="field3"
                 title="凭证融资月利率"/>
             </zj-table>
-            <zj-content-tip class="zj-inline zj-m-t-10">
-              <div><i style="color:#F18C3C;" class="zj-m-r-5 el-icon-info"></i>注：</div>
-              <div class="zj-m-l-15">
-                <p>1.开单最长期限小于等于180天。</p>
-                <p>2.凭证可用折扣：该参数控制凭证原始持有人对凭证的最大可使用金额，以及凭证持有人的最大融资金额。即凭证最大可使用金额=凭证可用折扣*凭证金额。</p>
-                <p>3.开单宽限天数：控制凭证到期日。凭证到期日=对账单预计付款日+开单宽限天数。</p>
-                <p>4.凭证融资日利率=凭证融资月利率/30。</p>
-              </div>
-            </zj-content-tip>
+            <bill-info-text-tip></bill-info-text-tip>
           </zj-content>
         </zj-content-block>
       </div>
@@ -206,9 +199,13 @@
   </zj-content-container>
 </template>
 <script>
+import SupplierBaseInfo from '../components/supplierBaseInfo';
+import BillInfoTextTip from '../components/billInfoTextTip';
 export default {
-  components: {},
-
+  components: {
+    SupplierBaseInfo,
+    BillInfoTextTip
+  },
   data() {
     return {
       customList: [],
