@@ -11,7 +11,8 @@ const billLssueRouter = [
       title: `凭证签发申请`,
       root: '电子债权凭证',
       keepAlive: true,
-      refreshIndex: 0
+      refreshIndex: 0,
+      notRequireAuth: true
     }
   },
   {
@@ -21,6 +22,30 @@ const billLssueRouter = [
     meta:{
       isMock:false,
       title:`凭证签发申请详情`,
+      keepAlive:true,
+      refreshIndex:0,
+      notRequireAuth: true
+    }
+  },
+  {
+    path: '/offlineDatails',
+    name: 'offlineDatails',
+    component: () => import('../views/billLssue/issuanceApply/details/offlineDatails.vue'),
+    meta:{
+      isMock:false,
+      title:`债权凭证签发申请`,
+      keepAlive:true,
+      refreshIndex:0,
+      notRequireAuth: true
+    }
+  },
+  {
+    path: '/issuanceApplyConfirm',
+    name: 'issuanceApplyConfirm',
+    component: () => import('../views/billLssue/issuanceApply/details/confirm.vue'),
+    meta:{
+      isMock:false,
+      title:`请确认电子债权凭证签发申请`,
       keepAlive:true,
       refreshIndex:0,
       notRequireAuth: true
@@ -83,7 +108,8 @@ const billLssueRouter = [
       title: `转让申请`,
       root: '电子债权凭证',
       keepAlive: true,
-      refreshIndex: 0
+      refreshIndex: 0,
+      notRequireAuth: true
     },
   },
   {
