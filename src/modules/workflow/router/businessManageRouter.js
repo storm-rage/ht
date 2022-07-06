@@ -13,8 +13,8 @@ const businessManageRouter = [
     }
   },
   {
-    path: '/businessDetail',
-    name: 'businessDetail',
+    path: '/businessApplyDetail',
+    name: 'businessApplyDetail',
     component: () => import('../views/businessManage/detail.vue'),
     meta: {
       isMock: true,

@@ -14,12 +14,12 @@
       />
     </el-row>
     <el-row class="button-row">
-      <zj-button class="append" icon="el-icon-circle-plus-outline" @click="goChild('entManageAdd')" :api="zjBtn.addEnterprise">新增</zj-button>
-      <zj-button class="export" icon="iconfont icon-daochu" @click="exportList" :api="zjBtn.exportEnterpriseList">导出数据</zj-button>
-      <zj-button class="trend" icon="iconfont icon-huiyuanfazhanqushi"  @click="goChild('entManageTen')" :api="zjBtn.getEnterpriseRegister">新增趋势</zj-button>
+      <vxe-button class="append" icon="el-icon-circle-plus-outline" @click="goChild('entManageAdd')" :api="zjBtn.addEnterprise">新增</vxe-button>
+      <vxe-button class="export" icon="iconfont icon-daochu" @click="exportList" :api="zjBtn.exportEnterpriseList">导出数据</vxe-button>
+      <vxe-button class="trend" icon="iconfont icon-huiyuanfazhanqushi"  @click="goChild('entManageTen')" :api="zjBtn.getEnterpriseRegister">新增趋势</vxe-button>
 
-      <zj-button class="reset" icon="el-icon-refresh" @click="resetSearch">重置</zj-button>
-      <zj-button class="search" icon="el-icon-search" @click="search">查询</zj-button>
+      <vxe-button class="reset" icon="el-icon-refresh" @click="resetSearch">重置</vxe-button>
+      <vxe-button class="search" icon="el-icon-search" @click="search">查询</vxe-button>
     </el-row>
     <el-form ref="searchForm" :model="searchForm">
       <el-form-item label="企业代码：">

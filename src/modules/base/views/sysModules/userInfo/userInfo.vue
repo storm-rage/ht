@@ -35,8 +35,8 @@
                     </el-row>
                     <el-row class="searchForm zj-p-t-10 zj-p-b-0 zj-p-x-0 tf-x_30" style="text-align: left;">
                         <el-col class="searchForm-button-row w120">
-                            <zj-button class=" blue " @click="editInfo('email')" :api="zjBtn.editEmail">修改邮箱</zj-button>
-                            <zj-button class="green" @click="editInfo('password')" :api="zjBtn.editPassword">修改登录密码</zj-button>
+                            <vxe-button class="blue" @click="editInfo('email')" :api="zjBtn.editEmail">修改邮箱</vxe-button>
+                            <vxe-button class="green" @click="editInfo('password')" :api="zjBtn.editPassword">修改登录密码</vxe-button>
                         </el-col>
                     </el-row>
         </div>

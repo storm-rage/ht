@@ -2,7 +2,7 @@
   <div>
     <div class="zj-search-condition">
       <el-row class="button-row">
-        <zj-button class="append" icon="el-icon-circle-plus-outline" @click="toAddProject" :api="zjBtn.bankDockSetAdd" v-if="isPlatform">新增项目</zj-button>
+        <vxe-button class="append" icon="el-icon-circle-plus-outline" @click="toAddProject" :api="zjBtn.bankDockSetAdd" v-if="isPlatform">新增项目</vxe-button>
       </el-row>
     </div>
     <div class="zj-search-response">
