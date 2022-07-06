@@ -3,7 +3,7 @@
     <detail-page ref="detailPage" :stepList="stepList" :stepActive="4" title="合同签约申请"></detail-page>
 
     <zj-content-footer>
-      <zj-button  class="back" @click="back">返回</zj-button>
+      <zj-button @click="back">返回</zj-button>
     </zj-content-footer>
   </div>
 </template>

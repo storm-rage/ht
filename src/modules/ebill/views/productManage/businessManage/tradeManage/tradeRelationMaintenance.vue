@@ -156,8 +156,8 @@
       <other-file-setting ref="ofileSetting" is-edit></other-file-setting>
     </el-form>
     <zj-content-footer>
-      <zj-button class="confirm" @click="back">提交申请</zj-button>
-      <zj-button class="back" @click="back">返回</zj-button>
+      <zj-button type="primary" @click="back">提交申请</zj-button>
+      <zj-button @click="back">返回</zj-button>
     </zj-content-footer>
     <bill-info-maintenance ref="billInfoMaintenance" @done="handleBillMaintenanceDone"></bill-info-maintenance>
   </zj-content-container>

@@ -3,11 +3,11 @@
     <div class="zj-search-condition">
       <el-row class="button-row">
         <el-button type="primary" @click="&quot;&quot;;">获取对账单</el-button>
-        <zj-button class="reset" icon="el-icon-refresh" @click="resetSearch"
-          >重置</zj-button
+        <vxe-button class="reset" icon="el-icon-refresh" @click="resetSearch"
+          >重置</vxe-button
         >
-        <zj-button class="search" icon="el-icon-search" @click="search"
-          >查询</zj-button
+        <vxe-button class="search" icon="el-icon-search" @click="search"
+          >查询</vxe-button
         >
       </el-row>
       <el-form ref="searchForm" :model="searchForm">

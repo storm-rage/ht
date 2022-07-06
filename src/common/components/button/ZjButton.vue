@@ -1,114 +1,195 @@
 <template>
-  <vxe-button v-bind="attrs" v-on="events" v-if="show" @click="zjButtonClick">
-    <template v-if="$slots.default"><slot></slot></template>
-    <template v-if="$slots.dropdowns" v-slot:dropdowns><slot name="dropdowns"></slot></template>
-  </vxe-button>
+  <el-button
+    v-bind="attr"
+    v-on="events"
+    @click="zjButtonClick"
+    v-show="apiShow"
+    :class="colorClass"
+    class="zj-buttons"
+  >
+    <!--    :style="btnStyle"-->
+    <slot></slot>
+  </el-button>
 </template>
 
 <script>
-export default {
-  name: 'ZjButton',
-  props: {
-    // 权限api
-    api: [Function, String],
-    /** button基本属性 */
-    // 内容（支持开启国际化）
-    content: String,
-    // text,submit,reset,button
-    type: String,
-    // medium,small,mini
-    size: String,
-    // 用来标识这一项
-    name: [String, Number],
-    // 前缀图标
-    icon: String,
-    // 圆角边框
-    round: Boolean,
-    // 圆角按钮
-    circle: Boolean,
-    // 按钮的图标 perfect, primary, success, info, warning, danger
-    status: String,
-    // 是否禁用
-    disabled: Boolean,
-    // 是否加载中
-    loading: Boolean,
-    // 固定显示下拉面板的方向 top, bottom
-    placement: String,
-    // 是否将弹框容器插入于 body 内（对于嵌入到表格或者弹窗中被遮挡时需要设置为 true）
-    transfer: Boolean
-  },
-  computed: {
-    // button基本属性
-    attrs () {
+  export default {
+    name: "ZjButton.vue",
+    props:{
+      //--------------- element 自带
+      //尺寸
+      size:{
+        type:String,
+        default:'small'
+      },
+      //类型
+      type:{
+        type:String,
+        default:''
+      },
+      //朴素
+      plain:{
+        type:Boolean,
+        default:false
+      },
+      //圆角
+      round:{
+        type:Boolean,
+        default:false
+      },
+      //圆形
+      circle:{
+        type:Boolean,
+        default:false
+      },
+      //加载
+      loading:{
+        type:Boolean,
+        default:false
+      },
+      //禁用
+      disabled:{
+        type:Boolean,
+        default:false
+      },
+      //图标
+      icon:{
+        type:String,
+        default:''
+      },
+      //聚焦
+      autofocus:{
+        type:Boolean,
+        default:false
+      },
+      //原生type
+      nativeType:{
+        type:String,
+        default:'button'
+      },
+      //---------------------whl 另加---------------------
+      //权限控制
+      api:[Function, String,Object],
+      //自定义属性-------
+      cus:{
+        type:Boolean,
+        default:false
+      },
+      //颜色
+      color:[String],
+      //宽度
+      width:[Number,String],
+      //高度
+      height:[Number,String],
+    },
+    data(){
       return {
-        content: this.content,
-        type: this.type,
-        size: this.size,
-        name: this.name,
-        icon: this.icon,
-        round: this.round,
-        circle: this.circle,
-        status: this.status ? this.status : this.type === 'text' ? 'primary' : this.status,
-        disabled: this.disabled,
-        loading: this.loading,
-        placement: this.placement,
-        transfer: this.transfer
+
       }
     },
-    // button基本事件
-    events() {
-      return {
-        // 下拉列表按钮点击时会触发该事件 { name, $event }
-        'dropdown-click': (params) => {
-          this.$emit('dropdown-click', params)
+    computed:{
+      //element自带属性原样返回
+      attr(){
+        return {
+          size:this.size,
+          type:this.type,
+          plain:this.plain,
+          round:this.round,
+          circle:this.circle,
+          loding:this.loading,
+          disabled:this.disabled,
+          icon:this.icon,
+          autofocus:this.autofocus,
+          nativeType:this.nativeType
         }
-      }
+      },
+      //自带属性
+      events() {
+        return {
+          // 下拉列表按钮点击时会触发该事件 { name, $event }
+          'dropdown-click': (params) => {
+            this.$emit('dropdown-click', params)
+          }
+        }
+      },
+      //增加权限控制
+      apiShow(){
+        //当api传入时进行判读
+        if (typeof this.api === 'function' || typeof this.api === 'undefined' || typeof this.api === 'object') {
+          return true
+        } else {
+          return false
+        }
+      },
+      //对类型进行控制
+      colorClass(){
+        let className = ''
+        if(this.type === 'text'){
+          if(this.color){
+            className = 'zj-buttons-text ' + this.color
+          }else{
+            className = 'zj-buttons-text'
+          }
+        }else{
+          if(this.color){
+            className = 'zj-buttons-' + this.color
+          }
+        }
+        return className
+      },
+      //进行宽度控制
+      // btnStyle(){
+      //   return{
+      //     width:this.width+'px',
+      //     height:this.height+'px'
+      //   }
+      // }
     },
-    // 权限控制 显示/隐藏
-    show () {
-      if (typeof this.api === 'function' || typeof this.api === 'undefined') {
-        return true
-      } else {
-        return false
+    methods:{
+      zjButtonClick(){
+        this.$emit('click')
       }
-    }
-  },
-  methods: {
-    // 点击事件
-    zjButtonClick () {
-      this.$emit('click')
     }
   }
-}
 </script>
 
-<style lang="less" scoped>
-  .vxe-button{
-    text-overflow:initial !important;
-  }
-  .vxe-button.type--button{
-    &.theme--success[plain]{
-      background-color: rgba(103, 194, 58, 0.25);
-      color: #67c23a;
-      &:hover{
-        color: #fff;
-        background-color: rgba(103, 194, 58, 0.8);
+<style lang="less">
+  .zj-buttons{
+    /*box-sizing: border-box;*/
+    /*display: flex;*/
+    /*justify-content: center;*/
+    /*align-items: center;*/
+    /*padding: 3px 15px;*/
+    //文字类型
+    &.zj-buttons-text{
+      span{
+        margin: 0 0.8em!important;
+      }
+      &.green{
+        color: #5bbf4a !important;
+        &:hover{
+          color: #ace2a2 !important;
+        }
       }
     }
-    &.theme--danger[plain]{
-      background-color: rgba(245, 108, 108, 0.25);
-      color: #f56c6c;
+    //按钮类型
+    //绿色
+    &.zj-buttons-green{
+      border-color: #9df8cc!important;
+      background-color: #30ac6a!important;
+      color: white!important;
       &:hover{
-        color: #fff;
-        background-color: rgba(245, 108, 108, 0.8);
+        background-color: #40c67f!important;
+        color: #F5F5F5!important;
       }
     }
-    &.theme--drakblue{
-      background-color: #32659D;
-      color: #f6f1f1;
+    //蓝色
+    &.zj-buttons-blue{ /* 浅蓝的按钮 */
+      border-color: #4092e3!important;
+      background-color: #169BD5!important;
+      color: white;
       &:hover{
-        color: white;
-        background-color: rgba(50, 101, 157, 0.9);
+        background-color: #61acf8!important;
       }
     }
   }

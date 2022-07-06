@@ -1,5 +1,5 @@
 <template>
-  <el-form ref="form" label-width="160px">>
+  <el-form ref="form" label-width="160px">
     <zj-content-block>
       <zj-header title="贸易关系"></zj-header>
       <zj-content>

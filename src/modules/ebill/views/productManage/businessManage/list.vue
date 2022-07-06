@@ -5,8 +5,8 @@
       <zj-content>
         <div class="zj-search-condition zj-m-b-20" style="border-bottom: none;">
           <el-row class="button-row">
-            <zj-button class="reset" icon="el-icon-refresh" @click="resetSearch">重置</zj-button>
-            <zj-button class="search" icon="el-icon-search" @click="search">查询</zj-button>
+            <vxe-button class="reset" icon="el-icon-refresh" @click="resetSearch">重置</vxe-button>
+            <vxe-button class="search" icon="el-icon-search" @click="search">查询</vxe-button>
           </el-row>
           <el-form ref="searchForm" :model="searchForm">
             <el-form-item label="供应商名称：">
