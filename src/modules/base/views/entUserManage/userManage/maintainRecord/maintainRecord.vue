@@ -12,20 +12,14 @@
       <el-form-item label="用户名：" class="col-center">
         <el-input v-model="searchForm.loginNameLike" @keyup.enter.native="enterSearch"/>
       </el-form-item>
-      <el-form-item label="维护日期：" class="col-right">
+      <el-form-item label="申请日期：" class="col-right">
         <zj-date-range-picker
           :startDate.sync="searchForm.createDateStart"
           :endDate.sync="searchForm.createDateEnd"
         />
       </el-form-item>
-      <el-form-item label="手机号码：">
+      <el-form-item label="申请流水号：">
         <el-input v-model="searchForm.mobileNo" @keyup.enter.native="enterSearch"/>
-      </el-form-item>
-      <el-form-item label="姓名：" class="col-center">
-        <el-input v-model="searchForm.userNameLike" @keyup.enter.native="enterSearch"/>
-      </el-form-item>
-      <el-form-item label="证件号码：" class="col-right">
-        <el-input v-model="searchForm.certNo" @keyup.enter.native="enterSearch"/>
       </el-form-item>
     </el-form>
   </div>
@@ -35,26 +29,15 @@
       :params="searchForm"
       :api="zjControl.mTableApi"
     >
-      <zj-table-column field="entName" title="企业名称"/>
-      <zj-table-column field="loginName" title="用户名"/>
+      <zj-table-column field="entName" title="申请流水号"/>
+      <zj-table-column field="operType" title="维护类型"/>
+      <zj-table-column field="loginName" title="企业代码"/>
+      <zj-table-column field="loginName" title="企业名称"/>
       <zj-table-column field="userName" title="用户姓名"/>
-      <zj-table-column field="mobileNo" title="手机号码"/>
-      <zj-table-column field="email" title="邮箱"/>
-      <zj-table-column field="roleNames" title="角色"/>
-      <zj-table-column field="certType" title="证件类型" :formatter="(obj)=> typeMap(mDictionary.certType,obj.cellValue)"/>
-      <zj-table-column field="certNo" title="证件号码"/>
-      <zj-table-column title="证件有效期">
-        <template v-slot="{row}">
-          {{ row.certStartDate || '-'}} 至 {{ row.certEndDate || '-'}}
-        </template>
-      </zj-table-column>
-      <zj-table-column field="certFileName" title="证件附件">
-        <template v-slot="{row}">
-          <span class="td-u pointer primary" @click="certDown(row)">{{row.certFileName}}</span>
-        </template>
-      </zj-table-column>
-      <zj-table-column field="createDatetime" title="维护日期"/>
-      <zj-table-column field="operType" title="维护类型" :formatter="(obj)=> typeMap(mDictionary.operType,obj.cellValue)"/>
+      <zj-table-column field="mobileNo" title="平台客户类型"/>
+      <zj-table-column field="email" title="发起方"/>
+      <zj-table-column field="roleNames" title="申请时间"/>
+      <zj-table-column field="certType" title="申请状态" :formatter="(obj)=> typeMap(mDictionary.certType,obj.cellValue)"/>
     </zj-table>
   </div>
 </div>

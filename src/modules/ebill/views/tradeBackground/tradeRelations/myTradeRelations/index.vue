@@ -42,6 +42,11 @@
         @click="openDialog"
         >新增</zj-button
       >
+      <zj-content style="padding-top: 0">
+        <zj-content-tip
+          text="注：证明材料可为买卖双方发票，贸易合同等证明双方真实贸易关系的材料，支持上次pdf，图片和压缩包！"
+        ></zj-content-tip>
+      </zj-content>
       <zj-table
         ref="searchTable"
         :params="searchForm"
@@ -62,7 +67,7 @@
             <zj-button type="text" @click="edit(row)">修改</zj-button>
             <zj-button
               type="text"
-              @click="&quot;&quot;;"
+              @click="upCredential(row)"
               :api="zjBtn.getEnterprise"
               >上次材料证明</zj-button
             >
@@ -75,7 +80,7 @@
       :close-on-click-modal="false"
       center
       width="50%"
-      title="新增贸易关系"
+      :title="type == 'add' ? '新增贸易关系' : '修改贸易关系'"
       custom-class="mbi-editDialog"
       @close="cancel"
       top="6vh"
@@ -142,7 +147,44 @@
 
       <el-row slot="footer" class="dialog-footer">
         <zj-button status="primary" @click="save">保存</zj-button>
-        <zj-button class="back" @click="cancel">取消</zj-button>
+        <zj-button class="back" @click="dialogVisible = false">取消</zj-button>
+      </el-row>
+    </el-dialog>
+
+    <el-dialog
+      :visible.sync="dialogVisible2"
+      :close-on-click-modal="false"
+      center
+      width="50%"
+      title="上传证明材料"
+      custom-class="mbi-editDialog"
+      @close="cancel"
+      top="6vh"
+    >
+      <div class="upForm">
+        <div class="upFormItem">
+          <span>买方企业名称：XXXXXX</span>
+        </div>
+
+        <div class="upFormItem">
+          <span>卖方企业名称：XXXXXX</span>
+        </div>
+
+        <div class="upFormItem">
+          <ZjUpload api="hhh"></ZjUpload>
+        </div>
+
+        <div class="upFormItem">
+          <zj-content style="padding-top: 0">
+            <zj-content-tip
+              text="注：1.证明材料可为买卖双方发票，贸易合同等证明双方真实贸易关系的材料。2.支持上次pdf，图片和压缩包！"
+            ></zj-content-tip>
+          </zj-content>
+        </div>
+      </div>
+      <el-row slot="footer" class="dialog-footer">
+        <zj-button status="primary" @click="save">保存</zj-button>
+        <zj-button class="back" @click="dialogVisible2 = false">取消</zj-button>
       </el-row>
     </el-dialog>
   </div>
@@ -158,7 +200,9 @@ export default {
       searchForm: {},
       tableData: [{ id: 1 }],
       formModel: {},
-      dialogVisible: false
+      dialogVisible: false,
+      type: "add",
+      dialogVisible2: false,
     };
   },
   created() {
@@ -166,10 +210,17 @@ export default {
   },
   methods: {
     //修改
-    edit(row) {},
+    edit(row) {
+      this.type = "edit";
+      this.dialogVisible = true;
+    },
     openDialog() {
-      this.dialogVisible = true
-    }
+      this.type = "add";
+      this.dialogVisible = true;
+    },
+    upCredential(row) {
+      this.dialogVisible2 = true;
+    },
   },
 };
 </script>
@@ -189,13 +240,9 @@ export default {
   }
 }
 
-
-
-
-
-
-
-
-
-
+.upForm {
+  .upFormItem {
+    margin-bottom: 10px;
+  }
+}
 </style>

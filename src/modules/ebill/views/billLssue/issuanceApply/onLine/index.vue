@@ -80,6 +80,14 @@
           </template>
         </zj-table-column>
       </zj-table>
+
+      <zj-content style="padding-top: 0">
+        <zj-content-tip
+          text="注：1.预计还款日期为平台根据结算周期计算所得，支持修改。
+                    2.点击修改，可修改预计付款日、开单金额和开立凭证说明
+                    3.凭证到期日=预计付款日+开单宽限期限。"
+        ></zj-content-tip>
+      </zj-content>
     </div>
     <!-- 工作流 -->
     <zj-workflow v-model="workflow">

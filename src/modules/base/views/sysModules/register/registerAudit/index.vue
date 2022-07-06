@@ -1,211 +1,284 @@
 <template>
-<div class="ent_user-audit">
-      <div class="zj-search-condition">
-        <el-row class="quick-row">
-          <div class="quick-item"
-               v-for="item in directory.supplierTradeTypeList"
-               :key="item.code"
-               @click="quickQuery(item.code)"
-               :class="{'active': item.code === quickCheck }">
-            {{item.desc}}
-          </div>
-        </el-row>
-        <el-row class="checkbox-row">
-          <zj-checkbox :list="directory.platFormEntStateListCheList" :value.sync="checkList" @handleCheckedChange="handleCheckedChange"/>
-        </el-row>
-        <el-row class="button-row">
-          <vxe-button class="export" icon="iconfont icon-daochu" @click="exportData" :api="zjBtn.expordData">导出数据</vxe-button>
-          <vxe-button class="reset" icon="el-icon-refresh" @click="resetSearch" :api="zjBtn.tableApi">重置</vxe-button>
-          <vxe-button class="search" icon="el-icon-search" @click="search" :api="zjBtn.tableApi">查询</vxe-button>
-        </el-row>
-        <el-form ref="searchForm" :model="searchForm" class="search-form">
-          <el-form-item label="企业名称：">
-            <el-input v-model="searchForm.nameLike" placeholder="" @keyup.enter.native="enterSearch"/>
-          </el-form-item>
-          <el-form-item label="注册申请日期：" class="col-center">
-            <zj-date-range-picker  class="searchFormDate"
-                                   :startDate.sync="searchForm.applyDatetimeStart"
-                                   :endDate.sync="searchForm.applyDatetimeEnd"
-            />
-          </el-form-item>
-          <el-form-item label="平台客户类型：" class="col-right">
-            <el-select v-model="searchForm.entType"
-                       filterable placeholder="请选择"
-                       :popper-append-to-body="false"
+  <div class="ent_user-audit">
+    <div class="zj-search-condition">
+      <el-row class="quick-row">
+        <div
+          class="quick-item"
+          v-for="item in directory.supplierTradeTypeList"
+          :key="item.code"
+          @click="quickQuery(item.code)"
+          :class="{ active: item.code === quickCheck }"
+        >
+          {{ item.desc }}
+        </div>
+      </el-row>
+      <el-row class="button-row">
+        <zj-button
+          class="reset"
+          icon="el-icon-refresh"
+          @click="resetSearch"
+          :api="zjBtn.tableApi"
+          >重置</zj-button
+        >
+        <zj-button
+          class="search"
+          icon="el-icon-search"
+          @click="search"
+          :api="zjBtn.tableApi"
+          >查询</zj-button
+        >
+      </el-row>
+      <el-form ref="searchForm" :model="searchForm" class="search-form">
+        <el-form-item label="企业名称：">
+          <el-input
+            v-model="searchForm.nameLike"
+            placeholder=""
+            @keyup.enter.native="enterSearch"
+          />
+        </el-form-item>
+        <el-form-item label="注册申请日期：" class="col-center">
+          <zj-date-range-picker
+            class="searchFormDate"
+            :startDate.sync="searchForm.applyDatetimeStart"
+            :endDate.sync="searchForm.applyDatetimeEnd"
+          />
+        </el-form-item>
+        <el-form-item label="平台客户类型：" class="col-right">
+          <el-select
+            v-model="searchForm.entType"
+            filterable
+            placeholder="请选择"
+            :popper-append-to-body="false"
+          >
+            <el-option
+              v-for="item in platFormAuditEntTypeList"
+              :key="item.value"
+              :label="item.desc"
+              :value="item.value"
             >
-              <el-option
-                v-for="item in platFormAuditEntTypeList"
-                :key="item.value"
-                :label="item.desc"
-                :value="item.value">
-              </el-option>
-            </el-select>
-          </el-form-item>
-        </el-form>
-      </div>
-      <div class="zj-search-response">
-        <zj-table ref="searchTable" :params="searchForm" :api="zjControl.tableApi">
-          <zj-table-column field="name" title="企业名称" />
-          <zj-table-column field="entType" title="平台客户类型">
-            <template v-slot="{row}">
-              <!-- 核心企业 -->
-              <template v-if="row.entType === 'B'">
-                {{typeMap(directory.platFormAuditEntTypeList,row.entType)}}
-              </template>
-              <!-- 供应商 -->
-              <template v-else-if="row.entType === 'S'">
-                <!-- 直接供应商 -->
-                <template v-if="row.supplierType === '01'">
-                  {{typeMap(directory.platFormAuditEntTypeList,row.entType)}}
-                  ( 直接供应商 )
-                </template>
-                <!-- 间接供应商 -->
-                <template v-else-if="row.supplierType === '02'">
-                  <!-- 有贸易关系 -->
-                  <template v-if="row.isTradeRelation === '1'">
-                    <label>
-                      {{typeMap(directory.platFormAuditEntTypeList,row.entType)}}
-                      ( 间接供应商<span class="success">√</span> )
-                    </label>
-                  </template>
-                  <!-- 无贸易关系 -->
-                  <template v-else>
-                    <label>
-                      {{typeMap(directory.platFormAuditEntTypeList,row.entType)}}
-                      ( 间接供应商<span class="red">×</span> )
-                    </label>
-                  </template>
-                </template>
-              </template>
-              <template v-else>——</template>
+            </el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="申请流水号：">
+          <el-input
+            v-model="searchForm.nameLike"
+            placeholder=""
+            @keyup.enter.native="enterSearch"
+          />
+        </el-form-item>
+        <el-form-item label="企业注册状态：" class="col-right">
+          <el-select
+            v-model="searchForm.entType"
+            filterable
+            placeholder="请选择"
+            :popper-append-to-body="false"
+          >
+            <el-option
+              v-for="item in platFormAuditEntTypeList"
+              :key="item.value"
+              :label="item.desc"
+              :value="item.value"
+            >
+            </el-option>
+          </el-select>
+        </el-form-item>
+      </el-form>
+    </div>
+    <div class="zj-search-response">
+      <zj-table
+        ref="searchTable"
+        :params="searchForm"
+        :api="zjControl.tableApi"
+      >
+        <zj-table-column field="name" title="企业名称" />
+        <zj-table-column field="entType" title="平台客户类型">
+          <template v-slot="{ row }">
+            <!-- 核心企业 -->
+            <template v-if="row.entType === 'B'">
+              {{ typeMap(directory.platFormAuditEntTypeList, row.entType) }}
             </template>
-          </zj-table-column>
-          <zj-table-column field="applyDatetime" title="申请时间" :formatter="filter"/>
-          <zj-table-column field="state" title="企业注册状态" :formatter="(obj) => typeMap(directory.platFormEntStateList,obj.cellValue)"/>
-          <zj-table-column title="操作" fixed="right" >
-            <template v-slot="{row}">
-              <zj-button type="text" @click="goChild('registerAuditApplyAudit',row)" v-if="row.state==='3'">审核</zj-button>
-              <zj-button type="text" @click="goChild('registerAuditProtocolAudit',row)" v-else-if="row.state==='4'">确认</zj-button>
-              <zj-button type="text" :api="zjBtn.getCertUserInfo" @click="certificate(row)" v-else-if="row.state==='5'">发证</zj-button>
-              <span v-else>——</span>
+            <!-- 供应商 -->
+            <template v-else-if="row.entType === 'S'">
+              <!-- 直接供应商 -->
+              <template v-if="row.supplierType === '01'">
+                {{ typeMap(directory.platFormAuditEntTypeList, row.entType) }}
+                ( 直接供应商 )
+              </template>
+              <!-- 间接供应商 -->
+              <template v-else-if="row.supplierType === '02'">
+                <!-- 有贸易关系 -->
+                <template v-if="row.isTradeRelation === '1'">
+                  <label>
+                    {{
+                      typeMap(directory.platFormAuditEntTypeList, row.entType)
+                    }}
+                    ( 间接供应商<span class="success">√</span> )
+                  </label>
+                </template>
+                <!-- 无贸易关系 -->
+                <template v-else>
+                  <label>
+                    {{
+                      typeMap(directory.platFormAuditEntTypeList, row.entType)
+                    }}
+                    ( 间接供应商<span class="red">×</span> )
+                  </label>
+                </template>
+              </template>
             </template>
-          </zj-table-column>
-        </zj-table>
-      </div>
-        <!-- 发证 -->
-        <certificate ref="certificate" :zjControl="zjControl" :cBtn="zjBtn" :directory="directory" @close="certificate"/>
-</div>
+            <template v-else>——</template>
+          </template>
+        </zj-table-column>
+        <zj-table-column
+          field="applyDatetime"
+          title="申请时间"
+          :formatter="filter"
+        />
+        <zj-table-column
+          field="state"
+          title="企业注册状态"
+          :formatter="
+            (obj) => typeMap(directory.platFormEntStateList, obj.cellValue)
+          "
+        />
+        <zj-table-column title="操作" fixed="right">
+          <template v-slot="{ row }">
+            <zj-button
+              type="text"
+              @click="goChild('registerAuditApplyAudit', row)"
+              v-if="row.state === '3'"
+              >审核</zj-button
+            >
+            <zj-button
+              type="text"
+              @click="goChild('registerAuditProtocolAudit', row)"
+              v-else-if="row.state === '4'"
+              >确认</zj-button
+            >
+            <zj-button
+              type="text"
+              :api="zjBtn.getCertUserInfo"
+              @click="certificate(row)"
+              v-else-if="row.state === '5'"
+              >发证</zj-button
+            >
+            <span v-else>——</span>
+          </template>
+        </zj-table-column>
+      </zj-table>
+    </div>
+    <!-- 发证 -->
+    <certificate
+      ref="certificate"
+      :zjControl="zjControl"
+      :cBtn="zjBtn"
+      :directory="directory"
+      @close="certificate"
+    />
+  </div>
 </template>
 
 <script>
-  import certificate from "./commom/certificate.vue";
+import certificate from "./commom/certificate.vue";
 export default {
-  components:{certificate},
-  data(){
-    return{
-      zjControl:{
-        getDirectory:this.$api.registerAudit.queryEntDataDirectory,//字典
-        tableApi:this.$api.registerAudit.queryRegisterEntPage, //列表查询
-        expordData:this.$api.registerAudit.exportRegisterEnt,//导出数据
+  components: { certificate },
+  data() {
+    return {
+      zjControl: {
+        getDirectory: this.$api.registerAudit.queryEntDataDirectory, //字典
+        tableApi: this.$api.registerAudit.queryRegisterEntPage, //列表查询
+        expordData: this.$api.registerAudit.exportRegisterEnt, //导出数据
 
-        getAuditDetail:this.$api.registerAudit.getAuditDetail,//查询审核详情
+        getAuditDetail: this.$api.registerAudit.getAuditDetail, //查询审核详情
 
-        getCertUserInfo:this.$api.registerAudit.getCertUserInfo,//查询待发证用户信息
-        certKey:this.$api.registerAudit.makeCertKey,//制key
-        submitEntIssuedCert:this.$api.registerAudit.submitEntIssuedCert,//发证完成
+        getCertUserInfo: this.$api.registerAudit.getCertUserInfo, //查询待发证用户信息
+        certKey: this.$api.registerAudit.makeCertKey, //制key
+        submitEntIssuedCert: this.$api.registerAudit.submitEntIssuedCert, //发证完成
       },
-      directory:{},
-      searchForm:{
-        supplierTradeType:'',//快捷查询
-        nameLike:'',//企业名称
-        applyDatetimeStart:'',//注册申请日期开始
-        applyDatetimeEnd:'',//注册申请日期结束
-        entType:'',//平台客户类型
-        states:'', //企业注册状态
+      directory: {},
+      searchForm: {
+        supplierTradeType: "", //快捷查询
+        nameLike: "", //企业名称
+        applyDatetimeStart: "", //注册申请日期开始
+        applyDatetimeEnd: "", //注册申请日期结束
+        entType: "", //平台客户类型
+        states: "", //企业注册状态
       },
-      platFormAuditEntTypeList:[
+      platFormAuditEntTypeList: [
         {
-          desc:'核心企业',
-          value:'B'
+          desc: "核心企业",
+          value: "B",
         },
         {
-          desc:'供应商',
-          value:'S'
-        }
+          desc: "供应商",
+          value: "S",
+        },
       ],
       //快捷查询
-      quickCheck:'',
-      checkList:[],//过渡
-    }
+      quickCheck: "",
+    };
   },
-  methods:{
+  methods: {
     //字典
-    getDirectory(){
-      this.zjControl.getDirectory().then(res => {
+    getDirectory() {
+      this.zjControl.getDirectory().then((res) => {
         res.data.platFormEntStateListCheList = JSON.parse(
-          JSON.stringify(res.data.platFormEntStateList).replace(/code/g,'key').replace(/desc/g,'label')
-        )
-        this.directory = res.data
-      })
+          JSON.stringify(res.data.platFormEntStateList)
+            .replace(/code/g, "key")
+            .replace(/desc/g, "label")
+        );
+        this.directory = res.data;
+      });
     },
     //快捷查询
-    quickQuery(code){
-      this.quickCheck = code
-      this.searchForm.supplierTradeType = code
-      if(!this.zjBtn.tableApi){return}
-      this.search()
-    },
-    //状态
-    handleCheckedChange(data){
-      this.searchForm.states = data.string
+    quickQuery(code) {
+      this.quickCheck = code;
+      this.searchForm.supplierTradeType = code;
+      if (!this.zjBtn.tableApi) {
+        return;
+      }
+      this.search();
     },
     //重置之前
-    beforeResetSearch(){
-      this.quickCheck = ''
-      this.checkList = []
-    },
-    //导出
-    exportData(){
-      this.zjControl.expordData(this.searchForm)
+    beforeResetSearch() {
+      this.quickCheck = "";
     },
     //发证
-    certificate(row){
-      if(typeof(row)==='object'){
-        this.$refs.certificate.row = Object.assign({},row)
-        this.$refs.certificate.show = true
-      }else if (typeof(row) === 'boolean'){
-        this.search(false)
+    certificate(row) {
+      if (typeof row === "object") {
+        this.$refs.certificate.row = Object.assign({}, row);
+        this.$refs.certificate.show = true;
+      } else if (typeof row === "boolean") {
+        this.search(false);
       }
-    }
+    },
   },
-  created(){
-    this.getDirectory()
-    this.getApi()
+  created() {
+    this.getDirectory();
+    this.getApi();
   },
   activated() {
-    if(sessionStorage.getItem('registerAuditAudit')){
-      if(this.$refs.searchTable){
-        this.search(false)
-      }else{
+    if (sessionStorage.getItem("registerAuditAudit")) {
+      if (this.$refs.searchTable) {
+        this.search(false);
+      } else {
         setTimeout(() => {
-          this.search(false)
-        },500)
+          this.search(false);
+        }, 500);
       }
-      sessionStorage.removeItem('registerAuditAudit')
+      sessionStorage.removeItem("registerAuditAudit");
     }
-
-  }
-}
+  },
+};
 </script>
 <style scoped lang="less">
-.ent_user-audit{
-  .quickQuery{
-
-    li{
-      &:first-child{
+.ent_user-audit {
+  .quickQuery {
+    li {
+      &:first-child {
         border-left-color: transparent;
       }
-      &:after{
+      &:after {
         content: "";
         display: block;
         clear: both;
@@ -214,20 +287,20 @@ export default {
       padding: 0 15px;
       color: #33649d;
       cursor: pointer;
-      &:hover{
-        color: #5494F2;
+      &:hover {
+        color: #5494f2;
         font-weight: bold;
       }
     }
-    &:after{
+    &:after {
       content: "";
       display: block;
       clear: both;
     }
-    .check{
+    .check {
       background-color: #fff;
       font-weight: bold;
-      color: #5494F2;
+      color: #5494f2;
       border-left: 1px solid #d0d0d0;
       border-right: 1px solid #d0d0d0;
     }

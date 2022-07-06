@@ -12,7 +12,8 @@ const registerAudit = [
       title:'注册审核',
       root:'企业与用户管理',
       keepAlive:true,
-      refreshIndex:0
+      refreshIndex:0,
+      notRequireAuth: true
     }
   },
   //申请信息审核页面
@@ -25,7 +26,8 @@ const registerAudit = [
       parent:'registerAudit',
       root:'企业与用户管理',
       keepAlive:true,
-      refreshIndex:0
+      refreshIndex:0,
+      notRequireAuth: true
     }
   },
   // 注册协议审核页面
@@ -38,7 +40,8 @@ const registerAudit = [
       parent:'registerAudit',
       root:'企业与用户管理',
       keepAlive:true,
-      refreshIndex:0
+      refreshIndex:0,
+      notRequireAuth: true
     }
   }
 ]

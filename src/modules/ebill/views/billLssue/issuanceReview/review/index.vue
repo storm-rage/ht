@@ -3,6 +3,7 @@
     <el-row class="ta-c mb-20">
       <label class="jc20">凭证签发复核</label>
     </el-row>
+  <ZjTopHeader>凭证签发复核</ZjTopHeader>
     <!-- 折叠面板 -->
     <el-collapse ref="elCollapse" v-model="collActive" class="zjcoll-noSelect">
       <!-- 交易信息 -->

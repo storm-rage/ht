@@ -17,7 +17,17 @@
         <zj-table-column field="" title="对账单金额" />
         <zj-table-column field="" title="付款日期" :formatter="date" />
         <zj-table-column field="" title="开立凭证说明" />
+        <zj-table-column title="操作" fixed="right">
+          <template v-slot="{ row }">
+            <zj-button type="text" @click="toDatails(row)">维护组件</zj-button>
+          </template>
+        </zj-table-column>
       </zj-table>
+      <zj-content style="padding-top: 0">
+        <zj-content-tip
+          text="注：1.凭证到期日=付款日期+开单宽限期限。"
+        ></zj-content-tip>
+      </zj-content>
     </div>
     <!-- 工作流 -->
     <zj-workflow>
@@ -44,7 +54,11 @@ export default {
   created() {
     this.getApi();
   },
-  methods: {},
+  methods: {
+    toDatails(row) {
+      this.$router.push("/offlineDatails");
+    },
+  },
 };
 </script>
 <style lang="less" scoped>
@@ -66,5 +80,4 @@ export default {
     }
   }
 }
-
 </style>

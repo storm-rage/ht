@@ -1,6 +1,12 @@
 <template>
-  <div>
+  <div class="transferApplication">
     <div class="zj-search-condition">
+      <div class="explain">
+        <p>可转让电子债券凭证金额： <b>1,233,100.00元</b></p>
+        <p>
+          说明：可转让债权凭证金额：当前状态为“正常持有”的，折扣范围内的可用金额。
+        </p>
+      </div>
       <el-row class="button-row">
         <vxe-button class="reset" icon="el-icon-refresh" @click="resetSearch"
           >重置</vxe-button
@@ -18,13 +24,13 @@
           />
         </el-form-item>
 
-        <el-form-item label="合同签署类型：">
+        <!-- <el-form-item label="合同签署类型：">
           <el-select v-model="contractType">
             <el-option value="1" />
             <el-option value="2" />
             <el-option value="3" />
           </el-select>
-        </el-form-item>
+        </el-form-item> -->
 
         <el-form-item label="申请日期：" class="col-right">
           <zj-date-range-picker
@@ -33,26 +39,48 @@
           />
         </el-form-item>
 
-        <el-form-item label="申请状态：">
+        <el-form-item label="凭证金额：" class="col-center">
+          <zj-amount-range
+            :startAmt.sync="searchForm.ebillAmtStart"
+            :endAmt.sync="searchForm.ebillAmtEnd"
+            @keyupEnterNative="enterSearch"
+          />
+        </el-form-item>
+
+        <!-- <el-form-item label="申请状态：">
           <el-select v-model="applicationStatus">
             <el-option value="全部" />
             <el-option value="待复核" />
           </el-select>
-        </el-form-item>
+        </el-form-item> -->
 
-        <el-form-item label="申请流水号：">
+        <el-form-item label="转让企业：">
           <el-input
             v-model="searchForm.issueEntName"
             @keyup.enter.native="enterSearch"
           />
         </el-form-item>
 
-        <el-form-item label="合同签署类型：">
+        <el-form-item label="债权凭证编号：">
+          <el-input
+            v-model="searchForm.issueEntName"
+            @keyup.enter.native="enterSearch"
+          />
+        </el-form-item>
+
+        <el-form-item label="凭证签收日：" class="col-right">
+          <zj-date-range-picker
+            :startDate.sync="searchForm.expireDateStart"
+            :endDate.sync="searchForm.expireDateEnd"
+          />
+        </el-form-item>
+
+        <!-- <el-form-item label="合同签署类型：">
           <el-select v-model="applicationStatus">
             <el-option value="全部" />
             <el-option value="待复核" />
           </el-select>
-        </el-form-item>
+        </el-form-item> -->
       </el-form>
     </div>
     <div class="zj-search-response">
@@ -61,39 +89,39 @@
         :params="searchForm"
         :api="zjControl.tableApi"
       >
-        <zj-table-column field="ebillCode" title="凭证编号">
+        <zj-table-column field="ebillCode" title="债权凭证编号">
           <template v-slot="{ row }">
             <span class="table-elbill-code" @click="toBillDetails(row)">{{
               row.ebillCode
             }}</span>
           </template>
         </zj-table-column>
-        <zj-table-column field="issueEntName" title="序号" />
-        <zj-table-column
-          field="ebillAmt"
-          title="申请流水号"
-          :formatter="money"
-        />
+        <zj-table-column field="issueEntName" title="原始债权凭证编号" />
+        <zj-table-column field="ebillAmt" title="签发人" :formatter="money" />
         <zj-table-column
           field="transferAmt"
-          title="合同签署类型"
+          title="原始持有人"
           :formatter="money"
         />
-        <zj-table-column field="splusAmt" title="合同编号" :formatter="money" />
-        <zj-table-column field="issueDate" title="合同名称" :formatter="date" />
+        <zj-table-column
+          field="issueDate"
+          title="凭证签发日"
+          :formatter="date"
+        />
+        <zj-table-column
+          field="issueDate"
+          title="凭证到期日"
+          :formatter="date"
+        />
         <zj-table-column
           field="receiveDate"
-          title="申请状态"
+          title="转让企业"
           :formatter="date"
         />
+        <zj-table-column field="splusAmt" title="凭证金额" :formatter="money" />
         <zj-table-column
           field="expireDate"
-          title="签约结果"
-          :formatter="date"
-        />
-        <zj-table-column
-          field="expireDate"
-          title="申请时间"
+          title="凭证签收日"
           :formatter="date"
         />
         <zj-table-column
@@ -109,12 +137,22 @@
               type="text"
               @click="goChild('entManageDetail', row)"
               :api="zjBtn.getEnterprise"
-              >详情</zj-button
+              >转让申请</zj-button
             >
           </template>
         </zj-table-column>
       </zj-table>
     </div>
+
+    <!-- 工作流 -->
+
+    <zj-workflow v-model="workflow">
+      <el-row slot="right">
+        <zj-button @click="goChild" :api="zjBtn.passBillSignBatch"
+          >发起转让申请</zj-button
+        >
+      </el-row>
+    </zj-workflow>
   </div>
 </template>
 <script>
@@ -135,6 +173,7 @@ export default {
       contractType: "", // 合同签署类型
       applicationStatus: "", // 申请状态
       signingResults: "", // 签约结果
+      workflow: "",
     };
   },
   created() {
@@ -145,8 +184,25 @@ export default {
       console.log(row);
     },
     goChild() {
-      this.$router.push("/limitChangeDetails");
+      this.$router.push("/voucherTransferApplication");
     },
   },
 };
 </script>
+
+<style lang="less" scoped>
+/deep/#ZjWorkflow {
+  .workflow-top {
+    .el-row {
+      padding: 5px 0 0;
+      text-align: center;
+    }
+  }
+  .workflow-bottom {
+    .right {
+      width: 100%;
+      text-align: center;
+    }
+  }
+}
+</style>
