@@ -18,7 +18,7 @@
           </el-form-item>
         </el-col>
       </el-row>
-      <el-row v-for="(item,index) in form.list">
+      <el-row v-for="(item,index) in form.list" :key="`${index}bill`">
         <el-col :span="8">
           <el-form-item label="电子债权凭证期限区间：" required>
             <el-row :gutter="2" class="multi-form-item">

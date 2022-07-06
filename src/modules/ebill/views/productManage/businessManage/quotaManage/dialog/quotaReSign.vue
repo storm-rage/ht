@@ -75,9 +75,6 @@ export default {
         financeRate: ''
       })
     },
-    toDelItem (index) {
-      this.$delete(this.form.list,index);
-    },
     close () {
       this.dialogVisible = false;
     },
