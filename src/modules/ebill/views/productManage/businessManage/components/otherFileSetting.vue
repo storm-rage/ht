@@ -22,17 +22,17 @@
             field="remark"
             title="附件说明" :edit-render="{name: '$input',props: {maxlength: 200}}"/>
           <zj-table-column title="操作" fixed="right">
-            <template v-slot="{ row,$index }">
+            <template v-slot="{ row, rowIndex }">
               <template v-if="$refs.fileTable.isActiveByRow(row)">
                 <zj-upload class="zj-inline" :httpRequest="handleFileUpload" :autoUpload="false" :onChange="handleFileChange">
                   <zj-button slot="trigger" type="text">上传</zj-button>
                 </zj-upload>
-                <zj-button type="text" @click="toSave(row,$index)">保存</zj-button>
-                <zj-button type="text" style="margin-left: 0px" @click="toCancel(row,$index)">取消</zj-button>
+                <zj-button type="text" @click="toSave(row,rowIndex)">保存</zj-button>
+                <zj-button type="text" style="margin-left: 0px" @click="toCancel(row,rowIndex)">取消</zj-button>
               </template>
               <template v-else>
                 <zj-button v-if="row.fileId" type="text" @click="toDownload(row)">下载</zj-button>
-                <zj-button v-if="isEdit" type="text" @click="delFile(row,$index)">删除</zj-button>
+                <zj-button v-if="isEdit" type="text" @click="delFile(row,rowIndex)">删除</zj-button>
               </template>
             </template>
           </zj-table-column>
@@ -85,7 +85,7 @@ export default {
       if (row.fileId) {
         //发送请求
       }else {
-        this.fileList.splice(index,1);
+        this.$delete(this.fileList, index);
       }
     },
     isTableEdit () {
