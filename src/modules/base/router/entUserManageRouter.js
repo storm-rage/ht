@@ -11,9 +11,10 @@ const entUserManage = [
     component: () => import('../views/entUserManage/entManage'),
     meta:{
       title:'企业信息管理',
-      root:'企业与用户管理',
+      root:'客户信息管理',
       keepAlive:true,
-      refreshIndex:0
+      refreshIndex:0,
+      notRequireAuth: true
     }
   },
   //新增
@@ -27,7 +28,8 @@ const entUserManage = [
       parent:'sysEnterprise',
       tagName: 'detail',
       keepAlive:true,
-      refreshIndex:0
+      refreshIndex:0,
+      notRequireAuth: true
     }
   },
   //新增趋势
@@ -40,7 +42,8 @@ const entUserManage = [
       parent:'sysEnterprise',
       tagName: 'detail',
       keepAlive:true,
-      refreshIndex:0
+      refreshIndex:0,
+      notRequireAuth: true
     }
   },
   //详情
@@ -54,7 +57,8 @@ const entUserManage = [
       parent:'sysEnterprise',
       tagName: 'detail',
       keepAlive:true,
-      refreshIndex:0
+      refreshIndex:0,
+      notRequireAuth: true
     }
   },
   //修改
@@ -68,7 +72,8 @@ const entUserManage = [
       parent:'sysEnterprise',
       tagName: 'detail',
       keepAlive:true,
-      refreshIndex:0
+      refreshIndex:0,
+      notRequireAuth: true
     }
   },
   //--------------------------------------------- 用户信息管理 ---------------------------------------------
@@ -80,7 +85,8 @@ const entUserManage = [
       title:'企业用户信息管理',
       root:'企业与用户管理',
       keepAlive:true,
-      refreshIndex:0
+      refreshIndex:0,
+      notRequireAuth: true
     }
   },
   {
@@ -92,7 +98,8 @@ const entUserManage = [
       parent: 'sysUser',
       isManage:true,
       keepAlive:true,
-      refreshIndex:0
+      refreshIndex:0,
+      notRequireAuth: true
     }
   },
   {
@@ -104,7 +111,8 @@ const entUserManage = [
       parent: 'sysUser',
       isManage:false,
       keepAlive:true,
-      refreshIndex:0
+      refreshIndex:0,
+      notRequireAuth: true
     }
   }
 ]

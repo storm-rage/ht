@@ -1,7 +1,7 @@
 <template>
-<div class="EnterPrises">
+ <zj-content-container>
   <div class="zj-search-condition">
-    <el-row class="quick-row">
+    <!-- <el-row class="quick-row">
       <zj-quick-query ref="quickQuery" @search="search" :api="zjBtn.updateEnterprise ? true : false"
                       :start.sync="searchForm.applyDateStart"
                       :end.sync="searchForm.applyDateEnd"
@@ -12,23 +12,23 @@
                    :list="dictionary.entTypeCheckList" :value.sync="entTypeList"
                    @handleCheckedChange="handleCheckedChange"
       />
-    </el-row>
+    </el-row> -->
     <el-row class="button-row">
       <zj-button class="append" icon="el-icon-circle-plus-outline" @click="goChild('entManageAdd')" :api="zjBtn.addEnterprise">新增</zj-button>
       <zj-button class="export" icon="iconfont icon-daochu" @click="exportList" :api="zjBtn.exportEnterpriseList">导出数据</zj-button>
-      <zj-button class="trend" icon="iconfont icon-huiyuanfazhanqushi"  @click="goChild('entManageTen')" :api="zjBtn.getEnterpriseRegister">新增趋势</zj-button>
+      <!-- <zj-button class="trend" icon="iconfont icon-huiyuanfazhanqushi"  @click="goChild('entManageTen')" :api="zjBtn.getEnterpriseRegister">新增趋势</zj-button> -->
 
       <zj-button class="reset" icon="el-icon-refresh" @click="resetSearch">重置</zj-button>
       <zj-button class="search" icon="el-icon-search" @click="search">查询</zj-button>
     </el-row>
     <el-form ref="searchForm" :model="searchForm">
-      <el-form-item label="企业代码：">
-        <el-input v-model="searchForm.code" @keyup.enter.native="enterSearch"/>
-      </el-form-item>
       <el-form-item label="企业名称：" class="col-center">
         <el-input v-model="searchForm.nameLike" @keyup.enter.native="enterSearch"/>
       </el-form-item>
-      <el-form-item label="新增日期：" class="col-right">
+      <el-form-item label="企业编码：">
+        <el-input v-model="searchForm.code" @keyup.enter.native="enterSearch"/>
+      </el-form-item>
+      <el-form-item label="创建日期：" class="col-right">
         <zj-date-range-picker
           @startChange="$refs.quickQuery.queryIndex = 0"
           @endChange="$refs.quickQuery.queryIndex = 0"
@@ -36,7 +36,7 @@
           :endDate.sync="searchForm.applyDateEnd"
         />
       </el-form-item>
-      <el-form-item label="所属项目：">
+      <el-form-item label="平台客户类型：">
         <el-select v-model="searchForm.projectId" :popper-append-to-body="false">
           <el-option
             v-for="(item, index) in dictionary.projectInfoList"
@@ -49,15 +49,13 @@
     </el-form>
   </div>
   <div class="zj-search-response">
-    <zj-table ref="searchTable" :params="searchForm" :api="zjControl.tableApi" v-if="searchListFlag">
-      <zj-table-column field="code" title="企业代码"/>
-      <zj-table-column field="customCode" title="客户编码"/>
+    <zj-table ref="searchTable" :params="searchForm" :api="zjControl.tableApi">
+      <zj-table-column field="customCode" title="企业编码"/>
+      <zj-table-column field="code" title="客户业务系统编码"/>
       <zj-table-column field="name" title="企业名称"/>
       <zj-table-column field="entType" title="平台客户类型" :formatter="(obj) => typeMap(dictionary.entTypeList, obj.cellValue)"/>
-      <zj-table-column field="supplierType" title="供应商类型" :formatter="(obj) => typeMap(dictionary.supplierTypeList, obj.cellValue)"/>
-      <zj-table-column field="applyDate" title="新增日期" :formatter="date"/>
+      <zj-table-column field="applyDate" title="创建日期" :formatter="date"/>
       <zj-table-column field="state" title="企业状态" :formatter="(obj) => typeMap(dictionary.enterpriseStateList, obj.cellValue)"/>
-      <zj-table-column field="projectName" title="所属项目"/>
       <zj-table-column title="操作" fixed="right">
         <template v-slot="{row}">
           <zj-button type="text" @click="goChild('entManageDetail',row)" :api="zjBtn.getEnterprise">详情</zj-button>
@@ -66,7 +64,7 @@
       </zj-table-column>
     </zj-table>
   </div>
-</div>
+ </zj-content-container>
 </template>
 
 <script>
