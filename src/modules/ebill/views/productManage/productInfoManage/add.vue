@@ -1,12 +1,12 @@
 <template>
   <zj-content-container>
-    <!--  产品详情  -->
+    <!--  新增产品  -->
     <zj-content-block>
       <zj-content>
         <zj-top-header title="新增产品" direction="center"/>
         <el-form :model="infoForm" ref="infoForm" :rules="rules" label-width="220px">
             <el-row>
-              <h4 class="orderTitle bl">产品基础信息</h4>
+              <zj-header title="产品基础信息"></zj-header>
               <el-row>
                 <el-col :span="8">
                   <el-form-item label="产品名称：" prop="productName">
@@ -45,7 +45,7 @@
               </el-row>
             </el-row>
             <el-row>
-              <h4 class="orderTitle bl">产品设置-订单保理</h4>
+              <zj-header title="产品设置-订单保理"></zj-header>
               <el-row>
                 <el-col :span="8">
                   <el-form-item label="保理追索方式：" prop="blResourceType">
@@ -122,7 +122,7 @@
               </el-row>
             </el-row>
             <el-row>
-              <h4 class="orderTitle bl">产品设置-电子债权凭证</h4>
+              <zj-header title="产品设置-电子债权凭证"></zj-header>
               <el-row class="el-claims-voucher">
                 <el-form-item label="对账单付款日前N天通知核心企业：" prop="noticeDate" label-width="300px">
                   <zj-number-input v-model="infoForm.noticeDate">
@@ -160,7 +160,7 @@
                   </zj-number-input>
                 </el-form-item>
               </el-row>
-              <h4 class="orderTitle bl">产品设置-经销商贷款</h4>
+              <zj-header title="产品设置-经销商贷款"></zj-header>
               <el-row>
                 <el-col :span="8">
                   <el-form-item label="资金方名称：" prop="fundingEntName">

@@ -6,7 +6,7 @@
         <zj-top-header title="修改产品信息" direction="center"/>
         <el-form :model="infoForm" ref="infoForm" :rules="rules" label-width="220px">
             <el-row>
-              <h4 class="orderTitle bl">产品基础信息</h4>
+              <zj-header title="产品基础信息"></zj-header>
               <el-row>
                 <el-col :span="8">
                   <el-form-item label="产品名称：" prop="productName">
@@ -50,7 +50,7 @@
               </el-row>
             </el-row>
             <el-row>
-              <h4 class="orderTitle bl">产品设置-订单保理</h4>
+              <zj-header title="产品设置-订单保理"></zj-header>
               <el-row>
                 <el-col :span="8">
                   <el-form-item label="保理追索方式：" prop="blResourceType">
@@ -79,7 +79,7 @@
                   </el-form-item>
                 </el-col>
               </el-row>
-              <h4 class="orderTitle bl">保理公司业务联系人</h4>
+              <zj-header title="保理公司业务联系人"></zj-header>
               <el-row>
                 <el-col :span="8">
                   <el-form-item label="联系人：" prop="contact">
@@ -104,7 +104,7 @@
                   </el-form-item>
                 </el-col>
               </el-row>
-              <h4 class="orderTitle bl">保理专户</h4>
+              <zj-header title="保理专户"></zj-header>
               <el-row>
                 <el-col :span="8">
                   <el-form-item label="银行账户名称：" prop="bankAccountName">
