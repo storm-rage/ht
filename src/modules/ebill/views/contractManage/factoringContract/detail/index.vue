@@ -6,7 +6,7 @@
         <el-steps :active="stepActive" process-status="finish" align-center>
           <el-step v-for="(step,index) in stepList" :key="`${index}stp`">
             <div slot="title">{{step.title}}</div>
-            <div slot="description" style="text-align: left">
+            <div slot="description" style="text-align: left;width: 220px">
               <p v-if="step.time">提交时间：{{step.time}}</p>
               <p v-if="step.user">提交人：{{step.user}}</p>
               <p v-if="step.desc">{{step.desc}}</p>

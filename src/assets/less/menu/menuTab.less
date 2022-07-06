@@ -85,6 +85,8 @@
     .tabScroll{
       display: flex;
       overflow: hidden;
+      float: left;
+      transition: transform .3s;
       background-color: @menu-tab-bg-color;
       padding-top: 2px;
       margin-left: 46px;
@@ -95,6 +97,7 @@
         line-height: 24px;
         position: relative;
         min-width: 100px;
+        white-space: nowrap;
         label{
           width: 80%;
         }
