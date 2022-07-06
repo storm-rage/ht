@@ -122,8 +122,33 @@ const billLssueRouter = [
       root: '电子债权凭证',
       keepAlive: true,
       refreshIndex: 0,
-      notRequireAuth: false
+      notRequireAuth: true
     },
-  }
+  },
+  {
+    path: '/transferCheck',
+    name: 'transferCheck',
+    component: () => import('../views/billLssue/transferCheck/index.vue'),
+    meta:{
+      isMock:false,
+      title:`转让复核`,
+      keepAlive:true,
+      refreshIndex:0,
+      notRequireAuth: true
+    }
+  },
+  {
+    path: '/transferCheckDetails',
+    name: 'transferCheckDetails',
+    component: () => import('../views/billLssue/transferCheck/detail.vue'),
+    meta: {
+      isMock: false,
+      title: `凭证转让复核`,
+      root: '转让复核',
+      keepAlive: true,
+      refreshIndex: 0,
+      notRequireAuth: true
+    },
+  },
 ]
 export default billLssueRouter

@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="transferApplication">
     <div class="zj-search-condition">
       <div class="explain">
         <p>可转让电子债券凭证金额： <b>1,233,100.00元</b></p>
@@ -89,8 +89,6 @@
         :params="searchForm"
         :api="zjControl.tableApi"
       >
-        债权凭证编号 原始债权凭证编号 签发人 原始持有人 凭证签发日 凭证到期日
-        转让企业 凭证金额 凭证签收日 凭证状态 操作
         <zj-table-column field="ebillCode" title="债权凭证编号">
           <template v-slot="{ row }">
             <span class="table-elbill-code" @click="toBillDetails(row)">{{
@@ -99,18 +97,22 @@
           </template>
         </zj-table-column>
         <zj-table-column field="issueEntName" title="原始债权凭证编号" />
-        <zj-table-column
-          field="ebillAmt"
-          title="签发人"
-          :formatter="money"
-        />
+        <zj-table-column field="ebillAmt" title="签发人" :formatter="money" />
         <zj-table-column
           field="transferAmt"
           title="原始持有人"
           :formatter="money"
         />
-        <zj-table-column field="issueDate" title="凭证签发日" :formatter="date" />
-        <zj-table-column field="issueDate" title="凭证到期日" :formatter="date" />
+        <zj-table-column
+          field="issueDate"
+          title="凭证签发日"
+          :formatter="date"
+        />
+        <zj-table-column
+          field="issueDate"
+          title="凭证到期日"
+          :formatter="date"
+        />
         <zj-table-column
           field="receiveDate"
           title="转让企业"
@@ -141,6 +143,16 @@
         </zj-table-column>
       </zj-table>
     </div>
+
+    <!-- 工作流 -->
+
+    <zj-workflow v-model="workflow">
+      <el-row slot="right">
+        <zj-button @click="goChild" :api="zjBtn.passBillSignBatch"
+          >发起转让申请</zj-button
+        >
+      </el-row>
+    </zj-workflow>
   </div>
 </template>
 <script>
@@ -161,6 +173,7 @@ export default {
       contractType: "", // 合同签署类型
       applicationStatus: "", // 申请状态
       signingResults: "", // 签约结果
+      workflow: "",
     };
   },
   created() {
@@ -171,8 +184,25 @@ export default {
       console.log(row);
     },
     goChild() {
-      this.$router.push("/limitChangeDetails");
+      this.$router.push("/voucherTransferApplication");
     },
   },
 };
 </script>
+
+<style lang="less" scoped>
+/deep/#ZjWorkflow {
+  .workflow-top {
+    .el-row {
+      padding: 5px 0 0;
+      text-align: center;
+    }
+  }
+  .workflow-bottom {
+    .right {
+      width: 100%;
+      text-align: center;
+    }
+  }
+}
+</style>
