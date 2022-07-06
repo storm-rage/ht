@@ -3,10 +3,10 @@
     <div class="zj-search-condition">
       <el-row class="button-row">
         <zj-button class="reset" icon="el-icon-refresh" @click="resetSearch"
-          >重置</zj-button
+        >重置</zj-button
         >
         <zj-button class="search" icon="el-icon-search" @click="search"
-          >查询</zj-button
+        >查询</zj-button
         >
       </el-row>
       <el-form ref="searchForm" :model="searchForm">
@@ -22,13 +22,6 @@
             :endDate.sync="searchForm.expireDateEnd"
           />
         </el-form-item>
-        <el-form-item label="融资金额：" class="col-center">
-          <zj-amount-range
-            :startAmt.sync="searchForm.ebillAmtStart"
-            :endAmt.sync="searchForm.ebillAmtEnd"
-            @keyupEnterNative="enterSearch"
-          />
-        </el-form-item>
         <el-form-item label="申请流水号：">
           <el-input v-model="searchForm.issueEntName" />
         </el-form-item>
@@ -40,25 +33,18 @@
         :params="searchForm"
         :api="zjControl.tableApi"
       >
-        <zj-table-column field="ebillCode" title="申请流水号">
+        <zj-table-column field="field1" title="申请流水号">
           <template v-slot="{ row }">
-            <span class="table-elbill-code" @click="toBillDetails(row)">{{
-              row.ebillCode
-            }}</span>
+            <el-link type="primary" :underline="false" @click="toDetail(row)">{{row.field1}}</el-link>
           </template>
         </zj-table-column>
-        <zj-table-column field="issueEntName" title="转出方" />
-        <zj-table-column field="issueEntName" title="签收方/资金方" />
-        <zj-table-column field="issueDate" title="转让日期" :formatter="date" />
-        <zj-table-column field="ebillAmt" title="保理合同编号" />
+        <zj-table-column field="field2" title="转出方" />
+        <zj-table-column field="field3" title="签收方/资金方" />
+        <zj-table-column field="field4" title="转让日期" :formatter="date" />
+        <zj-table-column field="field5" title="保理合同编号" />
         <zj-table-column title="操作" fixed="right">
-          <template>
-            <zj-button
-              type="text"
-              @click="&quot;&quot;;"
-              :api="zjBtn.getEnterprise"
-              >确认回执</zj-button
-            >
+          <template v-slot="{row}">
+            <zj-button type="text" @click="toReceipt(row)" :api="zjBtn.getEnterprise">确认回执</zj-button >
           </template>
         </zj-table-column>
       </zj-table>
@@ -70,17 +56,19 @@ export default {
   data() {
     return {
       zjControl: {},
-      searchForm: {},
-      XYchecked: false,
+      searchForm: {}
     };
   },
   created() {
-    this.getApi();
+    // this.getApi();
   },
   methods: {
-    toBillDetails(row) {
-      console.log(row);
+    toDetail(row) {
+      this.$router.push({name: 'transferNotifyDetail'})
     },
+    toReceipt (row) {
+      this.$router.push({name: 'transferNotifyReceipt'})
+    }
   },
 };
 </script>

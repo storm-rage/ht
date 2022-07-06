@@ -9,30 +9,30 @@
         <zj-content>
           <el-row :gutter="10">
             <el-col :span="8">
-              <el-form-item label="核心企业名称：" >
+              <el-form-item :disabled="!isEdit" label="核心企业名称：" >
                 发生发射点犯得上发防守对方的
               </el-form-item>
             </el-col>
             <el-col :span="8">
-              <el-form-item label="核心企业业是否海天集团：" >
+              <el-form-item :disabled="!isEdit" label="核心企业业是否海天集团：" >
                 是
               </el-form-item>
             </el-col>
             <el-col :span="8">
-              <el-form-item label="核心企业代码：" >
+              <el-form-item :disabled="!isEdit" label="核心企业代码：" >
                 X6654654654QWEE
               </el-form-item>
             </el-col>
             <el-col :span="12">
               <el-form-item label="保理标识：" prop="field1">
-                <el-select v-model="form.field1" disabled>
+                <el-select :disabled="!isEdit" v-model="form.field1" disabled>
                   <el-option label="订单保理"></el-option>
                 </el-select>
               </el-form-item>
             </el-col>
             <el-col :span="12">
               <el-form-item label="预计年采购金额："  prop="field1">
-               <zj-number-input v-model="form.field1">
+               <zj-number-input :disabled="!isEdit" v-model="form.field1">
                  <template slot="append">
                    元
                  </template>
@@ -41,7 +41,7 @@
             </el-col>
             <el-col :span="24">
               <el-form-item label="结算周期：" prop="field1">
-                <el-select v-model="form.field1" placeholder="请选择">
+                <el-select :disabled="!isEdit" v-model="form.field1" placeholder="请选择">
                   <el-option></el-option>
                 </el-select>
                 &nbsp;<zj-text-tip text="注：结算周期从mdm取值仅供参考，最终以平台维护为准。"></zj-text-tip>
@@ -49,7 +49,7 @@
             </el-col>
             <el-col :span="24">
               <el-form-item label="供应商总额度：" prop="field1">
-                <zj-number-input v-model="form.field1">
+                <zj-number-input :disabled="!isEdit" v-model="form.field1">
                   <template slot="append">
                     元
                   </template>
@@ -62,12 +62,12 @@
         </zj-content>
       </zj-content-block>
       <!--  产品业务设置    -->
-      <product-biz-setting ref="pbizSetting" title="产品业务设置" is-edit></product-biz-setting>
+      <product-biz-setting ref="pbizSetting" title="产品业务设置" :is-edit="isEdit"></product-biz-setting>
       <!--  其他附件    -->
-      <other-file-setting ref="ofileSetting" is-edit></other-file-setting>
+      <other-file-setting ref="ofileSetting" is-edit="isEdit"></other-file-setting>
     </el-form>
     <div slot="footer" class="zj-center" style="display: block;width: 100%">
-      <el-button size="small" type="primary" @click="submit">提交申请</el-button>
+      <el-button size="small" type="primary" v-if="isEdit" @click="submit">提交申请</el-button>
       <el-button size="small" @click="close">取 消</el-button>
     </div>
   </el-dialog>
