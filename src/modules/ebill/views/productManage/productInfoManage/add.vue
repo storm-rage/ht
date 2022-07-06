@@ -257,12 +257,27 @@ export default {
         bankAccountNo: [
           {required: false, message: '请填写银行账号', trigger: 'blur'},
         ],
-        //产品设置-电子债权凭证
+        //
         noticeDate: [
           {required: true, message: '请填写对账单付款日前N天通知核心企业', trigger: 'blur'},
         ],
         stopBusinessDate: [
           {required: true, message: '请填写对账单付款日前X天停止业务', trigger: 'blur'},
+        ],
+        noSettleNoticeDate: [
+          {required: true, message: '请填写对账单付款日前X天停止业务', trigger: 'blur'},
+        ],
+        noPayNoticeDate: [
+          {required: true, message: '请填写对账单付款日前X天停止业务', trigger: 'blur'},
+        ],
+        financingMonthRate: [
+          {required: true, message: '请填写最低凭证融资月利率', trigger: 'blur'},
+        ],
+        fundingEntName: [
+          {required: true, message: '请选择资金方名称', trigger: 'blur'},
+        ],
+        riskModel: [
+          {required: true, message: '请选择风险模型', trigger: 'blur'},
         ],
       },
       list: [
