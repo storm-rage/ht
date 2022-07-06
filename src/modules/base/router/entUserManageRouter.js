@@ -11,7 +11,7 @@ const entUserManage = [
     component: () => import('../views/entUserManage/entManage'),
     meta:{
       title:'企业信息管理',
-      root:'企业与用户管理',
+      root:'客户信息管理',
       keepAlive:true,
       refreshIndex:0,
       notRequireAuth: true

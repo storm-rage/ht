@@ -417,73 +417,77 @@
       v-model="spxxCollapseList"
       v-show="workflow === 'spxx'"
     >
-      <zj-collapse title="注册初审审批信息" name="spxx">
-        <div class="spxx-body">
-          <div class="history">
-            <h4 class="orderTitle bl zj-m-t-0">历史审核信息</h4>
-            <el-steps
-              direction="vertical"
-              :active="
-                detailData.entRegLogList ? detailData.entRegLogList.length : 1
-              "
-            >
-              <el-step
-                v-for="(item, index) in detailData.entRegLogList"
-                :key="index"
-                style="flex-basis: auto"
-              >
-                <div
-                  slot="title"
-                  class="history-content"
-                  :class="
-                    index === detailData.entRegLogList.length - 1 ? 'last' : ''
-                  "
+      <!--操作记录 -->
+      <zj-content>
+        <zj-collapse title="操作记录" name="czjl">
+          <vxe-table
+            header-cell-class-name="headerCell"
+            highlight-hover-row
+            auto-resize
+            border
+            align="center"
+            :data="tableData"
+          >
+            <vxe-table-column type="seq" title="序号" width="60" />
+            <vxe-table-column field="changeTime" title="业务节点" />
+            <vxe-table-column field="changeItem" title="处理人" />
+            <vxe-table-column field="changeItem" title="处理时间" />
+            <vxe-table-column field="changeItem" title="审核结果" />
+            <vxe-table-column field="changeItem" title="审核意见" />
+          </vxe-table>
+        </zj-collapse>
+      </zj-content>
+      <!--审核信息 -->
+      <zj-content>
+        <zj-collapse title="审核信息" name="spxx">
+          <h4 class="bl zj-m-b-10">审核信息</h4>
+          <el-form label-width="140px" :model="form" :rules="rules" ref="form">
+            <el-form-item label="平台客户类型：" prop="entType">
+              <el-radio-group v-model="form.entType" @change="entTypeChange">
+                <el-radio
+                  v-for="item in dictionary.platFormAuditEntTypeList"
+                  :key="item.code"
+                  :label="item.code"
+                  >{{ item.desc }}</el-radio
                 >
-                  <!--                <label>{{item.createDatetime}}</label>-->
-                  <!--                <span>{{item.creator}}</span>-->
-                  <!--                <i>{{typeMap(dictionary.operFlagList,item.operFlag)}}</i>-->
-                  <!--                <b>{{item.notes}}</b>-->
-                  {{ item.notes }}
-                </div>
-              </el-step>
-            </el-steps>
+              </el-radio-group>
+            </el-form-item>
+            <el-form-item label="是否海天集团：" prop="entType">
+              <el-radio-group v-model="form.entType" @change="entTypeChange">
+                <el-radio :label="form.a">是</el-radio>
+                <el-radio :label="form.b">否</el-radio>
+              </el-radio-group>
+            </el-form-item>
+            <el-form-item label="注册企业名称：" prop="name">
+              {{ form.name }}
+            </el-form-item>
 
-            <h4 class="orderTitle bl zj-m-t-0">审核信息</h4>
-            <el-form
-              label-width="120px"
-              :model="form"
-              :rules="rules"
-              ref="form"
-            >
-              <el-form-item label="企业名称：" prop="name">
-                {{ form.name }}
-              </el-form-item>
-              <el-form-item label="买方企业名称：" prop="myBuyers">
-                {{ form.myBuyers }}
-                <div class="red zj-f-s-12">{{ myBuyersMessage }}</div>
-              </el-form-item>
-              <el-form-item label="客户编码：" prop="customCode">
-                <el-input
-                  v-model="form.customCode"
-                  :maxlength="21"
-                  placeholder="请填写客户编码"
-                />
-              </el-form-item>
-              <el-form-item label="企业简称：" prop="shortName">
-                <el-input
-                  v-model="form.shortName"
-                  :maxlength="101"
-                  placeholder="请填写企业简称"
-                />
-              </el-form-item>
-              <el-form-item label="曾用名：" prop="beforeName">
-                <el-input
-                  v-model="form.beforeName"
-                  placeholder="如有多个，使用逗号分隔"
-                  :maxlength="200"
-                />
-              </el-form-item>
-              <el-form-item
+            <el-form-item label="注册企业简称：" prop="shortName">
+              <el-input
+                v-model="form.shortName"
+                :maxlength="101"
+                placeholder="请填写企业简称"
+              />
+            </el-form-item>
+            <el-form-item label="注册企业曾用名：" prop="beforeName">
+              <el-input
+                v-model="form.beforeName"
+                placeholder="如有多个，使用逗号分隔"
+                :maxlength="200"
+              />
+            </el-form-item>
+            <el-form-item label="买方企业名称：" prop="myBuyers">
+              {{ form.myBuyers }}
+              <div class="red zj-f-s-12">{{ myBuyersMessage }}</div>
+            </el-form-item>
+            <el-form-item label="客户业务系统编码：" prop="customCode">
+              <el-input
+                v-model="form.customCode"
+                :maxlength="21"
+                placeholder="请填写客户编码"
+              />
+            </el-form-item>
+            <!-- <el-form-item
                 v-for="(item, index) in form.projectInfoList"
                 :key="index"
                 :prop="'projectInfoList.' + index + '.projectId'"
@@ -530,154 +534,139 @@
                   "
                   :value.sync="item.selectProductList"
                 />
-                <!--  @handleCheckedChange="(data) => item.selectProductList = data.string"  -->
-              </el-form-item>
-              <el-row class="projectAdd">
+              </el-form-item> -->
+            <!-- <el-row class="projectAdd">
                 <i
                   class="el-icon-circle-plus-outline project-i"
                   @click="projectAdd"
                 />
-              </el-row>
-              <el-row class="projectText">
+              </el-row> -->
+            <!-- <el-row class="projectText">
                 说明：产品非必填，如果不选择产品，后续供应商可在登录后的页面发起开通申请
-              </el-row>
-              <el-form-item label="平台客户类型：" prop="entType">
-                <el-radio-group v-model="form.entType" @change="entTypeChange">
+              </el-row> -->
+            <!-- 核心企业 -->
+            <template v-if="form.entType === 'B'">
+              <el-form-item
+                label="隶属企业："
+                ref="parentEntId"
+                prop="parentEntId"
+              >
+                <el-select
+                  v-model="form.parentEntId"
+                  clearable
+                  filterable
+                  placeholder="请选择隶属企业"
+                  @change="parentChange"
+                  @clear="parentClear"
+                  :popper-append-to-body="false"
+                >
+                  <el-option
+                    v-for="item in parentList"
+                    :key="item.index"
+                    :label="item.name"
+                    :value="item.id"
+                  />
+                </el-select>
+              </el-form-item>
+              <el-form-item label="签章企业：" prop="sealEntId">
+                <el-select
+                  v-model="form.sealEntId"
+                  filterable
+                  placeholder="请选择签章企业"
+                  :popper-append-to-body="false"
+                >
+                  <el-option
+                    v-for="item in sealList"
+                    :key="item.name"
+                    :label="item.name"
+                    :value="item.id"
+                  />
+                </el-select>
+              </el-form-item>
+            </template>
+            <!-- 供应商 -->
+            <template v-else-if="form.entType === 'S'">
+              <el-form-item
+                prop="supplierType"
+                ref="supplierType"
+                label-width="40px"
+                class="supplierType-item"
+              >
+                <el-radio-group
+                  v-model="form.supplierType"
+                  @change="supplierChange"
+                >
                   <el-radio
-                    v-for="item in dictionary.platFormAuditEntTypeList"
+                    v-for="item in dictionary.supplierTypeList"
                     :key="item.code"
                     :label="item.code"
                     >{{ item.desc }}</el-radio
                   >
                 </el-radio-group>
+                <template v-if="form.supplierType === '02'">
+                  <span
+                    class="success zj-m-l-10"
+                    v-if="
+                      form.supplierTradeList && form.supplierTradeList.length
+                    "
+                    >√ 该供应商有贸易关系推荐函</span
+                  >
+                  <span class="error zj-m-l-10" v-else
+                    >× 该供应商尚无贸易关系推荐函</span
+                  >
+                </template>
+                <zj-table
+                  ref="searchTable"
+                  class="zj-search-table mw400px zj-m-b-0"
+                  v-show="form.entType === 'S' && form.supplierType === '02'"
+                  :dataList="form.supplierTradeList"
+                >
+                  <zj-table-column field="buyerEntName" title="推荐企业名称" />
+                  <zj-table-column title="上传证明材料">
+                    <template v-slot="{ row }">
+                      <zj-upload
+                        :httpRequest="uploadSupLier"
+                        :data="{ row }"
+                        class="zj-inline"
+                        v-if="zjBtn.uploadAttach"
+                      >
+                        <zj-button type="text">{{
+                          row.fileId ? "重新上传" : "上传"
+                        }}</zj-button>
+                      </zj-upload>
+                      <zj-button
+                        type="text"
+                        @click="downSupLier(row)"
+                        class="zj-m-l-10"
+                        style="text-decoration: underline"
+                        v-show="row.fileId"
+                      >
+                        {{ row.attachName }}
+                      </zj-button>
+                    </template>
+                  </zj-table-column>
+                </zj-table>
               </el-form-item>
-              <!-- 核心企业 -->
-              <template v-if="form.entType === 'B'">
-                <el-form-item
-                  label="隶属企业："
-                  ref="parentEntId"
-                  prop="parentEntId"
-                >
-                  <el-select
-                    v-model="form.parentEntId"
-                    clearable
-                    filterable
-                    placeholder="请选择隶属企业"
-                    @change="parentChange"
-                    @clear="parentClear"
-                    :popper-append-to-body="false"
-                  >
-                    <el-option
-                      v-for="item in parentList"
-                      :key="item.index"
-                      :label="item.name"
-                      :value="item.id"
-                    />
-                  </el-select>
-                </el-form-item>
-                <el-form-item label="签章企业：" prop="sealEntId">
-                  <el-select
-                    v-model="form.sealEntId"
-                    filterable
-                    placeholder="请选择签章企业"
-                    :popper-append-to-body="false"
-                  >
-                    <el-option
-                      v-for="item in sealList"
-                      :key="item.name"
-                      :label="item.name"
-                      :value="item.id"
-                    />
-                  </el-select>
-                </el-form-item>
-              </template>
-              <!-- 供应商 -->
-              <template v-else-if="form.entType === 'S'">
-                <el-form-item
-                  prop="supplierType"
-                  ref="supplierType"
-                  label-width="40px"
-                  class="supplierType-item"
-                >
-                  <el-radio-group
-                    v-model="form.supplierType"
-                    @change="supplierChange"
-                  >
-                    <el-radio
-                      v-for="item in dictionary.supplierTypeList"
-                      :key="item.code"
-                      :label="item.code"
-                      >{{ item.desc }}</el-radio
-                    >
-                  </el-radio-group>
-                  <template v-if="form.supplierType === '02'">
-                    <span
-                      class="success zj-m-l-10"
-                      v-if="
-                        form.supplierTradeList && form.supplierTradeList.length
-                      "
-                      >√ 该供应商有贸易关系推荐函</span
-                    >
-                    <span class="error zj-m-l-10" v-else
-                      >× 该供应商尚无贸易关系推荐函</span
-                    >
-                  </template>
-                  <zj-table
-                    ref="searchTable"
-                    class="zj-search-table mw400px zj-m-b-0"
-                    v-show="form.entType === 'S' && form.supplierType === '02'"
-                    :dataList="form.supplierTradeList"
-                  >
-                    <zj-table-column
-                      field="buyerEntName"
-                      title="推荐企业名称"
-                    />
-                    <zj-table-column title="上传证明材料">
-                      <template v-slot="{ row }">
-                        <zj-upload
-                          :httpRequest="uploadSupLier"
-                          :data="{ row }"
-                          class="zj-inline"
-                          v-if="zjBtn.uploadAttach"
-                        >
-                          <zj-button type="text">{{
-                            row.fileId ? "重新上传" : "上传"
-                          }}</zj-button>
-                        </zj-upload>
-                        <zj-button
-                          type="text"
-                          @click="downSupLier(row)"
-                          class="zj-m-l-10"
-                          style="text-decoration: underline"
-                          v-show="row.fileId"
-                        >
-                          {{ row.attachName }}
-                        </zj-button>
-                      </template>
-                    </zj-table-column>
-                  </zj-table>
-                </el-form-item>
-              </template>
+            </template>
 
-              <h4 class="orderTitle bl zj-m-t-0">审核意见</h4>
-              <el-row class="zj-p-l-30">
-                <span class="inline zj-p-l-15">{{ detailData.notes }}</span>
-              </el-row>
-              <el-form-item label-width="40px" prop="notes">
-                <el-input
-                  type="textarea"
-                  placeholder="请输入审核意见"
-                  v-model="form.notes"
-                  :rows="5"
-                  :show-word-limit="true"
-                  :maxlength="1000"
-                  style="width: 50%; min-height: 60px"
-                />
-              </el-form-item>
-            </el-form>
-          </div>
-        </div>
-      </zj-collapse>
+            <h4 class="bl zj-m-t-0">审核意见</h4>
+            <el-row class="zj-p-l-30">
+              <span class="inline zj-p-l-15">{{ detailData.notes }}</span>
+            </el-row>
+            <el-form-item label-width="40px" prop="notes">
+              <el-input
+                type="textarea"
+                placeholder="请输入审核意见"
+                v-model="form.notes"
+                :rows="5"
+                :show-word-limit="true"
+                :maxlength="1000"
+                style="width: 50%; min-height: 60px"
+              />
+            </el-form-item>
+          </el-form>
+        </zj-collapse>
+      </zj-content>
     </el-collapse>
 
     <!-- 底部工作流状态 -->
