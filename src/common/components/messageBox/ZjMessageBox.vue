@@ -114,9 +114,9 @@ export default {
 </script>
 <style lang="less" scoped>
 @btn-border-color:#c2c2c2;
-@success:#0FCE96;
-@warning:#EF6666;
-@default:#5494F2;
+@success:#07C160;
+@warning:#ED5C48;
+@default:#165DFF;
 @info:#D3B366;
 @box-width: 350px;
 @content-width:~"calc(@{box-width} - 20px)";
