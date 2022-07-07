@@ -64,7 +64,7 @@
             <zj-table-column field="field3" title="企业状态" />
             <zj-table-column field="field3" title="用户状态" />
             <zj-table-column field="field4" title="角色" />
-            <zj-table-column title="操作" fixed="right">
+            <zj-table-column title="操作" fixed="right" width="200px">
               <template>
                 <zj-button type="text" @click="''">制key</zj-button>
                 <zj-button type="text" @click="''">冻结</zj-button>
