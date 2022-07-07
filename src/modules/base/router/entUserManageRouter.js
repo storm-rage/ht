@@ -90,6 +90,19 @@ const entUserManage = [
     }
   },
   {
+    path: '/userVindicate',
+    name: 'userVindicate',
+    component:()=> import('../views/entUserManage/userManage/vindicate'),
+    meta: {
+      title:'企业用户信息管理-维护',
+      parent: 'sysUser',
+      isManage:true,
+      keepAlive:true,
+      refreshIndex:0,
+      notRequireAuth: true
+    }
+  },
+  {
     path: '/userManageMag',
     name: 'userManageMag',
     component:()=> import('../views/entUserManage/userManage/userInfo/manage/ManageUser.vue'),
