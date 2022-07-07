@@ -5,9 +5,9 @@
       <zj-checkbox :list="dictionary.voucherTypeCheckList" :value.sync="checkList" @handleCheckedChange="handleCheckedChange"/>
     </el-row>
     <el-row class="button-row">
-      <zj-button class="export" icon="iconfont icon-dayin" :title="!printFlag ?'请选择需要打印的凭证' : ''" @click="printVoucher" :api="zjBtn.voucherPrint">打印</zj-button>
-      <zj-button class="reset" icon="el-icon-refresh" @click="resetSearch">重置</zj-button>
-      <zj-button class="search" icon="el-icon-search" @click="search">查询</zj-button>
+      <vxebutton class="export" icon="iconfont icon-dayin" :title="!printFlag ?'请选择需要打印的凭证' : ''" @click="printVoucher" :api="zjBtn.voucherPrint">打印</vxebutton>
+      <vxebutton class="reset" icon="el-icon-refresh" @click="resetSearch">重置</vxebutton>
+      <vxebutton class="search" icon="el-icon-search" @click="search">查询</vxebutton>
     </el-row>
     <el-form ref="searchForm" :model="searchForm">
       <el-form-item label="凭证生成日期：">

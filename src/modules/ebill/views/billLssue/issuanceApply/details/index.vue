@@ -1,15 +1,18 @@
 <template>
   <div id="transactionQueryDetails">
-    <el-row class="ta-c mb-20">
+    <!-- <el-row class="ta-c mb-20">
       <label class="jc20">产品开通申请</label>
-    </el-row>
+    </el-row> -->
+    <ZjTopHeader>产品开通申请</ZjTopHeader>
     <!-- 折叠面板 -->
     <el-collapse ref="elCollapse" v-model="collActive" class="zjcoll-noSelect">
       <!-- 对账单信息 -->
       <el-collapse-item name="orderInfo" :disabled="true">
-        <template slot="title">
+        <!-- <template slot="title">
           <h4 class="orderTitle">对账单信息</h4>
-        </template>
+        </template> -->
+        <ZjHeader>对账单信息
+        </ZjHeader>
         <zj-table
           ref="searchTable"
           :params="searchForm"
@@ -29,9 +32,10 @@
 
       <!-- 对账单明细 -->
       <el-collapse-item name="orderInfo" :disabled="true">
-        <template slot="title">
+        <!-- <template slot="title">
           <h4 class="orderTitle">对账单明细</h4>
-        </template>
+        </template> -->
+        <ZjHeader>对账单明细</ZjHeader>
         <zj-table
           ref="searchTable"
           :params="searchForm"
@@ -53,7 +57,7 @@
       </el-collapse-item>
     </el-collapse>
     <!-- 工作流 -->
-    <zj-workflow>
+    <!-- <zj-workflow>
       <el-row slot="right">
         <zj-button
           class="back"
@@ -62,7 +66,15 @@
           >返回</zj-button
         >
       </el-row>
-    </zj-workflow>
+    </zj-workflow> -->
+      <ZjContentFooter
+        ><zj-button
+          class="back"
+          @click="$router.push('/issuanceApply')"
+          :api="zjBtn.passBillSignBatch"
+          >返回</zj-button
+        ></ZjContentFooter
+      >
   </div>
 </template>
 <script>
@@ -98,11 +110,4 @@ export default {
     }
   }
 }
-
-
-
-
-
-
-
 </style>

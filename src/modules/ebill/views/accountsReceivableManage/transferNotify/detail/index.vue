@@ -55,7 +55,7 @@
       </zj-content-block>
     </el-form>
     <zj-content-footer>
-      <zj-button class="back" @click="back">返回</zj-button>
+      <zj-button @click="back">返回</zj-button>
     </zj-content-footer>
   </zj-content-container>
 </template>

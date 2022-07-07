@@ -19,10 +19,6 @@
   background-color: @primary-main-color;
   border-color: @primary-main-color;
 }
-
-
-
-
 .vxe-table.border--full .vxe-footer--column, .vxe-table.border--full .vxe-header--column {
   background-color: #E5F0F7!important;
 }
@@ -273,25 +269,6 @@
     -webkit-box-shadow: none!important;
   }
 }
-.search.vxe-button.type--button,.reset.vxe-button.type--button{ //查询search / 重置reset
-  color: #33649d;
-  padding: 0 6px;
-  margin-left: 8px;
-  span{
-    margin-left: 1px;
-  }
-  &:hover{
-    color: rgba(51,100,157,0.8);
-  }
-  &:active{
-    color: rgba(51,100,157,0.8);
-    transform: translateY(1px);
-  }
-  &:focus{
-    box-shadow: none!important;
-    -webkit-box-shadow: none!important;
-  }
-}
 .export.vxe-button.type--button,.import.vxe-button.type--button,
 .append.vxe-button.type--button,.trend.vxe-button.type--button,
 .down.vxe-button.type--button{ //导出export / 导入import / 新增append / 趋势trend /下载down
@@ -426,101 +403,4 @@
       background-image: url("../../img/button/downO.png") !important;
     }
   }
-}
-// 特殊表格列表样式
-.customer-special-table-el {
-  .vxe-cell {
-    max-height: 150px!important;
-  }
-  .cell-ellipsis {
-    font-size: 24px;
-    line-height: 0px;
-    height: 20px;
-    margin-left: 34px;
-    color: #999999;
-  }
-}
-
-/** 通用按钮样式 **/
-.vxe-button.type--button.btn-sucess {
-  color: #fff;
-  border: 1px solid @primary-main-color;
-  background-color: @primary-main-color;
-  &:hover {
-    background-color: rgba(84, 148, 242, 0.8);
-  }
-}
-.vxe-button.type--button.btn-success {
-  border: 1px solid @primary-main-color;
-  color: @primary-main-color;
-  &:hover {
-    color: #00CC66;
-    background-color: #EFFCE6;
-    border-color:#00CC66;
-  }
-}
-
-.vxe-button.type--button.btn-warning {
-  border: 1px solid #d0d0d0;
-  color: #333;
-  background-color: #fff;
-  &:hover {
-    background-color: #f8e1e4;
-    color: red;
-    border-color: #FF0000
-  }
-}
-
-.vxe-button.type--button.btn-delete {
-  border: 1px solid #d0d0d0;
-  color: #333;
-  background-color: #fff;
-  &:hover {
-    background-color: #fff;
-    color: red;
-    border-color: #FF0000
-  }
-}
-
-.vxe-button.type--button.review-success {
-  border: 1px solid @primary-main-color;
-  color: @primary-main-color;
-  &:hover {
-    color: #fff;
-    background-color: @primary-main-color;
-  }
-}
-
-.submit-button.vxe-button.type--button {
-  padding-left: 18px;
-  padding-right: 18px;
-  height: 40px;
-  font-size: 16px;
-  border-radius: 5px;
-  border: 1px solid @primary-main-color;
-  background: @primary-main-color;
-  color: #FFFFFF;
-}
-
-.submit-button.vxe-button.type--button:hover {
-  opacity: 0.8;
-  background: @primary-main-color;
-  color: #FFFFFF;
-}
-
-
-.menu-button.vxe-button.type--button {
-  padding-left: 12px;
-  padding-right: 12px;
-  height: 32px;
-  border-radius: 4px;
-  border: 1px solid @primary-main-color;
-  background: @primary-main-color;
-  color: #FFFFFF;
-}
-
-.menu-button.vxe-button.type--button:hover {
-  opacity: 0.8;
-  background: @primary-main-color;
-  color: #FFFFFF;
 }

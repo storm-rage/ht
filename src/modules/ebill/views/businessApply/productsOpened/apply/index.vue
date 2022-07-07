@@ -27,8 +27,8 @@
       </zj-collapse>
     </zj-content>
     <zj-content-footer>
-      <zj-button class="confirm" @click="submit" :api="zjBtn.passBillSignBatch">确认申请</zj-button>
-      <zj-button class="back" @click="$router.push('/productsOpened')" :api="zjBtn.passBillSignBatch">返回</zj-button>
+      <zj-button type="primary" @click="submit" :api="zjBtn.passBillSignBatch">确认申请</zj-button>
+      <zj-button @click="$router.push('/productsOpened')" :api="zjBtn.passBillSignBatch">返回</zj-button>
     </zj-content-footer>
   </div>
 </template>

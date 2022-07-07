@@ -8,7 +8,7 @@
     <!--  其他附件    -->
     <other-file-setting></other-file-setting>
     <zj-content-footer>
-      <zj-button  class="back" @click="back">返回</zj-button>
+      <zj-button  @click="back">返回</zj-button>
     </zj-content-footer>
   </zj-content-container>
 </template>

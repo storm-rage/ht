@@ -92,7 +92,7 @@
       </zj-content>
     </zj-content-block>
     <zj-content-footer>
-      <zj-button class="back" @click="$router.push('/productsOpened')">返回</zj-button>
+      <zj-button @click="$router.push('/productsOpened')">返回</zj-button>
     </zj-content-footer>
   </zj-content-container>
 </template>

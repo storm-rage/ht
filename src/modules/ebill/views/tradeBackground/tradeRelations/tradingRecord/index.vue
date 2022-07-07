@@ -2,8 +2,8 @@
   <div>
     <div class="zj-search-condition">
       <el-row class="button-row">
-        <zj-button class="reset" icon="el-icon-refresh" @click="resetSearch">重置</zj-button>
-        <zj-button class="search" icon="el-icon-search" @click="search">查询</zj-button>
+        <vxe-button class="reset" icon="el-icon-refresh" @click="resetSearch">重置</vxe-button>
+        <vxe-button class="search" icon="el-icon-search" @click="search">查询</vxe-button>
       </el-row>
       <el-form ref="searchForm" :model="searchForm">
         <el-form-item label="买方企业名称：" class="col-right">
@@ -18,6 +18,8 @@
                      clearable
                      :popper-append-to-body="false" >
             <el-option value="" label="全部"></el-option>
+            <el-option value="1" label="我的买方企业"></el-option>
+            <el-option value="2" label="我的卖方企业"></el-option>
             <!-- <el-option
               v-for="item in dictionary.isGenerateVouchers"
               :key="item.code"
@@ -26,6 +28,10 @@
             >
             </el-option> -->
           </el-select>
+        </el-form-item>
+        
+        <el-form-item label="申请流水号：" class="col-right">
+          <el-input v-model="searchForm.ebillCode" @keyup.enter.native="enterSearch"/>
         </el-form-item>
       </el-form>
     </div>
@@ -51,7 +57,7 @@ export default {
     return {
       zjControl: {},
       searchForm:{
-      
+
       }
     }
   },

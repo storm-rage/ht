@@ -106,8 +106,8 @@
     </el-form>
     <quota-re-sign ref="quotaReSign"></quota-re-sign>
     <zj-content-footer>
-      <zj-button class="confirm" @click="back">提交申请</zj-button>
-      <zj-button class="back" @click="back">返回</zj-button>
+      <zj-button type="primary" @click="back">提交申请</zj-button>
+      <zj-button  @click="back">返回</zj-button>
     </zj-content-footer>
   </zj-content-container>
 </template>

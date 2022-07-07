@@ -3,9 +3,9 @@
     <detail-page ref="detailPage" :stepList="stepList" title="合同签约申请"></detail-page>
 
     <zj-content-footer>
-      <zj-button  class="confirm" @click="toApply"
+      <zj-button  type="primary" @click="toApply"
       >提交申请</zj-button>
-      <zj-button  class="back" @click="back">返回</zj-button>
+      <zj-button  @click="back">返回</zj-button>
     </zj-content-footer>
   </div>
 </template>

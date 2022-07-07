@@ -10,9 +10,9 @@
      <!--  审批意见  -->
     <audit-remark></audit-remark>
     <zj-content-footer>
-      <zj-button class="confirm" @click="back">审核通过</zj-button>
-      <zj-button class="confirm" @click="back">拒绝</zj-button>
-      <zj-button class="back" @click="back">返回</zj-button>
+      <zj-button type="primary" @click="back">审核通过</zj-button>
+      <zj-button type="primary" @click="back">拒绝</zj-button>
+      <zj-button @click="back">返回</zj-button>
     </zj-content-footer>
   </zj-content-container>
 </template>

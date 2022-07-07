@@ -54,8 +54,8 @@
         <el-checkbox v-model="agreeCheck">已阅读并同意</el-checkbox>&nbsp;
         <el-link :underline="false" type="primary">《应收账款转让通知确认函》</el-link>
       </span>
-      <zj-button class="confirm" @click="back">回执确认</zj-button>
-      <zj-button class="back" @click="back">返回</zj-button>
+      <zj-button type="primary" @click="back">回执确认</zj-button>
+      <zj-button @click="back">返回</zj-button>
     </zj-content-footer>
   </zj-content-container>
 </template>

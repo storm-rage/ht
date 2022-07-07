@@ -10,10 +10,10 @@
         <el-checkbox v-model="agreeCheck">我已阅读并同意</el-checkbox>&nbsp;
         <el-link :underline="false" type="primary">《额度调整申请书》</el-link>
       </span>
-      <zj-button  class="confirm" @click="toReview"
+      <zj-button type="primary" @click="toReview"
       >复核通过</zj-button>
-      <zj-button  class="reject" @click="toReject">拒绝</zj-button>
-      <zj-button  class="back" @click="back">返回</zj-button>
+      <zj-button  type="primary"  @click="toReject">拒绝</zj-button>
+      <zj-button  @click="back">返回</zj-button>
     </zj-content-footer>
     <!--  拒绝弹框  -->
     <zj-reject-dialog ref="rejectDialog"

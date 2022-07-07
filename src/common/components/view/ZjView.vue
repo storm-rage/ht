@@ -12,22 +12,22 @@
       <div class="view-imgpdf-row" :class="isScroll ? 'xScroll' : ''">
         <div class="view-operate">
           <el-tooltip content="放大">
-            <zj-button icon="fa fa-plus" @click="plus"></zj-button>
+            <vxe-button icon="fa fa-plus" @click="plus"></vxe-button>
           </el-tooltip>
           <el-tooltip content="缩小">
-            <zj-button icon="fa fa fa-minus" @click="minus"></zj-button>
+            <vxe-button icon="fa fa fa-minus" @click="minus"></vxe-button>
           </el-tooltip>
           <el-tooltip content="重置">
-            <zj-button icon="fa fa-refresh" @click="refresh"></zj-button>
+            <vxe-button icon="fa fa-refresh" @click="refresh"></vxe-button>
           </el-tooltip>
           <el-tooltip content="逆时针旋转">
-            <zj-button icon="fa fa-rotate-left" @click="rotateLeft"></zj-button>
+            <vxe-button icon="fa fa-rotate-left" @click="rotateLeft"></vxe-button>
           </el-tooltip>
           <el-tooltip content="顺时针旋转">
-            <zj-button icon="fa fa-rotate-right" @click="rotateRight"></zj-button>
+            <vxe-button icon="fa fa-rotate-right" @click="rotateRight"></vxe-button>
           </el-tooltip>
           <el-tooltip content="下载" v-show="downKey">
-            <zj-button icon="el-icon-download" @click="download"></zj-button>
+            <vxe-button icon="el-icon-download" @click="download"></vxe-button>
           </el-tooltip>
         </div>
         <!-- pdf分页 -->
