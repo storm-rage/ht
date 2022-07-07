@@ -399,6 +399,7 @@
     .reset,.search{
       float: right;
       padding-bottom: 0;
+      //margin-left: 8px;
     }
     .append,.search{
       background: @primary-main-color;
@@ -408,19 +409,24 @@
         background: @primary-main-color;
         border-color: @primary-main-color;
         color: #fff;
+        transform: translateY(1px);
       }
       &:focus{
         background: @primary-main-color;
         border-color: @primary-main-color;
         color: #fff;
+        box-shadow: none!important;
       }
     }
     .reset{
       &:hover{
         background: #FFFFFF;
+        color: rgba(51,100,157,0.8);
+        transform: translateY(1px);
       }
       &:focus{
         background: #FFFFFF;
+        box-shadow: none!important;
       }
     }
     .search{

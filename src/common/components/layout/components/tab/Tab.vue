@@ -105,15 +105,15 @@ export default {
         this.goParent()
       } else {
         //old-无上级则直接关闭
-        let currentIndex = 0;
-        this.tabTagList.forEach((item, index) => {
-          if (item.name === this.$router.currentRoute.name) {
-            currentIndex = index;
-          }
-        });
-        currentIndex = Math.max(currentIndex-1, 0);
-        const tab = {...this.tabTagList[currentIndex]};
-        this.$router.push(tab);
+        // let currentIndex = 0;
+        // this.tabTagList.forEach((item, index) => {
+        //   if (item.name === this.$router.currentRoute.name) {
+        //     currentIndex = index;
+        //   }
+        // });
+        // currentIndex = Math.max(currentIndex-1, 0);
+        // const tab = {...this.tabTagList[currentIndex]};
+        // this.$router.push(tab);
         this.scrollToPrev();
       }
     },
