@@ -2,16 +2,6 @@
   <div>
     <zj-list-layout>
       <template slot="searchForm">
-    <!-- <div class="zj-search-condition">
-      <el-row class="button-row">
-        <vxe-button class="reset" icon="el-icon-refresh" @click="resetSearch"
-          >重置</vxe-button
-        >
-        <vxe-button class="search" icon="el-icon-search" @click="search"
-          >查询</vxe-button
-        >
-      </el-row>
-    </div> -->
       <el-form ref="searchForm" :model="searchForm">
         <el-form-item label="买方企业名称：" class="col-center">
           <el-input v-model="searchForm.ebillCode" />
@@ -83,7 +73,7 @@
       :visible.sync="dialogVisible"
       :close-on-click-modal="false"
       center
-      width="50%"
+      width="500px"
       :title="type == 'add' ? '新增贸易关系' : '修改贸易关系'"
       custom-class="mbi-editDialog"
       @close="cancel"
