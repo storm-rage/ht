@@ -1,33 +1,25 @@
 <template>
   <div>
-    <div class="zj-search-condition">
-      <el-row class="button-row">
-        <vxe-button class="reset" icon="el-icon-refresh" @click="resetSearch"
-        >重置</vxe-button
-        >
-        <vxe-button class="search" icon="el-icon-search" @click="search"
-        >查询</vxe-button
-        >
-      </el-row>
-      <el-form ref="searchForm" :model="searchForm">
-        <el-form-item label="转出方：">
-          <el-input v-model="searchForm.issueEntName" />
-        </el-form-item>
-        <el-form-item label="签收方/资金方：">
-          <el-input v-model="searchForm.issueEntName" />
-        </el-form-item>
-        <el-form-item label="转让日期：" class="col-right">
-          <zj-date-range-picker
-            :startDate.sync="searchForm.expireDateStart"
-            :endDate.sync="searchForm.expireDateEnd"
-          />
-        </el-form-item>
-        <el-form-item label="申请流水号：">
-          <el-input v-model="searchForm.issueEntName" />
-        </el-form-item>
-      </el-form>
-    </div>
-    <div class="zj-search-response">
+    <zj-list-layout>
+      <template slot="searchForm">
+        <el-form ref="searchForm" :model="searchForm">
+          <el-form-item label="转出方：">
+            <el-input v-model="searchForm.issueEntName" />
+          </el-form-item>
+          <el-form-item label="签收方/资金方：">
+            <el-input v-model="searchForm.issueEntName" />
+          </el-form-item>
+          <el-form-item label="转让日期：" class="col-right">
+            <zj-date-range-picker
+              :startDate.sync="searchForm.expireDateStart"
+              :endDate.sync="searchForm.expireDateEnd"
+            />
+          </el-form-item>
+          <el-form-item label="申请流水号：">
+            <el-input v-model="searchForm.issueEntName" />
+          </el-form-item>
+        </el-form>
+      </template>
       <zj-table
         ref="searchTable"
         :params="searchForm"
@@ -48,7 +40,7 @@
           </template>
         </zj-table-column>
       </zj-table>
-    </div>
+    </zj-list-layout>
   </div>
 </template>
 <script>

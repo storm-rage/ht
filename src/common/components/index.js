@@ -180,6 +180,11 @@ const components = [
   {
     name: 'ZjTextTip',
     component:() => import('./textTip/index.vue')
+  },
+  //列表布局组件
+  {
+    name: 'ZjListLayout',
+    component:() => import('./listLayout/ZjListLayout.vue')
   }
 ]
 

@@ -1,0 +1,65 @@
+.zj-search-header__desc {
+  min-width: 1000px;
+  background-color: #F1F7FF;
+  padding: 5px 15px;
+  margin-bottom: 10px;
+}
+/* 查询头部 */
+/* 查询头部 */
+.zj-search-header{
+  min-width: 1000px;
+  background-color: #fff;
+  padding: 0 10px 0 20px;
+  .quickQuery {
+    float: left;
+  }
+  .radio-btns {
+    padding-top: 5px;
+    padding-left: 10px;
+    line-height: 35px;
+  }
+  .default-btns {
+    float: right;
+    padding: 6px 10px;
+    background-color: #fff;
+    button {
+      background-color: transparent;
+      border: 1px solid @primary-main-color;
+      &.search {
+        background-color: @primary-main-color;
+        color: #fff;
+        &.active {
+          background-color: @primary-main-color;
+          border-color: @primary-main-color;
+        }
+        &:hover {
+          color: #fff;
+          border: 1px solid @primary-main-color;
+          background-color: @primary-main-color;
+        }
+      }
+      &.reset {
+        color: #333;
+        border: 1px solid #999;
+        &.active {
+          border: 1px solid @primary-main-color;
+          color: @primary-main-color;
+        }
+        &:hover {
+          background-color: transparent;
+          color: @primary-main-color;
+          border: 1px solid @primary-main-color;
+        }
+      }
+    }
+  }
+  .el-checkbox {
+    margin-top: 8px;
+  }
+  .btnBox{
+    float: right;
+    button {
+      background-color: transparent;
+    }
+  }
+}
