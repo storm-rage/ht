@@ -1,36 +1,31 @@
 <template>
   <div>
-    <div class="zj-search-condition">
-      <el-row class="button-row">
-        <vxe-button class="reset" icon="el-icon-refresh" @click="resetSearch">重置</vxe-button>
-        <vxe-button class="search" icon="el-icon-search" @click="search">查询</vxe-button>
-      </el-row>
-
-      <el-form ref="searchForm" :model="searchForm">
-        <el-form-item label="资金流水号：">
-          <el-input v-model="searchForm.issueEntName" @keyup.enter.native="enterSearch"/>
-        </el-form-item>
-        <el-form-item label="收款日期：" class="col-right">
-          <zj-date-range-picker
-            :startDate.sync="searchForm.expireDateStart"
-            :endDate.sync="searchForm.expireDateEnd"
-          />
-        </el-form-item>
-        <el-form-item label="收款金额：">
-          <zj-amount-range :startAmt.sync="searchForm.ebillAmtStart" :endAmt.sync="searchForm.ebillAmtEnd"></zj-amount-range>
-        </el-form-item>
-        <el-form-item label="付款方名称：">
-          <el-input v-model="searchForm.issueEntName" @keyup.enter.native="enterSearch"/>
-        </el-form-item>
-        <el-form-item label="业务系统单号：">
-          <el-input v-model="searchForm.issueEntName" @keyup.enter.native="enterSearch"/>
-        </el-form-item>
-        <el-form-item label="供应商简称：">
-          <el-input v-model="searchForm.issueEntName" @keyup.enter.native="enterSearch"/>
-        </el-form-item>
-      </el-form>
-    </div>
-    <div class="zj-search-response">
+    <zj-list-layout>
+      <template slot="searchForm">
+        <el-form ref="searchForm" :model="searchForm">
+          <el-form-item label="资金流水号：">
+            <el-input v-model="searchForm.issueEntName" @keyup.enter.native="enterSearch"/>
+          </el-form-item>
+          <el-form-item label="收款日期：" class="col-right">
+            <zj-date-range-picker
+              :startDate.sync="searchForm.expireDateStart"
+              :endDate.sync="searchForm.expireDateEnd"
+            />
+          </el-form-item>
+          <el-form-item label="收款金额：">
+            <zj-amount-range :startAmt.sync="searchForm.ebillAmtStart" :endAmt.sync="searchForm.ebillAmtEnd"></zj-amount-range>
+          </el-form-item>
+          <el-form-item label="付款方名称：">
+            <el-input v-model="searchForm.issueEntName" @keyup.enter.native="enterSearch"/>
+          </el-form-item>
+          <el-form-item label="业务系统单号：">
+            <el-input v-model="searchForm.issueEntName" @keyup.enter.native="enterSearch"/>
+          </el-form-item>
+          <el-form-item label="供应商简称：">
+            <el-input v-model="searchForm.issueEntName" @keyup.enter.native="enterSearch"/>
+          </el-form-item>
+        </el-form>
+      </template>
       <zj-table ref="searchTable" :dataList="list" :params="searchForm" :api="zjControl.tableApi" @radio-change="handleRadioChange" :radio-config="{highlight: true}">
         <zj-table-column type="radio" width="40px" fixed="left"></zj-table-column>
         <zj-table-column field="field1" title="资金流水号" />
@@ -43,7 +38,7 @@
         <zj-table-column field="field8" title="已关联金额" :formatter="money"/>
         <zj-table-column field="field9" title="供应商简称"/>
       </zj-table>
-    </div>
+    </zj-list-layout>
     <zj-content-block>
       <zj-header title="确认收款"></zj-header>
       <zj-content-tip style="display: block;width: 100%;">
@@ -53,9 +48,9 @@
         </div>
       </zj-content-tip>
       <zj-content>
-        <el-tabs v-model="tabAtive" type="card" class="zj-tabs-card">
+        <el-tabs v-model="tabActive" type="card" class="zj-tabs-card">
           <el-tab-pane :label="item.label" v-for="(item,index) in tabsList" :key="`${index}b`" :name="item.name" >
-            <component :is="tabAtive" v-if="item.name === tabAtive"></component>
+            <component :is="tabActive" v-if="item.name === tabActive"></component>
           </el-tab-pane>
         </el-tabs>
       </zj-content>
@@ -107,7 +102,7 @@ export default {
           name: 'otherPayment'
         }
       ],
-      tabAtive: 'billPayment'
+      tabActive: 'billPayment'
     }
   },
   created() {
