@@ -3,43 +3,39 @@
     <!--  业务管理列表  -->
     <zj-content-block>
       <zj-content>
-        <div class="zj-search-condition zj-m-b-20" style="border-bottom: none;">
-          <el-row class="button-row">
-            <vxe-button class="reset" icon="el-icon-refresh" @click="resetSearch">重置</vxe-button>
-            <vxe-button class="search" icon="el-icon-search" @click="search">查询</vxe-button>
-          </el-row>
-          <el-form ref="searchForm" :model="searchForm">
-            <el-form-item label="供应商名称：">
-              <el-input
-                v-model="searchForm.issueEntName"
-                @keyup.enter.native="enterSearch"
-              />
-            </el-form-item>
-            <el-form-item label="是否海天一级供应商：">
-              <el-select v-model="searchForm.issueEntName">
-                <el-option value="全部" />
-              </el-select>
-            </el-form-item>
-            <el-form-item label="产品申请日期：" class="col-right">
-              <zj-date-range-picker
-                :startDate.sync="searchForm.expireDateStart"
-                :endDate.sync="searchForm.expireDateEnd"
-              />
-            </el-form-item>
-            <el-form-item label="供应商统一社会信用代码：">
-              <el-input
-                v-model="searchForm.issueEntName"
-                @keyup.enter.native="enterSearch"
-              />
-            </el-form-item>
-            <el-form-item label="是否签署保理合同：">
-              <el-select v-model="searchForm.issueEntName">
-                <el-option value="全部" />
-              </el-select>
-            </el-form-item>
-          </el-form>
-        </div>
-        <div class="zj-search-response">
+        <zj-list-layout noBottomBorder>
+          <template slot="searchForm">
+            <el-form ref="searchForm" :model="searchForm">
+              <el-form-item label="供应商名称：">
+                <el-input
+                  v-model="searchForm.issueEntName"
+                  @keyup.enter.native="enterSearch"
+                />
+              </el-form-item>
+              <el-form-item label="是否海天一级供应商：">
+                <el-select v-model="searchForm.issueEntName">
+                  <el-option value="全部" />
+                </el-select>
+              </el-form-item>
+              <el-form-item label="产品申请日期：" class="col-right">
+                <zj-date-range-picker
+                  :startDate.sync="searchForm.expireDateStart"
+                  :endDate.sync="searchForm.expireDateEnd"
+                />
+              </el-form-item>
+              <el-form-item label="供应商统一社会信用代码：">
+                <el-input
+                  v-model="searchForm.issueEntName"
+                  @keyup.enter.native="enterSearch"
+                />
+              </el-form-item>
+              <el-form-item label="是否签署保理合同：">
+                <el-select v-model="searchForm.issueEntName">
+                  <el-option value="全部" />
+                </el-select>
+              </el-form-item>
+            </el-form>
+          </template>
           <zj-table ref="searchContractTable"  :dataList="list"  @radio-change="handleRadioChange" :radio-config="{highlight: true}">
             <zj-table-column type="radio"  width="50"/>
             <zj-table-column field="field1" title="供应商名称"/>
@@ -62,7 +58,10 @@
               </template>
             </zj-table-column>
           </zj-table>
-        </div>
+        </zj-list-layout>
+<!--        <div class="zj-search-condition zj-m-b-20" style="border-bottom: none;">-->
+<!--        </div>-->
+
       </zj-content>
     </zj-content-block>
     <!--  贸易关系  -->

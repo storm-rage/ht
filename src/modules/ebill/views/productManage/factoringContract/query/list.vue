@@ -1,44 +1,39 @@
 <template>
   <div>
-    <div class="zj-search-condition">
-      <el-row class="button-row">
-        <vxe-button class="reset" icon="el-icon-refresh" @click="resetSearch">重置</vxe-button>
-        <vxe-button class="search" icon="el-icon-search" @click="search">查询</vxe-button>
-      </el-row>
+    <zj-list-layout>
+      <template slot="searchForm">
+        <el-form ref="searchForm" :model="searchForm">
+          <el-form-item label="供应商名称：">
+            <el-input v-model="searchForm.issueEntName" @keyup.enter.native="enterSearch"/>
+          </el-form-item>
 
-      <el-form ref="searchForm" :model="searchForm">
-        <el-form-item label="供应商名称：">
-          <el-input v-model="searchForm.issueEntName" @keyup.enter.native="enterSearch"/>
-        </el-form-item>
+          <el-form-item label="合同状态：">
+            <el-select v-model="contractType">
+              <el-option value="1"/>
+              <el-option value="2"/>
+              <el-option value="3"/>
+            </el-select>
+          </el-form-item>
 
-        <el-form-item label="合同状态：">
-          <el-select v-model="contractType">
-            <el-option value="1"/>
-            <el-option value="2"/>
-            <el-option value="3"/>
-          </el-select>
-        </el-form-item>
+          <el-form-item label="是否海天一级供应商：">
+            <el-select v-model="applicationStatus">
+              <el-option value="全部"/>
+              <el-option value="待复核"/>
+            </el-select>
+          </el-form-item>
 
-        <el-form-item label="是否海天一级供应商：">
-          <el-select v-model="applicationStatus">
-            <el-option value="全部"/>
-            <el-option value="待复核"/>
-          </el-select>
-        </el-form-item>
+          <el-form-item label="合同生效日：" class="col-right">
+            <zj-date-range-picker
+              :startDate.sync="searchForm.expireDateStart"
+              :endDate.sync="searchForm.expireDateEnd"
+            />
+          </el-form-item>
 
-        <el-form-item label="合同生效日：" class="col-right">
-          <zj-date-range-picker
-            :startDate.sync="searchForm.expireDateStart"
-            :endDate.sync="searchForm.expireDateEnd"
-          />
-        </el-form-item>
-
-        <el-form-item label="合同编号：">
-          <el-input v-model="searchForm.issueEntName" @keyup.enter.native="enterSearch"/>
-        </el-form-item>
-      </el-form>
-    </div>
-    <div class="zj-search-response">
+          <el-form-item label="合同编号：">
+            <el-input v-model="searchForm.issueEntName" @keyup.enter.native="enterSearch"/>
+          </el-form-item>
+        </el-form>
+      </template>
       <zj-table ref="searchTable" :dataList="list" :params="searchForm" :api="zjControl.tableApi">
         <zj-table-column field="field1" title="供应商名称" />
         <zj-table-column field="field2" title="是否海天一级供应商" />
@@ -54,7 +49,7 @@
           </template>
         </zj-table-column>
       </zj-table>
-    </div>
+    </zj-list-layout>
   </div>
 </template>
 <script>

@@ -1,0 +1,36 @@
+@import "../variables";
+@import "../mixin";
+/*展示表格*/
+.zj-search-table{
+  background-color: white;
+  .table-mixin();
+  &.nm{
+    margin: 0;
+  }
+  &.nm-t{
+    margin-top: 0;
+  }
+  &.nm-b{
+    margin-bottom: 0;
+  }
+  &.nm-y{
+    margin-top: 0;
+    margin-bottom: 0;
+  }
+  &.tableNullCenter{
+    .vxe-table--empty-placeholder{
+      top: 60%!important;
+      left: 50%!important;
+      transform: translate(-50%,-50%);
+    }
+  }
+  .vxe-button.type--text.theme--primary {
+    color: @primary-main-color !important;
+    .vxe-button--content {
+      &:hover {
+        opacity: .8;
+      }
+    }
+
+  }
+}

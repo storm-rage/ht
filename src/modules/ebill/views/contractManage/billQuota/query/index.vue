@@ -1,47 +1,38 @@
 <template>
   <div>
-    <div class="zj-search-condition">
-      <el-row class="button-row">
-        <vxe-button class="reset" icon="el-icon-refresh" @click="resetSearch"
-          >重置</vxe-button
-        >
-        <vxe-button class="search" icon="el-icon-search" @click="search"
-          >查询</vxe-button
-        >
-      </el-row>
+    <zj-list-layout>
+      <template slot="searchForm">
+        <el-form ref="searchForm" :model="searchForm">
+          <el-form-item label="买方企业名称：">
+            <el-input
+              v-model="searchForm.issueEntName"
+              @keyup.enter.native="enterSearch"
+            />
+          </el-form-item>
+          <el-form-item label="申请日期：" class="col-right">
+            <zj-date-range-picker
+              :startDate.sync="searchForm.expireDateStart"
+              :endDate.sync="searchForm.expireDateEnd"
+            />
+          </el-form-item>
 
-      <el-form ref="searchForm" :model="searchForm">
-        <el-form-item label="买方企业名称：">
-          <el-input
-            v-model="searchForm.issueEntName"
-            @keyup.enter.native="enterSearch"
-          />
-        </el-form-item>
-        <el-form-item label="申请日期：" class="col-right">
-          <zj-date-range-picker
-            :startDate.sync="searchForm.expireDateStart"
-            :endDate.sync="searchForm.expireDateEnd"
-          />
-        </el-form-item>
-
-        <el-form-item label="申请增加额度：">
-          <zj-amount-range :startAmt.sync="searchForm.ebillAmtStart" :endAmt.sync="searchForm.ebillAmtEnd"></zj-amount-range>
-        </el-form-item>
-        <el-form-item label="申请流水号：">
-          <el-input
-            v-model="searchForm.issueEntName"
-            @keyup.enter.native="enterSearch"
-          />
-        </el-form-item>
-        <el-form-item label="申请状态：">
-          <el-select v-model="applicationStatus">
-            <el-option value="全部" />
-            <el-option value="待复核" />
-          </el-select>
-        </el-form-item>
-      </el-form>
-    </div>
-    <div class="zj-search-response">
+          <el-form-item label="申请增加额度：">
+            <zj-amount-range :startAmt.sync="searchForm.ebillAmtStart" :endAmt.sync="searchForm.ebillAmtEnd"></zj-amount-range>
+          </el-form-item>
+          <el-form-item label="申请流水号：">
+            <el-input
+              v-model="searchForm.issueEntName"
+              @keyup.enter.native="enterSearch"
+            />
+          </el-form-item>
+          <el-form-item label="申请状态：">
+            <el-select v-model="applicationStatus">
+              <el-option value="全部" />
+              <el-option value="待复核" />
+            </el-select>
+          </el-form-item>
+        </el-form>
+      </template>
       <zj-table
         ref="searchTable"
         :params="searchForm"
@@ -88,8 +79,7 @@
           </template>
         </zj-table-column>
       </zj-table>
-    </div>
-
+    </zj-list-layout>
   </div>
 </template>
 <script>
