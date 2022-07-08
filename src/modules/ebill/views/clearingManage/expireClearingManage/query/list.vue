@@ -1,17 +1,19 @@
 <template>
   <div>
-    <el-tabs v-model="tabActive" type="card" class="zj-tabs-card">
+    <el-tabs v-model="activeComp" type="card" class="zj-tabs-card">
       <el-tab-pane :label="item.label" v-for="(item,index) in tabsList" :key="`${index}b`" :name="item.name" >
-        <component :is="tabActive" v-if="item.name === tabActive"></component>
+        <component :is="activeComp" v-if="item.name === activeComp"></component>
       </el-tab-pane>
     </el-tabs>
   </div>
 </template>
 <script>
-import billFactoringClearingList from './tabs/billFactoringClearingList';
+import billFactoringClearingTab from './tabs/billFactoringClearingTab';
+import orderFactoringClearingTab from './tabs/orderFactoringClearingTab.vue';
 export default {
   components: {
-    'billFactoringClearing': billFactoringClearingList
+    'billFactoringClearing': billFactoringClearingTab,
+    'orderFactoringClearing': orderFactoringClearingTab
   },
   data () {
     return {
@@ -25,7 +27,7 @@ export default {
           name: 'orderFactoringClearing'
         }
       ],
-      tabActive: 'billFactoringClearing'
+      activeComp: 'billFactoringClearing'
     }
   }
 };

@@ -47,7 +47,7 @@
 </template>
 <script>
 /**
- * 凭证收款和非凭证收款附件信息
+ * 凭证收款和非凭证收款,清算申请附件信息
  */
 export default {
   props: {

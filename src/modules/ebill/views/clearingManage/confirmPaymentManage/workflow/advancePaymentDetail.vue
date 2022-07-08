@@ -137,7 +137,7 @@
 /**
  * 提前还款流水详情页面
  */
-import PaymentFile from '../components/paymentFile';
+import PaymentFile from '../../components/clearingFileInfo';
 export default {
   name: 'BillAdvancePaymentDetail',
   components: {PaymentFile},
