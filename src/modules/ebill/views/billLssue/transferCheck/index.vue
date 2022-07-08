@@ -1,6 +1,8 @@
 <template>
   <div class="transferCheck">
-    <div class="zj-search-condition">
+    <zj-list-layout>
+      <template slot="searchForm">
+    <!-- <div class="zj-search-condition">
       <el-row class="button-row">
         <zj-button class="reset" icon="el-icon-refresh" @click="resetSearch"
           >重置</zj-button
@@ -9,6 +11,7 @@
           >查询</zj-button
         >
       </el-row>
+    </div> -->
       <el-form ref="searchForm" :model="searchForm">
         <el-form-item label="转让申请日期：" class="col-right">
           <zj-date-range-picker
@@ -23,9 +26,9 @@
           />
         </el-form-item>
       </el-form>
-    </div>
+      </template>
 
-    <div class="zj-search-response">
+    <!-- <div class="zj-search-response"> -->
       <zj-table
         ref="searchTable"
         :params="searchForm"
@@ -54,7 +57,8 @@
           </template>
         </zj-table-column>
       </zj-table>
-    </div>
+    <!-- </div> -->
+    </zj-list-layout>
   </div>
 </template>
 

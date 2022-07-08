@@ -1,6 +1,8 @@
 <template>
   <div class="transferApplication">
-    <div class="zj-search-condition">
+    <zj-list-layout>
+      <template slot="searchForm">
+        <!-- <div class="zj-search-condition">
       <div class="explain">
         <p>可转让电子债券凭证金额： <b>1,233,100.00元</b></p>
         <p>
@@ -15,16 +17,17 @@
           >查询</vxe-button
         >
       </el-row>
+    </div> -->
 
-      <el-form ref="searchForm" :model="searchForm">
-        <el-form-item label="合同编号：">
-          <el-input
-            v-model="searchForm.issueEntName"
-            @keyup.enter.native="enterSearch"
-          />
-        </el-form-item>
+        <el-form ref="searchForm" :model="searchForm">
+          <el-form-item label="合同编号：">
+            <el-input
+              v-model="searchForm.issueEntName"
+              @keyup.enter.native="enterSearch"
+            />
+          </el-form-item>
 
-        <!-- <el-form-item label="合同签署类型：">
+          <!-- <el-form-item label="合同签署类型：">
           <el-select v-model="contractType">
             <el-option value="1" />
             <el-option value="2" />
@@ -32,58 +35,58 @@
           </el-select>
         </el-form-item> -->
 
-        <el-form-item label="申请日期：" class="col-right">
-          <zj-date-range-picker
-            :startDate.sync="searchForm.expireDateStart"
-            :endDate.sync="searchForm.expireDateEnd"
-          />
-        </el-form-item>
+          <el-form-item label="申请日期：" class="col-right">
+            <zj-date-range-picker
+              :startDate.sync="searchForm.expireDateStart"
+              :endDate.sync="searchForm.expireDateEnd"
+            />
+          </el-form-item>
 
-        <el-form-item label="凭证金额：" class="col-center">
-          <zj-amount-range
-            :startAmt.sync="searchForm.ebillAmtStart"
-            :endAmt.sync="searchForm.ebillAmtEnd"
-            @keyupEnterNative="enterSearch"
-          />
-        </el-form-item>
+          <el-form-item label="凭证金额：" class="col-center">
+            <zj-amount-range
+              :startAmt.sync="searchForm.ebillAmtStart"
+              :endAmt.sync="searchForm.ebillAmtEnd"
+              @keyupEnterNative="enterSearch"
+            />
+          </el-form-item>
 
-        <!-- <el-form-item label="申请状态：">
+          <!-- <el-form-item label="申请状态：">
           <el-select v-model="applicationStatus">
             <el-option value="全部" />
             <el-option value="待复核" />
           </el-select>
         </el-form-item> -->
 
-        <el-form-item label="转让企业：">
-          <el-input
-            v-model="searchForm.issueEntName"
-            @keyup.enter.native="enterSearch"
-          />
-        </el-form-item>
+          <el-form-item label="转让企业：">
+            <el-input
+              v-model="searchForm.issueEntName"
+              @keyup.enter.native="enterSearch"
+            />
+          </el-form-item>
 
-        <el-form-item label="债权凭证编号：">
-          <el-input
-            v-model="searchForm.issueEntName"
-            @keyup.enter.native="enterSearch"
-          />
-        </el-form-item>
+          <el-form-item label="债权凭证编号：">
+            <el-input
+              v-model="searchForm.issueEntName"
+              @keyup.enter.native="enterSearch"
+            />
+          </el-form-item>
 
-        <el-form-item label="凭证签收日：" class="col-right">
-          <zj-date-range-picker
-            :startDate.sync="searchForm.expireDateStart"
-            :endDate.sync="searchForm.expireDateEnd"
-          />
-        </el-form-item>
+          <el-form-item label="凭证签收日：" class="col-right">
+            <zj-date-range-picker
+              :startDate.sync="searchForm.expireDateStart"
+              :endDate.sync="searchForm.expireDateEnd"
+            />
+          </el-form-item>
 
-        <!-- <el-form-item label="合同签署类型：">
+          <!-- <el-form-item label="合同签署类型：">
           <el-select v-model="applicationStatus">
             <el-option value="全部" />
             <el-option value="待复核" />
           </el-select>
         </el-form-item> -->
-      </el-form>
-    </div>
-    <div class="zj-search-response">
+        </el-form>
+      </template>
+      <!-- <div class="zj-search-response"> -->
       <zj-table
         ref="searchTable"
         :params="searchForm"
@@ -142,17 +145,18 @@
           </template>
         </zj-table-column>
       </zj-table>
-    </div>
+      <!-- </div> -->
 
-    <!-- 工作流 -->
+      <!-- 工作流 -->
 
-    <zj-workflow v-model="workflow">
-      <el-row slot="right">
-        <zj-button @click="goChild" :api="zjBtn.passBillSignBatch"
-          >发起转让申请</zj-button
-        >
-      </el-row>
-    </zj-workflow>
+      <zj-workflow v-model="workflow">
+        <el-row slot="right">
+          <zj-button @click="goChild" :api="zjBtn.passBillSignBatch"
+            >发起转让申请</zj-button
+          >
+        </el-row>
+      </zj-workflow>
+    </zj-list-layout>
   </div>
 </template>
 <script>
