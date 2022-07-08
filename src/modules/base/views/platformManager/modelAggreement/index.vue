@@ -1,14 +1,8 @@
 <template>
   <div class="modelAggreement">
-    <div class="zj-search-condition">
-      <el-row class="button-row">
-        <zj-button class="reset" icon="el-icon-refresh" @click="resetSearch"
-          >重置</zj-button
-        >
-        <zj-button class="search" icon="el-icon-search" @click="search"
-          >查询</zj-button
-        >
-      </el-row>
+    
+    <zj-list-layout>
+      <template slot="searchForm">
       <el-form ref="searchForm" :model="searchForm">
         <el-form-item label="协议文本编号：">
           <el-input
@@ -57,9 +51,19 @@
           </el-select>
         </el-form-item>
       </el-form>
-    </div>
+      </template>
+    <!-- <div class="zj-search-condition">
+      <el-row class="button-row">
+        <zj-button class="reset" icon="el-icon-refresh" @click="resetSearch"
+          >重置</zj-button
+        >
+        <zj-button class="search" icon="el-icon-search" @click="search"
+          >查询</zj-button
+        >
+      </el-row>
+    </div> -->
 
-    <div class="zj-search-response">
+    <!-- <div class="zj-search-response"> -->
       <zj-table
         ref="searchTable"
         :params="searchForm"
@@ -87,7 +91,8 @@
           </template>
         </zj-table-column>
       </zj-table>
-    </div>
+    <!-- </div> -->
+    </zj-list-layout>
   </div>
 </template>
 

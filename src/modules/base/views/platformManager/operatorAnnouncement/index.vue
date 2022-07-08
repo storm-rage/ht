@@ -1,6 +1,8 @@
 <template>
   <div class="operatorAnnouncement">
-    <div class="zj-search-condition">
+    <zj-list-layout>
+      <template slot="searchForm">
+        <!-- <div class="zj-search-condition">
       <el-row class="button-row">
         <zj-button class="reset" icon="el-icon-refresh" @click="resetSearch"
           >重置</zj-button
@@ -8,44 +10,46 @@
         <zj-button class="search" icon="el-icon-search" @click="search"
           >查询</zj-button
         >
-      </el-row>
-      <el-form ref="searchForm" :model="searchForm">
-        <el-form-item label="类型：" class="col-center">
-          <el-select
-            v-model="searchForm.isGenerateVoucher"
-            placeholder="请选择"
-            clearable
-            :popper-append-to-body="false"
-          >
-            <el-option value="" label="全部"></el-option>
-            <!-- <el-option
+      </el-row> 
+    </div>-->
+        <el-form ref="searchForm" :model="searchForm">
+          <el-form-item label="类型：" class="col-center">
+            <el-select
+              v-model="searchForm.isGenerateVoucher"
+              placeholder="请选择"
+              clearable
+              :popper-append-to-body="false"
+            >
+              <el-option value="" label="全部"></el-option>
+              <!-- <el-option
               v-for="item in dictionary.isGenerateVouchers"
               :key="item.code"
               :label="item.desc"
               :value="item.code"
             >
             </el-option> -->
-          </el-select>
-        </el-form-item>
-        <el-form-item label="转让申请日期：" class="col-right">
-          <zj-date-range-picker
-            :startDate.sync="searchForm.expireDateStart"
-            :endDate.sync="searchForm.expireDateEnd"
-          />
-        </el-form-item>
-        <el-form-item label="申请流水号：">
-          <el-input
-            v-model="searchForm.issueEntName"
-            @keyup.enter.native="enterSearch"
-          />
-        </el-form-item>
-      </el-form>
-    </div>
+            </el-select>
+          </el-form-item>
+          <el-form-item label="转让申请日期：" class="col-right">
+            <zj-date-range-picker
+              :startDate.sync="searchForm.expireDateStart"
+              :endDate.sync="searchForm.expireDateEnd"
+            />
+          </el-form-item>
+          <el-form-item label="申请流水号：">
+            <el-input
+              v-model="searchForm.issueEntName"
+              @keyup.enter.native="enterSearch"
+            />
+          </el-form-item>
+        </el-form>
+      </template>
+      <template slot="btnGroups">
+        <zj-button class="zj-m-l-10 mb-10 mt-10" type="primary" @click="add"
+          >新增</zj-button
+        >
+      </template>
 
-    <div class="zj-search-response">
-      <zj-button class="zj-m-l-10 mb-10 mt-10" type="primary" @click="add"
-        >新增</zj-button
-      >
       <zj-table
         ref="searchTable"
         :params="searchForm"
@@ -94,7 +98,7 @@
           </template>
         </zj-table-column>
       </zj-table>
-    </div>
+    </zj-list-layout>
 
     <el-dialog
       :visible.sync="dialogVisible"
@@ -171,7 +175,11 @@
           prop="invoicePhone"
           :class="{ 'zj-m-b-5': !editFlag }"
         >
-          <el-input  v-if="type != 'info'" type="textarea" v-model="formModel.invoicePhone" />
+          <el-input
+            v-if="type != 'info'"
+            type="textarea"
+            v-model="formModel.invoicePhone"
+          />
           <p v-else>内容内容内容内容内容</p>
         </el-form-item>
         <el-form-item
@@ -186,7 +194,8 @@
           prop="invoiceBankAccno"
           :class="{ 'zj-m-b-5': !editFlag }"
         >
-          <zj-date-range-picker v-if="type != 'info'"
+          <zj-date-range-picker
+            v-if="type != 'info'"
             :startDate.sync="formModel.expireDateStart"
             :endDate.sync="formModel.expireDateEnd"
           />

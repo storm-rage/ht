@@ -1,6 +1,8 @@
 <template>
   <div>
-    <div class="zj-search-condition">
+    <zj-list-layout>
+      <template slot="searchForm">
+    <!-- <div class="zj-search-condition">
       <el-row class="button-row">
         <vxe-button class="reset" icon="el-icon-refresh" @click="resetSearch"
           >重置</vxe-button
@@ -9,6 +11,7 @@
           >查询</vxe-button
         >
       </el-row>
+    </div> -->
       <el-form ref="searchForm" :model="searchForm">
         <el-form-item label="买方企业名称：" class="col-center">
           <el-input v-model="searchForm.ebillCode" />
@@ -34,7 +37,7 @@
           </el-select>
         </el-form-item>
       </el-form>
-    </div>
+      </template>
     <div class="zj-search-response">
       <zj-button
         class="zj-m-l-10 mb-10 mt-10"
@@ -75,6 +78,7 @@
         </zj-table-column>
       </zj-table>
     </div>
+    </zj-list-layout>
     <el-dialog
       :visible.sync="dialogVisible"
       :close-on-click-modal="false"

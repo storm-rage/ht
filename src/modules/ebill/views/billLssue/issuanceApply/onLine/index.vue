@@ -2,6 +2,15 @@
   <div>
     <div class="zj-search-condition">
       <el-row class="button-row">
+        <el-button type="primary" @click="&quot;&quot;;"
+          >获取对账单</el-button
+        >
+      </el-row>
+    </div>
+    <zj-list-layout>
+      <template slot="searchForm">
+    <!-- <div class="zj-search-condition">
+      <el-row class="button-row">
         <el-button type="primary" @click="&quot;&quot;;">获取对账单</el-button>
         <vxe-button class="reset" icon="el-icon-refresh" @click="resetSearch"
           >重置</vxe-button
@@ -10,6 +19,7 @@
           >查询</vxe-button
         >
       </el-row>
+    </div> -->
       <el-form ref="searchForm" :model="searchForm">
         <el-form-item label="对账单编号：" class="col-center">
           <el-input v-model="searchForm.ebillCode" />
@@ -50,7 +60,7 @@
           </el-select>
         </el-form-item>
       </el-form>
-    </div>
+      </template>
     <div class="zj-search-response">
       <zj-table
         ref="searchTable"
@@ -97,6 +107,8 @@
         >
       </el-row>
     </zj-workflow>
+    
+    </zj-list-layout>
   </div>
 </template>
 <script>
@@ -126,6 +138,10 @@ export default {
 };
 </script>
 <style lang="less" scoped>
+.zj-search-condition {
+  margin-top: 10px;
+  margin-left: 20px;
+}
 /deep/#ZjWorkflow {
   .workflow-top {
     .el-row {
