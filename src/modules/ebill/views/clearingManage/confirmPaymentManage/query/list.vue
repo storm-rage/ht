@@ -48,9 +48,9 @@
         </div>
       </zj-content-tip>
       <zj-content>
-        <el-tabs v-model="tabActive" type="card" class="zj-tabs-card">
+        <el-tabs v-model="activeComp" type="card" class="zj-tabs-card">
           <el-tab-pane :label="item.label" v-for="(item,index) in tabsList" :key="`${index}b`" :name="item.name" >
-            <component :is="tabActive" v-if="item.name === tabActive"></component>
+            <component :is="activeComp" v-if="item.name === activeComp"></component>
           </el-tab-pane>
         </el-tabs>
       </zj-content>
@@ -102,7 +102,7 @@ export default {
           name: 'otherPayment'
         }
       ],
-      tabActive: 'billPayment'
+      activeComp: 'billPayment'
     }
   },
   created() {
