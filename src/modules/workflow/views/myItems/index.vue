@@ -5,49 +5,42 @@
       <el-tab-pane label="已办" name="pending"> </el-tab-pane>
       <el-tab-pane label="已办结" name="processed"> </el-tab-pane>
     </el-tabs>
-
-    <div class="zj-search-condition">
-      <el-row class="button-row">
-        <vxe-button class="reset" icon="el-icon-refresh" @click="resetSearch"
-          >重置</vxe-button
-        >
-        <vxe-button class="search" icon="el-icon-search" @click="search"
-          >查询</vxe-button
-        >
-      </el-row>
-      <el-form ref="searchForm">
-        <el-form-item label="申请流水号：">
-          <el-input
-            v-model="searchForm.entNameLike"
-            @keyup.enter.native="enterSearch"
-          />
-        </el-form-item>
-        <el-form-item label="业务类型：" class="col-center">
-          <el-input
-            v-model="searchForm.loginNameLike"
-            @keyup.enter.native="enterSearch"
-          />
-        </el-form-item>
-        <el-form-item label="接收日期：" class="col-right">
-          <zj-date-range-picker
-            :startDate.sync="searchForm.createDateStart"
-            :endDate.sync="searchForm.createDateEnd"
-          />
-        </el-form-item>
-        <el-form-item label="发起发：">
-          <el-input
-            v-model="searchForm.mobileNo"
-            @keyup.enter.native="enterSearch"
-          />
-        </el-form-item>
-         <el-form-item label="供应商名称：" v-if="tabAtive === 'agenda'">
-          <el-input
-            v-model="searchForm.mobileNo"
-            @keyup.enter.native="enterSearch"
-          />
-        </el-form-item>
-      </el-form>
-    </div>
+    <zj-list-layout>
+      <template slot="searchForm">
+        <el-form ref="searchForm">
+          <el-form-item label="申请流水号：">
+            <el-input
+              v-model="searchForm.entNameLike"
+              @keyup.enter.native="enterSearch"
+            />
+          </el-form-item>
+          <el-form-item label="业务类型：" class="col-center">
+            <el-input
+              v-model="searchForm.loginNameLike"
+              @keyup.enter.native="enterSearch"
+            />
+          </el-form-item>
+          <el-form-item label="接收日期：" class="col-right">
+            <zj-date-range-picker
+              :startDate.sync="searchForm.createDateStart"
+              :endDate.sync="searchForm.createDateEnd"
+            />
+          </el-form-item>
+          <el-form-item label="发起发：">
+            <el-input
+              v-model="searchForm.mobileNo"
+              @keyup.enter.native="enterSearch"
+            />
+          </el-form-item>
+          <el-form-item label="供应商名称：" v-if="tabAtive === 'agenda'">
+            <el-input
+              v-model="searchForm.mobileNo"
+              @keyup.enter.native="enterSearch"
+            />
+          </el-form-item>
+        </el-form>
+      </template>
+    </zj-list-layout>
     <zj-content>
       <zj-table
         ref="searchTable"
@@ -62,7 +55,11 @@
         <zj-table-column field="userName" title="发起方" />
         <zj-table-column field="mobileNo" title="接收时间" />
         <zj-table-column field="roleNames" title="申请状态" />
-        <zj-table-column title="操作" fixed="right"  v-if="tabAtive === 'agenda'">
+        <zj-table-column
+          title="操作"
+          fixed="right"
+          v-if="tabAtive === 'agenda'"
+        >
           <template>
             <zj-button
               type="text"
@@ -92,7 +89,7 @@ export default {
       tabAtive: "agenda",
       searchForm: {},
       zjControl: {},
-      fileList: [{}]
+      fileList: [{}],
     };
   },
   methods: {},

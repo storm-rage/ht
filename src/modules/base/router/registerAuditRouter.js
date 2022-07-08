@@ -9,7 +9,7 @@ const registerAudit = [
     name:'registerAudit',
     component: () => import('../views/sysModules/register/registerAudit/index.vue'),
     meta: {
-      title:'注册审核',
+      title:'企业注册审核',
       root:'企业与用户管理',
       keepAlive:true,
       refreshIndex:0,
