@@ -13,7 +13,7 @@
 </template>
 <script>
 import BillConfirmPaymentInfo from '../components/billConfirmPaymentInfo';
-import PaymentFile from '../components/paymentFile';
+import PaymentFile from '../../components/clearingFileInfo';
 export default {
   components: {
     BillConfirmPaymentInfo,

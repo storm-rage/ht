@@ -1,6 +1,8 @@
 <template>
   <div class="credentialPrint">
-    <div class="zj-search-condition">
+    <zj-list-layout>
+      <template slot="searchForm">
+        <!-- <div class="zj-search-condition">
       <el-row class="button-row">
         <zj-button class="reset" icon="el-icon-refresh" @click="resetSearch"
           >重置</zj-button
@@ -9,70 +11,71 @@
           >查询</zj-button
         >
       </el-row>
-      <el-form ref="searchForm" :model="searchForm">
+    </div> -->
+        <el-form ref="searchForm" :model="searchForm">
           <el-form-item label="凭据类型：" class="col-center">
-          <el-select
-            v-model="searchForm.isGenerateVoucher"
-            placeholder="请选择"
-            clearable
-            :popper-append-to-body="false"
-          >
-            <el-option value="" label="全部"></el-option>
-            <!-- <el-option
+            <el-select
+              v-model="searchForm.isGenerateVoucher"
+              placeholder="请选择"
+              clearable
+              :popper-append-to-body="false"
+            >
+              <el-option value="" label="全部"></el-option>
+              <!-- <el-option
               v-for="item in dictionary.isGenerateVouchers"
               :key="item.code"
               :label="item.desc"
               :value="item.code"
             >
             </el-option> -->
-          </el-select>
-        </el-form-item>
-        <el-form-item label="打印状态：" class="col-center">
-          <el-select
-            v-model="searchForm.isGenerateVoucher"
-            placeholder="请选择"
-            clearable
-            :popper-append-to-body="false"
-          >
-            <el-option value="" label="全部"></el-option>
-            <!-- <el-option
+            </el-select>
+          </el-form-item>
+          <el-form-item label="打印状态：" class="col-center">
+            <el-select
+              v-model="searchForm.isGenerateVoucher"
+              placeholder="请选择"
+              clearable
+              :popper-append-to-body="false"
+            >
+              <el-option value="" label="全部"></el-option>
+              <!-- <el-option
               v-for="item in dictionary.isGenerateVouchers"
               :key="item.code"
               :label="item.desc"
               :value="item.code"
             >
             </el-option> -->
-          </el-select>
-        </el-form-item>
-        
-        <el-form-item label="凭据日期：" class="col-right">
-          <zj-date-range-picker
-            :startDate.sync="searchForm.expireDateStart"
-            :endDate.sync="searchForm.expireDateEnd"
-          />
-        </el-form-item>
-        <el-form-item label="凭据编号：">
-          <el-input
-            v-model="searchForm.issueEntName"
-            @keyup.enter.native="enterSearch"
-          />
-        </el-form-item>
-        <el-form-item label="签发人：">
-          <el-input
-            v-model="searchForm.issueEntName"
-            @keyup.enter.native="enterSearch"
-          />
-        </el-form-item>
-        <el-form-item label="持有人：">
-          <el-input
-            v-model="searchForm.issueEntName"
-            @keyup.enter.native="enterSearch"
-          />
-        </el-form-item>
-      </el-form>
-    </div>
+            </el-select>
+          </el-form-item>
 
-    <div class="zj-search-response">
+          <el-form-item label="凭据日期：" class="col-right">
+            <zj-date-range-picker
+              :startDate.sync="searchForm.expireDateStart"
+              :endDate.sync="searchForm.expireDateEnd"
+            />
+          </el-form-item>
+          <el-form-item label="凭据编号：">
+            <el-input
+              v-model="searchForm.issueEntName"
+              @keyup.enter.native="enterSearch"
+            />
+          </el-form-item>
+          <el-form-item label="签发人：">
+            <el-input
+              v-model="searchForm.issueEntName"
+              @keyup.enter.native="enterSearch"
+            />
+          </el-form-item>
+          <el-form-item label="持有人：">
+            <el-input
+              v-model="searchForm.issueEntName"
+              @keyup.enter.native="enterSearch"
+            />
+          </el-form-item>
+        </el-form>
+      </template>
+
+      <!-- <div class="zj-search-response"> -->
       <zj-table
         ref="searchTable"
         :params="searchForm"
@@ -101,7 +104,8 @@
           </template>
         </zj-table-column>
       </zj-table>
-    </div>
+      <!-- </div> -->
+    </zj-list-layout>
   </div>
 </template>
 

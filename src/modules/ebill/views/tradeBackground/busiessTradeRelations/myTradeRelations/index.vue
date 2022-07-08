@@ -1,6 +1,8 @@
 <template>
   <div>
-    <div class="zj-search-condition">
+    <zj-list-layout>
+      <template slot="searchForm">
+    <!-- <div class="zj-search-condition">
       <el-row class="button-row">
         <zj-button class="reset" icon="el-icon-refresh" @click="resetSearch"
           >重置</zj-button
@@ -9,6 +11,7 @@
           >查询</zj-button
         >
       </el-row>
+    </div> -->
       <el-form ref="searchForm" :model="searchForm">
         <el-form-item label="买方企业名称：" class="col-center">
           <el-input v-model="searchForm.ebillCode" />
@@ -58,8 +61,8 @@
           </el-select>
         </el-form-item>
       </el-form>
-    </div>
-    <div class="zj-search-response">
+      </template>
+    <!-- <div class="zj-search-response"> -->
       <zj-table
         ref="searchTable"
         :params="searchForm"
@@ -85,7 +88,8 @@
           </template>
         </zj-table-column>
       </zj-table>
-    </div>
+    <!-- </div> -->
+    </zj-list-layout>
     <el-dialog
       :visible.sync="dialogVisible"
       :close-on-click-modal="false"
@@ -151,8 +155,8 @@ export default {
       this.dialogVisible = true;
     },
     toInfo(id) {
-      this.$router.push('/busiessTradeRelationsInfo')
-    }
+      this.$router.push("/busiessTradeRelationsInfo");
+    },
   },
 };
 </script>
