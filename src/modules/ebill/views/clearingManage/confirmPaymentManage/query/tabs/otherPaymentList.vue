@@ -1,20 +1,16 @@
 <template>
   <div>
-    <div class="zj-search-condition" style="border-bottom: 0;margin-bottom: 10px">
-      <el-row class="button-row">
-        <vxe-button class="reset" icon="el-icon-refresh" @click="resetSearch">重置</vxe-button>
-        <vxe-button class="search" icon="el-icon-search" @click="search">查询</vxe-button>
-      </el-row>
-      <el-form ref="searchForm" :model="searchForm">
-        <el-form-item label="供应商名称：">
-          <el-input v-model="searchForm.issueEntName" @keyup.enter.native="enterSearch"/>
-        </el-form-item>
-        <el-form-item label="核心企业：">
-          <el-input v-model="searchForm.issueEntName" @keyup.enter.native="enterSearch"/>
-        </el-form-item>
-      </el-form>
-    </div>
-    <div class="zj-search-response">
+    <zj-list-layout noBottomBorder>
+      <template slot="searchForm">
+        <el-form ref="searchForm" :model="searchForm">
+          <el-form-item label="供应商名称：">
+            <el-input v-model="searchForm.issueEntName" @keyup.enter.native="enterSearch"/>
+          </el-form-item>
+          <el-form-item label="核心企业：">
+            <el-input v-model="searchForm.issueEntName" @keyup.enter.native="enterSearch"/>
+          </el-form-item>
+        </el-form>
+      </template>
       <zj-table ref="searchTable"
                 :dataList="list"
                 :params="searchForm"
@@ -33,7 +29,7 @@
           </template>
         </zj-table-column>
       </zj-table>
-    </div>
+    </zj-list-layout>
   </div>
 </template>
 <script>

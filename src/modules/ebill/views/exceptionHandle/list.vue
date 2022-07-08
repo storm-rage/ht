@@ -1,79 +1,75 @@
 <template>
   <div class="FdOpenAndReceipt-OrderAudit_pending">
-    <div class="zj-search-condition">
-      <el-form ref="searchForm" :model="searchForm">
-        <el-form-item label="交易流水号：">
-          <el-input v-model="searchForm.serialNo" @keyup.enter.native="enterSearch"/>
-        </el-form-item>
-        <el-form-item  label="交易日期：" class="col-center">
-          <zj-date-range-picker
-            :startDate.sync="searchForm.tranDateStart"
-            :startPlaceholder="''"
-            :endDate.sync="searchForm.tranDateEnd"
-            :endPlaceholder="''"
-          />
-        </el-form-item>
-        <!--<el-form-item label="交易金额：">
-          <el-input v-model="searchForm.tranAmt"/>
-        </el-form-item>-->
-        <el-form-item  label="接口状态：" class="col-right">
-          <el-select v-model="searchForm.tranStatus"
-                     :popper-append-to-body="false"
-          >
-            <el-option
-              v-for="(item, index) in dictionary.tranStatus"
-              :key="index"
-              :value="item.code"
-              :label="item.desc"
-            ></el-option>
-          </el-select>
-        </el-form-item>
+    <zj-list-layout>
+      <template slot="searchForm">
+        <el-form ref="searchForm" :model="searchForm">
+          <el-form-item label="交易流水号：">
+            <el-input v-model="searchForm.serialNo" @keyup.enter.native="enterSearch"/>
+          </el-form-item>
+          <el-form-item  label="交易日期：" class="col-center">
+            <zj-date-range-picker
+              :startDate.sync="searchForm.tranDateStart"
+              :startPlaceholder="''"
+              :endDate.sync="searchForm.tranDateEnd"
+              :endPlaceholder="''"
+            />
+          </el-form-item>
+          <!--<el-form-item label="交易金额：">
+            <el-input v-model="searchForm.tranAmt"/>
+          </el-form-item>-->
+          <el-form-item  label="接口状态：" class="col-right">
+            <el-select v-model="searchForm.tranStatus"
+                       :popper-append-to-body="false"
+            >
+              <el-option
+                v-for="(item, index) in dictionary.tranStatus"
+                :key="index"
+                :value="item.code"
+                :label="item.desc"
+              ></el-option>
+            </el-select>
+          </el-form-item>
 
-        <el-form-item :label="$i18n.messages[$i18n.locale].lang.financingName+'编号：'">
-          <el-input v-model="searchForm.ebillCode" @keyup.enter.native="enterSearch"/>
-        </el-form-item>
-        <el-form-item  label="开单企业：" class="col-center">
-          <el-input v-model="searchForm.writerNameLike" @keyup.enter.native="enterSearch"/>
-        </el-form-item>
-        <el-form-item  label="接口名称：" class="col-right">
-          <el-select v-model="searchForm.tranType"
-                     :popper-append-to-body="false"
-          >
-            <el-option
-              v-for="(item, index) in dictionary.tranType"
-              :key="index"
-              :value="item.code"
-              :label="item.desc"
-            ></el-option>
-          </el-select>
-        </el-form-item>
+          <el-form-item :label="$i18n.messages[$i18n.locale].lang.financingName+'编号：'">
+            <el-input v-model="searchForm.ebillCode" @keyup.enter.native="enterSearch"/>
+          </el-form-item>
+          <el-form-item  label="开单企业：" class="col-center">
+            <el-input v-model="searchForm.writerNameLike" @keyup.enter.native="enterSearch"/>
+          </el-form-item>
+          <el-form-item  label="接口名称：" class="col-right">
+            <el-select v-model="searchForm.tranType"
+                       :popper-append-to-body="false"
+            >
+              <el-option
+                v-for="(item, index) in dictionary.tranType"
+                :key="index"
+                :value="item.code"
+                :label="item.desc"
+              ></el-option>
+            </el-select>
+          </el-form-item>
 
-        <el-form-item  :label="$store.getters['project/productName']+'企业：'">
-          <el-input v-model="searchForm.financingEntNameLike" @keyup.enter.native="enterSearch"/>
-        </el-form-item>
-        <el-form-item  label="资金方企业：" class="col-center">
-          <el-input v-model="searchForm.fundingEntNameLike" @keyup.enter.native="enterSearch"/>
-        </el-form-item>
-        <el-form-item  label="所属项目：" class="col-right">
-          <el-select v-model="searchForm.projectId"
-                     :popper-append-to-body="false"
-                     clearable
-          >
-            <el-option
-              v-for="(item, index) in dictionary.projectList"
-              :key="index"
-              :value="item.code"
-              :label="item.desc"
-            ></el-option>
-          </el-select>
-        </el-form-item>
-      </el-form>
-      <el-row class="button-row">
-        <vxe-button class="search" icon="el-icon-search" @click="search">查询</vxe-button>
-        <vxe-button class="reset" icon="el-icon-refresh" @click="resetSearch">重置</vxe-button>
-      </el-row>
-    </div>
-    <div class="zj-search-response">
+          <el-form-item  :label="$store.getters['project/productName']+'企业：'">
+            <el-input v-model="searchForm.financingEntNameLike" @keyup.enter.native="enterSearch"/>
+          </el-form-item>
+          <el-form-item  label="资金方企业：" class="col-center">
+            <el-input v-model="searchForm.fundingEntNameLike" @keyup.enter.native="enterSearch"/>
+          </el-form-item>
+          <el-form-item  label="所属项目：" class="col-right">
+            <el-select v-model="searchForm.projectId"
+                       :popper-append-to-body="false"
+                       clearable
+            >
+              <el-option
+                v-for="(item, index) in dictionary.projectList"
+                :key="index"
+                :value="item.code"
+                :label="item.desc"
+              ></el-option>
+            </el-select>
+          </el-form-item>
+        </el-form>
+      </template>
       <zj-table ref="searchTable" :api="$api.exceptionHandle.queryBankFinancing" :params="searchForm">
         <zj-table-column field="tranType" title="接口名称" :formatter="(obj) => typeMap(dictionary.tranType, obj.cellValue)"/>
         <zj-table-column field="projectName" title="所属项目"/>
@@ -98,8 +94,7 @@
           </template>
         </zj-table-column>
       </zj-table>
-    </div>
-
+    </zj-list-layout>
     <!-- 驳回 -->
     <zj-reject-dialog
       ref="rejectDialog"

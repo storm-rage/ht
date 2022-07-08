@@ -1,38 +1,34 @@
 <template>
   <div ref="billPaymentRef">
-    <div class="zj-search-condition" style="border-bottom: 0;margin-bottom: 10px">
-      <el-row class="button-row">
-        <vxe-button class="reset" icon="el-icon-refresh" @click="resetSearch">重置</vxe-button>
-        <vxe-button class="search" icon="el-icon-search" @click="search">查询</vxe-button>
-      </el-row>
-      <el-form ref="searchForm" :model="searchForm">
-        <el-form-item label="凭证编号：">
-          <el-input v-model="searchForm.issueEntName" @keyup.enter.native="enterSearch"/>
-        </el-form-item>
-        <el-form-item label="签发日期：" class="col-right">
-          <zj-date-range-picker
-            :startDate.sync="searchForm.expireDateStart"
-            :endDate.sync="searchForm.expireDateEnd"
-          />
-        </el-form-item>
-        <el-form-item label="凭证到期日：" class="col-right">
-          <zj-date-range-picker
-            :startDate.sync="searchForm.expireDateStart"
-            :endDate.sync="searchForm.expireDateEnd"
-          />
-        </el-form-item>
-        <el-form-item label="原始持有人：">
-          <el-input v-model="searchForm.issueEntName" @keyup.enter.native="enterSearch"/>
-        </el-form-item>
-        <el-form-item label="签发人：">
-          <el-input v-model="searchForm.issueEntName" @keyup.enter.native="enterSearch"/>
-        </el-form-item>
-        <el-form-item label="业务系统单号：">
-          <el-input v-model="searchForm.issueEntName" @keyup.enter.native="enterSearch"/>
-        </el-form-item>
-      </el-form>
-    </div>
-    <div class="zj-search-response">
+    <zj-list-layout noBottomBorder>
+      <template slot="searchForm">
+        <el-form ref="searchForm" :model="searchForm">
+          <el-form-item label="凭证编号：">
+            <el-input v-model="searchForm.issueEntName" @keyup.enter.native="enterSearch"/>
+          </el-form-item>
+          <el-form-item label="签发日期：" class="col-right">
+            <zj-date-range-picker
+              :startDate.sync="searchForm.expireDateStart"
+              :endDate.sync="searchForm.expireDateEnd"
+            />
+          </el-form-item>
+          <el-form-item label="凭证到期日：" class="col-right">
+            <zj-date-range-picker
+              :startDate.sync="searchForm.expireDateStart"
+              :endDate.sync="searchForm.expireDateEnd"
+            />
+          </el-form-item>
+          <el-form-item label="原始持有人：">
+            <el-input v-model="searchForm.issueEntName" @keyup.enter.native="enterSearch"/>
+          </el-form-item>
+          <el-form-item label="签发人：">
+            <el-input v-model="searchForm.issueEntName" @keyup.enter.native="enterSearch"/>
+          </el-form-item>
+          <el-form-item label="业务系统单号：">
+            <el-input v-model="searchForm.issueEntName" @keyup.enter.native="enterSearch"/>
+          </el-form-item>
+        </el-form>
+      </template>
       <zj-table ref="searchTable"
                 :dataList="list"
                 :params="searchForm"
@@ -60,7 +56,7 @@
           </template>
         </zj-table-column>
       </zj-table>
-    </div>
+    </zj-list-layout>
     <confirm-payment-maintenance ref="confirmPaymentMaintenance"></confirm-payment-maintenance>
     <zj-content-footer v-if="showBottomBtn" style="position: fixed" :style="{'left': bottomBtnLeft+'px'}">
       <zj-button type="primary" @click="batchSubmitApply" :api="zjBtn.passBillSignBatch">提交申请</zj-button>
