@@ -63,6 +63,13 @@
         :params="searchForm"
         :api="zjControl.tableApi"
       >
+       <zj-table-column field="ebillCode" title="申请流水号">
+          <template v-slot="{ row }">
+            <span class="table-elbill-code" @click="toDetails(row)">{{
+              row.ebillCode
+            }}</span>
+          </template>
+        </zj-table-column>
         <zj-table-column field="name" title="企业名称" />
         <zj-table-column field="entType" title="平台客户类型">
           <template v-slot="{ row }">
