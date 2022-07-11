@@ -11,21 +11,23 @@
             </div>-->
 
             <el-card style="margin: 32px 13.4% 0 0;">
-                <!--       标题         -->
-                <div ref="loginForm"></div>
-                <el-row class="title">登录</el-row>
+              <login-type v-model="userData.pwdVerifyMode" @change="handleChangeLoginType"></login-type>
                 <!--     登录表单       -->
                 <el-form status-icon ref="userForm" class="demo-ruleForm" :statusIcon="false" :model="userData" :rules="userRules" >
                     <el-form-item prop="loginName">
                         <el-input type="text" v-model="userData.loginName" name="loginName"
-                                  placeholder="请输入账户名" size="medium" @focus="inputFocus($event)"
+                                  :placeholder="userData.pwdVerifyMode==='1'?'请输入账户名':'请输入手机号'"
+                                  :maxlength="userData.pwdVerifyMode==='1'?150:11"
+                                  size="medium"
+                                  @focus="inputFocus($event)"
                                   @blur="inputBlur($event)">
                           <div slot="prefix">
                             <img  src="@assets/img/login/account.png">
                           </div>
                         </el-input>
                     </el-form-item>
-                    <el-form-item prop="password" class="zj-m-b-5 password-block">
+
+                    <el-form-item prop="password" class="zj-m-b-5 password-block" v-if="userData.pwdVerifyMode==='1'">
                         <el-input v-model="userData.password" placeholder="请输入密码"
                                   size="medium"
                                   @focus="inputFocus($event)"
@@ -38,10 +40,6 @@
                             <img  src="@assets/img/login/password.png">
                           </div>
                           <i slot="suffix" :class="icon" :title="passw === 'password' ? '显示密码' : '隐藏密码'" @click="showPass" style="cursor: pointer"/>
-<!--                          <div slot="suffix" @click="changePwdType" style="line-height: 35px">
-                            <i class="el-icon-view" v-if="passwordType =='password'"></i>
-                            <img  src="@assets/img/login/password-hide.png" style="vertical-align: middle" v-if="passwordType =='text'">
-                          </div>-->
                         </el-input>
 <!--                      <router-link to="/forgotPassword" class="fr right-text">忘记密码?</router-link>-->
                       <a @click="$router.push('/forgotPassword')"  class="zj-f-r right-text pointer">忘记密码?</a>
@@ -65,7 +63,7 @@
                         </div>
                     </el-form-item>
                     <!--     当为首次登录时      -->
-                    <el-form-item prop="smsCode" v-if="isOneLogin === '0'" class="login-one">
+                    <el-form-item prop="smsCode" v-if="isOneLogin||userData.pwdVerifyMode==='2'" class="login-one">
                         <el-input placeholder="请输入手机验证码" v-model="userData.smsCode" size="medium">
                             <template slot="append">
                                 <zj-button
@@ -77,28 +75,21 @@
                         </el-input>
                     </el-form-item>
                     <el-form-item class="zj-m-t-5" >
-                        <zj-button status="primary" class="loginBtn" @click="submitForm">登录</zj-button>
+                        <vxe-button status="primary" class="loginBtn" @click="submitForm">登录</vxe-button>
                     </el-form-item>
                 </el-form>
                 <!--     注册 与 忘记      -->
                 <el-row class="login_pass">
-                    <el-checkbox v-model="remember" class="check-text">记住账户名</el-checkbox>
-<!--                    <router-link to="/forgotPassword" style="float: right">忘记密码</router-link>-->
-<!--                    <router-link to="/register" class="fr right-text">立即注册</router-link>-->
+<!--                    <el-checkbox v-model="remember" class="check-text">记住账户名</el-checkbox>-->
+<!--                    <router-link to="/forgotPassword" class="zj-f-r right-text">忘记密码？</router-link>-->
                   <a @click="$router.push('/register')"  class="zj-f-r right-text pointer">立即注册</a>
                 </el-row>
-                <!--     建议       -->
-<!--                <el-row class="advice">
-                    安全建议：为了确保您的账户安全，任何情况下请勿将您的登录密码、UKEY交给他人保管或使用，请勿在非信任设备上进行登录。
-                </el-row>-->
             </el-card>
         </div>
         <!--    底部组件    -->
         <LoginFooter></LoginFooter>
         <!--    强制修改密码    -->
         <LoginEditPassword ref="editPassword"  :userInfoS="userData" :userSinfo="loginSuccess" @editSuccess="editSuccess"></LoginEditPassword>
-        <!--    人脸识别    -->
-<!--        <FaceRecognition ref="FaceRecognition" :userInfo="loginSuccess" @resetState="resetState"></FaceRecognition>-->
         <!-- 冻结 -->
        <frozenDialog ref="frozenDialog"></frozenDialog>
     </div>

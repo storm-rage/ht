@@ -6,18 +6,18 @@
     </div>
     <!-- 一级目录 -->
     <div class="navbar-left">
-      <el-menu
-          :default-active="navMenuActive.toString()"
-          class="navbar-menu"
-          mode="horizontal">
-        <el-menu-item
-            v-for="(item, index) in menuTreeList"
-            :key="index"
-            :index="index.toString()"
-            @click="changeNavMenuActive(index)" >
-          {{ item.name }}
-        </el-menu-item>
-      </el-menu>
+<!--      <el-menu-->
+<!--          :default-active="navMenuActive.toString()"-->
+<!--          class="navbar-menu"-->
+<!--          mode="horizontal">-->
+<!--        <el-menu-item-->
+<!--            v-for="(item, index) in menuTreeList"-->
+<!--            :key="index"-->
+<!--            :index="index.toString()"-->
+<!--            @click="changeNavMenuActive(index)" >-->
+<!--          {{ item.name }}-->
+<!--        </el-menu-item>-->
+<!--      </el-menu>-->
     </div>
 
     <!-- 右侧信息 -->
@@ -54,7 +54,6 @@ export default {
     },
     // 登出
     logout () {
-
       this.$api.login.logout().then(()=>{
 		  //清除local存储的信息
 		  sessionStorage.clear()
