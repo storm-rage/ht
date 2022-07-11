@@ -22,12 +22,12 @@
 
     <!-- 右侧信息 -->
     <div class="navbar-right">
-      <el-dropdown trigger="click" class="navbar-right-menu" @command="toChangeProject" v-if="currentProject.projectName">
+      <el-dropdown trigger="click" class="navbar-right-menu" @command="toChangeEnt" v-if="currentEnt.entName">
         <span class="menu-dropdown-link">
-        {{currentProject.projectName}}<i class="el-icon-arrow-down el-icon--right"></i>
+        {{currentEnt.entName}}<i class="el-icon-arrow-down el-icon--right"></i>
         </span>
-        <el-dropdown-menu slot="dropdown" v-if="isChangeProject">
-          <el-dropdown-item :command="item" v-for="(item,index) in projects" :key="index">{{item.projectName}}</el-dropdown-item>
+        <el-dropdown-menu slot="dropdown" v-if="isChangeEnt">
+          <el-dropdown-item :command="item" v-for="(item,index) in projects" :key="index">{{item.entName}}</el-dropdown-item>
         </el-dropdown-menu>
       </el-dropdown>
       <div class="navbar-right-info">{{ userInfo.entName }}</div>
@@ -43,7 +43,7 @@ export default {
   name: 'Navbar',
   data () {
     return {
-      currentProject: {}
+      currentEnt: {}
     };
   },
   methods: {
@@ -69,17 +69,17 @@ export default {
         // }, 50)
       })
     },
-    toChangeProject (item) {
-      if (item.id==this.currentProject.id) {
+    toChangeEnt (item) {
+      if (item.entId==this.currentEnt.entId) {
         return;
       } else {
         this.$api.baseCommon.changeProject({
           loginChannel: '0',
-          projectId: item.id
+          entId: item.entId
         }).then(ret => {
-          this.currentProject = item;
+          this.currentEnt = item;
           const data = ret.data;
-          const loginRes = Object.assign({}, this.userInfo, data,{currentProject: item});
+          const loginRes = Object.assign({}, this.userInfo, data,{currentEnt: item});
           if (data.faceCheck || data.userServiceAgreementFlag === '1') {
             const loginSuccess = JSON.parse(JSON.stringify({
               loginRes
@@ -88,7 +88,7 @@ export default {
             sessionStorage.setItem('frLoginRes',JSON.stringify(loginRes))
             this.goChild('faceRecognition',loginSuccess)
           } else {
-            this.$store.dispatch('project/changeProject', {data,projectInfo: item}).then(() =>  {
+            this.$store.dispatch('project/changeEnt', {data,entInfo: item}).then(() =>  {
               /*
               this.$router.push('/')*/
               this.$store.commit('tab/tabClear');
@@ -105,15 +105,15 @@ export default {
       menuTreeList: state => state.menu.menuTreeList,
       navMenuActive: state => state.menu.navMenuActive,
       collapseFlag: state => state.menu.collapseFlag,
-      projectInfo: state => state.project.projectInfo,
-      projects: state => state.project.projectList,
-      isChangeProject: (state) => {
-        return state.project.projectList&&state.project.projectList.length;
+      entInfo: state => state.enterpriseStore.entInfo,
+      entList: state => state.enterpriseStore.entList,
+      isChangeEnt: (state) => {
+        return state.enterpriseStore.entList&&state.enterpriseStore.entList.length;
       }
     })
   },
   mounted() {
-    this.currentProject = this.projectInfo;
+    this.currentEnt = this.entInfo;
   },
   watch: {
     $route(val) {

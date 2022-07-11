@@ -4,11 +4,11 @@ export default {
     //保存相关信息
     saveInfo(loginRes){
       // 设置项目列表
-      this.$store.dispatch('project/setProjectList', loginRes.projectList);
-      if (loginRes.projectList&&loginRes.projectList.length&&!loginRes.currentProject) {
-        this.$store.dispatch('project/setProjectInfo', loginRes.projectList[0]);
-      } else if(loginRes.currentProject) {
-        this.$store.dispatch('project/setProjectInfo', loginRes.currentProject);
+      this.$store.dispatch('enterprise/setEntList', loginRes.projectList);
+      if (loginRes.entInfoList&&loginRes.entInfoList.length&&!loginRes.currentEnt) {
+        this.$store.dispatch('enterprise/setEntInfo', loginRes.projectList[0]);
+      } else if(loginRes.currentEnt) {
+        this.$store.dispatch('enterprise/setEntInfo', loginRes.currentEnt);
       }
       // 保存菜单树
       this.$store.dispatch('menu/setMenuTreeList', JSON.parse(JSON.stringify(loginRes.resList)));

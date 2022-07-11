@@ -91,9 +91,9 @@ export default {
     //保存相关信息
     saveInfo(loginRes) {
       // 设置项目列表
-      this.$store.dispatch('enterprise/setProjectList', loginRes.entInfoList);
+      this.$store.dispatch('enterprise/setEntList', loginRes.entInfoList);
       if (loginRes.entInfoList && loginRes.entInfoList.length) {
-        this.$store.dispatch('project/setProjectInfo', loginRes.entInfoList[0]);
+        this.$store.dispatch('enterprise/setEntInfo', loginRes.entInfoList[0]);
       }
       const menuList = loginRes.resList
       // 保存菜单树
