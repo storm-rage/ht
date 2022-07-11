@@ -1,10 +1,10 @@
 <template>
   <zj-content-container>
-    <el-tabs v-model="tabAtive" type="card" class="zj-tabs-card">
+    <zj-tabs v-model="tabAtive">
       <el-tab-pane label="代办" name="agenda"> </el-tab-pane>
       <el-tab-pane label="已办" name="pending"> </el-tab-pane>
       <el-tab-pane label="已办结" name="processed"> </el-tab-pane>
-    </el-tabs>
+    </zj-tabs>
     <zj-list-layout>
       <template slot="searchForm">
         <el-form ref="searchForm">

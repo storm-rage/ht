@@ -48,11 +48,11 @@
         </div>
       </zj-content-tip>
       <zj-content>
-        <el-tabs v-model="activeComp" type="card" class="zj-tabs-card">
+        <zj-tabs v-model="activeComp">
           <el-tab-pane :label="item.label" v-for="(item,index) in tabsList" :key="`${index}b`" :name="item.name" >
             <component :is="activeComp" v-if="item.name === activeComp"></component>
           </el-tab-pane>
-        </el-tabs>
+        </zj-tabs>
       </zj-content>
     </zj-content-block>
   </div>
