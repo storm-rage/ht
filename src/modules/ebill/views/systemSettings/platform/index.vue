@@ -1,7 +1,7 @@
 <template>
   <div id="ss-platform">
     <el-form :model="formModel" :rules="formRules" label-width="210px" ref="form">
-      <el-tabs v-model="myTabActive" type="card" class="zj-tabs-card">
+      <zj-tabs v-model="myTabActive">
         <el-tab-pane label="平台基本信息" name="platformSetting">
 
           <div>
@@ -285,7 +285,7 @@
             </el-collapse-item>
           </el-collapse>
         </el-tab-pane>
-      </el-tabs>
+      </zj-tabs>
     </el-form>
     <el-row class="w85 ta-c zj-m-b-15">
       <zj-button :api="zjBtn.updatePlatform" class="save-btn" @click="save">保存</zj-button>
@@ -498,7 +498,7 @@ export default {
                 if(kdArr && kdArr.length){
                   item.checkList.push('kd')
                 }
-      
+
               }
               //收 + 融 + 签
               if(kitem.isInEntSeal === '1'){

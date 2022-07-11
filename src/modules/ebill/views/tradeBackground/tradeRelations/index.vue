@@ -1,10 +1,10 @@
 <template>
   <div class="FdOpenAndReceipt-OrderAudit search-page">
-    <el-tabs v-model="tabAtive" type="card" class="zj-tabs-card">
+    <zj-tabs v-model="tabAtive">
       <el-tab-pane :label="item.label" v-for="(item,index) in tabsList" :key="index" :name="item.name" >
         <component :is="tabAtive" v-if="item.name === tabAtive" :dictionary="dictionary"></component>
       </el-tab-pane>
-    </el-tabs>
+    </zj-tabs>
   </div>
 </template>
 
@@ -25,10 +25,10 @@ export default {
     }
   },
   methods:{
-   
+
   },
   created() {
-  
+
   }
 }
 </script>
