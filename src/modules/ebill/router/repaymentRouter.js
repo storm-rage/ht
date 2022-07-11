@@ -9,7 +9,8 @@ const repaymentRouter = [
       title: `提前还款申请`,
       root: '融资管理',
       keepAlive: true,
-      refreshIndex: 0
+      refreshIndex: 0,
+      notRequireAuth: true
     }
   },
   {
@@ -21,7 +22,8 @@ const repaymentRouter = [
       title: `提前还款复核`,
       root: '融资管理',
       keepAlive: true,
-      refreshIndex: 0
+      refreshIndex: 0,
+      notRequireAuth: true
     }
   },
   {

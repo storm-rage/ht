@@ -1,43 +1,36 @@
 <template>
-  <div>
-    <div class="zj-search-condition">
-      <el-row class="button-row">
-        <vxe-button class="reset" icon="el-icon-refresh" @click="resetSearch"
-          >重置</vxe-button
-        >
-        <vxe-button class="search" icon="el-icon-search" @click="search"
-          >查询</vxe-button
-        >
-      </el-row>
-      <el-form ref="searchForm" :model="searchForm">
-        <el-form-item label="融资流水号：">
-          <el-input v-model="searchForm.issueEntName" />
-        </el-form-item>
-        <el-form-item label="申请日期：" class="col-right">
-          <zj-date-range-picker
-            :startDate.sync="searchForm.expireDateStart"
-            :endDate.sync="searchForm.expireDateEnd"
-          />
-        </el-form-item>
-        <el-form-item label="融资到期日期：" class="col-right">
-          <zj-date-range-picker
-            :startDate.sync="searchForm.expireDateStart"
-            :endDate.sync="searchForm.expireDateEnd"
-          />
-        </el-form-item>
-        <el-form-item label="申请提前还款金额：" class="col-center">
-          <zj-amount-range
-            :startAmt.sync="searchForm.ebillAmtStart"
-            :endAmt.sync="searchForm.ebillAmtEnd"
-            @keyupEnterNative="enterSearch"
-          />
-        </el-form-item>
-        <el-form-item label="申请流水号：">
-          <el-input v-model="searchForm.issueEntName" />
-        </el-form-item>
-      </el-form>
-    </div>
-    <div class="zj-search-response">
+  <zj-content-container>
+    <!--  提前还款复核  -->
+    <zj-list-layout>
+      <template slot="searchForm">
+        <el-form ref="searchForm" :model="searchForm">
+          <el-form-item label="融资流水号：">
+            <el-input v-model="searchForm.issueEntName" />
+          </el-form-item>
+          <el-form-item label="申请日期：" class="col-right">
+            <zj-date-range-picker
+              :startDate.sync="searchForm.expireDateStart"
+              :endDate.sync="searchForm.expireDateEnd"
+            />
+          </el-form-item>
+          <el-form-item label="融资到期日期：" class="col-right">
+            <zj-date-range-picker
+              :startDate.sync="searchForm.expireDateStart"
+              :endDate.sync="searchForm.expireDateEnd"
+            />
+          </el-form-item>
+          <el-form-item label="申请提前还款金额：" class="col-center">
+            <zj-amount-range
+              :startAmt.sync="searchForm.ebillAmtStart"
+              :endAmt.sync="searchForm.ebillAmtEnd"
+              @keyupEnterNative="enterSearch"
+            />
+          </el-form-item>
+          <el-form-item label="申请流水号：">
+            <el-input v-model="searchForm.issueEntName" />
+          </el-form-item>
+        </el-form>
+      </template>
       <zj-table
         ref="searchTable"
         :params="searchForm"
@@ -58,8 +51,16 @@
           title="融资到期日"
           :formatter="date"
         />
-        <zj-table-column field="expireDate" title="已还款本金" :formatter="money" />
-        <zj-table-column field="expireDate" title="已还款本金" :formatter="money" />
+        <zj-table-column
+          field="expireDate"
+          title="已还款本金"
+          :formatter="money"
+        />
+        <zj-table-column
+          field="expireDate"
+          title="已还款本金"
+          :formatter="money"
+        />
         <zj-table-column
           field="receiveDate"
           title="申请时间"
@@ -76,8 +77,8 @@
           </template>
         </zj-table-column>
       </zj-table>
-    </div>
-  </div>
+    </zj-list-layout>
+  </zj-content-container>
 </template>
 <script>
 export default {

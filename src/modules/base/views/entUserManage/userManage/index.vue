@@ -1,120 +1,109 @@
 <template>
-  <div class="UserManagement search-page">
-    <el-tabs v-model="tabAtive" type="card" class="zj-tabs-card">
-      <!-- <el-tab-pane
-        :label="item.label"
-        v-for="(item, index) in tabsList"
-        :key="index"
-        :name="tabAtive"
+  <zj-content-container>
+    <zj-list-layout>
+      <template slot="searchForm">
+        <el-form ref="searchForm" class="search-form">
+          <el-form-item label="用户姓名：" class="col-center">
+            <el-input
+              v-model="searchForm.userNameLike"
+              @keyup.enter.native="enterSearch"
+            />
+          </el-form-item>
+          <el-form-item label="新增日期：" class="col-right">
+            <zj-date-range-picker
+              @startChange="$refs.quickQuery.queryIndex = 0"
+              @endChange="$refs.quickQuery.queryIndex = 0"
+              :startDate.sync="searchForm.createDateStart"
+              :endDate.sync="searchForm.createDateEnd"
+            />
+          </el-form-item>
+          <el-form-item label="用户状态：">
+            <el-select v-model="applicationStatus">
+              <el-option value="1" />
+              <el-option value="2" />
+            </el-select>
+          </el-form-item>
+          <el-form-item label="企业名称：">
+            <el-input
+              v-model="searchForm.entNameLike"
+              @keyup.enter.native="enterSearch"
+            />
+          </el-form-item>
+        </el-form>
+      </template>
+      <template slot="btnGroups">
+        <zj-button
+          class="append"
+          icon="el-icon-circle-plus-outline"
+          @click="addUser"
+          >新增</zj-button
+        >
+      </template>
+      <zj-table
+        ref="searchTable"
+        :params="searchForm"
+        :api="zjControl.uTableApi"
       >
-        <component
-          :is="tabAtive"
-          v-if="item.name === tabAtive"
-          :dictionary="dictionary"
-        ></component>
-      </el-tab-pane> -->
-      <el-tab-pane label="用户记录" name="userInfo">
-        <userInfo :zjControl="zjControl" :uDictionary="uDictionary" :uBtn="zjBtn"/>
-      </el-tab-pane>
-      <el-tab-pane label="代办" name="agenda">
-        <agenda :zjControl="zjControl" :mDictionary="mDictionary" :mBtn="zjBtn"/>
-      </el-tab-pane>
-      <el-tab-pane label="已办" name="accomplish">
-        <accomplish :zjControl="zjControl" :mDictionary="mDictionary" :mBtn="zjBtn"/>
-      </el-tab-pane>
-      <el-tab-pane label="已办结" name="end">
-        <end :zjControl="zjControl" :mDictionary="mDictionary" :mBtn="zjBtn"/>
-      </el-tab-pane>
-    </el-tabs>
-  </div>
+        <zj-table-column field="loginName" title="用户编码" />
+        <zj-table-column field="userName" title="用户姓名" />
+        <zj-table-column field="mobileNo" title="手机号码" />
+        <zj-table-column field="createDate" title="创建日期" />
+        <zj-table-column field="createDate" title="已关联企业" />
+        <zj-table-column field="createDate" title="企业名称" />
+        <zj-table-column title="操作" fixed="right">
+          <template v-slot="{ row }">
+            <zj-button
+              type="text"
+              @click="&quot;&quot;;"
+              :api="uBtn.uGetUserInformationDetail"
+              >维护</zj-button
+            >
+          </template>
+        </zj-table-column>
+      </zj-table>
+    </zj-list-layout>
+  </zj-content-container>
 </template>
 
 <script>
-import userInfo from "./userInfo/userInfo";
-import agenda from "./maintainRecord/maintainRecord";
-import accomplish from "./maintainRecord/maintainRecord";
-import end from "./maintainRecord/maintainRecord";
 export default {
-  name: "UserManagement",
-  components: {
-    userInfo,
-    agenda,
-    accomplish,
-    end
-  },
+  name: "userInfo",
+  components: {},
   data() {
     return {
-      tabAtive: "userInfo",
-      tabsList: [
-        { label: "用户信息", name: "userInfo" },
-        { label: "待办", name: "agenda" },
-        { label: "已办", name: "accomplish" },
-        { label: "已办结", name: "end" }
-      ],
-      dictionary:{},
-      zjControl: {
-        //用户信息
-        uGetDictionary: this.$api.userInfoManage.getUserDictionary, //数据字典
-        uTableApi: this.$api.userInfoManage.queryUserPage, //用户列表
-        uAddUser: this.$api.userInfoManage.addUser, //新增用户
-        uExportUsers: this.$api.userInfoManage.exportUsers, //列表导出
-        uValidateMobileRealName:
-          this.$api.userInfoManage.validateMobileRealName, //联网核查
-        uUpdateUser: this.$api.userInfoManage.updateUser, //管理入口检测
-        uBindCloudCerUser: this.$api.userInfoManage.bindCloudCerUser, //绑定云证书
-        uMakeCertKey: this.$api.userInfoManage.makeCertKey, //制key
-        uGetUserInformationDetail:
-          this.$api.userInfoManage.getUserInformationDetail, //详情入口检测
-        uUserInfo: this.$api.userInfoManage.getUserInformation, //获取用户详情
-        //维护记录
-        mTableApi: this.$api.userInfoManage.queryUserLogsPage, //维护记录
-        mGetDictionary: this.$api.userInfoManage.getUserLogsDictionary, //数据字典
+      zjControl: {},
+      applicationStatus: "",
+      searchForm: {
+        entNameLike: "", //企业名称
+        loginNameLike: "", //用户名
+        createDateStart: "", //新增日期开始
+        createDateEnd: "", //新增日期结束
+        mobileNo: "", //手机号码
+        userNameLike: "", //姓名
+        certNo: "", //证件号码
       },
-      tabs: "userInfo",
-      uDictionary: {},
-      mDictionary: {},
     };
   },
   methods: {
-    getApiAfter() {
-      this.zjBtn.userInfo
-        ? (this.tabAtive = "userInfo")
-        : (this.tabAtive = "maintainRecord");
+    //查询之前
+    beforeSearch() {
+      this.$refs.quickQuery.editDate();
     },
-    uGetDictionary() {
-      this.zjControl.uGetDictionary().then((res) => {
-        this.uDictionary = res.data;
-      });
+    //重置之前
+    beforeResetSearch() {
+      this.$refs.quickQuery.editDate();
     },
-    mGetDictionary() {
-      this.zjControl.mGetDictionary().then((res) => {
-        this.mDictionary = res.data;
-      });
+    //新增用户
+    addUser() {
+      this.$refs.addEditUser.open(true); //显示
     },
-  },
-  created() {
-    this.getApi();
-    this.uGetDictionary();
-    this.mGetDictionary();
+    //新增完成
+    addSuccess(boo) {
+      boo ? this.resetSearch() : this.search();
+    },
   },
 };
 </script>
 
-<style lang="less">
-.uiTabs {
-  .el-tabs__nav {
-    margin-left: 100px;
-    /*padding: 10px 0 5px 0;*/
-  }
-  .el-tabs__item {
-    padding: 0 10px !important;
-    /*transform: translateX(-20px);*/
-  }
-  /*.is-active{*/
-  /*  border: 2px solid #f56c6c;*/
-  /*  border-bottom: none;*/
-  /*  border-radius: 12px 12px 0 0;*/
-  /*  transform: translateY(2px);*/
-  /*}*/
-}
+<style scoped>
 </style>

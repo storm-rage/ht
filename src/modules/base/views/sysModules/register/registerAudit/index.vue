@@ -1,95 +1,75 @@
 <template>
-  <div class="ent_user-audit">
-    <div class="zj-search-condition">
-      <el-row class="quick-row">
-        <div
-          class="quick-item"
-          v-for="item in directory.supplierTradeTypeList"
-          :key="item.code"
-          @click="quickQuery(item.code)"
-          :class="{ active: item.code === quickCheck }"
-        >
-          {{ item.desc }}
-        </div>
-      </el-row>
-      <el-row class="button-row">
-        <zj-button
-          class="reset"
-          icon="el-icon-refresh"
-          @click="resetSearch"
-          :api="zjBtn.tableApi"
-          >重置</zj-button
-        >
-        <zj-button
-          class="search"
-          icon="el-icon-search"
-          @click="search"
-          :api="zjBtn.tableApi"
-          >查询</zj-button
-        >
-      </el-row>
-      <el-form ref="searchForm" :model="searchForm" class="search-form">
-        <el-form-item label="企业名称：">
-          <el-input
-            v-model="searchForm.nameLike"
-            placeholder=""
-            @keyup.enter.native="enterSearch"
-          />
-        </el-form-item>
-        <el-form-item label="注册申请日期：" class="col-center">
-          <zj-date-range-picker
-            class="searchFormDate"
-            :startDate.sync="searchForm.applyDatetimeStart"
-            :endDate.sync="searchForm.applyDatetimeEnd"
-          />
-        </el-form-item>
-        <el-form-item label="平台客户类型：" class="col-right">
-          <el-select
-            v-model="searchForm.entType"
-            filterable
-            placeholder="请选择"
-            :popper-append-to-body="false"
-          >
-            <el-option
-              v-for="item in platFormAuditEntTypeList"
-              :key="item.value"
-              :label="item.desc"
-              :value="item.value"
+  <zj-content-container>
+    <zj-list-layout>
+      <template slot="searchForm">
+        <el-form ref="searchForm" :model="searchForm" class="search-form">
+          <el-form-item label="企业名称：">
+            <el-input
+              v-model="searchForm.nameLike"
+              placeholder=""
+              @keyup.enter.native="enterSearch"
+            />
+          </el-form-item>
+          <el-form-item label="注册申请日期：" class="col-center">
+            <zj-date-range-picker
+              class="searchFormDate"
+              :startDate.sync="searchForm.applyDatetimeStart"
+              :endDate.sync="searchForm.applyDatetimeEnd"
+            />
+          </el-form-item>
+          <el-form-item label="平台客户类型：" class="col-right">
+            <el-select
+              v-model="searchForm.entType"
+              filterable
+              placeholder="请选择"
+              :popper-append-to-body="false"
             >
-            </el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item label="申请流水号：">
-          <el-input
-            v-model="searchForm.nameLike"
-            placeholder=""
-            @keyup.enter.native="enterSearch"
-          />
-        </el-form-item>
-        <el-form-item label="企业注册状态：" class="col-right">
-          <el-select
-            v-model="searchForm.entType"
-            filterable
-            placeholder="请选择"
-            :popper-append-to-body="false"
-          >
-            <el-option
-              v-for="item in platFormAuditEntTypeList"
-              :key="item.value"
-              :label="item.desc"
-              :value="item.value"
+              <el-option
+                v-for="item in platFormAuditEntTypeList"
+                :key="item.value"
+                :label="item.desc"
+                :value="item.value"
+              >
+              </el-option>
+            </el-select>
+          </el-form-item>
+          <el-form-item label="申请流水号：">
+            <el-input
+              v-model="searchForm.nameLike"
+              placeholder=""
+              @keyup.enter.native="enterSearch"
+            />
+          </el-form-item>
+          <el-form-item label="企业注册状态：" class="col-right">
+            <el-select
+              v-model="searchForm.entType"
+              filterable
+              placeholder="请选择"
+              :popper-append-to-body="false"
             >
-            </el-option>
-          </el-select>
-        </el-form-item>
-      </el-form>
-    </div>
-    <div class="zj-search-response">
+              <el-option
+                v-for="item in platFormAuditEntTypeList"
+                :key="item.value"
+                :label="item.desc"
+                :value="item.value"
+              >
+              </el-option>
+            </el-select>
+          </el-form-item>
+        </el-form>
+      </template>
       <zj-table
         ref="searchTable"
         :params="searchForm"
         :api="zjControl.tableApi"
       >
+       <zj-table-column field="ebillCode" title="申请流水号">
+          <template v-slot="{ row }">
+            <span class="table-elbill-code" @click="toDetails(row)">{{
+              row.ebillCode
+            }}</span>
+          </template>
+        </zj-table-column>
         <zj-table-column field="name" title="企业名称" />
         <zj-table-column field="entType" title="平台客户类型">
           <template v-slot="{ row }">
@@ -166,16 +146,16 @@
           </template>
         </zj-table-column>
       </zj-table>
-    </div>
-    <!-- 发证 -->
-    <certificate
-      ref="certificate"
-      :zjControl="zjControl"
-      :cBtn="zjBtn"
-      :directory="directory"
-      @close="certificate"
-    />
-  </div>
+      <!-- 发证 -->
+      <certificate
+        ref="certificate"
+        :zjControl="zjControl"
+        :cBtn="zjBtn"
+        :directory="directory"
+        @close="certificate"
+      />
+    </zj-list-layout>
+  </zj-content-container>
 </template>
 
 <script>
