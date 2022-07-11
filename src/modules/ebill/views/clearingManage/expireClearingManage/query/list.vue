@@ -1,10 +1,10 @@
 <template>
   <div>
-    <el-tabs v-model="activeComp" type="card" class="zj-tabs-card">
+    <zj-tabs v-model="activeComp">
       <el-tab-pane :label="item.label" v-for="(item,index) in tabsList" :key="`${index}b`" :name="item.name" >
         <component :is="activeComp" v-if="item.name === activeComp"></component>
       </el-tab-pane>
-    </el-tabs>
+    </zj-tabs>
   </div>
 </template>
 <script>
