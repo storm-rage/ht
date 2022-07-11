@@ -8,7 +8,8 @@ const myItemsRouter = [
       title: '我的代办',
       root: '我的代办',
       keepAlive: true,
-      refreshIndex: 0
+      refreshIndex: 0,
+      notRequireAuth: true
     }
   }
 ]
