@@ -1,6 +1,6 @@
 <template>
   <div class="siderbar" :class="collapseFlag ? 'min-siderbar' : ''">
-    <el-scrollbar class="zj-p-b-5 siderbar-scrollbar">
+    <el-scrollbar class="zj-p-b-5 siderbar-scrollbar"  wrapStyle="overflow-x: auto;">
       <el-menu
         ref="zjElMenu"
         :default-active="activeMenu"
