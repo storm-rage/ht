@@ -4,7 +4,7 @@
         <template v-if="item.children">
             <el-submenu :index="item.id.toString()" >
                 <template slot="title">
-                  <i v-if="item.icon" class="icon-img" :class="[`icon-izejin-${item.icon}`,{'menu-collapse': collapse}]"/>
+                  <i v-if="item.icon" class="icon-img" :class="[`ht-iconfont ${item.icon}`,{'menu-collapse': collapse}]"/>
                   <span slot="title">{{item.name}}</span>
                 </template>
                 <MenuTree :menuData="item.children"></MenuTree>
@@ -12,7 +12,7 @@
         </template>
         <template  v-else-if="!item.children && item.url">
             <el-menu-item :index="item.url" @click="toRouter(item)">
-              <i v-if="item.icon" :class="[`icon-izejin-${item.icon}`,{'menu-collapse': collapse}]" class="icon-img"/>
+              <i v-if="item.icon" :class="[`ht-iconfont ${item.icon}`,{'menu-collapse': collapse}]" class="icon-img"/>
               <span slot="title">{{item.name}}</span>
             </el-menu-item>
         </template>
