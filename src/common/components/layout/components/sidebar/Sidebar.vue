@@ -104,7 +104,7 @@ export default {
         if(newArr.findIndex(item => item===true) >= 0){
           this.$store.dispatch('menu/setNavMenuActive', i)
           let mentT = JSON.parse(JSON.stringify(this.$store.state.menu.menuTreeList))
-          this.sideMenuTreeList = mentT[this.$store.state.menu.navMenuActive].children || []
+          this.sideMenuTreeList = mentT || []
           if(!editFlag){
             router.meta.parent ? this.activeMenu = router.meta.parent : this.activeMenu = routeName
           }else{
@@ -115,7 +115,7 @@ export default {
       }
       // 加载当前菜单树
       let mentT = JSON.parse(JSON.stringify(this.$store.state.menu.menuTreeList))
-      this.sideMenuTreeList = mentT[this.navMenuActive].children || []
+      this.sideMenuTreeList = mentT || []
       this.activeMenu = this.menuActive
       //设置菜单栏选中
       // this.$store.dispatch('tab/addCache',newRou)
@@ -162,7 +162,7 @@ export default {
       if(!mentT.length){return}
       // this.menuLoading = false
       this.$nextTick(() => {
-        this.sideMenuTreeList = mentT[val].children || []
+        this.sideMenuTreeList = mentT || []
       })
     },
     menuActive(val){

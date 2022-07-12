@@ -8,12 +8,12 @@
         <el-form ref="form" :model="form" class="form" :rules="rules" label-width="92px">
           <el-form-item prop="phone" label="手机号">
             <el-input v-model="form.phone" placeholder="请输入手机号" maxLength="11" @input="changePhoneFlag">
-              <zj-button slot="append" :disabled="form.phoneFlag"
+              <vxe-button slot="append" :disabled="form.phoneFlag"
                          :status="form.phoneFlag ? 'info' : 'primary'"
                          @click="sendPhoneCode"
               >
                 {{form.phoneText}}
-              </zj-button>
+              </vxe-button>
             </el-input>
             <p class="pmes">
             <span @click="$refs.editPhone.open('phone')">
