@@ -12,23 +12,17 @@
         <el-aside :class="collapseFlag ? 'w50px' : 'w200px'" class="zj-layout-aside">
           <sidebar />
         </el-aside>
-
         <!-- 内容 -->
         <div :class="collapseFlag ? 'w-c-100_50px' : 'w-c-100_200px'">
           <!-- 标签 -->
           <tab class="layout-tab" v-if="$route.name !== 'home'"/>
           <!-- 主内容区 -->
-          <el-main class="w100 h-c-100_41 zj-aside-shrink" style="padding: 0">
+          <el-main class="w100 h-c-100_41" style="padding: 0">
 
             <!-- 展示 -->
             <app-main
               :class="$route.name==='home' ? 'appMainHome' : 'appMain' "
             />
-            <div class="shrinkBox" @click="collapseFlagClick">
-<!--              <i class="el-icon-d-arrow-right" v-if="collapseFlag"/>-->
-<!--              <i class="el-icon-d-arrow-left" v-else/>-->
-              <i :class="collapseFlag ? 'el-icon-d-arrow-right' : 'el-icon-d-arrow-left'"/>
-            </div>
           </el-main>
         </div>
 
@@ -53,11 +47,6 @@
       ...mapState({
         collapseFlag: state => state.menu.collapseFlag,
       })
-    },
-    methods:{
-      collapseFlagClick(){
-        this.$store.dispatch('menu/setCollapseFlag',!this.collapseFlag)
-      }
     }
   }
 </script>

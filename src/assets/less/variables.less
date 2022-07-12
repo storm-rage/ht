@@ -1,4 +1,5 @@
 @primary-main-color: #165DFF;// 主色调#1199C4
+@danger-color: #ed5c48;//
 @white-color:#FFFFFF;//白色
 @black-color:#000000;//黑色
 @text-color: #333333;//标题，正文文字，对应T1文字类型
@@ -6,19 +7,27 @@
 @sub-color-light:#5494f2;//浅蓝色（主要用于左边标题和radio，按钮，checkbox等背景，次颜色）#5494f2
 @sub-text-color-light:#409EFF;//浅蓝色（主要用于左边标题和radio，按钮，checkbox等字体，次颜色）#409EFF
 //左边菜单
-@menu-color: @white-color;
-@menu-font-color: @text-color;
+//整个菜单背景色
+@menu-color: #2D313F;
+//整个菜单文字颜色,暂时没用到
+@menu-font-color: @white-color;
+//菜单激活父菜单背景色,暂时没用到
 @menu-color-activate: #F6F5F6;
+//菜单激活父菜单文字颜色,暂时没用到
 @menu-activate-font-color: @black-color;
+//菜单激活背景色
 @sub-menu-color-activate: @primary-main-color;
+// 菜单激活文字颜色,暂时没用到
 @sub-menu-activate-font-color: @white-color;
+// 父级菜单title
 @menu-title-hg: 40px;
-@sub-menu-title-hg: 35px;
-@menu-router-tab-hg: 40px;
-@menu-icon-color: #95a9be;
+// 子级菜单title
+@sub-menu-title-hg: 40px;
+//菜单icon颜色
+@menu-icon-color: @white-color;
+// 菜单hove icon颜色,收缩的时候
 @menu-icon-hove-color:@primary-main-color;
-@sign-menu-background-color-activate: @primary-main-color;
-@sign-menu-font-color-activate: @sub-menu-activate-font-color;
+// 菜单icon颜色
 @sign-menu-icon-color-activate: @sub-menu-activate-font-color;
 //tabs标签
 @tabs-nav-color:#999999;
