@@ -64,7 +64,7 @@
             <zj-table-column field="field3" title="企业状态" />
             <zj-table-column field="field3" title="用户状态" />
             <zj-table-column field="field4" title="角色" />
-            <zj-table-column title="操作" fixed="right" width="200px">
+            <zj-table-column title="操作" fixed="right" width="200px" v-if="pageType !=='detail'">
               <template>
                 <zj-button type="text" @click="''">制key</zj-button>
                 <zj-button type="text" @click="''">冻结</zj-button>
@@ -76,6 +76,7 @@
       </zj-content-block>
     </el-form>
     <zj-content-footer>
+      <zj-button type="primary" @click="back" v-if="pageType !=='detail'">修改</zj-button>
       <zj-button class="back" @click="back">返回</zj-button>
     </zj-content-footer>
   </zj-content-container>
@@ -83,9 +84,9 @@
 <script>
 export default {
   components: {},
-
   data() {
     return {
+      pageType: this.$route.meta.pageType,
       fileList: [
         {
           field1: "海天a公司",

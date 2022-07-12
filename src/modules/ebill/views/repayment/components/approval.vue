@@ -1,6 +1,8 @@
 <template>
   <zj-content-container>
-    <zj-top-header>提前还款申请</zj-top-header>
+    <zj-top-header>{{
+      pageType === "apply" ? "提前还款申请" : "提前还款复核"
+    }}</zj-top-header>
     <!-- 融资信息 -->
     <zj-content-block>
       <zj-content>
@@ -32,7 +34,12 @@
               <el-form-item label="上次还款日期："> 546565465 </el-form-item>
             </el-col>
             <el-col :span="8">
-              <el-form-item label="还款状态："> 546565465 </el-form-item>
+              <el-form-item label="还款状态：" v-if="pageType === 'apply'">
+                546565465
+              </el-form-item>
+              <el-form-item label="融资业务状态：" v-else>
+                546565465
+              </el-form-item>
             </el-col>
           </el-row>
           <el-row>
@@ -103,8 +110,10 @@
             </el-col>
           </el-form>
         </el-row>
-
-        <zj-content style="padding-top: 0">
+        <zj-content>
+          <el-row class="mb-10">
+            <el-link :underline="false" type="primary">《回购协议》</el-link>
+          </el-row>
           <zj-content-tip
             text="1.提前还款须一次性还清未还本息，提前还款金额=未还本金+未还本金*融资月利率/30*融资天数。"
           ></zj-content-tip>
@@ -115,24 +124,68 @@
         </zj-content>
       </zj-content>
     </zj-content-block>
+
     <zj-content-footer>
-      <zj-button type="primary" @click="back">提交申请</zj-button>
+      <span style="display: inline-block; margin-right: 10px" v-if="pageType==='review'">
+        <el-checkbox v-model="agreeCheck">我已阅读并同意</el-checkbox>&nbsp;
+        <el-link :underline="false" type="primary">《回购协议》</el-link>
+      </span>
+      <zj-button type="primary" @click="toReview" v-if="pageType === 'apply'"
+        >提交申请</zj-button
+      >
+      <template v-if="pageType==='review'">
+        <zj-button type="primary" @click="toReview">复核通过</zj-button>
+        <zj-button @click="toReject">拒绝</zj-button>
+      </template>
       <zj-button @click="back">返回</zj-button>
     </zj-content-footer>
+    <!--  拒绝弹框  -->
+    <zj-reject-dialog
+      ref="rejectDialog"
+      @reject="reviewReject"
+      title="提前还款复核拒绝"
+      label="拒绝原因"
+      message="请输入拒绝原因"
+      :max="100"
+    ></zj-reject-dialog>
   </zj-content-container>
 </template>
 <script>
 export default {
   data() {
     return {
+      pageType: this.$route.meta.pageType,
       zjControl: {},
       form: {},
-      collActive: ["orderInfo"],
-      protocolCheck: false,
+      agreeCheck: false,
     };
   },
   created() {},
-  methods: {},
+  methods: {
+     toReview() {
+      if (this.agreeCheck) {
+        let title = this.pageType === 'apply'?'提前还款申请确认':'提前还款复核确认'
+        this.$confirm(`您本次提前还款${this.pageType === 'apply'?'申请':''}金额：<b style="font-size: 18px;">21424</b>元，请确认。`, title,{
+          dangerouslyUseHTMLString: true,
+          confirmButtonText: '确定',
+          cancelButtonText: '取消'
+        }).then(() => {
+          // todo:请求
+        })
+      }else {
+        this.$alert('请阅读并同意《额度调整申请书》','提示', {
+          type: 'warning'
+        })
+      }
+    },
+    toReject() {
+      this.$refs.rejectDialog.open();
+    },
+    reviewReject(text) {
+      this.$refs.rejectDialog.close();
+    },
+    back() {},
+  },
 };
 </script>
 <style lang="less" scoped>

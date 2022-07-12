@@ -29,24 +29,26 @@ const repaymentRouter = [
   {
     path: '/repaymentApply',
     name: 'repaymentApply',
-    component: () => import('../views/repayment/repaymentApply/submit'),
+    component: () => import('../views/repayment/components/approval'),
     meta:{
       isMock:false,
       title:`提前还款申请`,
       keepAlive:true,
       refreshIndex:0,
+      pageType: 'apply',
       notRequireAuth: true
     }
   },
   {
     path: '/repaymentReview',
     name: 'repaymentReview',
-    component: () => import('../views/repayment/repaymentReview/review'),
+    component: () => import('../views/repayment/components/approval'),
     meta:{
       isMock:false,
       title:`提前还款复核`,
       keepAlive:true,
       refreshIndex:0,
+      pageType: 'review',
       notRequireAuth: true
     }
   },

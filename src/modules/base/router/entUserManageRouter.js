@@ -128,32 +128,33 @@ const entUserManage = [
       notRequireAuth: true
     }
   },
-  {
-    path: '/userManageMag',
-    name: 'userManageMag',
-    component: () => import('../views/entUserManage/userManage/userInfo/manage/ManageUser.vue'),
-    meta: {
-      title: '企业用户信息管理-管理',
-      parent: 'sysUser',
-      isManage: true,
-      keepAlive: true,
-      refreshIndex: 0,
-      notRequireAuth: true
-    }
-  },
   // {
-  //   path: '/userManageDetail',
-  //   name: 'userManageDetail',
+  //   path: '/userManageMag',
+  //   name: 'userManageMag',
   //   component: () => import('../views/entUserManage/userManage/userInfo/manage/ManageUser.vue'),
   //   meta: {
-  //     title: '企业用户信息管理-详情',
+  //     title: '企业用户信息管理-管理',
   //     parent: 'sysUser',
-  //     isManage: false,
+  //     isManage: true,
   //     keepAlive: true,
   //     refreshIndex: 0,
   //     notRequireAuth: true
   //   }
-  // }
+  // },
+  {
+    path: '/userManageDetail',
+    name: 'userManageDetail',
+    component: () => import('../views/entUserManage/userManage/vindicate'),
+    meta: {
+      title: '企业用户信息管理-详情',
+      parent: 'sysUser',
+      isManage: false,
+      keepAlive: true,
+      refreshIndex: 0,
+      notRequireAuth: true,
+      pageType: 'detail'
+    }
+  }
 ]
 
 export default entUserManage
