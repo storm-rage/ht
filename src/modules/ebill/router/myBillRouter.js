@@ -9,7 +9,8 @@ const myBillRouter = [
       title: `我的凭证`,
       root: '电子债权凭证',
       keepAlive: true,
-      refreshIndex: 0
+      refreshIndex: 0,
+      notRequireAuth: true
     }
   },
   {

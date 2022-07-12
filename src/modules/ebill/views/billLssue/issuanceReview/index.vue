@@ -1,42 +1,35 @@
 <template>
-  <div>
-    <div class="zj-search-condition">
-      <el-row class="button-row">
-        <vxe-button class="reset" icon="el-icon-refresh" @click="resetSearch"
-          >重置</vxe-button
-        >
-        <vxe-button class="search" icon="el-icon-search" @click="search"
-          >查询</vxe-button
-        >
-      </el-row>
-      <el-form ref="searchForm" :model="searchForm">
-        <el-form-item label="供应商：">
-          <el-input v-model="searchForm.issueEntName" />
-        </el-form-item>
-        <el-form-item label="对账单编号：">
-          <el-input v-model="searchForm.issueEntName" />
-        </el-form-item>
-        <el-form-item label="申请日期：" class="col-right">
-          <zj-date-range-picker
-            :startDate.sync="searchForm.expireDateStart"
-            :endDate.sync="searchForm.expireDateEnd"
-          />
-        </el-form-item>
-        <el-form-item label="凭证编号：" class="col-center">
-          <el-input
-            v-model="searchForm.ebillCode"
-            @keyup.enter.native="enterSearch"
-          />
-        </el-form-item>
-      </el-form>
-    </div>
-    <div class="zj-search-response">
+  <zj-content-container>
+    <zj-list-layout>
+      <template slot="searchForm"
+        ><el-form ref="searchForm" :model="searchForm">
+          <el-form-item label="供应商：">
+            <el-input v-model="searchForm.issueEntName" />
+          </el-form-item>
+          <el-form-item label="对账单编号：">
+            <el-input v-model="searchForm.issueEntName" />
+          </el-form-item>
+          <el-form-item label="申请日期：" class="col-right">
+            <zj-date-range-picker
+              :startDate.sync="searchForm.expireDateStart"
+              :endDate.sync="searchForm.expireDateEnd"
+            />
+          </el-form-item>
+          <el-form-item label="凭证编号：" class="col-center">
+            <el-input
+              v-model="searchForm.ebillCode"
+              @keyup.enter.native="enterSearch"
+            />
+          </el-form-item>
+        </el-form>
+      </template>
+
       <zj-table
         ref="searchTable"
         :params="searchForm"
         :api="zjControl.tableApi"
       >
-        <zj-table-column fixed="left" type="checkbox" />
+        <zj-table-column fixed="left" type="checkbox" width="50px" />
         <zj-table-column field="ebillCode" title="凭证编号">
           <template v-slot="{ row }">
             <span class="table-elbill-code" @click="toBillDetails(row)">{{
@@ -78,26 +71,26 @@
           </template>
         </zj-table-column>
       </zj-table>
-    </div>
-    <el-row class="ta-c w85 fixed-footer-btns">
-      <el-row class="ta-c w85 zj-m-b-5">
-        <el-checkbox v-model="XYchecked" class="check-text"
-          >已阅读并同意协议</el-checkbox
-        >
-      </el-row>
-      <div>
-        <zj-button @click="&quot;&quot;;" :api="zjBtn.passRecheck"
-          >复核通过</zj-button
-        >
-        <zj-button
-          class="btn-warning"
-          @click="&quot;&quot;;"
-          :api="zjBtn.rejectRecheck"
-          >拒绝</zj-button
-        >
-      </div>
-    </el-row>
-  </div>
+      <zj-content-footer>
+        <span style="display: inline-block; margin-right: 5px">
+          <el-checkbox v-model="agreeCheck"
+            >已阅读并同意以上相关协议</el-checkbox
+          >&nbsp;
+        </span>
+        <zj-button type="primary" @click="toReview">复核通过</zj-button>
+        <zj-button type="primary" @click="toReject">拒绝</zj-button>
+      </zj-content-footer>
+      <!--  拒绝弹框  -->
+      <zj-reject-dialog
+        ref="rejectDialog"
+        @reject="reviewReject"
+        title="凭证签发复核拒绝"
+        label="拒绝原因"
+        message="请输入拒绝原因"
+        :max="100"
+      ></zj-reject-dialog>
+    </zj-list-layout>
+  </zj-content-container>
 </template>
 <script>
 export default {
@@ -105,7 +98,8 @@ export default {
     return {
       zjControl: {},
       searchForm: {},
-      XYchecked: false,
+      // 是否阅读协议
+      agreeCheck: false,
     };
   },
   created() {
@@ -114,6 +108,32 @@ export default {
   methods: {
     toBillDetails(row) {
       console.log(row);
+    },
+    toReview() {
+      if (this.agreeCheck) {
+        let num, money;
+        this.$confirm(
+          `您本次复核同意签发<b style="font-size: 18px;">${num}</b>笔电子债权凭证，共计<b style="font-size: 18px;">${money}</b>元，请确认。`,
+          "凭证签发复核确认",
+          {
+            dangerouslyUseHTMLString: true,
+            confirmButtonText: "确定",
+            cancelButtonText: "取消",
+          }
+        ).then(() => {
+          // todo:请求
+        });
+      } else {
+        this.$alert("请阅读并同意《额度调整申请书》", "提示", {
+          type: "warning",
+        });
+      }
+    },
+    toReject() {
+      this.$refs.rejectDialog.open();
+    },
+    reviewReject(text) {
+      this.$refs.rejectDialog.close();
     },
   },
 };

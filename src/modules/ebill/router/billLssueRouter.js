@@ -60,7 +60,8 @@ const billLssueRouter = [
       title: `凭证签发复核`,
       root: '电子债权凭证',
       keepAlive: true,
-      refreshIndex: 0
+      refreshIndex: 0,
+      notRequireAuth: true
     }
   },
   {
@@ -96,7 +97,8 @@ const billLssueRouter = [
       title: `凭证作废复核`,
       root: '电子债权凭证',
       keepAlive: true,
-      refreshIndex: 0
+      refreshIndex: 0,
+      notRequireAuth: true
     }
   },
   {
