@@ -8,181 +8,181 @@
     ]"
   >
     <zj-top-header title="企业注册审核"></zj-top-header>
-    <!-- 业务申请信息 -->
-    <el-collapse v-model="sqxxCollapseList" v-show="workflow === 'sqxx'">
-      <zj-content>
-        <zj-collapse title="业务申请信息" name="entInfo">
-          <div>
+    <el-form label-width="160px">
+      <!-- 业务申请信息 -->
+      <zj-content-block v-show="workflow === 'sqxx'">
+        <zj-content-block>
+          <zj-header title="业务申请信息" />
+          <zj-content>
             <el-row>
               <el-col :span="8">
-                <label>申请流水号：</label>
-                <span :class="nameSuccess ? '' : 'red'">{{
-                  detailData.name | value
-                }}</span>
+                <el-form-item label="申请流水号：">
+                  <span :class="nameSuccess ? '' : 'red'">{{
+                    detailData.name | value
+                  }}</span>
+                </el-form-item>
               </el-col>
               <el-col :span="8">
-                <label>申请类型：</label>
-                <span :class="bizLicenceSuccess ? '' : 'red'">{{
-                  detailData.bizLicence | value
-                }}</span>
+                <el-form-item label="申请类型：">
+                  <span :class="bizLicenceSuccess ? '' : 'red'">{{
+                    detailData.bizLicence | value
+                  }}</span>
+                </el-form-item>
               </el-col>
               <el-col :span="8">
-                <label>申请状态：</label>
-                <span>{{
-                  typeMap(dictionary.entTypeList, detailData.entType)
-                }}</span>
+                <el-form-item label="申请状态：">
+                  <span>{{
+                    typeMap(dictionary.entTypeList, detailData.entType)
+                  }}</span></el-form-item
+                >
+              </el-col>
+              <el-col :span="8">
+                <el-form-item label="申请时间：">
+                  <span :class="pcaSuccess ? '' : 'red'">{{
+                    detailData.address
+                  }}</span>
+                </el-form-item>
               </el-col>
             </el-row>
-            <el-row>
-              <el-col :span="8">
-                <label>申请时间：</label>
-                <span :class="pcaSuccess ? '' : 'red'">{{
-                  detailData.address
-                }}</span>
-              </el-col>
-            </el-row>
-          </div>
-        </zj-collapse>
-      </zj-content>
-      <zj-content>
-        <zj-collapse title="企业基础信息" name="entInfo">
-          <div>
-            <div>
-              <h4 class="bl zj-m-t-0">企业信息</h4>
+          </zj-content>
+        </zj-content-block>
+        <!-- 企业基础信息 -->
+        <!-- <ent-base-info></ent-base-info> -->
+        <zj-content-block>
+          <zj-header title="企业基础信息" />
+          <zj-content>
+            <zj-collapse title="企业信息" name="userInfo">
               <div class="info-body">
                 <el-row>
                   <el-col :span="8">
-                    <label>企业名称：</label>
-                    <span :class="nameSuccess ? '' : 'red'">{{
-                      detailData.name | value
-                    }}</span>
+                    <el-form-item label="企业名称：">
+                      <span :class="nameSuccess ? '' : 'red'">{{
+                        detailData.name | value
+                      }}</span>
+                    </el-form-item>
                   </el-col>
                   <el-col :span="8">
-                    <label>统一社会信用代码：</label>
-                    <span :class="bizLicenceSuccess ? '' : 'red'">{{
-                      detailData.bizLicence | value
-                    }}</span>
+                    <el-form-item label="统一社会信用代码：">
+                      <span :class="bizLicenceSuccess ? '' : 'red'">{{
+                        detailData.bizLicence | value
+                      }}</span>
+                    </el-form-item>
                   </el-col>
                   <el-col :span="8">
-                    <label>平台客户类型：</label>
-                    <span>{{
-                      typeMap(dictionary.entTypeList, detailData.entType)
-                    }}</span>
-                  </el-col>
-                </el-row>
-                <el-row>
-                  <el-col :span="8">
-                    <label>企业注册地址：</label>
-                    <span :class="pcaSuccess ? '' : 'red'">{{
-                      detailData.address
-                    }}</span>
+                    <el-form-item label="平台客户类型：">
+                      <span>{{
+                        typeMap(dictionary.entTypeList, detailData.entType)
+                      }}</span>
+                    </el-form-item>
                   </el-col>
                   <el-col :span="8">
-                    <label>成立日期：</label>
-                    <span :class="pcaSuccess ? '' : 'red'">{{
-                      detailData.address
-                    }}</span>
+                    <el-form-item label="企业注册地址：">
+                      <span :class="pcaSuccess ? '' : 'red'">{{
+                        detailData.address
+                      }}</span></el-form-item
+                    >
                   </el-col>
                   <el-col :span="8">
-                    <label>注册资本：</label>
-                    <span :class="pcaSuccess ? '' : 'red'">{{
-                      detailData.address
-                    }}</span>
-                  </el-col>
-                </el-row>
-                <el-row>
-                  <el-col :span="8">
-                    <label>企业规模：</label>
-                    <span>{{
-                      typeMap(dictionary.scaleList, detailData.scale)
-                    }}</span>
+                    <el-form-item label="成立日期：">
+                      <span :class="pcaSuccess ? '' : 'red'">{{
+                        detailData.address
+                      }}</span></el-form-item
+                    >
                   </el-col>
                   <el-col :span="8">
-                    <label>企业经营类型：</label>
-                    <span>{{
-                      typeMap(dictionary.scaleList, detailData.scale)
-                    }}</span>
+                    <el-form-item label="注册资本：">
+                      <span :class="pcaSuccess ? '' : 'red'">{{
+                        detailData.address
+                      }}</span>
+                    </el-form-item>
+                  </el-col>
+                  <el-col :span="8">
+                    <el-form-item label="企业规模：">
+                      <span>{{
+                        typeMap(dictionary.scaleList, detailData.scale)
+                      }}</span></el-form-item
+                    >
+                  </el-col>
+                  <el-col :span="8">
+                    <el-form-item label="企业经营类型：">
+                      <span>{{
+                        typeMap(dictionary.scaleList, detailData.scale)
+                      }}</span>
+                    </el-form-item>
                   </el-col>
                 </el-row>
               </div>
-            </div>
-            <div>
-              <h4 class="bl">法人信息</h4>
+            </zj-collapse>
+            <zj-collapse title="法人信息">
               <el-row class="info-body">
                 <el-col :span="8">
-                  <label>企业法人姓名：</label>
-                  <span :class="legalPersonNameSuccess ? '' : 'red'">{{
-                    detailData.legalPersonName | value
-                  }}</span>
+                  <el-form-item label="企业法人姓名：">
+                    <span :class="legalPersonNameSuccess ? '' : 'red'">{{
+                      detailData.legalPersonName | value
+                    }}</span></el-form-item
+                  >
                 </el-col>
                 <el-col :span="8">
-                  <label>法人身份证号码：</label>
-                  <span>{{
-                    typeMap(
-                      dictionary.userCertTypeList,
-                      detailData.legalCertType
-                    )
-                  }}</span>
+                  <el-form-item label="法人身份证号码：">
+                    <span>{{
+                      typeMap(
+                        dictionary.userCertTypeList,
+                        detailData.legalCertType
+                      )
+                    }}</span></el-form-item
+                  >
                 </el-col>
                 <el-col :span="8">
-                  <label>法人手机手机号：</label>
                   <span>{{ detailData.legalCertNo | value }}</span>
+                  <el-form-item label="法人手机手机号："> </el-form-item>
                 </el-col>
               </el-row>
-            </div>
-            <div>
-              <h4 class="bl">企业联系人</h4>
+            </zj-collapse>
+            <zj-collapse title="企业联系人">
               <el-row class="info-body">
                 <el-col :span="8">
-                  <label>企业联系人姓名：</label>
-                  <span :class="legalPersonNameSuccess ? '' : 'red'">{{
-                    detailData.legalPersonName | value
-                  }}</span>
+                  <el-form-item label="企业联系人姓名：">
+                    <span :class="legalPersonNameSuccess ? '' : 'red'">{{
+                      detailData.legalPersonName | value
+                    }}</span></el-form-item
+                  >
                 </el-col>
                 <el-col :span="8">
-                  <label>企业联系人手机号：</label>
-                  <span>{{
-                    typeMap(
-                      dictionary.userCertTypeList,
-                      detailData.legalCertType
-                    )
-                  }}</span>
+                  <el-form-item label="企业联系人手机号：">
+                    <span>{{
+                      typeMap(
+                        dictionary.userCertTypeList,
+                        detailData.legalCertType
+                      )
+                    }}</span>
+                  </el-form-item>
                 </el-col>
                 <el-col :span="8">
-                  <label>企业联系地址：</label>
-                  <span>{{ detailData.legalCertNo | value }}</span>
+                  <el-form-item label="企业联系地址："
+                    ><span>{{ detailData.legalCertNo | value }}</span>
+                  </el-form-item>
                 </el-col>
               </el-row>
-            </div>
-            <div class="legal">
-              <h4 class="bl">银行账户</h4>
-              <vxe-table
-                header-cell-class-name="headerCell"
-                highlight-hover-row
-                auto-resize
-                border
-                align="center"
-                :data="tableData"
+            </zj-collapse>
+            <zj-collapse title="银行账户">
+              <zj-table :pager="false" :dataList="dataList">
+                <zj-table-column field="changeTime" title="银行账户名称" />
+                <zj-table-column field="changeItem" title="银行账号" />
+                <zj-table-column field="changeItem" title="银行账户开户行" />
+                <zj-table-column field="changeItem" title="银行联行号" />
+                <zj-table-column field="changeItem" title="银行类型" />
+                <zj-table-column field="changeItem" title="核查方式" />
+              </zj-table>
+            </zj-collapse>
+            <zj-collapse title="天眼查信息">
+              <zj-button
+                type="text"
+                @click="activeEyeSky = !activeEyeSky"
+                ref="EyeSkyBtn"
+                >{{ activeEyeSky ? "收起" : "展开" }}</zj-button
               >
-                <vxe-table-column field="changeTime" title="银行账户名称" />
-                <vxe-table-column field="changeItem" title="银行账号" />
-                <vxe-table-column field="changeItem" title="银行账户开户行" />
-                <vxe-table-column field="changeItem" title="银行联行号" />
-                <vxe-table-column field="changeItem" title="银行类型" />
-                <vxe-table-column field="changeItem" title="核查方式" />
-              </vxe-table>
-            </div>
-            <div class="eye" v-if="detailData.isOpenTyc === '1'">
-              <h4 class="bl">
-                天眼查信息
-                <zj-button
-                  type="text"
-                  @click="activeEyeSky = !activeEyeSky"
-                  ref="EyeSkyBtn"
-                  >{{ activeEyeSky ? "收起" : "展开" }}</zj-button
-                >
-                <zj-button @click="getEyeSky">一键获取天眼查信息</zj-button>
-              </h4>
+              <zj-button @click="getEyeSky">一键获取天眼查信息</zj-button>
+
               <zj-eye-sky
                 :mountKey="true"
                 ref="eyesky"
@@ -190,31 +190,24 @@
                 :entId="eyeSkyId"
                 @eyeSkyChange="eyeSkyChange"
               />
-            </div>
-          </div>
-        </zj-collapse>
-      </zj-content>
-      <zj-content>
-        <zj-collapse title="操作用户信息" name="userInfo">
-          <vxe-table
-            header-cell-class-name="headerCell"
-            highlight-hover-row
-            auto-resize
-            border
-            align="center"
-            :data="tableData"
-          >
-            <vxe-table-column field="changeTime" title="姓名" />
-            <vxe-table-column field="changeItem" title="用户名" />
-            <vxe-table-column field="changeItem" title="证件类型" />
-            <vxe-table-column field="changeItem" title="证件号码" />
-            <vxe-table-column field="changeItem" title="邮箱" />
-            <vxe-table-column field="changeItem" title="手机号" />
-          </vxe-table>
-        </zj-collapse>
-      </zj-content>
-      <zj-content>
-        <zj-collapse title="相关资料附件" name="attach">
+            </zj-collapse>
+          </zj-content>
+        </zj-content-block>
+
+        <zj-content-block>
+          <zj-header title="操作用户信息" />
+          <zj-table :pager="false" :dataList="dataList">
+            <zj-table-column field="changeTime" title="姓名" />
+            <zj-table-column field="changeItem" title="用户名" />
+            <zj-table-column field="changeItem" title="证件类型" />
+            <zj-table-column field="changeItem" title="证件号码" />
+            <zj-table-column field="changeItem" title="邮箱" />
+            <zj-table-column field="changeItem" title="手机号" />
+          </zj-table>
+        </zj-content-block>
+
+        <zj-content-block>
+          <zj-header title="相关资料附件" />
           <div class="attach-body">
             <ul class="attach-bar">
               <li
@@ -321,173 +314,171 @@
               </div>
             </div>
           </div>
-        </zj-collapse>
-      </zj-content>
-      <zj-content>
-        <zj-collapse title="企业其他信息" name="entOtherInfo">
-          <div class="entOtherInfo-body">
-            <h4 class="bl">开票信息</h4>
-            <div class="info-body">
-              <el-row>
-                <el-col :span="8">
-                  <label>企业名称：</label>
-                  <span>{{ detailData.name | value }}</span>
-                </el-col>
-                <el-col :span="8">
-                  <label>纳税人识别号：</label>
-                  <span>{{ detailData.invoiceTaxpayerId | value }}</span>
-                </el-col>
-                <el-col :span="8">
-                  <label>邮箱：</label>
-                  <span>{{ detailData.invoiceEmail | value }}</span>
-                </el-col>
-              </el-row>
-              <el-row>
-                <el-col :span="8">
-                  <label>电话：</label>
-                  <span>{{ detailData.invoicePhone | value }}</span>
-                </el-col>
-                <el-col :span="8">
-                  <label>开户行：</label>
-                  <span>{{ detailData.invoiceBankInfo | value }}</span>
-                </el-col>
-                <el-col :span="8">
-                  <label>银行账号：</label>
-                  <span>{{ detailData.invoiceBankAccno | value }}</span>
-                </el-col>
-              </el-row>
-              <el-row>
-                <el-col :span="8">
-                  <label>地址：</label>
-                  <span>{{ detailData.invoicePhone | value }}</span>
-                </el-col>
-              </el-row>
-            </div>
-            <h4 class="bl">其他信息</h4>
-            <div class="info-body">
-              <el-row>
-                <el-col :span="8">
-                  <label>注册渠道：</label>
-                  <span>{{ detailData.registerWebsite | value }}</span>
-                </el-col>
-                <el-col :span="8">
-                  <label>买方企业：</label>
-                  <span>{{ detailData.myBuyers | value }}</span>
-                </el-col>
-              </el-row>
-              <el-row
-                v-if="$route.name === 'registerAuditProtocolAudit'"
-                class="entOtherInfo-body"
-              >
-                <template v-if="detailData.entType === 'S'">
-                  <h4 class="orderTitle bl">供应商企业类型</h4>
-                  <el-row>
-                    <el-col :span="24" class="s130">
-                      <label> </label>
-                      <span>{{
-                        typeMap(
-                          dictionary.supplierTypeList,
-                          detailData.supplierType
-                        )
-                      }}</span>
-                    </el-col>
-                  </el-row>
-                </template>
-                <template v-if="detailData.entType === 'B'">
-                  <el-row>
-                    <el-col :span="8">
-                      <label>隶属企业：</label>
-                      <span>{{ detailData.parentEntName | value }}</span>
-                    </el-col>
-                    <el-col :span="8">
-                      <label>签章企业：</label>
-                      <span>{{ detailData.sealEntName | value }}</span>
-                    </el-col>
-                  </el-row>
-                </template>
-              </el-row>
-            </div>
-          </div>
-        </zj-collapse>
-      </zj-content>
-    </el-collapse>
-    <!-- 审批信息 -->
-    <el-collapse
-      class="zjcoll spxx mt-20"
-      v-model="spxxCollapseList"
-      v-show="workflow === 'spxx'"
-    >
-      <!--操作记录 -->
-      <zj-content>
-        <zj-collapse title="操作记录" name="czjl">
-          <vxe-table
-            header-cell-class-name="headerCell"
-            highlight-hover-row
-            auto-resize
-            border
-            align="center"
-            :data="tableData"
-          >
-            <vxe-table-column type="seq" title="序号" width="60" />
-            <vxe-table-column field="changeTime" title="业务节点" />
-            <vxe-table-column field="changeItem" title="处理人" />
-            <vxe-table-column field="changeItem" title="处理时间" />
-            <vxe-table-column field="changeItem" title="审核结果" />
-            <vxe-table-column field="changeItem" title="审核意见" />
-          </vxe-table>
-        </zj-collapse>
-      </zj-content>
-      <!--审核信息 -->
-      <zj-content>
-        <zj-collapse title="审核信息" name="spxx">
-          <h4 class="bl zj-m-b-10">审核信息</h4>
-          <el-form label-width="140px" :model="form" :rules="rules" ref="form">
-            <el-form-item label="平台客户类型：" prop="entType">
-              <el-radio-group v-model="form.entType" @change="entTypeChange">
-                <el-radio
-                  v-for="item in dictionary.platFormAuditEntTypeList"
-                  :key="item.code"
-                  :label="item.code"
-                  >{{ item.desc }}</el-radio
-                >
-              </el-radio-group>
-            </el-form-item>
-            <el-form-item label="是否海天集团：" prop="entType">
-              <el-radio-group v-model="form.entType" @change="entTypeChange">
-                <el-radio :label="form.a">是</el-radio>
-                <el-radio :label="form.b">否</el-radio>
-              </el-radio-group>
-            </el-form-item>
-            <el-form-item label="注册企业名称：" prop="name">
-              {{ form.name }}
-            </el-form-item>
+        </zj-content-block>
 
-            <el-form-item label="注册企业简称：" prop="shortName">
-              <el-input
-                v-model="form.shortName"
-                :maxlength="101"
-                placeholder="请填写企业简称"
-              />
-            </el-form-item>
-            <el-form-item label="注册企业曾用名：" prop="beforeName">
-              <el-input
-                v-model="form.beforeName"
-                placeholder="如有多个，使用逗号分隔"
-                :maxlength="200"
-              />
-            </el-form-item>
-            <el-form-item label="买方企业名称：" prop="myBuyers">
-              {{ form.myBuyers }}
-              <div class="red zj-f-s-12">{{ myBuyersMessage }}</div>
-            </el-form-item>
-            <el-form-item label="客户业务系统编码：" prop="customCode">
-              <el-input
-                v-model="form.customCode"
-                :maxlength="21"
-                placeholder="请填写客户编码"
-              />
-            </el-form-item>
-            <!-- <el-form-item
+        <zj-content-block>
+          <zj-header title="企业其他信息" />
+          <zj-collapse title="开票信息">
+            <el-row>
+              <el-col :span="8">
+                <el-form-item label="企业名称："
+                  ><span>{{ detailData.name | value }}</span>
+                </el-form-item>
+              </el-col>
+              <el-col :span="8">
+                <el-form-item label="纳税人识别号：">
+                  <span>{{ detailData.invoiceTaxpayerId | value }}</span>
+                </el-form-item>
+              </el-col>
+              <el-col :span="8">
+                <el-form-item label="邮箱：">
+                  <span>{{ detailData.invoiceEmail | value }}</span>
+                </el-form-item>
+              </el-col>
+              <el-col :span="8">
+                <el-form-item label="电话：">
+                  <span>{{
+                    detailData.invoicePhone | value
+                  }}</span></el-form-item
+                >
+              </el-col>
+              <el-col :span="8">
+                <el-form-item label="开户行："
+                  ><span>{{ detailData.invoiceBankInfo | value }}</span>
+                </el-form-item>
+              </el-col>
+              <el-col :span="8">
+                <el-form-item label="银行账号：">
+                  <span>{{
+                    detailData.invoiceBankAccno | value
+                  }}</span></el-form-item
+                >
+              </el-col>
+              <el-col :span="8">
+                <el-form-item label="地址："
+                  ><span>{{ detailData.invoicePhone | value }}</span>
+                </el-form-item>
+              </el-col>
+            </el-row>
+          </zj-collapse>
+          <zj-collapse title="其他信息">
+            <el-row>
+              <el-col :span="8">
+                <el-form-item label="注册渠道：">
+                  <span>{{
+                    detailData.registerWebsite | value
+                  }}</span></el-form-item
+                >
+              </el-col>
+              <el-col :span="8">
+                <el-form-item label="买方企业：">
+                  <span>{{ detailData.myBuyers | value }}</span>
+                </el-form-item>
+              </el-col>
+            </el-row>
+            <!-- <el-row
+              v-if="$route.name === 'registerAuditProtocolAudit'"
+              class="entOtherInfo-body"
+            >
+              <template v-if="detailData.entType === 'S'">
+                <h4 class="orderTitle bl">供应商企业类型</h4>
+                <el-row>
+                  <el-col :span="24" class="s130">
+                    <label> </label>
+                    <span>{{
+                      typeMap(
+                        dictionary.supplierTypeList,
+                        detailData.supplierType
+                      )
+                    }}</span>
+                  </el-col>
+                </el-row>
+              </template>
+              <template v-if="detailData.entType === 'B'">
+                <el-row>
+                  <el-col :span="8">
+                    <label>隶属企业：</label>
+                    <span>{{ detailData.parentEntName | value }}</span>
+                  </el-col>
+                  <el-col :span="8">
+                    <label>签章企业：</label>
+                    <span>{{ detailData.sealEntName | value }}</span>
+                  </el-col>
+                </el-row>
+              </template>
+            </el-row> -->
+          </zj-collapse>
+        </zj-content-block>
+      </zj-content-block>
+
+      <!-- 审批信息 -->
+      <zj-content-block class="zjcoll spxx mt-20" v-show="workflow === 'spxx'">
+        <!--操作记录 -->
+        <zj-header title="操作记录" />
+        <zj-content>
+          <zj-table :pager="false" :dataList="dataList">
+            <zj-table-column type="seq" title="序号" width="60" />
+            <zj-table-column field="changeTime" title="业务节点" />
+            <zj-table-column field="changeItem" title="处理人" />
+            <zj-table-column field="changeItem" title="处理时间" />
+            <zj-table-column field="changeItem" title="审核结果" />
+            <zj-table-column field="changeItem" title="审核意见" />
+          </zj-table>
+        </zj-content>
+        <!--审核信息 -->
+        <el-form label-width="170px" :model="form" :rules="rules" ref="form">
+          <zj-content>
+            <zj-collapse title="审核信息">
+              <el-form-item label="平台客户类型：" prop="entType">
+                <el-radio-group v-model="form.entType" @change="entTypeChange">
+                  <el-radio
+                    v-for="item in dictionary.platFormAuditEntTypeList"
+                    :key="item.code"
+                    :label="item.code"
+                    >{{ item.desc }}</el-radio
+                  >
+                </el-radio-group>
+              </el-form-item>
+              <el-form-item label="是否海天集团：" prop="entType">
+                <el-radio-group v-model="form.entType" @change="entTypeChange">
+                  <el-radio :label="form.a">是</el-radio>
+                  <el-radio :label="form.b">否</el-radio>
+                </el-radio-group>
+              </el-form-item>
+              <el-form-item label="注册企业名称：" prop="name">
+                {{ form.name }}
+              </el-form-item>
+
+              <el-form-item label="注册企业简称：" prop="shortName">
+                <el-input
+                  v-model="form.shortName"
+                  :maxlength="101"
+                  placeholder="请填写企业简称"
+                />
+              </el-form-item>
+              <el-form-item label="注册企业曾用名：" prop="beforeName">
+                <el-input
+                  v-model="form.beforeName"
+                  placeholder="如有多个，使用逗号分隔"
+                  :maxlength="200"
+                />
+              </el-form-item>
+              <el-form-item label="买方企业名称：" prop="myBuyers">
+                {{ form.myBuyers }}
+                <div class="red zj-f-s-12">{{ myBuyersMessage }}</div>
+              </el-form-item>
+              <el-form-item label="客户业务系统编码：" prop="customCode">
+                <el-input
+                  v-model="form.customCode"
+                  :maxlength="21"
+                  placeholder="请填写客户编码"
+                />
+                <zj-content-tip
+                  class="ml-20"
+                  text="注：供应商在核心企业业务系统的编码，选填。"
+                ></zj-content-tip>
+              </el-form-item>
+              <!-- <el-form-item
                 v-for="(item, index) in form.projectInfoList"
                 :key="index"
                 :prop="'projectInfoList.' + index + '.projectId'"
@@ -535,121 +526,127 @@
                   :value.sync="item.selectProductList"
                 />
               </el-form-item> -->
-            <!-- <el-row class="projectAdd">
+              <!-- <el-row class="projectAdd">
                 <i
                   class="el-icon-circle-plus-outline project-i"
                   @click="projectAdd"
                 />
               </el-row> -->
-            <!-- <el-row class="projectText">
+              <!-- <el-row class="projectText">
                 说明：产品非必填，如果不选择产品，后续供应商可在登录后的页面发起开通申请
               </el-row> -->
-            <!-- 核心企业 -->
-            <template v-if="form.entType === 'B'">
-              <el-form-item
-                label="隶属企业："
-                ref="parentEntId"
-                prop="parentEntId"
-              >
-                <el-select
-                  v-model="form.parentEntId"
-                  clearable
-                  filterable
-                  placeholder="请选择隶属企业"
-                  @change="parentChange"
-                  @clear="parentClear"
-                  :popper-append-to-body="false"
+              <!-- 核心企业 -->
+              <!-- <template v-if="form.entType === 'B'">
+                <el-form-item
+                  label="隶属企业："
+                  ref="parentEntId"
+                  prop="parentEntId"
                 >
-                  <el-option
-                    v-for="item in parentList"
-                    :key="item.index"
-                    :label="item.name"
-                    :value="item.id"
-                  />
-                </el-select>
-              </el-form-item>
-              <el-form-item label="签章企业：" prop="sealEntId">
-                <el-select
-                  v-model="form.sealEntId"
-                  filterable
-                  placeholder="请选择签章企业"
-                  :popper-append-to-body="false"
-                >
-                  <el-option
-                    v-for="item in sealList"
-                    :key="item.name"
-                    :label="item.name"
-                    :value="item.id"
-                  />
-                </el-select>
-              </el-form-item>
-            </template>
-            <!-- 供应商 -->
-            <template v-else-if="form.entType === 'S'">
-              <el-form-item
-                prop="supplierType"
-                ref="supplierType"
-                label-width="40px"
-                class="supplierType-item"
-              >
-                <el-radio-group
-                  v-model="form.supplierType"
-                  @change="supplierChange"
-                >
-                  <el-radio
-                    v-for="item in dictionary.supplierTypeList"
-                    :key="item.code"
-                    :label="item.code"
-                    >{{ item.desc }}</el-radio
+                  <el-select
+                    v-model="form.parentEntId"
+                    clearable
+                    filterable
+                    placeholder="请选择隶属企业"
+                    @change="parentChange"
+                    @clear="parentClear"
+                    :popper-append-to-body="false"
                   >
-                </el-radio-group>
-                <template v-if="form.supplierType === '02'">
-                  <span
-                    class="success zj-m-l-10"
-                    v-if="
-                      form.supplierTradeList && form.supplierTradeList.length
-                    "
-                    >√ 该供应商有贸易关系推荐函</span
+                    <el-option
+                      v-for="item in parentList"
+                      :key="item.index"
+                      :label="item.name"
+                      :value="item.id"
+                    />
+                  </el-select>
+                </el-form-item>
+                <el-form-item label="签章企业：" prop="sealEntId">
+                  <el-select
+                    v-model="form.sealEntId"
+                    filterable
+                    placeholder="请选择签章企业"
+                    :popper-append-to-body="false"
                   >
-                  <span class="error zj-m-l-10" v-else
-                    >× 该供应商尚无贸易关系推荐函</span
-                  >
-                </template>
-                <zj-table
-                  ref="searchTable"
-                  class="zj-search-table mw400px zj-m-b-0"
-                  v-show="form.entType === 'S' && form.supplierType === '02'"
-                  :dataList="form.supplierTradeList"
+                    <el-option
+                      v-for="item in sealList"
+                      :key="item.name"
+                      :label="item.name"
+                      :value="item.id"
+                    />
+                  </el-select>
+                </el-form-item>
+              </template> -->
+              <!-- 供应商 -->
+              <!-- <template v-else-if="form.entType === 'S'">
+                <el-form-item
+                  prop="supplierType"
+                  ref="supplierType"
+                  label-width="40px"
+                  class="supplierType-item"
                 >
-                  <zj-table-column field="buyerEntName" title="推荐企业名称" />
-                  <zj-table-column title="上传证明材料">
-                    <template v-slot="{ row }">
-                      <zj-upload
-                        :httpRequest="uploadSupLier"
-                        :data="{ row }"
-                        class="zj-inline"
-                        v-if="zjBtn.uploadAttach"
-                      >
-                        <zj-button type="text">{{
-                          row.fileId ? "重新上传" : "上传"
-                        }}</zj-button>
-                      </zj-upload>
-                      <zj-button
-                        type="text"
-                        @click="downSupLier(row)"
-                        class="zj-m-l-10"
-                        style="text-decoration: underline"
-                        v-show="row.fileId"
-                      >
-                        {{ row.attachName }}
-                      </zj-button>
-                    </template>
-                  </zj-table-column>
-                </zj-table>
-              </el-form-item>
-            </template>
+                  <el-radio-group
+                    v-model="form.supplierType"
+                    @change="supplierChange"
+                  >
+                    <el-radio
+                      v-for="item in dictionary.supplierTypeList"
+                      :key="item.code"
+                      :label="item.code"
+                      >{{ item.desc }}</el-radio
+                    >
+                  </el-radio-group>
+                  <template v-if="form.supplierType === '02'">
+                    <span
+                      class="success zj-m-l-10"
+                      v-if="
+                        form.supplierTradeList && form.supplierTradeList.length
+                      "
+                      >√ 该供应商有贸易关系推荐函</span
+                    >
+                    <span class="error zj-m-l-10" v-else
+                      >× 该供应商尚无贸易关系推荐函</span
+                    >
+                  </template>
+                  <zj-table
+                    ref="searchTable"
+                    class="zj-search-table mw400px zj-m-b-0"
+                    v-show="form.entType === 'S' && form.supplierType === '02'"
+                    :dataList="form.supplierTradeList"
+                  >
+                    <zj-table-column
+                      field="buyerEntName"
+                      title="推荐企业名称"
+                    />
+                    <zj-table-column title="上传证明材料">
+                      <template v-slot="{ row }">
+                        <zj-upload
+                          :httpRequest="uploadSupLier"
+                          :data="{ row }"
+                          class="zj-inline"
+                          v-if="zjBtn.uploadAttach"
+                        >
+                          <zj-button type="text">{{
+                            row.fileId ? "重新上传" : "上传"
+                          }}</zj-button>
+                        </zj-upload>
+                        <zj-button
+                          type="text"
+                          @click="downSupLier(row)"
+                          class="zj-m-l-10"
+                          style="text-decoration: underline"
+                          v-show="row.fileId"
+                        >
+                          {{ row.attachName }}
+                        </zj-button>
+                      </template>
+                    </zj-table-column>
+                  </zj-table>
+                </el-form-item>
+              </template> -->
+            </zj-collapse>
+          </zj-content>
 
-            <h4 class="bl zj-m-t-0">审核意见</h4>
+          <zj-content-block>
+            <zj-header>审核意见</zj-header>
             <el-row class="zj-p-l-30">
               <span class="inline zj-p-l-15">{{ detailData.notes }}</span>
             </el-row>
@@ -664,43 +661,45 @@
                 style="width: 50%; min-height: 60px"
               />
             </el-form-item>
-          </el-form>
-        </zj-collapse>
-      </zj-content>
-    </el-collapse>
+          </zj-content-block>
+        </el-form>
+      </zj-content-block>
 
-    <!-- 底部工作流状态 -->
-    <zj-workflow v-model="workflow" :list="workflowList">
-      <!-- 审核时 -->
-      <el-row slot="right" v-if="$route.name === 'registerAuditApplyAudit'">
-        <el-row v-show="workflow === 'sqxx'" class="btn-w85">
-          <zj-button class="back" @click="goParent">返回</zj-button>
+      <!-- 底部工作流状态 -->
+      <zj-workflow v-model="workflow" :list="workflowList">
+        <!-- 审核时 -->
+        <el-row slot="right" v-if="$route.name === 'registerAuditApplyAudit'">
+          <el-row v-show="workflow === 'sqxx'" class="btn-w85">
+            <zj-button class="back" @click="goParent">返回</zj-button>
+          </el-row>
+          <el-row v-show="workflow === 'spxx'" class="btn-w85">
+            <zj-button class="back" @click="goParent">返回</zj-button>
+            <zj-button status="primary" @click="holdSave">暂存</zj-button>
+            <zj-button class="pass" @click="auditPass">审核通过</zj-button>
+            <zj-button class="retort" @click="auditReject">审核驳回</zj-button>
+            <zj-button class="reject" @click="registerRefuse"
+              >注册拒绝</zj-button
+            >
+          </el-row>
         </el-row>
-        <el-row v-show="workflow === 'spxx'" class="btn-w85">
-          <zj-button class="back" @click="goParent">返回</zj-button>
-          <zj-button status="primary" @click="holdSave">暂存</zj-button>
-          <zj-button class="pass" @click="auditPass">审核通过</zj-button>
-          <zj-button class="retort" @click="auditReject">审核驳回</zj-button>
-          <zj-button class="reject" @click="registerRefuse">注册拒绝</zj-button>
-        </el-row>
-      </el-row>
-    </zj-workflow>
-    <!-- 协议时 -->
-    <zj-content-footer v-if="$route.name === 'registerAuditProtocolAudit'">
+      </zj-workflow>
+      <!-- 协议时 -->
+      <!-- <zj-content-footer v-if="$route.name === 'registerAuditProtocolAudit'">
       <zj-button class="back" @click="goParent">返回</zj-button>
       <zj-button class="pass" @click="confirm" :api="zjBtn.submitConfirm"
         >确认提交</zj-button
       >
-    </zj-content-footer>
+    </zj-content-footer> -->
 
-    <!--   查看器 -->
-    <zj-preview
-      :visible.sync="viewShow"
-      :fileUrl="viewUrl"
-      :showFooter="false"
-      :fileType="viewType"
-      @close="viewShow = false"
-    />
+      <!--   查看器 -->
+      <zj-preview
+        :visible.sync="viewShow"
+        :fileUrl="viewUrl"
+        :showFooter="false"
+        :fileType="viewType"
+        @close="viewShow = false"
+      />
+    </el-form>
   </zj-content-container>
 </template>
 
