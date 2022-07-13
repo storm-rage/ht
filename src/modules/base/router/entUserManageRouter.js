@@ -26,7 +26,7 @@ const entUserManage = [
     meta: {
       title: '企业信息管理-新增',
       parent: 'sysEnterprise',
-      tagName: 'detail',
+      pageType: 'add',
       keepAlive: true,
       refreshIndex: 0,
       notRequireAuth: true
@@ -40,7 +40,6 @@ const entUserManage = [
     meta: {
       title: '企业信息管理-新增趋势',
       parent: 'sysEnterprise',
-      tagName: 'detail',
       keepAlive: true,
       refreshIndex: 0,
       notRequireAuth: true
@@ -55,7 +54,7 @@ const entUserManage = [
     meta: {
       title: '企业信息管理-详情',
       parent: 'sysEnterprise',
-      tagName: 'detail',
+      pageType: 'detail',
       keepAlive: true,
       refreshIndex: 0,
       notRequireAuth: true
@@ -70,7 +69,7 @@ const entUserManage = [
     meta: {
       title: '企业信息管理-修改信息',
       parent: 'sysEnterprise',
-      tagName: 'detail',
+      pageType: 'edit',
       keepAlive: true,
       refreshIndex: 0,
       notRequireAuth: true

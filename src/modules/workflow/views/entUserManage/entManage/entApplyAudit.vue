@@ -4,13 +4,8 @@
     <!--  交易信息  -->
     <trade-info />
     <!--  企业基础信息 -->
-    <ent-base-info />
-    <!--  企业操作员  -->
-    <!--  企业附件  -->
-    <!--  企业开票信息-->
-    <!--  其他附件  -->
-    <!--  操作记录  -->
-    <operate-log></operate-log>
+    <ent-info />
+
     <!--  审批意见  -->
     <audit-remark></audit-remark>
     <zj-content-footer>
@@ -26,15 +21,13 @@
  * 复核企业信息申请页面
  */
 import tradeInfo from "../components/tradeInfo";
-import entBaseInfo from "../components/entBaseInfo";
-import OperateLog from '../../components/operateLog';
+import entInfo from '@modules/base/views/entUserManage/entManage/entInfo';
 import AuditRemark from '../../components/auditRemark';
 
 export default {
   components: {
     tradeInfo,
-    entBaseInfo,
-    OperateLog,
+    entInfo,
     AuditRemark
   },
   data() {
