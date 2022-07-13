@@ -58,7 +58,7 @@ export default {
   }
   .zj-header-right {
     position: absolute;
-    right: 10px;
+    right: 0px;
     top: -3px;
   }
 }

@@ -17,7 +17,7 @@ const mutations = {
   //添加-单
   tabAdd(state,rItem) {
     //不添加缓存的白名单过滤
-    let whiteArr = ['home','whith']
+    let whiteArr = ['whith']
     let key = whiteArr.some(item => item === rItem.name)
     if (key && rItem !== 'whith') {
       state.tabTagList = []
