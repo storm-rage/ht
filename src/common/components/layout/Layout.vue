@@ -15,7 +15,7 @@
         <!-- 内容 -->
         <div :class="collapseFlag ? 'w-c-100_50px' : 'w-c-100_200px'">
           <!-- 标签 -->
-          <tab class="layout-tab" v-if="$route.name !== 'home'"/>
+          <tab class="layout-tab"/>
           <!-- 主内容区 -->
           <el-main class="w100 h-c-100_41" style="padding: 0">
 
@@ -63,10 +63,9 @@
   }
   .appMain{
     width: 100%;
-    //border-radius: 10px;
   }
   .appMainHome{
-    width: 100%;
+    padding: 0;
   }
 
 </style>

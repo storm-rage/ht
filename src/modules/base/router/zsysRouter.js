@@ -8,7 +8,7 @@ const zsysRouter = [
     name: 'home',
     component: () => import('../views/sysModules/home'),
     meta: {
-      title: '工作台'
+      title: '平台首页'
     }
   },
   {
@@ -23,15 +23,6 @@ const zsysRouter = [
     meta: {
       title: '角色权限配置'
     }
-  }/*,
-  // 测试页面
-  {
-    path: '/testPage',
-    name: 'testPage',
-    component: () => import('../views/examples/testPage.vue'),
-    meta: {
-      notRequireAuth: true
-    }
-  },*/
+  }
 ]
 export default zsysRouter
