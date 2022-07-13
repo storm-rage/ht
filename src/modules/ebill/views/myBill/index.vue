@@ -1,62 +1,51 @@
 <template>
-  <div>
+  <zj-content-container>
     <zj-money-block
       img-name="hold-img"
       text="正常持有的电子债权凭证金额"
       tipsText="统计的是所有正常持有的电子债权凭证金额合计"
     />
-    <div class="zj-search-condition">
-      <el-row class="button-row">
-        <vxe-button class="reset" icon="el-icon-refresh" @click="resetSearch"
-          >重置</vxe-button
-        >
-        <vxe-button class="search" icon="el-icon-search" @click="search"
-          >查询</vxe-button
-        >
-      </el-row>
-      <el-form ref="searchForm" :model="searchForm">
-        <el-form-item label="签发人：">
-          <el-input
-            v-model="searchForm.issueEntName"
-            @keyup.enter.native="enterSearch"
-          />
-        </el-form-item>
-        <el-form-item label="到期日期：" class="col-right">
-          <zj-date-range-picker
-            :startDate.sync="searchForm.expireDateStart"
-            :endDate.sync="searchForm.expireDateEnd"
-          />
-        </el-form-item>
-        <el-form-item label="凭证金额：" class="col-center">
-          <zj-amount-range
-            :startAmt.sync="searchForm.ebillAmtStart"
-            :endAmt.sync="searchForm.ebillAmtEnd"
-            @keyupEnterNative="enterSearch"
-          />
-        </el-form-item>
-        <el-form-item label="凭证编号：" class="col-center">
-          <el-input
-            v-model="searchForm.ebillCode"
-            @keyup.enter.native="enterSearch"
-          />
-        </el-form-item>
-        <el-form-item label="签收日期：" class="col-right">
-          <zj-date-range-picker
-            :startDate.sync="searchForm.issueDateStart"
-            :endDate.sync="searchForm.issueDateEnd"
-          />
-        </el-form-item>
-      </el-form>
-      <el-row class="button-row">
-        <vxe-button
-          class="export"
-          icon="iconfont icon-daochu"
-          @click="exportData"
-          >导出数据</vxe-button
-        >
-      </el-row>
-    </div>
-    <div class="zj-search-response">
+    <zj-list-layout>
+      <template slot="searchForm">
+        <el-form ref="searchForm" :model="searchForm">
+          <el-form-item label="签发人：">
+            <el-input
+              v-model="searchForm.issueEntName"
+              @keyup.enter.native="enterSearch"
+            />
+          </el-form-item>
+          <el-form-item label="到期日期：" class="col-right">
+            <zj-date-range-picker
+              :startDate.sync="searchForm.expireDateStart"
+              :endDate.sync="searchForm.expireDateEnd"
+            />
+          </el-form-item>
+          <el-form-item label="凭证金额：" class="col-center">
+            <zj-amount-range
+              :startAmt.sync="searchForm.ebillAmtStart"
+              :endAmt.sync="searchForm.ebillAmtEnd"
+              @keyupEnterNative="enterSearch"
+            />
+          </el-form-item>
+          <el-form-item label="凭证编号：" class="col-center">
+            <el-input
+              v-model="searchForm.ebillCode"
+              @keyup.enter.native="enterSearch"
+            />
+          </el-form-item>
+          <el-form-item label="签收日期：" class="col-right">
+            <zj-date-range-picker
+              :startDate.sync="searchForm.issueDateStart"
+              :endDate.sync="searchForm.issueDateEnd"
+            />
+          </el-form-item>
+        </el-form>
+      </template>
+      <template slot="btnGroups">
+        <zj-content>
+          <vxe-button type="primary" @click="exportData">导出数据</vxe-button>
+        </zj-content>
+      </template>
       <zj-table
         ref="searchTable"
         :params="searchForm"
@@ -110,8 +99,8 @@
           </template>
         </zj-table-column>
       </zj-table>
-    </div>
-  </div>
+    </zj-list-layout>
+  </zj-content-container>
 </template>
 <script>
 export default {
@@ -138,5 +127,4 @@ export default {
 .export {
   float: right;
 }
-
 </style>

@@ -18,7 +18,7 @@
         ref="form"
         :model="form"
         :rules="rules"
-        label-width="160px"
+        label-width="200px"
         v-show="workflow === 'base'"
       >
         <zj-content-block>
@@ -360,15 +360,13 @@
 
         <zj-content-block v-if="$route.name === 'entManageAdd'">
           <zj-header title="企业操作员" />
-          <el-row>
-            <div class="">
-              <zj-button
-                class="append"
-                icon="el-icon-circle-plus-outline"
-                @click="sysUserAdd"
-                >新增</zj-button
-              >
-            </div>
+          <zj-content>
+            <zj-button
+              class="append mb-10"
+              icon="el-icon-circle-plus-outline"
+              @click="sysUserAdd"
+              >新增</zj-button
+            >
             <zj-table
               ref="sysUser"
               :dataList="form.sysUserList"
@@ -438,7 +436,7 @@
                 </template>
               </zj-table-column>
             </zj-table>
-          </el-row>
+          </zj-content>
         </zj-content-block>
 
         <zj-content-block>
@@ -488,7 +486,7 @@
             </zj-table>
           </el-row>
         </zj-content-block>
-        
+
         <zj-content-block>
           <zj-header title="企业开票信息" />
           <el-row>
@@ -497,7 +495,7 @@
                 {{ form.name }}
               </el-form-item>
             </el-col>
-              <el-col :span="8">
+            <el-col :span="8">
               <el-form-item label="电话：" prop="invoicePhone">
                 <el-input
                   v-model="form.invoicePhone"
@@ -549,90 +547,14 @@
           </el-row>
         </zj-content-block>
 
-        <zj-content-block>
-          <zj-header title="操作记录" />
-          <el-row class="zj-p-x-20">
-            <zj-table
-              ref="sysUser"
-              :dataList="form.sysUserList"
-              :pager="false"
-              keep-source
-              auto-resize
-              :edit-config="{
-                trigger: 'manual',
-                mode: 'row',
-                icon: '-',
-                autoClear: false,
-                showStatus: true,
-              }"
-              class="sysUserAdd"
-            >
-              <zj-table-column type="seq" title="序号" width="60"/>
-              <zj-table-column
-                field="userName"
-                title="业务节点"
-              />
-              <zj-table-column
-                field="certNo"
-                title="处理人"
-              />
-              <zj-table-column
-                field="mobileNo"
-                title="处理时间"
-              />
-              <zj-table-column
-                field="email"
-                title="审核结果"
-              />
-              <zj-table-column
-                field="email"
-                title="审核意见"
-              />
-            </zj-table>
-          </el-row>
-        </zj-content-block>
+        <!--  操作记录  -->
+        <operate-log></operate-log>
       </el-form>
-      <!-- 天眼查信息 -->
-      <div
-        class="eye-page"
-        v-if="$route.name !== 'entManageAdd'"
-        v-show="workflow === 'eye'"
-      >
-        <zj-eye-sky
-          v-if="$route.name !== 'entManageAdd'"
-          :show="$route.name !== 'entManageAdd'"
-          :entId.sync="form.id"
-          :entName.sync="form.name"
-          :openChange="true"
-        />
-      </div>
 
-      <zj-workflow v-model="workflow" :list="workflowList">
-        <!-- 新增时 -->
-        <el-row slot="right" v-if="$route.name === 'entManageAdd'">
-          <zj-button
-            @click="save('add')"
-            class="save-btn"
-            :api="zjBtn.addEnterprise"
-            >保存</zj-button
-          >
-          <zj-button @click="cancel" class="back">取消</zj-button>
-        </el-row>
-        <!-- 修改时 -->
-        <el-row slot="right" v-if="$route.name === 'entManageEdit'">
-          <zj-button
-            class="save-btn"
-            @click="save('edit')"
-            :api="zjBtn.updateEnterprise"
-            >提交</zj-button
-          >
-          <zj-button @click="cancel" class="back">取消</zj-button>
-        </el-row>
-        <!-- 详情时 -->
-        <el-row slot="right" v-if="$route.name === 'entManageDetail'">
-          <zj-button @click="cancel" class="back">返回</zj-button>
-        </el-row>
-      </zj-workflow>
+      <zj-content-footer>
+        <zj-button type="primary" @click="submit">提交申请</zj-button>
+        <zj-button class="back" @click="back">返回</zj-button>
+      </zj-content-footer>
 
       <!-- 天眼查 -->
       <eyeDialog ref="eyeDialog" :entName="form.name" @eyeReturn="eyeReturn" />

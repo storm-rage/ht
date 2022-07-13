@@ -4,10 +4,12 @@ import {
 } from '@utils/rules'
 import eyeDialog from "./eyeDialog";
 import orderDialog from "./orderDialog";
+import OperateLog from '@modules/workflow/views/components/operateLog';
+
 export default {
   name: "enterpriseManage",
   mixins:[project],
-  components:{eyeDialog,orderDialog},
+  components:{eyeDialog,orderDialog,OperateLog},
   data(){
     return {
       zjControl:this.$api.entInfoManage,

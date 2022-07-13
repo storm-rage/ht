@@ -1,6 +1,8 @@
 <template>
   <zj-content-container>
-    <zj-top-header>{{isAdd?'新增用户申请':'修改用户信息申请'}}</zj-top-header>
+    <zj-top-header>{{
+      isAdd ? "新增用户申请" : "修改用户信息申请"
+    }}</zj-top-header>
     <el-form ref="form" label-width="160px">
       <zj-content-block v-if="isAdd">
         <zj-header title="企业信息"></zj-header>
@@ -34,94 +36,111 @@
       <zj-content-block>
         <zj-header title="用户信息"></zj-header>
         <zj-content>
-          <div>
-            <el-row>
-              <el-col :span="8" v-if="isAdd">
-                <el-form-item label="用户编码：">
-                  <span>xxx</span>
-                </el-form-item>
-              </el-col>
-              <el-col :span="8">
-                <el-form-item label="用户姓名：">
-                  <el-input v-model="form.a" v-if="isAdd" />
-                  <span v-else>xxxxxxx</span>
-                </el-form-item>
-              </el-col>
-              <el-col :span="8">
-                <el-form-item label="证件类型：">
-                  <el-select
-                    v-model="form.a"
-                    filterable
-                    placeholder="请选择"
-                    :popper-append-to-body="false"
-                    v-if="isAdd" 
-                  >
-                    <el-option :label="身份证号码" :value="身份证号码" />
-                  </el-select>
-                  <span v-else>62434343</span>
-                </el-form-item>
-              </el-col>
-              <el-col :span="8">
-                <el-form-item label="证件号码：">
-                  <el-input v-model="form.a" v-if="isAdd" />
-                  <span v-else>xxxxxxx</span>
-                </el-form-item>
-              </el-col>
-              <el-col :span="8">
-                <el-form-item label="证件有效期：">
-                  <zj-date-range-picker
-                    class="el-form-item__regExpire"
-                    :startDate.sync="form.certStartDate"
-                    :endDate.sync="form.certEndDate"
-                    @startChange="certStartChange"
-                    @endChange="certEndChange"
-                  />
-                </el-form-item>
-              </el-col>
-              <el-col :span="8">
-                <el-form-item label="手机号码/用户名：">
-                  <el-input v-model="form.a" />
-                </el-form-item>
-              </el-col>
-              <el-col :span="8">
-                <el-form-item label="邮箱：">
-                  <el-input v-model="form.a" />
-                </el-form-item>
-              </el-col>
-              <el-col :span="8" v-if="isAdd">
-                <el-form-item label="海天业务系统账号：">
-                  <el-input v-model="form.a" />
-                </el-form-item>
-              </el-col>
-              <el-col :span="24">
-                <el-form-item label="用户角色：">
-                  <el-select
-                    v-model="form.a"
-                    filterable
-                    placeholder="请选择"
-                    :popper-append-to-body="false"
-                  >
-                    <el-option :label="身份证号码" :value="身份证号码" />
-                  </el-select>
-                </el-form-item>
-              </el-col>
-              <el-col :span="8">
-                <el-form-item
-                  label="请选择开凭证对账单类型权限："
-                  label-width="280px"
+          <el-row>
+            <el-col :span="8" v-if="isAdd">
+              <el-form-item label="用户编码：">
+                <span>xxx</span>
+              </el-form-item>
+            </el-col>
+            <el-col :span="8">
+              <el-form-item label="用户姓名：">
+                <el-input v-model="form.a" v-if="isAdd" />
+                <span v-else>xxxxxxx</span>
+              </el-form-item>
+            </el-col>
+            <el-col :span="8">
+              <el-form-item label="证件类型：">
+                <el-select
+                  v-model="form.a"
+                  filterable
+                  placeholder="请选择"
+                  :popper-append-to-body="false"
+                  v-if="isAdd"
                 >
-                  <el-select
-                    v-model="form.a"
-                    filterable
-                    placeholder="请选择"
-                    :popper-append-to-body="false"
+                  <el-option :label="身份证号码" :value="身份证号码" />
+                </el-select>
+                <span v-else>62434343</span>
+              </el-form-item>
+            </el-col>
+            <el-col :span="8">
+              <el-form-item label="证件号码：">
+                <el-input v-model="form.a" v-if="isAdd" />
+                <span v-else>xxxxxxx</span>
+              </el-form-item>
+            </el-col>
+            <el-col :span="8">
+              <el-form-item label="证件有效期：">
+                <zj-date-range-picker
+                  class="el-form-item__regExpire"
+                  :startDate.sync="form.certStartDate"
+                  :endDate.sync="form.certEndDate"
+                  @startChange="certStartChange"
+                  @endChange="certEndChange"
+                />
+              </el-form-item>
+            </el-col>
+            <el-col :span="8">
+              <el-form-item label="手机号码/用户名：">
+                <el-input v-model="form.a" />
+              </el-form-item>
+            </el-col>
+            <el-col :span="8">
+              <el-form-item label="邮箱：">
+                <el-input v-model="form.a" />
+              </el-form-item>
+            </el-col>
+            <el-col :span="8" v-if="isAdd">
+              <el-form-item label="海天业务系统账号：">
+                <el-input v-model="form.a" />
+              </el-form-item>
+            </el-col>
+            <el-col :span="24">
+              <el-form-item label="用户角色：">
+                <el-select
+                  v-model="form.a"
+                  filterable
+                  placeholder="请选择"
+                  :popper-append-to-body="false"
+                >
+                  <el-option :label="身份证号码" :value="身份证号码" />
+                </el-select>
+              </el-form-item>
+            </el-col>
+            <el-col :span="8">
+              <el-form-item
+                label="请选择开凭证对账单类型权限："
+                label-width="280px"
+              >
+                <el-select
+                  v-model="form.a"
+                  filterable
+                  placeholder="请选择"
+                  :popper-append-to-body="false"
+                >
+                  <el-option :label="身份证号码" :value="身份证号码" />
+                </el-select>
+              </el-form-item>
+            </el-col>
+          </el-row>
+          <zj-collapse title="身份证">
+            <zj-table :pager="false">
+              <zj-table-column type="seq" width="60" title="序号" />
+              <zj-table-column field="field2" title="附件类型" />
+              <zj-table-column field="field2" title="附件" />
+              <zj-table-column title="操作" fixed="right">
+                <template v-slot="{ row }">
+                  <zj-button type="text" @click="toDownload(row)"
+                    >下载</zj-button
                   >
-                    <el-option :label="身份证号码" :value="身份证号码" />
-                  </el-select>
-                </el-form-item>
-              </el-col>
-            </el-row>
-          </div>
+                </template>
+              </zj-table-column>
+            </zj-table>
+            <zj-content>
+              <zj-content-tip
+                text="1.上传的身份证影像件请加盖公司公章。2.支持上传的文档格式：PDF。3.将身份证正、反面完整放在同一页上。请确保身份证在有效期内。 "
+              ></zj-content-tip>
+            </zj-content>
+          </zj-collapse>
         </zj-content>
       </zj-content-block>
     </el-form>

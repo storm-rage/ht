@@ -414,17 +414,7 @@
       <!-- 审批信息 -->
       <zj-content-block class="zjcoll spxx mt-20" v-show="workflow === 'spxx'">
         <!--操作记录 -->
-        <zj-header title="操作记录" />
-        <zj-content>
-          <zj-table :pager="false" :dataList="dataList">
-            <zj-table-column type="seq" title="序号" width="60" />
-            <zj-table-column field="changeTime" title="业务节点" />
-            <zj-table-column field="changeItem" title="处理人" />
-            <zj-table-column field="changeItem" title="处理时间" />
-            <zj-table-column field="changeItem" title="审核结果" />
-            <zj-table-column field="changeItem" title="审核意见" />
-          </zj-table>
-        </zj-content>
+        <operate-log></operate-log>
         <!--审核信息 -->
         <el-form label-width="170px" :model="form" :rules="rules" ref="form">
           <zj-content>
@@ -645,7 +635,7 @@
             </zj-collapse>
           </zj-content>
 
-          <zj-content-block>
+          <!-- <zj-content-block>
             <zj-header>审核意见</zj-header>
             <el-row class="zj-p-l-30">
               <span class="inline zj-p-l-15">{{ detailData.notes }}</span>
@@ -661,8 +651,10 @@
                 style="width: 50%; min-height: 60px"
               />
             </el-form-item>
-          </zj-content-block>
+          </zj-content-block> -->
         </el-form>
+        <!--  审核意见  -->
+        <audit-remark></audit-remark>
       </zj-content-block>
 
       <!-- 底部工作流状态 -->

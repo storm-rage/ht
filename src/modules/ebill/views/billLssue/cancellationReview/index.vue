@@ -1,33 +1,25 @@
 <template>
-  <div>
-    <div class="zj-search-condition">
-      <el-row class="button-row">
-        <vxe-button class="reset" icon="el-icon-refresh" @click="resetSearch"
-          >重置</vxe-button
-        >
-        <vxe-button class="search" icon="el-icon-search" @click="search"
-          >查询</vxe-button
-        >
-      </el-row>
-      <el-form ref="searchForm" :model="searchForm">
-        <el-form-item label="凭证持有人：">
-          <el-input v-model="searchForm.issueEntName" />
-        </el-form-item>
-        <el-form-item label="申请日期：" class="col-right">
-          <zj-date-range-picker
-            :startDate.sync="searchForm.expireDateStart"
-            :endDate.sync="searchForm.expireDateEnd"
-          />
-        </el-form-item>
-        <el-form-item label="凭证编号：" class="col-center">
-          <el-input
-            v-model="searchForm.ebillCode"
-            @keyup.enter.native="enterSearch"
-          />
-        </el-form-item>
-      </el-form>
-    </div>
-    <div class="zj-search-response">
+  <zj-content-container>
+    <zj-list-layout>
+      <template slot="searchForm">
+        <el-form ref="searchForm" :model="searchForm">
+          <el-form-item label="凭证持有人：">
+            <el-input v-model="searchForm.issueEntName" />
+          </el-form-item>
+          <el-form-item label="申请日期：" class="col-right">
+            <zj-date-range-picker
+              :startDate.sync="searchForm.expireDateStart"
+              :endDate.sync="searchForm.expireDateEnd"
+            />
+          </el-form-item>
+          <el-form-item label="凭证编号：" class="col-center">
+            <el-input
+              v-model="searchForm.ebillCode"
+              @keyup.enter.native="enterSearch"
+            />
+          </el-form-item>
+        </el-form>
+      </template>
       <zj-table
         ref="searchTable"
         :params="searchForm"
@@ -43,7 +35,7 @@
         <zj-table-column field="issueEntName" title="凭证签发人" />
         <zj-table-column field="issueEntName" title="凭证签发人" />
         <zj-table-column field="ebillAmt" title="凭证金额" :formatter="date" />
-           <zj-table-column
+        <zj-table-column
           field="issueDate"
           title="凭证签发日期"
           :formatter="date"
@@ -71,8 +63,8 @@
           </template>
         </zj-table-column>
       </zj-table>
-    </div>
-  </div>
+    </zj-list-layout>
+  </zj-content-container>
 </template>
 <script>
 export default {
