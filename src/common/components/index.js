@@ -1,6 +1,4 @@
 import ZjLog from './log/ZjLog.js'
-import { message } from '../utils/whl_resetMessage'
-import zjConfirm from "./confirm/ZjConfirm";
 import { messageBox } from "./messageBox"
 
 const components = [
@@ -118,11 +116,6 @@ const components = [
     name: 'ZjTabs',
     component: () => import('./tabs/ZjTabs.vue')
   },
-  //单张发票
-  {
-    name: 'ZjOneInvoice',
-    component: () => import('./oneInvoice/ZjOneInvoice.vue')
-  },
   { // 弹框提示
     name: 'ZjMessageBox',
     component: () => import('./messageBox/ZjMessageBox')
@@ -193,8 +186,6 @@ const install = function (Vue) {
     Vue.component(item.name, item.component)
   })
   Vue.prototype.$log = ZjLog;
-  Vue.prototype.$Message = message;
-  Vue.prototype.$Confirm = zjConfirm;
   Vue.use(messageBox);
 }
 

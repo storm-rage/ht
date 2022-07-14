@@ -41,15 +41,6 @@ const commonRouter = [
       title:'忘记密码'
     }
   },
-  {
-    path:'/zjView',
-    name:'zjView',
-    component: () => import('@baseModules/views/zjView.vue'),
-    meta: {
-      notRequireAuth: true,
-      title:'在线预览'
-    }
-  },
   // 报错模块----------------
   {
     path: '/401',

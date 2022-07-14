@@ -1,7 +1,7 @@
 import applyAudit from "./applyAudit.js";
 import protocolAudit from "./protocolAudit.js";
 import registerAuditAttach from "./registerAuditAttach.js";
-import project from "../../../../project.js";
+// import project from "../../../../project.js";
 import view from "@pubComponent/preview/view.js";
 import OperateLog from '@modules/workflow/views/components/operateLog';
 import AuditRemark from '@modules/workflow/views/components/auditRemark';
@@ -100,8 +100,8 @@ export default {
 
     if (this.$route.name === 'registerAuditApplyAudit') {
       //获取所属项目
-      this.projectApi = this.$api.registerAudit.getProjectList
-      this.getProjectList()
+      // this.projectApi = this.$api.registerAudit.getProjectList
+      // this.getProjectList()
     }
 
     //设置工作流--确认时
