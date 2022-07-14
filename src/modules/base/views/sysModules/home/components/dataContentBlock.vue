@@ -18,13 +18,11 @@ export default {};
   border: 1px solid #BBDEFE;
   border-radius: 8px;
   padding: 4px;
-  max-width: 400px;
   margin-top: 20px;
   .content-block {
     background-image: linear-gradient(0deg,#FFFFFF 0%,#E8F4FF 100%);
     border-radius: 4px;
     padding: 20px;
-    max-width: 400px;
     .title {
       font-weight: bold;
       font-size: 16px;

@@ -62,6 +62,6 @@ export default {
   }
 }
 .list-item-block+.list-item-block {
-  margin-top: 15px;
+  margin-top: 10px;
 }
 </style>

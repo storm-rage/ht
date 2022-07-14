@@ -46,11 +46,6 @@ export default {
           title: '凭证作废复核审批人规则，必须是部分很长很长很长很长很长很长很长很长很长很长很长很长很长很长很长很长很长很长很长',
           isNew: false,
           date: '2022-05-08'
-        },
-        {
-          title: '各事业部供应链采购规则',
-          isNew: false,
-          date: '2022-04-11'
         }
       ]
     }
@@ -64,9 +59,7 @@ export default {
 </script>
 <style lang="less" scoped>
 .home-content-notice {
-  height: 100%;
   .notice-list-block {
-
   }
 }
 </style>
