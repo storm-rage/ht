@@ -2,7 +2,7 @@
   <div class="navbar">
     <!--    &lt;!&ndash; logo &ndash;&gt;-->
     <div class="navbar-logo" :class="{'min-navbar-logo': collapseFlag}">
-      <img src="@assets/img/layout/Logo.png"/>
+      <img src="@assets/img/layout/Logo.png"/><span class="text">供应链金融平台</span>
     </div>
     <!-- 左边内容 -->
     <div class="navbar-left">
@@ -73,12 +73,27 @@ export default {
     height: 100%;
     transition: width .1s ease-out;
     &.min-navbar-logo {
-      width: 120px;
+      width: 82px;
+      overflow: hidden;
+      text-overflow: clip;
+      white-space: nowrap;
+      .text {
+        display: none;
+      }
+    }
+    .text {
+      display: inline-block;
+      vertical-align: middle;
+      font-weight: bold;
+      font-size: 18px;
+      color:#303133;
+      margin-left: 5px;
     }
     img {
-      width: 80px;
+      width: 48px;
       margin: auto;
       height: 35px;
+      vertical-align: middle;
     }
   }
 
