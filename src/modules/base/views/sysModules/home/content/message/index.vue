@@ -59,6 +59,5 @@ export default {
 </script>
 <style lang="less" scoped>
 .home-content-message {
-  height: 100%;
 }
 </style>

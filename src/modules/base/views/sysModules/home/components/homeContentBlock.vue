@@ -13,6 +13,6 @@ export default {}
 .home-content-block {
   background-color: #FFFFFF;
   border-radius: 4px;
-  padding: 20px;
+  padding: 15px 20px;
 }
 </style>

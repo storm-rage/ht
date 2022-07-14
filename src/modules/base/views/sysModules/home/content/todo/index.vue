@@ -5,13 +5,17 @@
         <right-more-btn @click="toMore"></right-more-btn>
       </template>
     </zj-header>
-    <div class="todo-block">
-      <div class="todo-block-item yw" v-for="(item,index) in list" :key="`${index}todo`" :class="[index===0?'yw':index===1?'ht':'rz']">
-        <div class="item">
-          <div class="num">{{item.num}}</div>
-          <div class="desc">{{item.title}}</div>
-        </div>
+    <div class="todo-block-item yw"
+         v-for="(item,index) in list"
+         :key="`${index}todo`"
+         :class="[index===0?'yw':index===1?'ht':'rz']">
+      <div class="logo">
+        <img v-if="index===0" src="~@assets/img/home/todo/yw_bg.png">
+        <img v-if="index===1" src="~@assets/img/home/todo/ht_bg.png">
+        <img v-if="index===2" src="~@assets/img/home/todo/rz_bg.png">
       </div>
+      <div class="title"> {{item.title}}</div>
+      <div class="num">{{item.num}}</div>
     </div>
   </home-content-block>
 </template>
@@ -51,45 +55,51 @@ export default {
 <style lang="less" scoped>
 .home-content-todo {
   height: 100%;
-  .todo-block {
+  .todo-block-item {
+    position: relative;
+    cursor: pointer;
+    border-radius: 4px;
+    height: 62px;
     display: flex;
     align-items: center;
-    justify-content: space-between;
-    .todo-block-item {
-      flex: 0 0 30%;
-      height: 130px;
-      text-align: right;
-      position: relative;
-      // 业务管理
-      &.yw {
-        background: url("~@assets/img/home/todo/yw_bg.png") no-repeat;
+    padding-left: 20px;
+    padding-right: 20px;
+    font-weight: bold;
+    // 业务管理
+    &.yw {
+      background-color: #FFF6ED;
+      .num {
         color: #FFA958;
       }
-      // 合同管理
-      &.ht {
-        background: url("~@assets/img/home/todo/ht_bg.png") no-repeat;
+    }
+    // 合同管理
+    &.ht {
+      background-color: #FFEFEF;
+      .num {
         color: #FF6D6D;
       }
-      // 融资审核
-      &.rz {
-        background: url("~@assets/img/home/todo/rz_bg.png") no-repeat;
+    }
+    // 融资审核
+    &.rz {
+      background-color: #E6FAFF;
+      .num {
         color: #1EC5A3;
       }
-      .item {
-        position: absolute;
-        right: 30px;
-        bottom: 30px;
-        .title {
-          font-weight: 400;
-          font-size: 15px;
-          color: #303133;
-        }
-        .num {
-          font-weight: bold;
-          font-size: 30px;
-        }
-      }
     }
+    .title {
+      margin-left: 15px;
+      font-size: 16px;
+      color: #303133;
+    }
+    .num {
+      width: 100px;
+      text-align: right;
+      flex: auto;
+      font-size: 30px;
+    }
+  }
+  .todo-block-item+ .todo-block-item{
+    margin-top: 12px;
   }
 }
 </style>
