@@ -5,7 +5,7 @@ import {
 import eyeDialog from "./eyeDialog";
 import orderDialog from "./orderDialog";
 import OperateLog from '@modules/workflow/views/components/operateLog';
-import OtherFileSetting from '@modules/ebill/views/productManage/businessManage/components/otherFileSetting';
+import OtherFileSetting from './components/otherFileSetting';
 
 export default {
   name: "enterpriseManage",

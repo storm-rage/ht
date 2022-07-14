@@ -2,9 +2,7 @@
   <div class="bg-white">
     <div class="FdOpenAndReceipt-OrderReview_signFor bg-w bg-white">
       <!-- 标题区 -->
-      <h1 class="ta-c zj-m-b-20">
-        电子债权凭证签收
-      </h1>
+      <h1 class="ta-c zj-m-b-20">电子债权凭证签收</h1>
       <!-- 内容  -->
       <div class="orderBody">
         <el-row class="ta-l">
@@ -126,50 +124,16 @@
             >详情</zj-button
           >
         </el-row>
-        <!-- <el-row class="zj-p-t-20">
-          <el-checkbox v-model="protocolCheck" />
-          <span class="zj-m-l-5" style="color: #409eff">已阅读并同意</span>
-          <span
-            class="protocol_item"
-            v-for="(item, index) in detailData.protocols"
-            :key="index"
-          >
-            <label
-              @click="
-                item.protocolFileId
-                  ? dowmApply(item, 'agree')
-                  : viewProtocol(item)
-              "
-              style="color: #409eff; cursor: pointer"
-            >
-              《{{ item.protocolName }}》
-            </label>
-            <i
-              style="font-style: normal"
-              v-if="index !== detailData.protocols.length - 1"
-              >或</i
-            >
-          </span>
-        </el-row> -->
       </el-row>
-      <el-row class="ta-c w85 fixed-footer-btns">
-        <el-row class="ta-c w85 zj-m-b-5">
-          <el-checkbox v-model="protocolCheck" class="check-text"
-            >已阅读并同意协议</el-checkbox
-          >
-        </el-row>
-        <div>
-          <zj-button @click="confirmSignFor" :api="zjBtn.passRecheck"
-            >确认签收</zj-button
-          >
-          <zj-button
-            class="btn-warning"
-            @click="goParent"
-            :api="zjBtn.rejectRecheck"
-            >取消</zj-button
-          >
-        </div>
-      </el-row>
+      <zj-content-footer>
+        <span style="display: inline-block; margin-right: 5px">
+          <el-checkbox v-model="agreeCheck"
+            >已阅读并同意 <el-link :underline="false" type="primary">《开单确认书》</el-link></el-checkbox
+          >&nbsp;
+        </span>
+        <zj-button type="primary" @click="toReview">复核通过</zj-button>
+        <zj-button type="primary" @click="toReject">拒绝</zj-button>
+      </zj-content-footer>
       <!-- 协议预览 -->
       <el-dialog class="view-pdf" :visible.sync="htmlVisible" width="1100px">
         <div slot="title"></div>
