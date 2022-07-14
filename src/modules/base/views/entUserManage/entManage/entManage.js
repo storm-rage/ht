@@ -1,4 +1,4 @@
-import project from "../../project";
+// import project from "../../project";
 import {
   validateEmail, newValidateFixedPhone, validateBankAcct
 } from '@utils/rules'
@@ -9,7 +9,7 @@ import OtherFileSetting from './components/otherFileSetting';
 
 export default {
   name: "enterpriseManage",
-  mixins: [project],
+  // mixins: [project],
   components: { eyeDialog, orderDialog, OperateLog, OtherFileSetting },
   data() {
     return {
@@ -315,7 +315,7 @@ export default {
 
       this.invoiceOneAndAll() //企业开票附件
 
-      this.projectInit() //所属项目初始化
+      // this.projectInit() //所属项目初始化
 
       //签章初始化
       this.sealEntSelect[0].sealEntId = this.form.id || '0'

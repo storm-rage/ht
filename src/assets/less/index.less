@@ -34,9 +34,6 @@ ul{
 .no-border {
   border: 0!important;
 }
-.underline {
-  text-decoration: underline;
-}
 /*  ---------------------------------查询页-------------------------------------------------- */
 html,body,#app{
   width: 100%;
@@ -54,31 +51,6 @@ input[type=number] {
 input:-webkit-autofill,.el-input__inner:-webkit-autofill{
   background-color: white!important;
   -webkit-box-shadow: 0 0 0px 1000px white inset;
-}
-
-/*------文字颜色------*/
-.el-textarea__inner::-webkit-input-placeholder,.el-input__inner::-webkit-input-placeholder{ //输入框提示说明文字色号
-  //color: red;
-  color: #C2C2C2!important;
-}
-.el-textarea__inner::-webkit-input-placeholder{
-  font-family:Arial;
-}
-
-.el-form-item__label {
-  color: #999;
-}
-
-/** 公共的底部按钮 **/
-.detailButtons {
-  margin: 15px 0;
-}
-.content-wrap {
-  padding: 15px;
-  background-color: #fff;
-}
-.el-main {
-  padding: 15px;
 }
 
 
@@ -119,38 +91,6 @@ input:focus::-moz-placeholder, textarea:focus::-moz-placeholder {
   color: transparent!important;
 }
 
-/** 不可编辑的下拉框 **/
-.el-input.is-disabled .el-input__inner {
-  background-color: #e6e6e6;
-  border-color: #e6e6e6;
-}
-
-.el-tooltip__popper {
-  max-width: unset!important;
-}
-
-//贸易背景 -----
-.state{
-  display: inline-block;
-  height: 24px;
-  line-height: 24px;
-  img{
-    width: 24px;
-    height: 24px;
-  }
-}
-//片段标题
-.sec-title {
-  font-size: 14px;
-  height: 22px;
-  line-height: 22px;
-  color: #333333;
-  border-left: 6px solid @left-title-border-color;
-  width: 100%;
-  padding: 0 10px 5px 10px;
-  margin-bottom: 16px;
-}
-
 //不要随便移动位置
 @import "mixin";
 @import "variables";
@@ -161,5 +101,4 @@ input:focus::-moz-placeholder, textarea:focus::-moz-placeholder {
 @import "vxe-ui/vxeTable";
 @import "vxe-ui/vxeButton";
 @import "search/search.less";
-@import "header/index.less";
 @import "workflow.less";

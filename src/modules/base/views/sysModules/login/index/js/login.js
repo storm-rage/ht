@@ -109,8 +109,8 @@ export default {
                 this.oneLoginFlag = false
               }
             }
-            // 需要人脸识别 或者签 协议
-            else if (loginRes.faceCheck || loginRes.userServiceAgreementFlag === '1') {
+            // 需要签 协议
+            else if (loginRes.userServiceAgreementFlag === '1') {
               const loginResMix = Object.assign({}, loginRes, this.userData);
               this.loginSuccess = JSON.parse(JSON.stringify({
                 loginRes: loginResMix

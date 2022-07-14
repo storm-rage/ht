@@ -12,7 +12,7 @@
         </div>
         <div class="register-white">
           <div class="register-body">
-            <div class="zj-white zj-bg-blue zj-center zj-h-35">
+            <div class="zj-white zj-bg-blue zj-center zj-h-35" style="color: #fff">
               <span>注册</span>
             </div>
             <el-form ref="form" :model="form" :rules="rules" class="register-form" hide-required-asterisk label-width="70px">

@@ -4,42 +4,34 @@ table{
     height: 32px;
   }
 }
-.detail-table {
-  border-collapse:collapse;
-  text-align: center;
-  td {
-    border: 1px solid #d0d0d0;
-    padding: 0 15px;
-  }
-}
-.t--stripe table {
-  tbody {
-    tr  {
-      &:nth-child(odd) {
-        &:hover {
-          background-color: #f9f9f9!important;
-          td {
-            background-color: #f9f9f9!important;
-          }
-        }
-        td {
-          background-color: #fff;
-        }
-      }
-      &:nth-child(even) {
-        &:hover {
-          background-color: #f2f2f2!important;
-          td {
-            background-color: #f2f2f2!important;
-          }
-        }
-        td {
-          background-color: #f7f7f7;
-        }
-      }
-    }
-  }
-}
+//.t--stripe table {
+//  tbody {
+//    tr  {
+//      &:nth-child(odd) {
+//        &:hover {
+//          background-color: #f9f9f9!important;
+//          td {
+//            background-color: #f9f9f9!important;
+//          }
+//        }
+//        td {
+//          background-color: #fff;
+//        }
+//      }
+//      &:nth-child(even) {
+//        &:hover {
+//          background-color: #f2f2f2!important;
+//          td {
+//            background-color: #f2f2f2!important;
+//          }
+//        }
+//        td {
+//          background-color: #f7f7f7;
+//        }
+//      }
+//    }
+//  }
+//}
 //表格插槽
 .zj-table{
   .slotRow{
@@ -73,18 +65,5 @@ table{
     background-color: #E5F0F7!important;
     color: #333333!important;
     font-weight: bold;
-  }
-}
-/** 详情页里的无表头表格 **/
-.bankTable{
-  border-top: 1px solid #d0d0d0;
-  th {
-    background-color: #f1f1f1 !important;
-    border: 1px solid #d0d0d0;
-    border-top: none;
-  }
-  td {
-    padding: 0 15px;
-    white-space: pre-wrap!important; /** 允许换行 **/
   }
 }

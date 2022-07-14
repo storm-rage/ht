@@ -71,13 +71,7 @@
               this.$store.commit('tab/tabRefresh',rItem)
               this.$router.replace({name:item.url || item.name})
               this.$store.dispatch('menu/SET_MENU_ACTIVE',item.url || item.name) //设置选中
-            },
-          getImg (item) {
-            if (this.currentMenu.parentId==item.id) {
-              return require(`@assets/img/menu/activate/${item.icon}-activate.png`)
             }
-            return require(`@assets/img/menu/${item.icon}.png`)
-          }
         }
     }
 </script>
