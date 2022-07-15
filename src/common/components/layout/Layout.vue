@@ -63,6 +63,8 @@
   }
   .appMain{
     width: 100%;
+    // 底部浮动按钮基准
+    position: relative;
   }
   .appMainHome{
     padding: 0;
