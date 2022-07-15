@@ -1,5 +1,17 @@
 /** element-ui */
 /*form*/
+/*------文字颜色------*/
+.el-textarea__inner::-webkit-input-placeholder,.el-input__inner::-webkit-input-placeholder{ //输入框提示说明文字色号
+  //color: red;
+  color: #C2C2C2!important;
+}
+.el-textarea__inner::-webkit-input-placeholder{
+  font-family:Arial;
+}
+
+.el-main {
+  padding: 15px;
+}
 .el-form-item--small .el-form-item__content, .el-form-item--small .el-form-item__label {
   line-height: 28px;
 }
@@ -11,48 +23,6 @@
   width: 220px;
 }
 
-.el-input__inner:focus{
-  border-color: @primary-main-color !important;
-}
-.el-select-dropdown__item.selected{
-  color: @primary-main-color !important;
-}
-.el-radio__input.is-checked+.el-radio__label{
-  color: @primary-main-color !important;
-}
-.radio-btns /deep/ .el-radio.is-checked .el-radio__inner{
-  border-color: @primary-main-color !important;
-}
-.radio-btns /deep/ .el-radio:hover .el-radio__inner:after{
-  background-color: #FFF !important;
-}
-.radio-btns /deep/ .el-radio:hover .el-radio__inner{
-  border:2px solid @primary-main-color !important;
-}
-.radio-btns /deep/ .el-radio.is-checked .el-radio__inner:after{
-  background-color:@primary-main-color !important;
-}
-#app /deep/ .el-radio.is-checked .el-radio__inner{
-  border-color: @primary-main-color !important;
-}
-#app /deep/ .el-radio:hover .el-radio__inner:after{
-  background-color: #FFF !important;
-}
-#app /deep/ .el-radio:hover .el-radio__inner{
-  border:2px solid @primary-main-color !important;
-}
-#app /deep/ .el-radio.is-checked .el-radio__inner:after{
-  background-color:@primary-main-color !important;
-}
-//.el-loading-spinner i {
-//  color: @primary-main-color !important;
-//}
-//.el-loading-spinner .el-loading-text {
-//  color: @primary-main-color !important;
-//}
-//.el-loading-spinner .path{
-//  stroke:@primary-main-color !important;
-//}
 .el-input--small .el-input__inner {
   height: 28px;
   line-height: 28px;
@@ -68,13 +38,7 @@
 .el-select .el-icon-circle-close {
   margin-top: 2px;
 }
-.el-checkbox__input.is-checked .el-checkbox__inner{
-  background-color:@primary-main-color !important;
-  border-color: @primary-main-color !important;
-}
-.el-checkbox__input.is-checked+.el-checkbox__label{
-  color: @primary-main-color !important;
-}
+
 /* datePicker */
 .el-input__prefix {
   left: auto;
@@ -117,7 +81,6 @@
   }
   .el-dialog__headerbtn {
     top: 10px;
-    /*right: 10px;*/
   }
   &.header-shadow {
     .el-dialog__header {
@@ -157,13 +120,6 @@
         color: white;
       }
     }
-  }
-}
-
-/*协议*/
-.view-pdf{
-  .el-dialog__body{
-    overflow-y: scroll;
   }
 }
 
@@ -231,85 +187,12 @@
   }
 }
 
-#app /deep/ .el-input__inner:focus{
-  border-color: @date-primary-color !important;
-}
-.el-picker-panel .el-picker-panel__icon-btn:hover{
-  color: @date-primary-color !important;
-}
-.el-picker-panel .el-date-picker__header-label:hover{
-  color:  @date-primary-color !important;
-}
-.el-picker-panel .cell:hover{
-  color:  @date-primary-color !important;
-  background-color:@date-hover-color !important;
-}
-.el-picker-panel .today .cell{
-  color: @date-primary-color !important;
-  background-color:@date-hover-color !important;
-}
-.el-picker-panel .available:hover{
-  span{
-    color:  @date-primary-color !important;
-    background-color:@date-hover-color !important;
-  }
-}
-.el-date-table td.today span{
-  color:  @date-primary-color !important;
-  background-color:@date-hover-color !important;
-}
-.el-picker-panel .el-date-table td.current:not(.disabled) span{
-  background-color: @date-primary-color !important;
-  color: #FFF !important;
-}
-.el-year-table td.current:not(.disabled) .cell{
-  color: #FFF !important;
-  background-color:@date-primary-color !important;
-}
-.el-date-table td span{
-  border-radius: 0;
-}
-.el-month-table td .cell{
-  border-radius: 0;
-}
-.el-month-table td.current:not(.disabled) .cell{
-  background-color: @date-primary-color !important;
-  color: #FFF !important;
 // checkbox相关
 //el-checkbox
 .el-checkbox__label{
   color:#666;
 }
-//复选框
-.el-checkbox{
-  .el-checkbox__inner{
-    border: 1px solid gray;
-  }
-  &:hover{
-    .el-checkbox__inner{
-      border-color: @primary-main-color;
-    }
-  }
-  &.is-checked {
-    .el-checkbox__inner{
-      background-color: @el-checkbox-check-bg;
-      border-color: @el-checkbox-check-bg;
-    }
-    .el-checkbox__label {
-      color: @el-checkbox-check-text-color;
-    }
 
-  }
-  &.is-disabled {
-    .el-checkbox__inner{
-      background-color: @el-checkbox-disabled-bg;
-      border-color: @el-checkbox-disabled-border-color;
-    }
-    .el-checkbox__label {
-      color: @el-checkbox-disabled-text-color;
-    }
-  }
-}
 /** 复选框勾选距离文字的距离 **/
 .el-checkbox__label {
   padding-left: 8px;
@@ -321,51 +204,6 @@
     color: #333;
   }
 }
-.quick-check-wrap {
-  padding-top: 5px;
-  .el-checkbox-group {
-    display: inline-block;
-  }
-  .el-checkbox {
-    margin-right: 0px;
-    margin-left: 10px;
-    &.is-checked {
-      .el-checkbox__label {
-        color: #333;
-      }
-    }
-  }
-  .el-checkbox__label {
-    color: #999;
-    font-size: 12px;
-  }
-  .el-checkbox .el-checkbox__inner {
-    margin-left: 8px;
-  }
-}
-}
-
-// 平台项目设置tab切换
-.el-radio-button__orig-radio:checked+.el-radio-button__inner{
-  background-color: @primary-main-color;
-  border-color: @primary-main-color;
-}
-
-//按钮
-.vxe-button.type--button.theme--primary:not(.is--disabled){
-  background-color: @primary-main-color;
-  border-color: @primary-main-color;
-}
-.vxe-button.type--button{
-  color: @primary-main-color;
-}
-
-
-
-.el-time-spinner__item:hover:not(.disabled):not(.active){
-  background: @time-hover-color;
-  color: @time-primary-color;
-}
 
 // 弹窗
 .el-dialog__header{
@@ -373,23 +211,6 @@
   text-align: left !important;
 }
 
-.el-dialog.header-shadow .el-dialog__header{
-  border-bottom: 1px solid @alert-boder-color;
-}
-.el-dialog--center .el-dialog__footer{
-  text-align: right;
-  border-top: 1px solid @alert-boder-color;
-}
-
-.el-dialog__headerbtn .el-dialog__close:hover{
-  color: @alert-primary-color;
-}
-
-//下拉菜单
-.el-dropdown-menu__item:hover{
-  background: @drop-hover-color !important;
-  color:@drop-primary-color !important;
-}
 .el-dialog__header{
   display: flex;
   justify-content: space-between;

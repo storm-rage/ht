@@ -32,19 +32,6 @@ const entUserManage = [
       notRequireAuth: true
     }
   },
-  //新增趋势
-  {
-    path: '/entManageTen',
-    name: 'entManageTen',
-    component: () => import('../views/entUserManage/entManage/appendTendency/AppendTendency.vue'),
-    meta: {
-      title: '企业信息管理-新增趋势',
-      parent: 'sysEnterprise',
-      keepAlive: true,
-      refreshIndex: 0,
-      notRequireAuth: true
-    }
-  },
   //详情
   {
     path: '/entDealDetail',

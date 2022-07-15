@@ -1,5 +1,3 @@
-import {mapState} from "vuex";
-
 export default {
   install(Vue){
     Vue.mixin({
@@ -8,13 +6,6 @@ export default {
           zjBtn: {},
           row: {},
         }
-      },
-      computed:{
-        ...mapState({
-          tabActive: state => state.tab.tabActive, //选中
-          userInfo: state => state.user.userInfo ?? {}, //用户信息
-          tabTagList: state => state.tab.tabTagList, //标签
-        }),
       },
       methods:{
         notEmptyCheck(form,rules,whiteList = []){
@@ -45,9 +36,6 @@ export default {
                   ||
                   ( Array.isArray(this[form][rulesArr[i]]) && this[form][rulesArr[i]].length === 0 )
               ){
-                // if(this.$Message){
-                //   this.$Message.error(this[rules][rulesArr[i]][0].message)
-                // }
 
                 if(this.$messageBox){
                   this.$messageBox({
@@ -172,12 +160,6 @@ export default {
           }
           this.$store.commit('tab/tabDel',rItem)
         },
-        tabAdd(){
-          let rItem = {
-            name:this.$route.name,
-          }
-          this.$store.commit('tab/tabAdd',rItem)
-        },
         tabRefresh(){
           let rItem = {
             name:this.$route.name,
@@ -195,23 +177,7 @@ export default {
             this.search()
           }
         },
-      },
-      activated() {
-        // this.$nextTick(()=>{
-        //   if(this.$route.params.refresh &&  this.$refs.searchTable){
-        //     this.search(false)
-        //   }
-        //   if(this.beforeActiva && typeof(this.beforeActiva) ==='function'){
-        //     this.beforeActiva()
-        //   }
-        // })
-        // if(this.$refs.searchTable){
-        //   this.search(false)
-        // }
-        if(this.beforeActiva && typeof(this.beforeActiva) ==='function'){
-          this.beforeActiva()
-        }
-      },
+      }
     })
   }
 }
