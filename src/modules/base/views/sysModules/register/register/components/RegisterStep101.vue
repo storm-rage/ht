@@ -4,7 +4,7 @@
     <div class="registerContent">
       <div class="register-card">
         <div class="register-inline">
-          <div class="register-tip">
+          <div class="register-tip" v-if="false">
             <div class="register-tip-icon"></div>
             <span class="zj-m-l-5">提示：如果您已经申请注册，可录入企业名称和注册使用的手机号查看注册进度以及下载资料。</span>
           </div>
@@ -12,43 +12,82 @@
         </div>
         <div class="register-white">
           <div class="register-body">
-            <div class="zj-white zj-bg-blue zj-center zj-h-35" style="color: #fff">
-              <span>注册</span>
-            </div>
-            <el-form ref="form" :model="form" :rules="rules" class="register-form" hide-required-asterisk label-width="70px">
-              <el-form-item label="企业名称" prop="name">
-                <el-input class="zj-pw-100" v-model="form.name" placeholder="请输入企业名称"/>
+            <zj-top-header title="注冊"/>
+            <el-form ref="form" :model="form" :rules="rules" class="register-form" label-width="160px">
+              <el-form-item label="企业名称：" prop="name">
+                <el-input class="zj-pw-100" v-model="form.name" placeholder="请输入企业名称" @change="nameChange"/>
+                <zj-button style="margin-left: 20px;" @click="checkIsHtEnterprise">确定</zj-button>
               </el-form-item>
-              <el-form-item label="手机号码" prop="registerPhone">
-                <el-input class="zj-inline iphoneCode" v-model="form.registerPhone" placeholder="请填写手机号码" maxLength="11"
-                          @input="btnValidateS">
-                            <zj-button
-                              slot="append"
-                              class="zj-inline sendBtn w100px zj-f-s-10"
-                              :status="sendDisabled ? 'info' : 'primary'"
-                              :disabled="sendDisabled"
-                              @click="send"
-                            >
-                              <span style="font-weight:unset">{{ sendText }}</span>
-                            </zj-button>
-                </el-input>
-                <p v-if="smsCodeSuccess" class="formTips">
-                  <i class="el-icon-success iconSuccess zj-f-s-14"></i>
-                  <span class="tipsInfo fs-14">验证码发送成功，请注意查收</span>
-                </p>
-              </el-form-item>
-              <el-form-item label="验证码" prop="smsCode">
-                <el-input class="zj-pw-100" v-model="form.smsCode" :maxLength="6" placeholder="请输入6位验证码"/>
-              </el-form-item>
+
+              <el-row v-if="form.name && form.isHtEnterprise == '0'">
+                <el-form-item label="统一社会信用代码：" prop="bizLicence" class="required">
+                  <el-input v-model="form.bizLicence" maxLength="25" placeholder="请输入统一社会信用代码" />
+                </el-form-item>
+                <el-form-item label="法定代表人姓名：" prop="legalPersonName" class="required">
+                  <el-input v-model="form.legalPersonName" maxLength="50" placeholder="请输入法定代表人姓名" />
+                </el-form-item>
+                <el-form-item label="法人证件类型：" prop="legalCertType" class="zj-inline required">
+                  <el-select v-model="form.legalCertType" placeholder="请选择法人证件类型" class="register102-legalCertType"
+                             :popper-append-to-body="false" :disabled="true"
+                  >
+                    <el-option
+                      v-for="(item, index) in dictionary.userCertTypeList"
+                      :key="index"
+                      :value="item.code"
+                      :label="item.desc"
+                    ></el-option>
+                  </el-select>
+                </el-form-item>
+                <el-form-item label="法人证件号码：" prop="legalCertNo" class="zj-inline required">
+                  <el-input v-model="form.legalCertNo" placeholder="请输入证件号码" maxLength="50" />
+                </el-form-item>
+              </el-row>
+              <el-row v-if="form.name && form.isHtEnterprise !== ''">
+                <el-form-item label="法人手机号码：" prop="registerPhone">
+                  <el-input class="zj-inline iphoneCode" v-model="form.registerPhone" placeholder="请填写手机号码" maxLength="11"
+                            @input="btnValidateS">
+                  </el-input>
+                </el-form-item>
+                <el-form-item label="验证码：" prop="smsCode">
+                  <el-input class="zj-pw-100 smsCode" v-model="form.smsCode" :maxLength="6" placeholder="请输入验证码">
+                    <vxe-button
+                      slot="append"
+                      class="zj-inline sendBtn w100px zj-f-s-10"
+                      :status="sendDisabled ? 'info' : 'primary'"
+                      :disabled="sendDisabled"
+                      @click="send"
+                    >
+                      <span style="font-weight:unset">{{ sendText }}</span>
+                    </vxe-button>
+                  </el-input>
+                  <p v-if="smsCodeSuccess" class="formTips">
+                    <i class="el-icon-success iconSuccess zj-f-s-14"></i>
+                    <span class="tipsInfo fs-14">验证码发送成功，请注意查收</span>
+                  </p>
+                </el-form-item>
+              </el-row>
             </el-form>
-            <el-row class="btn-row">
-              <zj-button :status="nextFlag ? 'primary' : 'info'" :disabled="!nextFlag" @click="next">下一步</zj-button>
+            <el-row v-if="form.name && form.isHtEnterprise !== ''">
+              <el-form label-width="160px">
+                <el-form-item>
+                  <el-radio-group v-model="isAgreed" @change="checkIsAgreed">
+                    <el-radio label="1">我已阅读并同意</el-radio>
+                  </el-radio-group>
+                  <zj-button type="text" @click="getLicensorAgreement">《授权协议》</zj-button>
+                </el-form-item>
+
+              </el-form>
+              <el-row class="btn-row">
+                <vxe-button :status="nextFlag ? 'primary' : 'info'" :disabled="!nextFlag" @click="next">下一步</vxe-button>
+              </el-row>
             </el-row>
           </div>
         </div>
       </div>
     </div>
     <RegisterFooter/>
+    <!-- 查看器 -->
+    <zj-preview :visible.sync="viewShow" :fileUrl="viewUrl" :showFooter="false" :fileType="viewType" @close="viewShow=false"/>
   </div>
 
 </template>
@@ -57,41 +96,136 @@
 import RegisterHeader from "./RegisterHeader.vue";
 import RegisterFooter from "./RegisterFooter.vue";
 import RegisterProgressBar from './RegisterProgressBar.vue'
+import ZjButton from "@pubComponent/button/ZjButton";
+import {validateBusinessNo} from "@utils/rules";
+import {mapState} from "vuex";
+import view from "@pubComponent/preview/view";
+
 export default {
   name: 'RegisterStep101',
+  mixins:[view],
   components: {
+    ZjButton,
     RegisterProgressBar,RegisterHeader,RegisterFooter
   },
   props: {
     step: String,
     entInfoObj:Object,
-    zjControl: Object
+    zjControl: Object,
+    dictionary: Object,
   },
   data () {
     return {
       //提交的表单
-      form: {
-        name:'',//企业名
-        registerPhone:'',//注册手机号
-        smsCode:'',//短信验证码
+      form:{
+        address: '',
+        bizLicence: '',
+        city: '',
+        cityZh: '',
+        companyType: '',
+        custType: '',
+        detailAddress: '',
+        entBankInfo: {},
+        entBankInfoList: [],
+        entContactAddressCity: '',
+        entType: '',
+        fastMailAddress: '',
+        fastMailName: '',
+        fastMailPhone: '',
+        id: '',
+        invoiceAddress: '',
+        invoiceBankAccno: '',
+        invoiceBankInfo: '',
+        invoiceEmail: '',
+        invoicePhone: '',
+        invoiceTaxpayerId: '',
+        isHtEnterprise: '',//是否海天集团/(是否海天一级供应商)：0-否 1-是
+        legalCertExpireDate: '',
+        legalCertNo: '',
+        legalCertRegDate: '',
+        legalCertType: '01',//默认居民身份证
+        legalPersonName: '',
+        myBuyers: '',
+        name: '',
+        province: '',
+        provinceZh: '',
+        registerCapital: '',
+        registerEndDate: '',
+        registerOperateFlag: '',
+        registerPhone: '',
+        registerStartDate: '',
+        registerWebsite: '',
+        scale: '',
+        smallPaymentCertAmt: '',
+        smsCode:'',
       },
       //表单校验规则
       rules: {
         name: [
-          // { required: true, message: '请输入企业名称', trigger: 'blur' },
-          // { max:200, message: '企业名称至多200个字符', trigger: 'blur' }
-          {required: false, message: '请输入企业名称',trigger: 'blur'},
-          {validator:this.nameVali,trigger: 'blur'}
+          {required: false, message: '请输入企业名称', trigger: 'change'},
+          {validator:this.nameVali, trigger: 'change'}
         ],
         registerPhone: [
-          { required: false,message: '请输入手机号码',trigger: 'blur'},
-          {validator:this.validatePhone,trigger: 'blur'}
+          { required: true, message: '请输入法人手机号码',trigger: 'blur'},
+          {validator:this.validatePhone, trigger: 'blur'}
         ],
         smsCode: [
-          { required: false, message: '请输入验证码', trigger: 'change' },
+          { required: true, message: '请输入验证码', trigger: 'change' },
           { validator:this.smsCodeValidate, trigger: 'change'}
         ],
+        bizLicence: [
+          { message: '请输入统一社会信用代码', trigger: ['blur'] },
+          { validator:(rule, value, callback)=>{
+              // 营业执照号码或统一社会信用代码格式
+              let businessNoReg = /^([0-9a-zA-Z]{15}([0-9a-zA-Z]{3})?)$/
+              rule.required = this.form.isHtEnterprise == '0'? true:false
+              if (!value && rule.required) {
+                callback(new Error('请输入统一社会信用代码'))
+              } else if (value && !businessNoReg.test(value)) {
+                callback(new Error('统一社会信用代码格式不正确'))
+              } else {
+                callback()
+              }
+            },
+            trigger: ['blur']
+          }
+        ],
+        legalPersonName: [
+          { message: '请输入法定代表人姓名', trigger: ['blur'] },
+          { validator:(rule, value, callback)=>{
+              rule.required = this.form.isHtEnterprise == '0'? true:false
+              if (!value && rule.required) {
+                callback(new Error('请输入法定代表人姓名'))
+              } else {
+                callback()
+              }
+            },
+            trigger: ['blur']
+          },
+        ],
+        legalCertType: [
+          { required: false , message: '请选择法人证件类型', trigger: ['blur'] }
+        ],
+        legalCertNo: [
+          { message: '请输入法人证件号码', trigger: ['blur'] },
+          { validator:(rule, value, callback)=>{
+              let idReg = /^([1-6][1-9]|50)\d{4}(18|19|20)\d{2}((0[1-9])|10|11|12)(([0-2][1-9])|10|20|30|31)\d{3}[0-9Xx]$/
+              rule.required = this.form.isHtEnterprise == '0'? true:false
+              if(rule.required && !value){
+                callback(new Error('请输入法人证件号码'))
+              }else if(value && this.form && this.form.legalCertType === '01' && !idReg.test(value)){
+                callback(new Error('证件号码格式不正确'))
+              }else{
+                callback()
+              }
+            },
+            trigger: ['blur']
+          },
+        ],
+
       },
+      emptyObj: {},//暂存供应商信息
+      isAgreed: '',
       //按钮置灰
       nameFlag:false,//企业名
       phoneFlag:false,//手机号码
@@ -105,7 +239,39 @@ export default {
       nextFlag:false
     }
   },
+  created() {
+    console.log(this.entInfoObj)
+  },
   methods: {
+    nameChange(){
+      for(const key in this.form){
+        if(key !== 'name'){
+          this.form[key] = ''
+        }
+      }
+    },
+    checkIsHtEnterprise() {
+      let params = {
+        name : this.form.name
+      }
+      //接口请求判断供应商等级
+      this.zjControl.getEntInfo(params).then(res => {
+        this.form = {...res.data}
+        this.emptyObj = res.data
+        this.form.registerPhone ? this.sendDisabled = false : this.sendDisabled = true
+        this.form.legalCertType = '01'
+      })
+    },
+    //获取授权协议
+    getLicensorAgreement(){
+      this.previewFile()
+      this.zjControl.getLicensorAgreement()
+    },
+    //阅读并同意
+    checkIsAgreed(){
+      console.log(this.isAgreed)
+      this.btnValidate()
+    },
     //企业名称校验
     nameVali(rule, value, callback){
       if(rule.required && !value){
@@ -156,9 +322,10 @@ export default {
     //按钮校验
     btnValidate(){
       //发送验证码
-      this.nameFlag && this.phoneFlag ? this.sendDisabled = false : this.sendDisabled = true
+      // this.nameFlag && this.phoneFlag ? this.sendDisabled = false : this.sendDisabled = true
+      this.phoneFlag ? this.sendDisabled = false : this.sendDisabled = true
       //下一步按钮
-      this.sendDisabled === false && this.form.smsCode.length === 6 ? this.nextFlag = true : this.nextFlag = false
+      this.sendDisabled === false && this.form.smsCode.length === 6 && this.isAgreed == '1'? this.nextFlag = true : this.nextFlag = false
     },
     //手机号码长度
     btnValidateS(val){
@@ -172,7 +339,7 @@ export default {
     },
     //发送手机验证码
     send () {
-      if(!this.form.name){return this.$Message.error('请输入企业名称')}
+      if(!this.form.name){return this.$message.error('请输入企业名称')}
       this.$refs.form.validateField('name',err => {
         if(err){return}
         this.$refs.form.validateField('registerPhone',error => {
@@ -212,21 +379,30 @@ export default {
       }
       for(let i=0; i<valiArr.length; i++){
         if(!key){break}
-        if(!this.form[valiArr[i]]){
+        //非空且规则为必填
+        if(!this.form[valiArr[i]] && this.rules[valiArr[i]].required == true){
           key = false
-          this.$Message.error(this.rules[valiArr[i]][0])
+          this.$message.error(this.rules[valiArr[i]][0])
         }
       }
       if(!key){return}
+      if(this.isAgreed !== '1'){
+        this.$message.error('请勾选我已阅读并同意')
+        return
+      }
       //------------------------------------------------------
 
       this.$refs.form.validate(boo=>{
         if(!boo){return}
-        this.zjControl.registerApply(this.form).then(res => {
+        this.emptyObj = {
+          ...this.form
+        }
+        this.zjControl.registerApply(this.emptyObj).then(res => {
           res.data.entName = this.form.name
           res.data.form = this.form
 
           // localStorage.setItem('entInfoObj',JSON.stringify(res.data)) //保存返回来的信息
+          //企业注册状态：0-待填写资料 1-注册成功 2-待平台初审 3-待平台复审 4-待发证 5-注册拒绝 6-平台拒绝
           let stepArr = [
             //注册成功
             {step:'501',state:'1'},
@@ -274,7 +450,8 @@ export default {
   .registerContent{
     position: relative;
     height:calc(100% - 68px - 149px) !important;
-    min-height: 520px;
+    min-height: 732px;
+    background-color: #fff;
   }
   .sw_footer{
     position: relative;
@@ -295,24 +472,24 @@ export default {
 .register-card{
   /*background-color: white;*/
   /*z-index: -9999;*/
-  transform: translateY(-15px);
-  width: 800px;
-  margin:0 auto;
+  //transform: translateY(-15px);
+  //width: 800px;
+  //margin:0 auto;
 }
 .register-white{
   background: white;
   margin-top: 15px;
   padding: 0 0 15px 0;
-  box-shadow: 0 4px 5px 0 rgba(133, 133, 133, 0.5);
+  //box-shadow: 0 4px 5px 0 rgba(133, 133, 133, 0.5);
 }
 .register-inline {
   position: relative;
-  z-index: -9998;
-  width: 800px;
+  //z-index: -9998;
+  //width: 800px;
   margin: auto 0;
-  transform: translateY(30px);
+  transform: translateY(10px);
   background: #FFFFFF;
-  box-shadow: 0 1px 5px 0 rgba(133,133,133,0.50);
+  //box-shadow: 0 1px 5px 0 rgba(133,133,133,0.50);
   padding: 20px 0 20px 0;
 }
 .register-tip {
@@ -333,11 +510,11 @@ export default {
   background: url(~@assets/img/register/icon-tip.png) no-repeat center;
 }
 .register-body {
-  width: 350px;
+  width: 600px;
   /*padding-top: 20px;*/
   margin:  auto;
   background-color: #FFFFFF;
-  box-shadow: 0 2px 12px 0 rgba(0,0,0,.2);
+  //box-shadow: 0 2px 12px 0 rgba(0,0,0,.2);
   border-radius: 8px;
   overflow: auto;
   /deep/ .el-form-item__label {
@@ -352,8 +529,14 @@ export default {
   /*text-align: center;*/
   margin-top: -5px;
   padding: 5px 0 10px 90px;
+  label {
+    margin-right: 0;
+  }
+  .el-row {
+    margin-bottom: 10px;
+  }
 }
-/deep/ .iphoneCode{
+/deep/ .smsCode{
 
   border-radius: 4px 0 0 4px;
   .el-input__inner{
