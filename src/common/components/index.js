@@ -178,6 +178,11 @@ const components = [
   {
     name: 'ZjListLayout',
     component:() => import('./listLayout/ZjListLayout.vue')
+  },
+  // 海天流程引擎
+  {
+    name: 'ZjHtApproval',
+    component: () => import('./htApproval/index')
   }
 ]
 

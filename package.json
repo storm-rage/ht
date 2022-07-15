@@ -20,6 +20,7 @@
     "crypto-js": "^4.0.0",
     "echarts": "^4.9.0",
     "element-ui": "^2.13.2",
+    "ht-approval": "^3.5.9",
     "font-awesome": "^4.7.0",
     "js-md5": "^0.7.3",
     "moment": "^2.25.3",
@@ -52,6 +53,8 @@
     "less": "^3.11.3",
     "less-loader": "^6.1.0",
     "mockjs": "^1.1.0",
+    "sass": "^1.23.7",
+    "sass-loader": "^8.0.0",
     "vue-template-compiler": "^2.6.11"
   },
   "eslintConfig": {

@@ -164,10 +164,6 @@
         -moz-user-select: none;
         -ms-user-select: none;
         user-select: none;
-        /*公共*/
-        .el-dialog__header,.el-dialog__body,.el-dialog__footer{
-
-        }
         /*头部*/
         .el-dialog__header{
             padding: 10px 20px 0;

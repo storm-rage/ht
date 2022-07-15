@@ -17,7 +17,7 @@
           <!-- 标签 -->
           <tab class="layout-tab"/>
           <!-- 主内容区 -->
-          <el-main class="w100 h-c-100_41" style="padding: 0">
+          <el-main class="w100 h-c-100_41" style="padding: 0;height: calc(100% - 32px)">
 
             <!-- 展示 -->
             <app-main
