@@ -1,5 +1,5 @@
 <template>
-  <div class="wscn-http404-container">
+  <div class="wscn-http404-container" style="width: auto;height: auto">
     <div class="wscn-http404">
       <div class="pic-404">
         <img class="pic-404__parent" src="@assets/img/500_images/500.svg" alt="404">

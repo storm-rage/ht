@@ -17,7 +17,7 @@
           <!-- 标签 -->
           <tab class="layout-tab"/>
           <!-- 主内容区 -->
-          <el-main class="w100 h-c-100_41" style="padding: 0">
+          <el-main class="w100 h-c-100_41" style="padding: 0;height: calc(100% - 32px)">
 
             <!-- 展示 -->
             <app-main
@@ -63,6 +63,8 @@
   }
   .appMain{
     width: 100%;
+    // 底部浮动按钮基准
+    position: relative;
   }
   .appMainHome{
     padding: 0;

@@ -2,7 +2,7 @@
 <div>
   <div class="zj-search-form" :class="{'no-bottom-border':noBottomBorder}" v-if="$slots.searchForm">
     <!-- 左边按钮 -->
-    <el-row class="button-row zj-f-l" v-if="$slots.leftBtns">
+    <el-row class="button-row zj-f-l" v-if="$slots.leftBtns" style="position: relative;z-index: 10">
       <slot name="leftBtns"></slot>
     </el-row>
     <!-- 右边搜索按钮 -->

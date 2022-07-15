@@ -8,9 +8,10 @@
 .el-textarea__inner::-webkit-input-placeholder{
   font-family:Arial;
 }
-
-.el-main {
-  padding: 15px;
+/** 不可编辑的下拉框 **/
+.el-input.is-disabled .el-input__inner {
+  background-color: #e6e6e6;
+  border-color: #e6e6e6;
 }
 .el-form-item--small .el-form-item__content, .el-form-item--small .el-form-item__label {
   line-height: 28px;
@@ -69,14 +70,9 @@
 }
 /** el-dialog **/
 .el-dialog {
-  position: relative;
-  border-radius: 2px;
   box-shadow: 0 2px 9px #91a1b180;
-  box-sizing: border-box;
-  width: 50%;
   border: 1px solid #d4d4d4;
   .el-dialog__header {
-    text-align: center;
     padding: 10px 20px 10px;
   }
   .el-dialog__headerbtn {
@@ -100,29 +96,6 @@
     }
   }
 }
-
-.el-dialog__wrapper{
-  &.header{
-    .el-dialog{
-      box-shadow: none;
-      border-radius: 0;
-      border: none;
-    }
-    .el-dialog__body {
-      padding: 10px 20px 20px;
-    }
-    .el-dialog__header{
-      background-color: #169BD5;
-      .el-dialog__title{
-        color: white;
-      }
-      .el-dialog__close{
-        color: white;
-      }
-    }
-  }
-}
-
 /*el-radio*/
 .el-radio{
   border-color:#C0C4CC!important;
@@ -186,13 +159,10 @@
     }
   }
 }
-
-// checkbox相关
 //el-checkbox
 .el-checkbox__label{
   color:#666;
 }
-
 /** 复选框勾选距离文字的距离 **/
 .el-checkbox__label {
   padding-left: 8px;
@@ -202,29 +172,5 @@
   color: #999;
   .el-checkbox__input.is-checked+.el-checkbox__label {
     color: #333;
-  }
-}
-
-// 弹窗
-.el-dialog__header{
-  background-color: #FFFFFF !important;
-  text-align: left !important;
-}
-
-.el-dialog__header{
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-.el-dialog__footer{
-  display: flex;
-  flex-direction: row-reverse;
-  >div{
-    display: flex;
-    align-items: center;
-    flex-direction: row-reverse;
-    button:nth-child(1){
-      margin-left: 20px;
-    }
   }
 }
