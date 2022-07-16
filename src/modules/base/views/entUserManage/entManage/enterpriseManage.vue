@@ -4,7 +4,7 @@
       :title="pageType === 'add' ? '新增企业申请' : '修改企业申请'"
     />
     <!-- 表单 -->
-    <entInfo ref="entInfo" />
+    <ent-info-edit ref="entInfoInit" />
 
     <zj-content-footer>
       <zj-button type="primary" @click="submit" v-if="pageType !== 'detail'"
@@ -16,10 +16,10 @@
 </template>
 
 <script>
-import entInfo from "./entInfo";
+import entInfoEdit from "./entInfoEdit";
 export default {
   components: {
-    entInfo,
+    entInfoEdit,
   },
   data() {
     return {

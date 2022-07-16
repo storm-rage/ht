@@ -4,7 +4,7 @@
     <!--  交易信息  -->
     <trade-info />
     <!--  企业基础信息 -->
-    <ent-info />
+    <ent-info-edit />
 
     <!--  审批意见  -->
     <audit-remark></audit-remark>
@@ -21,13 +21,13 @@
  * 复核企业信息申请页面
  */
 import tradeInfo from "../components/tradeInfo";
-import entInfo from '@modules/base/views/entUserManage/entManage/entInfo';
+import entInfoEdit from '@modules/base/views/entUserManage/entManage/entInfoEdit';
 import AuditRemark from '../../components/auditRemark';
 
 export default {
   components: {
     tradeInfo,
-    entInfo,
+    entInfoEdit,
     AuditRemark
   },
   data() {
