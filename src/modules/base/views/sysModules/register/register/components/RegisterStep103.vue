@@ -272,6 +272,7 @@ export default {
   created(){
     this.setFormValue()
     this.form.isHtEnterprise = this.entInfoObj.form.isHtEnterprise
+    this.form.legalCertType = this.entInfoObj.form.legalCertType
     console.log(this.entInfoObj)
   }
 }

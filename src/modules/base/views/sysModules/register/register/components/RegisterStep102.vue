@@ -161,7 +161,7 @@
           <el-row style="margin: 20px auto">
             <zj-button class="append" icon="el-icon-circle-plus-outline" @click="contAdd">请录入银行账户</zj-button>
           </el-row>
-          <zj-table ref="bankAccnameTable" class="zj-search-table" :dataList="form.entBankInfoList"
+          <zj-table ref="bankAccnameTable" class="zj-search-table" :dataList="form.entBankInfoList" v-if="entBankInfo"
                     keep-source :pager="false"
                     :edit-config="{trigger: 'manual', mode: 'row', icon:'-', autoClear: false,showStatus: true}"
           >
@@ -238,6 +238,7 @@ export default {
 
       myBuyersMessage:'',
       oldRowInfo: {},
+      entBankInfo: true,
 
       form:{
         address: '',
@@ -568,14 +569,21 @@ export default {
       let params = Object.assign({},row)
       params.bankAccId = row.bankAccId ? row.bankAccId : ''
       this.zjControl.saveEntBankInfo(params).then(res => {
-        this.form.entBankInfoList[0] = res.data
+        this.entBankInfo = false
+        if(res.data.bankAccId){
+          this.form.entBankInfoList[0] = res.data
+        }
+        this.$nextTick(()=>{
+          this.entBankInfo = true
+        })
+
         this.form.entBankInfo = { ...this.form.entBankInfoList[0] }
         console.log(this.form.entBankInfoList)
         this.$message.success('保存成功！')
-        this.$refs.bankAccnameTable.clearActived()
         let params = Object.assign({},this.entInfoObj)
         params.form = this.form
         this.$emit('update:entInfoObj',params)
+        this.$refs.bankAccnameTable.clearActived()
       })
     },
     //取消
@@ -645,7 +653,7 @@ export default {
           }
           this.form.entBankInfo = this.form.entBankInfoList[0]
           this.form.registerOperateFlag = flag
-          this.form.legalCertType = this.entInfoObj.legalCertType
+          this.form.legalCertType = this.entInfoObj.form.legalCertType
           this.zjControl.saveEntInfo(this.form).then(res => {
             this.$message.success('提交企业资料成功！')
             this.entInfoObj.form.id = res.data.id
