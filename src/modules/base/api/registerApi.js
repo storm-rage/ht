@@ -86,6 +86,10 @@ const register = {
     downloadTemplate:(params) => {
       return download('/sys-ent-register/download-template',params,1,'post')
     },
+    //保存/完成注册
+    completeRegister:(params) => {
+      return request.post('/sys-ent-register/complete-register',params)
+    },
 
 }
 

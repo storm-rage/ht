@@ -7,7 +7,7 @@
       <zj-top-header title="操作用户" direction="left"/>
       <div class="border-underline"></div>
       <el-row class="operator-table">
-        <zj-table ref="operatorTable" class="zj-search-table" :dataList="operatorList" :pager="false" v-if="operatorTable"
+        <zj-table ref="operatorTable" class="zj-search-table" :dataList="registerUserList" :pager="false" v-if="operatorTable"
         >
           <zj-table-column field="roleId" title="操作员类型" :formatter="(obj)=>typeMap(dictionary.roleIdList, obj.cellValue)"/>
           <zj-table-column field="userName" title="姓名"/>
@@ -39,14 +39,14 @@
           <zj-button type="text" @click="downloadTemplate('WTSQS')">《委托授权书模板》</zj-button>、
           <zj-button type="text" @click="downloadTemplate('GRXXSQS')">《个人信息授权书模板》</zj-button>
         </el-row>
-        <zj-table ref="attaTable" class="zj-search-table" :dataList="attaTableList" :pager="false"
+        <zj-table ref="attaTable" class="zj-search-table" :dataList="registerAttachList" :pager="false"
                   keep-source
         >
-          <zj-table-column field="index" title="序号" width="60"/>
+          <zj-table-column field="attachId" title="序号" width="60"/>
           <zj-table-column title="附件类型">
             <template v-slot="{row}">
-              <span style="color: red">{{ row.attaType? '*' : '' }}</span>
-              {{ row.attaType ? typeMap(dictionary.attachTypeList,row.attaType) : '' }}
+              <span style="color: red">{{ row.fileType? '*' : '' }}</span>
+              {{ row.fileType ? typeMap(dictionary.attachTypeList,row.fileType) : '' }}
             </template>
           </zj-table-column>
           <zj-table-column field="isSign" title="是否需要加盖企业公章" v-if="form.isHtEnterprise == '1'"/>
@@ -122,8 +122,8 @@
           <el-form-item label="请选择：" prop="supplier">
             <el-radio v-model="tradeInfoForm.supplier" label="1">我是供应商</el-radio>
           </el-form-item>
-          <el-form-item label="我的买方企业：" prop="buyer">
-            <el-input type="text" placeholder="支持录入多个，请用'，'分隔开" v-model="tradeInfoForm.buyer"></el-input>
+          <el-form-item label="我的买方企业：" prop="myBuyers">
+            <el-input type="text" placeholder="支持录入多个，请用'，'分隔开" v-model="tradeInfoForm.myBuyers"></el-input>
           </el-form-item>
         </el-form>
       </el-row>
@@ -265,26 +265,26 @@ export default {
         smallPaymentCertAmt: '',
       },
       //影像资料
-      attaTableList:[
-        {index:'1', attaType:'YYZC', isSign:'', fileName:'', fileId:''},
-        {index:'2', attaType:'FRSFZ', isSign:'', fileName:'', fileId:''},
-        {index:'3', attaType:'JBYSFZ', isSign:'', fileName:'', fileId:''},
-        {index:'4', attaType:'FHYSFZ', isSign:'', fileName:'', fileId:''},
-        {index:'5', attaType:'FXRSFZ', isSign:'', fileName:'', fileId:''},
-        {index:'6', attaType:'WTSQS', isSign:'', fileName:'', fileId:''},
-        {index:'7', attaType:'FXRSQS', isSign:'', fileName:'', fileId:''},
+      registerAttachList:[
+        {attachId:'1', fileType:'YYZC', isSign:'', fileName:'', fileId:''},
+        {attachId:'2', fileType:'FRSFZ', isSign:'', fileName:'', fileId:''},
+        {attachId:'3', fileType:'JBYSFZ', isSign:'', fileName:'', fileId:''},
+        {attachId:'4', fileType:'FHYSFZ', isSign:'', fileName:'', fileId:''},
+        {attachId:'5', fileType:'FXRSFZ', isSign:'', fileName:'', fileId:''},
+        {attachId:'6', fileType:'WTSQS', isSign:'', fileName:'', fileId:''},
+        {attachId:'7', fileType:'FXRSQS', isSign:'', fileName:'', fileId:''},
       ],
       //贸易信息
       tradeInfoForm: {
-        supplier:'',
-        buyer:'',
+        supplier:'1',
+        myBuyers:'',
       },
       //贸易信息规则
       tradeInfoRules: {
         supplier: [
           {required: true, message: '请选择我是供应商', trigger: 'blur'},
         ],
-        buyer: [
+        myBuyers: [
           {required: false, message: '请录入我的买方企业', trigger: 'blur'},
         ],
       },
@@ -401,12 +401,11 @@ export default {
             }, trigger: 'blur'},
         ],
       },
-      registSuccess: false,//完成注册标识
       dialogVisible: false,//注册成功弹窗
       editFlag: false,
       maintainInfo: false,//维护操纵员弹窗
       operatorTable:true,
-      operatorList: [
+      registerUserList: [
         {
           roleId: '2', userId: '', userName: '', certType: '01', certNo: '', certStartDate: '', certEndDate: '', mobileNo: '', email: '', bankAcctNo: '', htSysCode:'', idCheckState:''
         },
@@ -424,11 +423,100 @@ export default {
       this.$emit('update:step','103')
     },
     registerSuccess() {
-      if(this.registSuccess){
-        this.dialogVisible = true
-      }else {
-        this.$message.error('请补全信息并保存！')
+      //校验操作用户数据是否完整
+      if(!this.entInfoObj.form.registerUserList) {
+        for(let i of this.registerUserList){
+          for(let obj in i){
+            if(obj !== 'htSysCode' && obj !== 'idCheckState' && obj !== 'email' && obj !== 'bankAcctNo' && obj !== 'checkType' && i[obj] == '' || null){
+              console.log(`请补全${i}的${obj}的信息！`)
+              this.$message.error(`请补全操作用户的信息！`)
+              return
+            }
+          }
+        }
+      }else{
+        for(let i of this.entInfoObj.form.registerUserList){
+          for(let obj in i){
+            if(obj !== 'htSysCode' && obj !== 'idCheckState' && obj !== 'email' && obj !== 'bankAcctNo' && obj !== 'checkType' && i[obj] == '' || null){
+              console.log(`请补全${i}的${obj}的信息！`)
+              this.$message.error(`请补全操作用户的信息！`)
+              return
+            }
+          }
+        }
       }
+      //校验影像资料是否完整
+      if(!this.entInfoObj.form.registerAttachList){
+        for(let i of this.registerAttachList){
+          for(let obj in i){
+            if(this.entInfoObj.form.isHtEnterprise == '0') {
+              if(obj !== 'isSign' && i[obj] == '' || null ){
+                console.log(`请补全${i}的${obj}的信息！`)
+                this.$message.error(`请补全影像资料信息！`)
+                return
+              }
+            }else if(this.entInfoObj.form.isHtEnterprise == '1'){
+              if(i[obj] == '' || null ){
+                console.log(`请补全${i}的${obj}的信息！`)
+                this.$message.error(`请补全影像资料信息！`)
+                return
+              }
+            }
+          }
+        }
+      }else {
+        for(let i of this.entInfoObj.form.registerAttachList){
+          for(let obj in i){
+            if(this.entInfoObj.form.isHtEnterprise == '0') {
+              if(obj !== 'isSign' && i[obj] == '' || null ){
+                console.log(`请补全${i}的${obj}的信息！`)
+                this.$message.error(`请补全影像资料信息！`)
+                return
+              }
+            }else if(this.entInfoObj.form.isHtEnterprise == '1'){
+              if(i[obj] == '' || null ){
+                console.log(`请补全${i}的${obj}的信息！`)
+                this.$message.error(`请补全影像资料信息！`)
+                return
+              }
+            }
+          }
+        }
+      }
+      console.log('影像资料success')
+      //校验发票信息
+      this.$refs.form.validate(boo=>{
+        if (!boo){
+          return
+        }else{
+          //校验贸易信息
+          if(this.tradeInfoForm.supplier !== '1'){
+            this.$message.error(`请勾选"我是供应商"！`)
+            return
+          }
+          this.entInfoObj.form.invoiceAddress = this.form.invoiceAddress
+          this.entInfoObj.form.invoiceBankAccno = this.form.invoiceBankAccno
+          this.entInfoObj.form.invoiceBankInfo = this.form.invoiceBankInfo
+          this.entInfoObj.form.invoiceEmail = this.form.invoiceEmail
+          this.entInfoObj.form.invoicePhone = this.form.invoicePhone
+          this.entInfoObj.form.invoiceTaxpayerId = this.form.invoiceTaxpayerId
+          this.entInfoObj.form.myBuyers = this.tradeInfoForm.myBuyers
+          let params = {
+            ...this.entInfoObj.form,
+            id: this.entInfoObj.form.id,
+            name: this.entInfoObj.form.name,
+            registerOperateFlag: 'NEXT',
+          }
+          this.zjControl.completeRegister(params).then(res => {
+            this.dialogVisible = true
+            let params = Object.assign({},this.entInfoObj)
+            params.form.registerUserList = this.registerUserList//操作用户
+            params.form.registerAttachList = this.registerAttachList//影像资料
+            params.form.tradeInfoForm = this.tradeInfoForm//贸易信息
+            this.$emit('update:entInfoObj',params)
+          })
+        }
+      })
     },
     onConfirm() {
       this.$router.push({ path: '/login' })
@@ -472,11 +560,11 @@ export default {
               //更新列表数据
               this.operatorTable = false
               if(res.data.roleId == '2'){
-                this.operatorList[0] = res.data
+                this.registerUserList[0] = res.data
               }else if(res.data.roleId == '3'){
-                this.operatorList[1] = res.data
+                this.registerUserList[1] = res.data
               }else if(res.data.roleId == '4'){
-                this.operatorList[2] = res.data
+                this.registerUserList[2] = res.data
               }
               this.$nextTick(()=>{
                 this.operatorTable = true
@@ -485,7 +573,7 @@ export default {
               let activeRoleId = this.typeMap(this.dictionary.roleIdList,res.data.roleId)
               this.$message.success(`维护${activeRoleId}成功！`)
               let params = Object.assign({},this.entInfoObj)
-              params.form.operatorList = this.operatorList
+              params.form.registerUserList = this.registerUserList
               this.$emit('update:entInfoObj',params)
               this.maintainInfo = false
             })
@@ -496,8 +584,8 @@ export default {
     save(flag){
       console.log('save')
       //校验操作用户数据是否完整
-      if(!this.entInfoObj.form.operatorList) {
-        for(let i of this.operatorList){
+      if(!this.entInfoObj.form.registerUserList) {
+        for(let i of this.registerUserList){
           for(let obj in i){
             if(obj !== 'htSysCode' && obj !== 'idCheckState' && obj !== 'email' && obj !== 'bankAcctNo' && obj !== 'checkType' && i[obj] == '' || null){
               console.log(`请补全${i}的${obj}的信息！`)
@@ -507,7 +595,7 @@ export default {
           }
         }
       }else{
-        for(let i of this.entInfoObj.form.operatorList){
+        for(let i of this.entInfoObj.form.registerUserList){
           for(let obj in i){
             if(obj !== 'htSysCode' && obj !== 'idCheckState' && obj !== 'email' && obj !== 'bankAcctNo' && obj !== 'checkType' && i[obj] == '' || null){
               console.log(`请补全${i}的${obj}的信息！`)
@@ -518,8 +606,8 @@ export default {
         }
       }
       //校验影像资料是否完整
-      if(!this.entInfoObj.form.attaTableList){
-        for(let i of this.attaTableList){
+      if(!this.entInfoObj.form.registerAttachList){
+        for(let i of this.registerAttachList){
           for(let obj in i){
             if(this.entInfoObj.form.isHtEnterprise == '0') {
               if(obj !== 'isSign' && i[obj] == '' || null ){
@@ -537,7 +625,7 @@ export default {
           }
         }
       }else {
-        for(let i of this.entInfoObj.form.attaTableList){
+        for(let i of this.entInfoObj.form.registerAttachList){
           for(let obj in i){
             if(this.entInfoObj.form.isHtEnterprise == '0') {
               if(obj !== 'isSign' && i[obj] == '' || null ){
@@ -574,13 +662,14 @@ export default {
           this.entInfoObj.form.invoiceEmail = this.form.invoiceEmail
           this.entInfoObj.form.invoicePhone = this.form.invoicePhone
           this.entInfoObj.form.invoiceTaxpayerId = this.form.invoiceTaxpayerId
+          this.entInfoObj.form.myBuyers = this.tradeInfoForm.myBuyers
 
           this.zjControl.saveEntInfo(this.entInfoObj.form).then(res => {
-            this.$Message.success('提交企业资料成功！')
+            this.$message.success('提交企业资料成功！')
             this.registSuccess = true //true才能完成注册
             let params = Object.assign({},this.entInfoObj)
-            params.form.operatorList = this.operatorList//操作用户
-            params.form.attaTableList = this.attaTableList//影像资料
+            params.form.registerUserList = this.registerUserList//操作用户
+            params.form.registerAttachList = this.registerAttachList//影像资料
             params.form.tradeInfoForm = this.tradeInfoForm//贸易信息
             this.$emit('update:entInfoObj',params)
           })
@@ -608,9 +697,9 @@ export default {
         data.row.fileId = res.data.fileId
         data.row.fileName = res.data.fileName
         let params = Object.assign({},this.entInfoObj)
-        params.form.attaTableList = this.attaTableList
+        params.form.registerAttachList = this.registerAttachList
         this.$emit('update:entInfoObj',params)
-        this.$Message.success('附件上传成功!')
+        this.$message.success('附件上传成功!')
         console.log(data.row)
       })
     },
@@ -627,7 +716,7 @@ export default {
       let params = {
         id: this.entInfoObj.form.id,
         templateType: data,
-        registerUserList: this.entInfoObj.form.operatorList
+        registerUserList: this.entInfoObj.form.registerUserList
       }
       this.zjControl.downloadTemplate(params)
     },
@@ -653,11 +742,12 @@ export default {
   created() {
     console.log(this.entInfoObj)
     this.form.isHtEnterprise = this.entInfoObj.form.isHtEnterprise
-    if(this.entInfoObj.form.operatorList) {
-      this.operatorList = this.entInfoObj.form.operatorList
+    this.form.legalCertType = this.entInfoObj.form.legalCertType
+    if(this.entInfoObj.form.registerUserList) {
+      this.registerUserList = this.entInfoObj.form.registerUserList
     }
-    if(this.entInfoObj.form.attaTableList) {
-      this.attaTableList = this.entInfoObj.form.attaTableList
+    if(this.entInfoObj.form.registerAttachList) {
+      this.registerAttachList = this.entInfoObj.form.registerAttachList
     }
     if(this.entInfoObj.form.tradeInfoForm) {
       this.tradeInfoForm = this.entInfoObj.form.tradeInfoForm
