@@ -1,15 +1,13 @@
 const myItemsRouter = [
   {
-    path: '/myItems',
-    name: 'myItems',
+    path: '/myTodo',
+    name: 'myTodo',
     component: () => import('../views/myItems/index.vue'),
     meta: {
-      isMock: true,
       title: '我的代办',
       root: '我的代办',
       keepAlive: true,
-      refreshIndex: 0,
-      notRequireAuth: true
+      refreshIndex: 0
     }
   }
 ]
