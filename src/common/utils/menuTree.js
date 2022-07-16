@@ -1,3 +1,5 @@
+// 需要隐藏的菜单url
+const hideMenuUrl = ['myTodo']
 const getMenuTreeList = (menuList) => {
   // 获取一级菜单
   let rootList = menuList.filter(item => !item.parentId || item.parentId === item.id)
@@ -14,14 +16,16 @@ const getMenuTreeList = (menuList) => {
     return item
   })
   // 过滤没有子节点的一级菜单
-  menuTreeList = menuTreeList.filter(item => item.children)
-  //删除节点
-  for(let i=0; i<menuTreeList.length; i++){
-    if(menuTreeList[i].children.length <= 0){
-      menuTreeList.splice(i,1)
-      i--
-    }
-  };
+  menuTreeList = menuTreeList.filter(item => {
+    return item.children || (item.url&&!hideMenuUrl.includes(item.url))
+  })
+  // //删除节点
+  // for(let i=0; i<menuTreeList.length; i++){
+  //   if(menuTreeList[i].children&&menuTreeList[i].children.length <= 0&&!menuTreeList[i].url){
+  //     menuTreeList.splice(i,1)
+  //     i--
+  //   }
+  // };
   return menuTreeList
 };
 const getMenuChildren = (parent, menuList) => {

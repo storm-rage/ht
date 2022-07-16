@@ -10,17 +10,17 @@
       <zj-collapse title="业务联系人" tipText="注：该联系人为签署商业保理合同业务联系人。">
         <el-row>
           <el-form ref="form" :model="form" :rules="rules" label-position="top">
-            <el-form-item label="联系人：" prop="issueEntName">
-              <el-input v-model="form.issueEntName" />
+            <el-form-item label="联系人：" prop="businessPerson">
+              <el-input v-model="form.businessPerson" />
             </el-form-item>
-            <el-form-item label="联系号码：" prop="issueEntPhone">
-              <el-input v-model="form.issueEntPhone" />
+            <el-form-item label="联系号码：" prop="businessPhone">
+              <el-input v-model="form.businessPhone" />
             </el-form-item>
-            <el-form-item label="联系邮箱：" prop="issueEntEmail">
-              <el-input v-model="form.issueEntEmail" />
+            <el-form-item label="联系邮箱：" prop="businessEmail">
+              <el-input v-model="form.businessEmail" />
             </el-form-item>
-            <el-form-item label="联系地址：" prop="issueEntDetail">
-              <el-input v-model="form.issueEntDetail" />
+            <el-form-item label="联系地址：" prop="businessAddress">
+              <el-input v-model="form.businessAddress" />
             </el-form-item>
           </el-form>
         </el-row>
@@ -39,35 +39,56 @@ export default {
   components: {SelectItems},
   data() {
     return {
-      form: {
-
+      zjControl: {
+        getDataDirectory: this.$api.productOpenApply.getDataDirectory,
+        openApply: this.$api.productOpenApply.submitProductOpenAplly,
+        getDetail: this.$api.productOpenApply.getProductOpenApplyDetail,
       },
-      collActive: ["orderInfo"],
-      checked: false,
+      form: {
+        // 联系地址
+        businessAddress: '',
+        // 联系邮箱
+        businessEmail: '',
+        // 联系人
+        businessPerson: '',
+        //联系号码
+        businessPhone: '',
+        //产品
+        productModelList: []
+      },
       rules:{
-        issueEntName:[
+        businessPerson:[
           {required: true,message: '请输入联系人',trigger: ['blur','change']}
         ],
-        issueEntPhone: [
+        businessPhone: [
           {required: true,message: '请输入联系号码',trigger: ['blur','change']},
           {validator: newValidateFixedPhone,trigger: ['blur','change']}
         ],
-        issueEntEmail: [
+        businessEmail: [
           {required: true,message: '请输入联系邮箱',trigger: ['blur','change']},
           {type:'email',message: '请输入正确的联系邮箱',trigger: ['blur','change']}
         ],
-        issueEntDetail:[
+        businessAddress:[
           {required: true,message: '请输入联系地址',trigger: ['blur','change']}
         ]
       }
     };
   },
-  created() {},
+  created() {
+    this.getApi();
+  },
   methods: {
     submit() {
       this.$refs.form.validate((valid) => {
         if (valid) {
-          //todo:request
+          this.$confirm('是否确认提交产品申请？','温馨提示',{
+            confirmButtonText: '确定',
+            cancelButtonText: '取消'
+          }).then(() => {
+            this.zjControl.openApply(this.form).then(res => {
+              //成功，关闭
+            })
+          })
         }
       })
     }

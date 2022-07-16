@@ -3,8 +3,8 @@
  */
 const businessApplyRouter = [
     {
-      path: '/productsOpened',
-      name: 'productsOpened',
+      path: '/productOpenApply',
+      name: 'productOpenApply',
       component: () => import('../views/businessApply/productsOpened/index.vue'),
       meta:{
         isMock:true,

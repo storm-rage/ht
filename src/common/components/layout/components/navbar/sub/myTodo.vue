@@ -1,12 +1,18 @@
 <template>
   <div class="navbar-my-todo">
-    <span class="text">
+    <span class="text" @click="toRouter">
       <i class="ht-iconfont hd-wodishijiao_submit"></i>&nbsp;我的待办
     </span>
   </div>
 </template>
 <script>
-export default {};
+export default {
+  methods: {
+    toRouter () {
+      this.$router.push({name: 'myTodo'})
+    }
+  }
+};
 </script>
 <style lang="less" scoped>
 @import "~@assets/less/variables";

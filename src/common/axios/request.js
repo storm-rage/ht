@@ -2,12 +2,10 @@ import Vue from "vue"
 import axios from 'axios'
 import router from '@/router'
 import ZjLog from '../components/log/ZjLog'
-import { messageBox } from '../components/messageBox'
 import store from "@/store";
 //引入
 import sw_cookie from "../utils/cookie";
 
-Vue.use(messageBox);
 const qs = require('qs');
 const service = axios.create({
   timeout: 120000,
@@ -59,7 +57,7 @@ const errorHandle = (status,response) => {
   switch (response.code) {
     case 403:
       clearToken()
-      new Vue().$messageBox({
+      Vue.prototype.$messageBox({
         type: 'warning',
         content: response.msg || '未登录或者登录已超时，请重新登录',
         messageResolve: () => {
@@ -70,7 +68,7 @@ const errorHandle = (status,response) => {
       })
       break
     default:
-      new Vue().$messageBox({ type: 'warning', content: response.msg || '系统繁忙' })
+      Vue.prototype.$messageBox({ type: 'warning', content: response.msg || '系统繁忙' })
       break
   }
 
@@ -137,11 +135,11 @@ service.interceptors.response.use(response => {
   } else {
     if (error.message.includes('timeout')) {
       // 请求超时
-      new Vue().$messageBox({ type: 'error', content: '请求超时，请检查网络是否正常连接' })
+      Vue.prototype.$messageBox({ type: 'error', content: '请求超时，请检查网络是否正常连接' })
       return Promise.reject(new Error())
     } else {
       // 请求失败
-      new Vue().$messageBox({ type: 'error', content: '请求失败，请检查网络是否已连接' })
+      Vue.prototype.$messageBox({ type: 'error', content: '请求失败，请检查网络是否已连接' })
       return Promise.reject(new Error())
     }
   }
