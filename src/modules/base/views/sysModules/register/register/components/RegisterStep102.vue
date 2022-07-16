@@ -7,98 +7,104 @@
       <register-progress-bar :active="1" v-else/>
     </div>
     <div class="register-inline">
-      <el-form ref="form" :model="form" :rules="rules" class="register-form" label-width="250px">
-        <div class="register-title">基本信息</div>
-        <el-form-item label="企业名称：" required>
-          <span>{{ form.name }}</span>
+      <el-form ref="form" :model="form" :rules="rules" class="register-form" label-width="240px">
+        <zj-top-header title="企业基本信息" direction="left"/>
+        <div class="border-underline"></div>
+        <el-form-item label="企业名称：" prop="name">
+          <el-input v-model="form.name" maxLength="25" placeholder="请输入企业名称" :disabled="true"/>
         </el-form-item>
         <!-- 营业 -->
-        <el-form-item label="营业执照影印件：" prop="qyyzFileId" class="required">
-          <el-popover
-            placement="right"
-            trigger="hover">
-            <div>
-              <img :src="viewUrl.qyyzFile.url" width="200" height="200">
-            </div>
-            <el-button slot="reference" type="text" @click="downs({fileName:form.qyyzAttachName,fileId:form.qyyzFileId})">{{ form.qyyzAttachName }}</el-button>
-            <!--            <zj-button type="text" @click="downloadFile(form.qyfrzjFileId,form.qyfrzjAttachName)">{{ form.qyfrzjAttachName }}</zj-button>-->
-          </el-popover>
-          <!--          <zj-button type="text" @click="downloadFile(form.qyyzFileId,form.qyyzAttachName)">{{ form.qyyzAttachName }}</zj-button>-->
-          <zj-upload :httpRequest="upload" :data="{ busType: 'qyyz' }" style="display: inline-block">
-            <zj-button size="mini" class="uploadBtn" :class="qyyzFileIdFlag ? 'bt-red' : ''">
-              {{ this.form.qyyzAttachName ? '重新上传' : '上传' }}
-            </zj-button>
-          </zj-upload>
-          <el-popover placement="right" trigger="click" ref="popover1">
-            <div>
-              <!--              <div style="width:50px;height: 50px;position: absolute;right: 10px;top: 10px;cursor: pointer" @click="hidePopper('popover1')"/>-->
-              <img src="@assets/img/register/sample-business-license.png">
-            </div>
-            <zj-button
-              slot="reference"
-              type="text" status="primary" class="explainBtn"
-              @mouseenter.native="showPopper('popover1')"
-              @mouseleave.native="hidePopper('popover1')"
+        <el-form-item label="统一社会信用代码：" prop="bizLicence">
+          <el-input v-model="form.bizLicence" maxLength="25" placeholder="请输入统一社会信用代码" :disabled="true"/>
+        </el-form-item>
+        <el-form-item label="营业执照注册地址：" prop="address">
+          <el-input v-model="form.address" :maxLength="400"/>
+        </el-form-item>
+        <el-form-item label="成立日期：" prop="registerStartDate"> <!-- :clearable="false" -->
+          <zj-date-picker :date.sync="form.registerStartDate" :lessNow="true" :disabled="form.isHtEnterprise == '1'" :format="'yyyy年MM月dd日'"/>
+        </el-form-item>
+        <el-form-item label="注册资本：" prop="registerCapital">
+          <el-input v-model="form.registerCapital" :disabled="form.isHtEnterprise == '1'"/>
+        </el-form-item>
+        <el-form-item label="企业工商有效期：" prop="registerEndDate">
+          <el-input v-model="form.registerEndDate"/>
+        </el-form-item>
+        <!-- 企业 -->
+        <el-form-item label="企业规模：" prop="scale" class="no-required entType">
+          <el-select placeholder="请选择企业规模" v-model="form.scale"
+                     @change="() => { $refs.form.validateField('scale') }"
+                     :popper-append-to-body="false"
+          >
+            <template v-if="dictionary && dictionary.scaleList">
+              <el-option
+                v-for="item in dictionary.scaleList"
+                :key="item.code"
+                :value="item.code"
+                :label="item.desc">
+              </el-option>
+            </template>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="企业经营类型：" prop="custType" class="no-required entType">
+          <el-select placeholder="请选择企业经营类型" v-model="form.custType"
+                     @change="() => { $refs.form.validateField('custType') }"
+                     :popper-append-to-body="false"
+          >
+            <template v-if="dictionary && dictionary.custTypeList">
+              <el-option
+                v-for="item in dictionary.custTypeList"
+                :key="item.code"
+                :value="item.code"
+                :label="item.desc">
+              </el-option>
+            </template>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="企业联系人姓名：" prop="fastMailName">
+          <el-input v-model="form.fastMailName" maxLength="50" placeholder="请输入企业联系人姓名" :disabled="form.isHtEnterprise == '1'"/>
+          <span style="color: #7f7f7f;margin-left: 10px">注：后续平台相关纸质资料将使用该联系人传递。</span>
+        </el-form-item>
+        <el-form-item label="企业联系人手机号：" prop="fastMailPhone">
+          <el-input v-model="form.fastMailPhone" maxLength="50" placeholder="请输入企业联系人手机号" :disabled="form.isHtEnterprise == '1'"/>
+        </el-form-item>
+        <el-form-item label="企业联系地址：" class="zj-inline contact-address required">
+          <el-form-item prop="provinceZh">
+            <el-select v-model="form.provinceZh" placeholder="请选择" class="register102-legalCertType"
+                       :popper-append-to-body="false"
             >
-              上传营业执照影印件要求说明
-            </zj-button>
-          </el-popover>
+                <el-option
+                  @change="provinceZhChange"
+                  v-for="item in provinceList"
+                  :key="item.districtName"
+                  :value="item.treeCode"
+                  :label="item.treeCode">
+                </el-option>
+            </el-select>
+          </el-form-item>
+          <span class="zj-inline zj-center zj-w-20">省</span>
+          <el-form-item prop="cityZh">
+            <el-input v-model="form.cityZh" maxLength="50" placeholder="请输入城市名称"/>
+          </el-form-item>
+          <span class="zj-inline zj-center zj-w-20">市</span>
         </el-form-item>
-        <el-form-item label="统一社会信用代码：" prop="bizLicence" class="required">
-          <el-input v-model="form.bizLicence" maxLength="25" placeholder="请输入统一社会信用代码" :disabled="!qyyzBoo"/>
+        <el-form-item label="详细地址：" prop="fastMailAddress">
+          <el-input v-model="form.fastMailAddress" type="textarea" :rows="2" placeholder="请输入详情地址"></el-input>
         </el-form-item>
-        <el-form-item label="营业执照注册地址：" prop="address" class="required">
-          <el-input v-model="form.address" :disabled="!qyyzBoo" :maxLength="400"/>
+
+        <!--   法定代表人信息     -->
+        <zj-top-header title="法定代表人信息" direction="left"/>
+        <div class="border-underline"></div>
+        <!-- 共公部分 -->
+        <el-form-item label="企业法人姓名：" prop="legalPersonName" class="required">
+          <el-input v-model="form.legalPersonName" maxLength="50" placeholder="请输入法定代表人姓名" :disabled="true"/>
         </el-form-item>
-        <el-form-item label="成立日期：" prop="registerStartDate" class="required"> <!-- :clearable="false" -->
-          <zj-date-picker :date.sync="form.registerStartDate" :lessNow="true" :disabled="!qyyzBoo" :format="'yyyy年MM月dd日'"/>
-        </el-form-item>
-        <el-form-item label="企业工商有效期：" prop="registerEndDate" class="required">
-<!--          <zj-date-picker :date.sync="form.registerEndDate" :lessNow="true"/>-->
-          <el-input v-model="form.registerEndDate" :disabled="!qyyzBoo"/>
-        </el-form-item>
-        <el-form-item label="注册资本：" prop="registerCapital" class="required">
-          <el-input v-model="form.registerCapital" :disabled="!qyyzBoo"/>
-        </el-form-item>
-        <el-form-item label="法定代表人姓名：" prop="legalPersonName" class="required">
-          <el-input v-model="form.legalPersonName" maxLength="50" placeholder="请输入法定代表人姓名" :disabled="!qyyzBoo"/>
-        </el-form-item>
-        <!-- 法定 -->
-        <el-form-item label="法定代表人：" prop="qyfrzjFileId" class="required">
-          <el-popover
-            placement="right"
-            trigger="hover">
-            <div>
-              <img :src="viewUrl.qyfrzjFile.url" width="200" height="200">
-            </div>
-            <el-button slot="reference" type="text" @click="downs({fileName:form.qyfrzjAttachName,fileId:form.qyfrzjFileId})">{{ form.qyfrzjAttachName }}</el-button>
-            <!--            <zj-button type="text" @click="downloadFile(form.qyfrzjFileId,form.qyfrzjAttachName)">{{ form.qyfrzjAttachName }}</zj-button>-->
-          </el-popover>
-          <zj-upload :httpRequest="upload" :data="{ busType: 'qyfrzj' }" class="zj-inline">
-            <zj-button size="mini" class="uploadBtn" :class="qyfrzjFileIdFlag ? 'bt-red' : ''">
-              {{ this.form.qyfrzjAttachName ? '重新上传' : '上传' }}
-            </zj-button>
-          </zj-upload>
-          <el-popover placement="right" trigger="click" ref="popover2">
-            <div>
-              <img src="@assets/img/register/sample-id-card.png">
-            </div>
-            <zj-button
-              slot="reference"
-              type="text" status="primary" class="explainBtn"
-              @mouseenter.native="showPopper('popover2')"
-              @mouseleave.native="hidePopper('popover2')"
-            >
-              上传法定代表人身份证要求说明
-            </zj-button>
-          </el-popover>
-        </el-form-item>
-        <el-form-item label="证件：" class="zj-h-28" required>
-          <el-form-item prop="legalCertType" class="zj-inline">
+        <!-- 一级供应商独有 -->
+        <div v-if="form.isHtEnterprise == '1'">
+          <el-form-item label="法人证件类型：" prop="legalCertType" class="zj-inline required">
             <el-select v-model="form.legalCertType" placeholder="请选择证件类型" class="register102-legalCertType"
                        @change="legalCertTypeChange"
                        :popper-append-to-body="false"
-                       :disabled="!qyfrBoo"
+                       :disabled="true"
             >
               <template v-if="dictionary && dictionary.legalCertTypeList">
                 <el-option
@@ -111,101 +117,78 @@
               </template>
             </el-select>
           </el-form-item>
-          <el-form-item prop="legalCertNo" class="zj-inline zj-m-l-30">
-            <el-input v-model="form.legalCertNo" placeholder="请输入证件号码" maxLength="50" :disabled="!qyfrBoo"/>
-          </el-form-item>
-        </el-form-item>
-        <el-form-item label="证件有效期：" class="zj-h-28" required>
-            <el-form-item prop="legalCertRegDate" class="zj-inline"> <!-- :clearable="false" -->
-              <zj-date-picker placeholder="请选择证件有效期起始日"  :date.sync="form.legalCertRegDate" :pickerOptions="{ disabledDate:legalCertRegDateDisabledDate }" :disabled="!qyfrBoo"></zj-date-picker>
+          <el-row>
+            <el-form-item label="法人证件号码：" prop="legalCertNo" class="zj-inline required">
+              <el-input v-model="form.legalCertNo" placeholder="请输入证件号码" maxLength="50" :disabled="true"/>
             </el-form-item>
-            <div class="zj-inline zj-center zj-w-30">至</div>
-            <el-form-item prop="legalCertExpireDate" class="zj-inline"> <!-- :clearable="false" -->
-              <zj-date-picker placeholder="请选择证件有效期截止日"  :date.sync="form.legalCertExpireDate" :pickerOptions="{ disabledDate: legalCertExpireDateDisabledDate }" :disabled="!qyfrBoo"></zj-date-picker>
+          </el-row>
+        </div>
+        <!-- 二级供应商独有 -->
+        <el-form-item label="法人身份证号码：" prop="legalCertNo" class="zj-inline required" v-if="form.isHtEnterprise == '0'">
+          <el-input v-model="form.legalCertNo" placeholder="请输入证件号码" maxLength="50" :disabled="true"/>
+        </el-form-item>
+        <!-- 共公部分 -->
+        <el-form-item label="法人手机号码：" prop="registerPhone" class="required">
+          <el-input v-model="form.registerPhone" maxLength="50" placeholder="请输入法人手机号码" :disabled="true"/>
+        </el-form-item>
+        <el-form-item label="证件有效期：" class="zj-h-28 card-validity required">
+            <el-form-item prop="legalCertRegDate" class="zj-inline">
+              <zj-date-picker placeholder="年/月/日"  :date.sync="form.legalCertRegDate" :pickerOptions="{ disabledDate:legalCertRegDateDisabledDate }" ></zj-date-picker>
             </el-form-item>
-        </el-form-item>
-        <!-- 企业 -->
-        <el-form-item label="企业规模：" prop="scale" class="no-required">
-          <el-select placeholder="请选择企业规模" v-model="form.scale"
-                     @change="() => { $refs.form.validateField('scale') }"
-                     :popper-append-to-body="false"
-          >
-            <template v-if="dictionary && dictionary.scaleList">
-                <el-option
-                        v-for="item in dictionary.scaleList"
-                        :key="item.code"
-                        :value="item.code"
-                        :label="item.desc">
-                </el-option>
-            </template>
-          </el-select>
-        </el-form-item>
-        <el-form-item label="企业经营类型：" prop="custType" class="no-required">
-          <el-select placeholder="请选择经营类型" v-model="form.custType"
-                     @change="() => { $refs.form.validateField('custType') }"
-                     :popper-append-to-body="false"
-          >
-            <template v-if="dictionary && dictionary.custTypeList">
-              <el-option
-                      v-for="item in dictionary.custTypeList"
-                      :key="item.code"
-                      :value="item.code"
-                      :label="item.desc">
-              </el-option>
-            </template>
-          </el-select>
-        </el-form-item>
-        <!-- 开票 -->
-        <div class="register-title">开票信息</div>
-        <el-form-item label="纳税人识别号：" prop="invoiceTaxpayerId" class="required">
-          <el-input v-model="form.invoiceTaxpayerId" maxLength="20" placeholder="请输入纳税人识别号"/>
-        </el-form-item>
-        <el-form-item label="地址：" prop="invoiceAddress" class="required">
-          <el-input v-model="form.invoiceAddress" placeholder="请输入地址"/>
-        </el-form-item>
-        <el-form-item label="电话：" prop="invoicePhone" class="required">
-          <el-input v-model="form.invoicePhone" placeholder="请输入电话"/>
-        </el-form-item>
-        <el-form-item label="开户行：" prop="invoiceBankInfo" class="required">
-          <el-input v-model="form.invoiceBankInfo" placeholder="请输入开户行" maxlength="200"/>
-        </el-form-item>
-        <el-form-item label="银行账号：" prop="invoiceBankAccno" class="required">
-          <el-input v-model="form.invoiceBankAccno" placeholder="请输入银行账号"/>
-        </el-form-item>
-        <el-form-item label="电子邮箱：" prop="invoiceEmail" class="required">
-          <el-input v-model="form.invoiceEmail" placeholder="请输入电子邮箱"/>
-        </el-form-item>
-        <!-- 贸易 -->
-        <div class="register-title">贸易信息</div>
-        <el-form-item prop="entType" class="required">
-          <span slot="label">
-            <span class="red"> 请选择 </span>：
-          </span>
-          <el-radio-group v-model="form.entType">
-            <el-radio v-for="(item,index) in entTypeList" :key="index" :label="item.code">{{item.desc}}</el-radio>
-          </el-radio-group>
-        </el-form-item>
-        <el-form-item label=" " prop="myBuyers" class="myBuyers">
-          <span class="el-form-item__label zj-p-r-0">我的买方企业：</span>
-          <el-input v-model="form.myBuyers" placeholder="可录入多个，使用“ , ”分隔" /> <!-- @blur="myBuyersBlur" -->
-          <label class="msgText" v-if="myBuyersMessage">{{myBuyersMessage}}</label>
+            <div class="zj-inline zj-center zj-w-20">至</div>
+            <el-form-item prop="legalCertExpireDate" class="zj-inline">
+              <zj-date-picker placeholder="年/月/日"  :date.sync="form.legalCertExpireDate" :pickerOptions="{ disabledDate: legalCertExpireDateDisabledDate }" ></zj-date-picker>
+            </el-form-item>
         </el-form-item>
 
-        <!-- 提示 -->
-        <el-form-item v-if="formWarning">
-          <p class="formTips">
-            <i class="el-icon-error iconError fs-14"></i>
-            <span class="tipsWarning fs-14">{{nextError}}</span>
-          </p>
-        </el-form-item>
+        <!--   银行账户信息     -->
+        <zj-top-header title="银行账户信息" direction="left"/>
+        <div class="border-underline"></div>
+        <el-row v-if="form.isHtEnterprise == '1'">
+          <!-- 一级供应商 -->
+          <el-row style="font-size: 16px;font-weight: bold">请选择贵司的主结算银行账号：</el-row>
+          <zj-table ref="searchTable" class="zj-search-table" :dataList="form.entBankInfoList"
+          >
+            <zj-table-column fixed="left" type="checkbox" width="60"/>
+            <zj-table-column field="bankAccname" title="银行账户名称" />
+            <zj-table-column field="bankAccno" title="银行账号" />
+            <zj-table-column field="bankName" title="开户行" />
+            <zj-table-column field="bankNo" title="银行联行号" />
+          </zj-table>
+        </el-row>
+        <el-row v-if="form.isHtEnterprise == '0'">
+          <!-- 二级供应商 -->
+          <el-row style="margin: 20px auto">
+            <zj-button class="append" icon="el-icon-circle-plus-outline" @click="contAdd">请录入银行账户</zj-button>
+          </el-row>
+          <zj-table ref="bankAccnameTable" class="zj-search-table" :dataList="form.entBankInfoList"
+                    keep-source :pager="false"
+                    :edit-config="{trigger: 'manual', mode: 'row', icon:'-', autoClear: false,showStatus: true}"
+          >
+            <zj-table-column field="bankAccname" title="银行账户名称" :edit-render="{name: '$input'}"/>
+            <zj-table-column field="bankAccno" title="银行账号" :edit-render="{name: '$input'}"/>
+            <zj-table-column field="bankName" title="开户行" :edit-render="{name: '$input'}"/>
+            <zj-table-column field="bankNo" title="銀行联行号" :edit-render="{name: '$input'}"/>
+            <zj-table-column title="操作" fixed="right">
+              <template v-slot="{row}">
+                <template v-if="$refs.bankAccnameTable.isActiveByRow(row)">
+                  <zj-button type="text" @click="saveRow(row)">保存</zj-button>
+                  <zj-button type="text" @click="cancel(row)">取消</zj-button>
+                </template>
+                <template v-if="!$refs.bankAccnameTable.isActiveByRow(row)">
+                  <zj-button type="text" @click="edit(row)">维护</zj-button>
+                </template>
+              </template>
+            </zj-table-column>
+          </zj-table>
+        </el-row>
+        <el-row style="color: #7f7f7f">注：主结算银行账号将用于小额打款认证和后续在平台开展的业务。</el-row>
 
-        <el-form-item label=" " >
-          <zj-button status="primary" @click="next">下一步</zj-button>
-        </el-form-item>
-<!--        <el-form-item class="next-button-row" style="margin-left: 70px">-->
-<!--          <zj-button status="primary" @click="next">下一步</zj-button>-->
-<!--        </el-form-item>-->
       </el-form>
+      <el-row class="btn-row">
+        <zj-button status="primary" @click="save('SAVE')">保存</zj-button>
+        <zj-button status="primary" @click="next('NEXT')">下一步</zj-button>
+      </el-row>
     </div>
     <RegisterFooter/>
   </div>
@@ -221,7 +204,7 @@ import {
   validateIdCard,//身份证
   validateInvoiceTaxpayerId,//纳税人识别号
 
-  // validatePhone,//电话
+  validatePhone,//电话
   validateFixedPhone,
 
   validateBankAcct,//银行账号
@@ -241,6 +224,9 @@ export default {
     step:String,
     entInfoObj:Object,
   },
+  computed: {
+
+  },
   data () {
     return {
       sysControl:{
@@ -250,79 +236,88 @@ export default {
       provinceList:[],//省下拉
       cityList:[],
 
-      entTypeList:[
-        {code:'B',desc:'我是核心企业'},{code:'S',desc:'我是供应商'}
-      ],
       myBuyersMessage:'',
+      oldRowInfo: {},
 
-      form: {
-        name: '企业名称',
-        // ----  营业  -------
-        qyyzAttachId:'',//营业执照附件主键id（新增时为空）
-        qyyzFileId:'',
-        qyyzAttachName:'',//营业执照影印件名称
-        qyyzFileSize:'',//营业执照文件大小
-        qyyzFileType:'',//营业执照文件类型
-        qyyzFileUrl:'',//营业执照文件路径
-        bizLicence:'',//统一社会信用代码
-        address:'',//营业执照注册地址
-        registerStartDate:'',//成立日期
-        registerEndDate:'',//企业工商有效期
-        registerCapital:'',//注册资本
-        companyType:'',
-
-        //---- 法人 -------
-        legalPersonName:'',//法定代表人姓名
-        qyfrzjFileId:'',
-        qyfrzjAttachId:'',//法定代表人证件附件主键id(新增时为空)
-        qyfrzjAttachName:'',//法定代表人证件名称
-        qyfrzjFileSize:'',//法定代表人证件文件大小
-        qyfrzjFileType:'', //法定代表人证件文件类型
-        qyfrzjFileUrl:'',//法定代表人证件文件路径
-        legalCertType:'',//法定代表人证件类型
-        legalCertNo:'',//法定代表人证件号码
-        legalCertRegDate:'',//法人证件有效期起始日
-        legalCertExpireDate:'',//法人证件有效期截止日
-        // ---- 企业 -----
-        scale:'',//企业规模
-        custType:'',//企业类型
-        //---- 开票信息 -----
-        invoiceTaxpayerId:'',//纳税人识别号
-        invoiceAddress:'',//地址
-        invoicePhone:'',//电话
-        invoiceBankInfo:'',//开户行
-        invoiceBankAccno:'',//银行账号
-        invoiceEmail:'',//电子邮箱
-        //---- 贸易信息 -----
-        entType:'',
-        myBuyers:'',
-        registerWebsite:window.location.host
+      form:{
+        address: '',
+        bizLicence: '',
+        city: '',
+        cityZh: '',
+        companyType: '',
+        custType: '',
+        detailAddress: '',
+        entBankInfo: {},
+        entBankInfoList: [],
+        entContactAddressCity: '',
+        entType: '',
+        fastMailAddress: '',
+        fastMailName: '',
+        fastMailPhone: '',
+        id: '',
+        invoiceAddress: '',
+        invoiceBankAccno: '',
+        invoiceBankInfo: '',
+        invoiceEmail: '',
+        invoicePhone: '',
+        invoiceTaxpayerId: '',
+        isHtEnterprise: '',//是否海天集团/(是否海天一级供应商)：0-否 1-是
+        legalCertExpireDate: '',
+        legalCertNo: '',
+        legalCertRegDate: '',
+        legalCertType: '',
+        legalPersonName: '',
+        myBuyers: '',
+        name: '',
+        province: '',
+        provinceZh: '',
+        registerCapital: '',
+        registerEndDate: '',
+        registerOperateFlag: '',
+        registerPhone: '',
+        registerStartDate: '',
+        registerWebsite: '',
+        scale: '',
+        smallPaymentCertAmt: '',
       },
       rules: {
-        qyyzFileId: [
-          { required: false, message: '请上传营业执照影印件', trigger: ['blur'] }
+        entName: [
+          { required: true, message: '请输入企业名称', trigger: ['blur'] }
         ],
         bizLicence: [
-          { required: false,  message:  '请输入统一社会信用代码', trigger: ['blur'] },
+          { required: true,  message:  '请输入统一社会信用代码', trigger: ['blur'] },
           { validator:validateBusinessNo,trigger: ['blur'] }
         ],
         address: [
-          { required: false, message: '请输入营业执照注册地址', trigger: ['blur'] },
+          { required: true, message: '请输入营业执照注册地址', trigger: ['blur'] },
           { max:400, message: '营业执照注册地址不可超过400字符', trigger: ['blur'] }
         ],
         registerStartDate: [
-          { required: false, message: '请选择成立日期', trigger: ['blur'] }
+          { required: true, message: '请选择成立日期', trigger: ['blur'] }
         ],
         registerEndDate: [
-          { required: false, message: '请填写企业工商有效期', trigger: ['blur'] }
+          { required: true, message: '请填写企业工商有效期', trigger: ['blur'] }
         ],
         registerCapital: [
-          { required: false, message: '请填写注册资本', trigger: ['blur'] }
+          { required: true, message: '请填写注册资本', trigger: ['blur'] }
+        ],
+        fastMailName: [
+          { required: true, message: '请填写企业联系人姓名', trigger: ['blur'] }
+        ],
+        fastMailPhone: [
+          { required: true, message: '请填写企业联系人手机号', trigger: ['blur'] },
+          { validator: validatePhone, trigger: ['blur'] }
+        ],
+        provinceZh: [
+          { required: true, message: '请选择企业联系省份', trigger: ['change'] }
+        ],
+        cityZh: [
+          { required: true, message: '请选择企业联系城市', trigger: ['blur'] }
+        ],
+        fastMailAddress: [
+          { required: true, message: '请填写企业联系详细地址', trigger: ['blur'] }
         ],
         //-----------------  法人
-        qyfrzjFileId: [
-          { required: false, message: '请上传法定代表人身份证', trigger: ['blur'] }
-        ],
         legalPersonName: [
           { required: false, message: '请输入法定代表人姓名', trigger: ['blur'] }
         ],
@@ -334,10 +329,10 @@ export default {
           { validator:this.leaglCerNoVali,trigger: ['blur']},
         ],
         legalCertRegDate: [
-          { required: false, message: '请选择证件有效期起始日', trigger: ['blur'] }
+          { required: true, message: '请选择证件有效期起始日', trigger: ['blur'] }
         ],
         legalCertExpireDate: [
-          { required: false, message: '请选择证件有效期截止日', trigger: ['blur'] }
+          { required: true, message: '请选择证件有效期截止日', trigger: ['blur'] }
         ],
         //-----------------  企业
         scale: [
@@ -376,9 +371,6 @@ export default {
         entType:[
           { required: false, message: '请选择企业类型', trigger: ['blur'] }
         ],
-        myBuyers:[
-          { required: false, message: '请输入买方企业', trigger: ['blur'] }
-        ]
       },
       formWarning:false, //是否展示错误语句
       viewUrl:{
@@ -390,12 +382,24 @@ export default {
       qyfrzjFileIdFlag:false,//法定
       nextError:'信息存在未填写部分，请填写完整后再提交！',
 
-      //未上传禁用
-      qyyzBoo:false,
-      qyfrBoo:false
     }
   },
+  created(){
+    console.log(this.entInfoObj)
+    this.form.name = this.entInfoObj.entName
+    //获取省list
+    this.zjControl.querySysDistrictDictList().then(res=>{
+      this.provinceList = res.data.sysDistrictDictList
+    })
+    this.setFormValue()
+  },
   methods: {
+    //回显form
+    setFormValue(){
+      this.form = {
+        ...this.entInfoObj.form
+      }
+    },
     //获取企业的注册信息
     getEntInfo(){
       if(!this.entInfoObj.id){return}
@@ -449,6 +453,11 @@ export default {
         })
       }
     },
+    //省改变事件
+    provinceZhChange(){
+      this.form.cityZh = ''
+      this.form.fastMailAddress = ''
+    },
     //法定代表人类型发生改变
     legalCertTypeChange(){
       this.$refs.form.validateField('legalCertType')
@@ -480,59 +489,6 @@ export default {
       if (this.form.legalCertRegDate) {
         return date.getTime() < this.$moment(this.form.legalCertRegDate)
       }
-    },
-    //上传按钮
-    upload ({ file, data }) {
-      let formData = new FormData()
-      formData.append('file',file)
-      this.zjControl.uploadAttach(formData).then(res => {
-
-        let uploadData = JSON.parse(JSON.stringify(res.data))
-
-        data.busType === 'qyyz' ? this.qyyzBoo = true : this.qyfrBoo = true
-
-        //进行ocr请求
-        let ocrParams = {
-          fileName:uploadData.fileName,
-          fileId:uploadData.fileId
-        }
-
-        this.form[data.busType+'AttachName'] = uploadData.fileName
-        this.form[data.busType+'FileId'] = uploadData.fileId
-        this.form[data.busType+'FileSize'] = uploadData.fileSize
-        this.form[data.busType+'FileType'] = uploadData.fileType
-        let viewParams = {
-          fileUrl:this.form[data.busType+'FileId'],
-          fileId: this.form[data.busType+'FileId'],
-          fileName: this.form[data.busType+'AttachName']
-        }
-        this.getViewUrl(viewParams,data.busType + 'File')
-        this.$refs.form.validateField(data.busType+'FileId')
-        this[data.busType+'FileIdFlag'] = false
-        this.formWarning = false
-
-        if (data.busType === 'qyyz'){ //营业执照
-          this.zjControl.sendOcrBusiness(ocrParams).then(ocrRes => {
-            if(!ocrRes.data){return}
-            let qyyzOCRlist = ['bizLicence','address','registerStartDate','registerEndDate','registerCapital','legalPersonName','companyType']
-            qyyzOCRlist.map(item => {
-              this.form[item] = ocrRes.data[item]
-            })
-          })
-
-        }else if (data.busType === 'qyfrzj'){ //法定代表人
-          this.zjControl.sendOcrCert(ocrParams).then(ocrRes => {
-            if(!ocrRes.data){return}
-            let {certType,certNo,certStartDate,certEndDate} = ocrRes.data
-            // this.form.legalPersonName = userName
-            this.form.legalCertType = certType
-            this.form.legalCertNo = certNo
-            this.form.legalCertRegDate = certStartDate
-            this.form.legalCertExpireDate = certEndDate
-          })
-
-        }
-      })
     },
     //附件下载
     downloadFile(fileId,fileName){
@@ -579,79 +535,181 @@ export default {
         this.myBuyersMessage = ''
       }
     },
-    //下一步按钮
-    next () {
+    //添加银行账户
+    contAdd() {
+      if(!this.tableEditReport(["bankAccnameTable"])){return}
+      console.log('add...')
+      if(this.form.entBankInfoList == null){
+        this.form.entBankInfoList = []
+      }
+      if(this.form.entBankInfoList.length == 0){
+        let item = {bankAccname:'', bankAccno:'', bankName:'', bankNo:'',}
+        this.form.entBankInfo = { ...item }
+        this.form.entBankInfoList.push(item)
+        this.$refs.bankAccnameTable.setActiveRow(item)
+      }else{
+        this.$message.error('已经存在一个银行账户了！')
+      }
+    },
+    //保存row
+    saveRow(row) {
+      if(!row.bankAccname){ return this.$messageBox({type:'info',content:'请输入户名'}) }
+      //银行账号
+      if(!row.bankAccno){ return this.$messageBox({type:'info',content:'请输入银行账号'}) }
+      let bankAcctReg = /^(\d{8,})$/
+      if(row.bankAccno && !bankAcctReg.test(row.bankAccno)){ return this.$messageBox({type:'info',content:'银行账号格式不正确'}) }
+      //开
+      if(!row.bankName){ return this.$messageBox({type:'info',content:'请输入开户行'}) }
+      //联
+      if(!row.bankNo){ return this.$messageBox({type:'info',content:'请输入联行号'}) }
+      let bankNoReg = /^(\d{1,12})$/
+      if(row.bankNo && !bankNoReg.test(row.bankNo)){ return this.$messageBox({type:'info',content:'联行号格式不正确'}) }
+      //
+      let params = Object.assign({},row)
+      params.bankAccId = row.bankAccId ? row.bankAccId : ''
+      this.zjControl.saveEntBankInfo(params).then(res => {
+        this.form.entBankInfoList[0] = res.data
+        this.form.entBankInfo = { ...this.form.entBankInfoList[0] }
+        console.log(this.form.entBankInfoList)
+        this.$message.success('保存成功！')
+        this.$refs.bankAccnameTable.clearActived()
+        let params = Object.assign({},this.entInfoObj)
+        params.form = this.form
+        this.$emit('update:entInfoObj',params)
+      })
+    },
+    //取消
+    cancel(row){
+      if(row.bankAccId){
+        this.form.entBankInfoList.splice(0,1,this.oldRowInfo)
+      }
+      // else if(!row.bankAccId && this.form.entBankInfoList.length == 1){
+      //   this.form.entBankInfoList.splice(0,1,this.oldRowInfo)
+      // }
+      else{
+        this.form.entBankInfoList.splice(0,1)
+      }
+      this.$refs.bankAccnameTable.clearActived()
+    },
+    //维护
+    edit(row){
+      if(!this.tableEditReport(['bankAccnameTable'])){return}
+      this.oldRowInfo = Object.assign({},row)
+      this.$refs.bankAccnameTable.setActiveRow(row)
+    },
+    //检测是否正在编辑     tableRefList需要检测的table数组
+    tableEditReport(tableRefList){
+      let key = true
+      tableRefList.forEach(item => {
+        if(this.$refs[item] && this.$refs[item].getActiveRecord()){
+          key = false
+        }
+      })
+      if(!key){
+        this.$log.alert('请保存当前正在编辑的数据')
+        return false
+      }else{
+        return true
+      }
+    },
+    //暂存form信息
+    save(flag) {
       //----------------------非空校验-------------------------
-      let rulesArr = []
-      let whiteList = ['scale','custType','myBuyers']
-      let form = 'form'
-      let rules = 'rules'
-      for(let key in this[rules]){
-        if(!whiteList.some(item => item === key)){
-          rulesArr.push(key)
+      let valiArr = []
+      let key = true
+      for(let nm in this.rules){
+        valiArr.push(nm)
+      }
+      for(let i=0; i<valiArr.length; i++){
+        if(!key){break}
+        //非空且规则为必填
+        if(!this.form[valiArr[i]] && this.rules[valiArr[i]].required == true){
+          key = false
+          this.$message.error(this.rules[valiArr[i]][0])
         }
       }
-      let mesKey = true
-      for(let i=0; i<rulesArr.length; i++){
-        if(!mesKey){ break }
-        if(!this[form][rulesArr[i]]){
-          if(rulesArr[i] === 'qyyzFileId'){
-            this.qyyzFileIdFlag = true
-            this.qyfrzjFileIdFlag = false
-            this.nextError = '营业执照影印件未上传，请上传完成后再提交'
-            this.$Message.error(this[rules][rulesArr[i]][0].message)
-          }else if(rulesArr[i] === 'qyfrzjFileId'){
-            this.qyyzFileIdFlag = false
-            this.qyfrzjFileIdFlag = true
-            this.nextError = '法定代表人身份证未上传，请上传完成后再提交'
-            this.$Message.error(this[rules][rulesArr[i]][0].message)
-          }else {
-            this.qyyzFileIdFlag = false
-            this.qyfrzjFileIdFlag = false
-            this.nextError = '信息存在未填写部分，请填写完整后再提交！'
-            this.$Message.error(this[rules][rulesArr[i]][0].message)
-          }
-          mesKey = false
-        }
-      }
-      this.formWarning = !mesKey
-      if(!mesKey){ return }
+      if(!key){return}
       //------------------------------------------------------
       this.$refs.form.validate(boo=>{
         if (!boo){
-          // return this.$message.error('信息存在未填写部分，请填写完整后再提交！')
-          // this.formWarning = true
           return
         }else{
-          this.$messageBox({
-            type:'confirm',
-            title:`温馨提示`,
-            content:`确认资料填写无误？`,
-            showCancelButton:true,
-            messageResolve:()=>{
-              this.zjControl.saveEntInfo(this.form).then(() => {
-                this.$Message.success('提交企业资料成功！')
-
-
-                let params = Object.assign({},this.entInfoObj)
-                params.form = this.form
-                this.$emit('update:entInfoObj',params)
-
-                this.$emit('update:step','103')
-                // let locObj = JSON.parse(localStorage.getItem('entInfoObj'))
-                // locObj.form = this.form
-                // localStorage.setItem('entInfoObj',JSON.stringify(locObj))
-              })
+          //银行账户校验
+          if(this.form.entBankInfoList == null){
+            this.$message.error('银行账户不能为空！')
+            return
+          }
+          if(!this.form.entBankInfoList[0].bankNo){
+            this.$message.error('银行账户不能为空！')
+            return
+          }
+          this.form.entBankInfo = this.form.entBankInfoList[0]
+          this.form.registerOperateFlag = flag
+          this.form.legalCertType = this.entInfoObj.legalCertType
+          this.zjControl.saveEntInfo(this.form).then(res => {
+            this.$message.success('提交企业资料成功！')
+            this.entInfoObj.form.id = res.data.id
+            let params = Object.assign({},this.entInfoObj)
+            params.form = params.form ? params.form : this.form
+            this.$emit('update:entInfoObj',params)
+          })
+        }
+      })
+    },
+    //下一步按钮
+    next(flag) {
+      let valiArr = []
+      let key = true
+      for(let nm in this.rules){
+        valiArr.push(nm)
+      }
+      for(let i=0; i<valiArr.length; i++){
+        if(!key){break}
+        //非空且规则为必填
+        if(!this.form[valiArr[i]] && this.rules[valiArr[i]].required == true){
+          key = false
+          this.$message.error(this.rules[valiArr[i]][0])
+        }
+      }
+      if(!key){return}
+      //------------------------------------------------------
+      this.$refs.form.validate(boo=>{
+        if (!boo){
+          return
+        }else{
+          //银行账户校验
+          if(this.form.entBankInfoList == null){
+            this.$message.error('银行账户不能为空！')
+            return
+          }
+          if(!this.form.entBankInfoList[0].bankNo){
+            this.$message.error('银行账户不能为空！')
+            return
+          }
+          let proFormat = ''
+          for(const item of this.provinceList){
+            if(item.treeCode == this.form.provinceZh){
+              proFormat = item.districtName
+              break
             }
+          }
+          this.form.province = proFormat
+
+          this.form.entBankInfo = this.form.entBankInfoList[0]
+          this.form.registerOperateFlag = flag
+          this.form.legalCertType = this.entInfoObj.form.legalCertType
+          this.zjControl.saveEntInfo(this.form).then(res => {
+            this.$message.success('提交企业资料成功！')
+            this.entInfoObj.form.id = res.data.id
+            let params = Object.assign({},this.entInfoObj)
+            params.form = params.form ? params.form : this.form
+            this.$emit('update:entInfoObj',params)
+            this.$emit('update:step','103')
           })
         }
       })
     }
   },
-  created(){
-    this.form.name = this.entInfoObj.entName
-    this.getEntInfo() //获取企业信息
-  }
 }
 </script>
 
@@ -691,7 +749,7 @@ export default {
   top: 0;
   right: 0;
   bottom: 0;
-  background-color: #F9F9F9;
+  background-color: #fff;
   z-index: -9999;
   overflow-y: auto;
 }
@@ -699,13 +757,13 @@ export default {
   position: relative;
   z-index: -9998;
   background-color: #FFFFFF;
-  width: 800px;
+  width: 1000px;
   margin: 20px auto;
-  box-shadow: 0 1px 5px 0 rgba(133,133,133,0.50);
+  //box-shadow: 0 1px 5px 0 rgba(133,133,133,0.50);
   padding: 20px 0 20px 0;
 }
 .register-form {
-  width: 800px;
+  //width: 800px;
 }
 .register-title {
   border-left: 7px solid #5494F2;
@@ -790,4 +848,39 @@ export default {
       line-height: 1.2;
     }
   }
+  .el-input {
+    width: 260px;
+  }
+  .entType {
+    /deep/.el-select{
+      width: 260px;
+      .el-input {
+        width: 260px;
+      }
+    }
+  }
+  .contact-address {
+    /deep/.el-select {
+      .el-input {
+        width: 120px;
+      }
+    }
+    /deep/.el-form-item__content {
+      display: flex;
+      .el-input {
+        width: 120px;
+      }
+    }
+  }
+  .card-validity {
+    /deep/.el-date-editor.el-input {
+      width: 120px;
+    }
+    /deep/.zj-date-picker .el-input__inner {
+      min-width: auto;
+      padding: 0 30px 0 15px !important;
+    }
+  }
+
+
 </style>

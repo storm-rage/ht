@@ -1,22 +1,22 @@
 import applyAudit from "./applyAudit.js";
 import protocolAudit from "./protocolAudit.js";
-import registerAuditAttach from "./registerAuditAttach.js";
+// import registerAuditAttach from "./registerAuditAttach.js";
 // import project from "../../../../project.js";
 import view from "@pubComponent/preview/view.js";
 import OperateLog from '@modules/workflow/views/components/operateLog';
 import AuditRemark from '@modules/workflow/views/components/auditRemark';
-// import entBaseInfo from "@modules/workflow/views/entUserManage/components/entBaseInfo";
+import entInfo from '@modules/base/views/entUserManage/entManage/detail/entInfo.vue'
 export default {
   components: {
-    // entBaseInfo
     OperateLog,
-    AuditRemark
+    AuditRemark,
+    entInfo
   },
   mixins: [
     applyAudit,
     protocolAudit,
-    registerAuditAttach,
-    project,
+    // registerAuditAttach,
+    // project,
     view
   ],
   data() {

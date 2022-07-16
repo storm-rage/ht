@@ -20,7 +20,7 @@ const tradeBackgroundRouter = [
     meta: {
       isMock: true,
       title: `贸易关系管理`,
-      root: '贸易背景管理',
+      root: '客户信息管理',
       keepAlive: true,
       refreshIndex: 0,
       notRequireAuth: true
@@ -29,23 +29,10 @@ const tradeBackgroundRouter = [
   {
     path: '/busiessTradeRelationsInfo',
     name: 'busiessTradeRelationsInfo',
-    component: () => import('../views/tradeBackground/busiessTradeRelations/myTradeRelations/info.vue'),
+    component: () => import('../views/tradeBackground/busiessTradeRelations/detilt'),
     meta: {
       isMock: false,
       title: `贸易关系详情`,
-      root: '贸易背景管理',
-      keepAlive: true,
-      refreshIndex: 0,
-      notRequireAuth: true
-    }
-  },
-  {
-    path: '/busiessTradeRelationsDealInfo',
-    name: 'busiessTradeRelationsDealInfo',
-    component: () => import('../views/tradeBackground/busiessTradeRelations/info.vue'),
-    meta: {
-      isMock: false,
-      title: `贸易关系交易详情`,
       root: '贸易背景管理',
       keepAlive: true,
       refreshIndex: 0,

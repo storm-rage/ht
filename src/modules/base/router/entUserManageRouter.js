@@ -34,12 +34,11 @@ const entUserManage = [
   },
   //详情
   {
-    path: '/entManageDetail',
-    name: 'entManageDetail',
-    // component: () => import('../views/entUserManage/entManage/detailsEnterPrises/DetailsEnterPrises.vue'),
+    path: '/entDealDetail',
+    name: 'entDealDetail',
     component: () => import('../views/entUserManage/entManage/enterpriseManage.vue'),
     meta: {
-      title: '企业信息管理-详情',
+      title: '企业信息申请交易详情',
       parent: 'sysEnterprise',
       pageType: 'detail',
       keepAlive: true,
@@ -47,6 +46,21 @@ const entUserManage = [
       notRequireAuth: true
     }
   },
+  {
+    path: '/entDetail',
+    name: 'entDetail',
+    component: () => import('../views/entUserManage/entManage/detail'),
+    meta: {
+      title: '企业用户信息管理-详情',
+      parent: 'sysUser',
+      isManage: false,
+      keepAlive: true,
+      refreshIndex: 0,
+      notRequireAuth: true,
+      pageType: 'detail'
+    }
+  },
+
   //修改
   {
     path: '/entManageEdit',
@@ -128,11 +142,11 @@ const entUserManage = [
   //   }
   // },
   {
-    path: '/userManageDetail',
-    name: 'userManageDetail',
+    path: '/userVindicate',
+    name: 'userVindicate',
     component: () => import('../views/entUserManage/userManage/vindicate'),
     meta: {
-      title: '企业用户信息管理-详情',
+      title: '维护用户信息',
       parent: 'sysUser',
       isManage: false,
       keepAlive: true,
@@ -140,7 +154,7 @@ const entUserManage = [
       notRequireAuth: true,
       pageType: 'detail'
     }
-  }
+  },
 ]
 
 export default entUserManage

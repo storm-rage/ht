@@ -18,26 +18,10 @@
     </div>
     <div class="register-progress-item" :class="itemClass(3)">
       <div class="register-progress-index">{{ index[3] }}</div>
-      <div class="register-progress-title left92px">盖章并邮寄资料</div>
+      <div class="register-progress-title left108px">注册成功</div>
       <div class="register-progress-desc">
         <div class="register-progress-desc-prefix">{{ descPrefix[3] }}</div>
         {{ desc[3] }}
-      </div>
-    </div>
-    <div class="register-progress-item" :class="itemClass(4)">
-      <div class="register-progress-index">{{ index[4] }}</div>
-      <div class="register-progress-title left94px">资料核对发证书</div>
-      <div class="register-progress-desc">
-        <div class="register-progress-desc-prefix">{{ descPrefix[4] }}</div>
-        {{ desc[4] }}
-      </div>
-    </div>
-    <div class="register-progress-item" :class="itemClass(5)">
-      <div class="register-progress-index">{{ index[5] }}</div>
-      <div class="register-progress-title left108px">注册成功</div>
-      <div class="register-progress-desc">
-        <div class="register-progress-desc-prefix">{{ descPrefix[5] }}</div>
-        {{ desc[5] }}
       </div>
     </div>
   </div>
@@ -53,15 +37,13 @@ export default {
   },
   data () {
     return {
-      index: ['0', '1', '2', '3', '4', '5'],
-      descPrefix: ['', '', '', '', '', ''],
+      index: ['0', '1', '2', '3', ],
+      descPrefix: ['', '', '', '', ],
       desc: [
         '',
-        '用户线上填写注册信息并上传公司相关资料',
-        '平台线上审核注册信息',
-        '平台审核通过后，用户登录系统下载并打印企业注册资料，盖章后邮寄至指定地址',
-        '平台审核邮寄资料，并发放平台操作所需要的数字证书',
-        '短信通知注册成功信息及用户密码'
+        '用户线上填写注册信息并上传公司相关资料。',
+        '平台审核申请资料，并发放平台操作所需要的数字证书。',
+        '短信通知注册成功信息。'
       ]
     }
   },
@@ -81,6 +63,11 @@ export default {
 </script>
 
 <style lang="less" scoped>
+.register-progress {
+  display: flex;
+  justify-content: center;
+  transform: translateX(-50px);
+}
 .register-progress-item {
   display: inline-block;
   vertical-align: top;
