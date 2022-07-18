@@ -1,6 +1,6 @@
 <template>
   <div>
-    <register-step101 v-if="step === '101'" :step.sync="step" :entInfoObj.sync="entInfoObj" :zjControl="zjControl"/>
+    <register-step101 v-if="step === '101'" :step.sync="step" :entInfoObj.sync="entInfoObj" :zjControl="zjControl" :dictionary="dictionary"/>
     <register-step102 v-else-if="step === '102'" :step.sync="step" :entInfoObj.sync="entInfoObj"  :zjControl="zjControl" :dictionary="dictionary"/>
     <register-step103 v-else-if="step === '103'" :step.sync="step" :entInfoObj.sync="entInfoObj" :zjControl="zjControl" :dictionary="dictionary"/>
     <register-step104 v-else-if="step === '104'" :step.sync="step" :entInfoObj.sync="entInfoObj" :zjControl="zjControl" :dictionary="dictionary"/>
@@ -71,8 +71,15 @@ export default {
         queryDirectory:this.$api.register.queryDirectory, //获取企业字典
         sendMobileCaptcha:this.$api.register.sendMobileCaptcha, //手机验证码
         registerApply:this.$api.register.registerApply, //注册申请
-        getEntInfo:this.$api.register.getEntInfo,//获取企业信息
+        getEntInfo:this.$api.register.getEntInfo,//根据企业名称获取企业信息
+        getLicensorAgreement:this.$api.register.getLicensorAgreement,//获取授权协议
         saveEntInfo:this.$api.register.saveEntInfo,//保存企业信息
+        saveEntBankInfo:this.$api.register.saveEntBankInfo,//保存企业信息
+        querySysDistrictDictList:this.$api.register.querySysDistrictDictList,//保存企业信息
+        saveSmallPaymentCertAmt:this.$api.register.saveSmallPaymentCertAmt,//小额打款验证
+        saveRegisterEntUser:this.$api.register.saveRegisterEntUser,//单个维护注册企业的用户信息
+        downloadTemplate:this.$api.register.downloadTemplate,//下载委托授权书模板/个人信息授权书模板
+        completeRegister:this.$api.register.completeRegister,//保存/完成注册
         getUserInfo:this.$api.register.getUserInfo,//获取用户信息
         saveUserInfo:this.$api.register.saveUserInfo,//保存企业用户信息
         uploadAttach:this.$api.register.uploadAttach, //上传
@@ -100,6 +107,11 @@ export default {
         this.dictionary = res.data
       })
     },
+    //获取授权协议
+    getLicensorAgreement(){
+      this.zjControl.getLicensorAgreement().then(res => {
+      })
+    },
   },
   created(){
     //reject
@@ -121,13 +133,29 @@ export default {
 
 <style lang="less">
   .register{
-    background-color: #EEEEEE !important;
+    background-color: #fff !important;
     min-width: 850px!important;
     z-index: 1!important;
   }
 </style>
 
-<style lang="less" scoped>
+<style lang="less" >
 /*  公共样式  */
+
+.border-underline {
+  width: 100%;
+  border-bottom: 1px dashed #bfbfbf;
+  margin-bottom: 20px;
+}
+.btn-row {
+  display: flex;
+  justify-content: center;
+  margin: 20px auto;
+}
+form {
+  /deep/.el-input__inner {
+    width: 300px;
+  }
+}
 
 </style>

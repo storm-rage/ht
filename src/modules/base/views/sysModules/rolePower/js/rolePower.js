@@ -13,17 +13,37 @@ export default {
             sysPowerList: [],
             sysRolePowerList: [],
             nodeList: [],
+            searchForm: {
+              code: '',
+              roleNameLike: '',
+            },
+            dialogVisible: false,
+            form:{
+              code:'',
+              name:'',
+              descr:'',
+              powerCodeList:[],
+            },
+            rules:{
+              name:[
+                {required: true, message:'请选择角色名称', trigger:'blur'},
+              ],
+              descr:[
+                {required: true, message:'请选择角色描述', trigger:'blur'},
+              ],
+            }
         }
     },
     methods:{
         // 获取角色列表
-        getRoleList (roleNameLike) {
+        getRoleList (searchForm) {
             this.zjControl.search && this.zjControl.search({
                 page: this.currentPage,
-                roleNameLike,
+                code: searchForm.code,
+                roleNameLike: searchForm.roleNameLike,
                 rows: 10
             }).then(res => {
-                if (roleNameLike !== this.cacheValue) this.currentId = ''
+                if (searchForm.roleNameLike !== this.cacheValue) this.currentId = ''
                 this.currentRoleList = res.data.rows
                 this.total = parseInt(res.data.total)
             })
@@ -108,13 +128,6 @@ export default {
                     i--
                 }
             }
-            // let indexArr = powerArr.findIndex(item => item === null || item === 'null' || typeof item === 'undefined')
-            // if(indexArr.length)
-            // indexArr.forEach((item,index) => {
-            //     if(item === true){
-            //         powerArr.splice(index,1)
-            //     }
-            // })
             await this.zjControl.update && this.zjControl.update({
                 operationType,
                 roleId: this.currentId,
@@ -122,10 +135,6 @@ export default {
             }).then(() => {
                 this.sysRolePowerList = currentRolePowerList
                 this.$Message.success('更新成功')
-                // this.$message({
-                //     message: '更新成功',
-                //     type: 'success'
-                // })
             })
         },
         // 获取增或者删除的权限
@@ -136,22 +145,61 @@ export default {
         },
         search () {
             this.currentPage = 0
-            this.getRoleList(this.searchValue)
+            this.getRoleList(this.searchForm)
         },
         //设置滚动条初始位置
         scrollY(){
             this.$refs.rolePower.scrollTop = '0px'
-        }
+        },
+      selectRolePower(){
+        this.form.powerCodeList = this.$refs.rolePowerTreeAdd.getCheckedKeys()
+        console.log(this.form.powerCodeList)
+      },
+      addRole(){
+        this.dialogVisible = true
+        this.zjControl.getCode().then(res => {
+          console.log('code..')
+          this.form.code = res.data.code
+        })
+      },
+      submit(){
+        this.$refs.form.validate(boo=> {
+          if (!boo) {
+            return
+          } else {
+            this.dialogVisible = false
+            let params = {
+              ...this.form
+            }
+            this.zjControl.add(params).then(res=>{
+              this.search()
+            })
+
+          }
+        })
+      },
+      close(){
+        this.dialogVisible = false
+      },
+      handleRadioChange({ row }){
+        let rowId = row.id
+        this.getList(rowId)
+      }
+    },
+    created() {
+      this.getRow()
+      this.getList()
     },
     mounted(){
         const zjControl = {
             get: this.$api.rolePower.getRolePower,//获取权限列表
             update: this.$api.rolePower.updateRolePower, //更新角色权限
-            search: this.$api.rolePower.quertRolePage //角色列表查询
+            search: this.$api.rolePower.queryRolePage, //角色列表查询
+            add: this.$api.rolePower.addRole, //角色列表查询
+            getCode: this.$api.rolePower.getRoleCode, //角色列表查询
         }
         this.zjControl = zjControl
       this.getApi()
-        this.getRoleList()
         this.getList()
         this.scrollY()
     }

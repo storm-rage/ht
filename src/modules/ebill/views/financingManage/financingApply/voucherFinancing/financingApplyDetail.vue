@@ -94,7 +94,7 @@
       </zj-table>
       <el-row>
         <zj-header title="融资协议"/>
-        <el-row class="btn-row">
+        <el-row class="button-row">
           <zj-button type="text">《入库融资协议》</zj-button>
           <zj-button type="text">《凭证融资协议》</zj-button>
           <zj-button type="text">《债权转让通知》</zj-button>
