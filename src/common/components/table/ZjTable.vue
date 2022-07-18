@@ -11,6 +11,7 @@
       class="zj-table_pager"
       v-if="pager"
       ref="zjPager"
+      data-placement="bottom"
       v-bind="pagerAttrs"
       v-on="pagerEvents">
       <template v-slot:left>
@@ -581,12 +582,6 @@
       pagerPageChange (params) {
         if(!this.reqKey){return}
         this.reqKey = false
-        // let paramss = Object.assign(params,this.params)
-        // this.tablePagerCurrentPage = params.currentPage
-        // this.tablePagerPageSize = params.pageSize
-        // paramss.tablePagerCurrentPage = params.currentPage
-        // paramss.tablePagerPageSize = params.pageSize
-        // this.getApiData(paramss)
         this.tablePagerCurrentPage = params.currentPage
         this.tablePagerPageSize = params.pageSize
         this.getList(false, true)

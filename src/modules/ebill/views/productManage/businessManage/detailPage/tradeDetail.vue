@@ -3,7 +3,12 @@
     <zj-content-block>
       <zj-header title="贸易关系"></zj-header>
       <zj-content>
-        <zj-table ref="tradeTable"  :dataList="tradeList"  @radio-change="handleRadioChange" :radio-config="{highlight: true}">
+        <zj-table ref="tradeTable"
+                  :dataList="tradeList"
+                  row-id="tradeId"
+                  :pager="false"
+                  @radio-change="handleRadioChange"
+                  :radio-config="{highlight: true,checkRowKey: defaultSelectRowId}">
           <zj-table-column type="radio"  width="50"/>
           <zj-table-column field="field1" title="核心企业名称"/>
           <zj-table-column field="field2" title="核心企业是否海天集团"/>
@@ -23,7 +28,7 @@
       </zj-content>
     </zj-content-block>
     <!--  产品  -->
-    <div v-if="currentTrade.field1">
+    <div v-if="currentTrade.tradeId">
       <zj-content-block>
         <zj-header :title="`${currentTrade.field9}业务设置-${currentTrade.field1}`"></zj-header>
         <zj-content>
@@ -95,14 +100,33 @@
           <bill-info-text-tip></bill-info-text-tip>
         </zj-content>
       </zj-content-block>
+      <!--  其他附件    -->
+      <other-file-setting></other-file-setting>
     </div>
   </el-form>
 </template>
 <script>
 import BillInfoTextTip from '../components/billInfoTextTip';
+import OtherFileSetting from '../components/otherFileSetting';
 export default {
+  props: {
+    tradeList: {
+      type: Array,
+      default: () => {
+        return [];
+      }
+    }
+  },
+  watch: {
+    tradeList () {
+      if (this.tradeList&& this.tradeList.length) {
+        this.defaultSelectRowId = this.tradeList[0].tradeId
+      }
+    }
+  },
   components: {
-    BillInfoTextTip
+    BillInfoTextTip,
+    OtherFileSetting
   },
   data () {
     return {
@@ -116,20 +140,8 @@ export default {
         field6: '招生银行',
         field7: '62343434343'
       },
-      tradeList: [
-        {
-          field1: '佛山市a有限公司',
-          field2: '是',
-          field3: '756756756767',
-          field4: '非保理',
-          field5: '12',
-          field6: '1000',
-          field7: '2000',
-          field8: '正常',
-          field9: '保理产品',
-          field10: '电子凭证'
-        }
-      ],
+      // 默认勾选第一个供应商
+      defaultSelectRowId: '',
       //当前选中的贸易对象
       currentTrade: {}
     };

@@ -31,10 +31,18 @@
           <zj-button type="primary" :api="zjBtn.openApply" @click="toApply">产品开通申请</zj-button>
         </div>
       </template>
-      <zj-table ref="searchTable" :params="searchForm" :api="zjControl.tableApi">
+      <zj-table ref="searchTable" :params="searchForm" :api="zjControl.tableApi" :pagerPageSize="6" :pagerPageSizes="[6,10,15,20,50,100]">
         <zj-table-column field="serialNo" title="申请流水号"/>
         <zj-table-column field="productApplyDatetime" title="申请时间"/>
-        <zj-table-column field="productType" title="申请产品" :formatter="(obj) => typeMap(dictionary.productType, obj.cellValue)"/>
+        <zj-table-column field="productType" title="申请产品">
+          <template v-slot="{row,rowIndex}">
+            <div v-if="row.productType">
+              <el-tag v-for="(item,index) in row.productType.split(',')" size="mini" :key="`${rowIndex}${index}productType`">
+                {{typeMap(dictionary.productType,item)}}
+              </el-tag>
+            </div>
+          </template>
+        </zj-table-column>
         <zj-table-column field="applyStatus" title="申请状态" :formatter="(obj) => typeMap(dictionary.applyStatus, obj.cellValue)"/>
       </zj-table>
     </zj-list-layout>

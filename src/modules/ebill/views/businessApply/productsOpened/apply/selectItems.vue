@@ -1,20 +1,20 @@
 <template>
   <el-row :gutter="12">
-    <el-col :span="8" v-for="(item,index) in list" :key="index+'s'">
-      <div @click="handleSelect(item)" class="select-items" :class="{'select':currentProdId.includes(item.id)}">
+    <el-col :span="8" v-for="(item,index) in productList" :key="index+'s'">
+      <div @click="handleSelect(item)" class="select-items" :class="{'select':prodIds.includes(item.id)}">
         <div class="check-box">
-          <img src="./img/unselect.png" v-if="!currentProdId.includes(item.id)">
-          <img src="./img/select.png" v-else-if="currentProdId.includes(item.id)">
+          <img src="./img/unselect.png" v-if="!prodIds.includes(item.id)">
+          <img src="./img/select.png" v-else-if="prodIds.includes(item.id)">
         </div>
         <div class="content">
           <div class="logo">
-            <img v-if="item.id==='2'" src='./img/bill.png' alt="图片">
+            <img v-if="item.productType==='RD'" src='./img/bill.png' alt="图片">
             <img v-else src='./img/order-fancing.png' alt="图片">
           </div>
           <div class="content-block">
-            <div class="title">{{item.name}}</div>
-            <div class="desc">{{item.desc}}</div>
-            <el-popover placement="bottom" width="220" trigger="hover" :content="item.detail">
+            <div class="title">{{item.productName}}</div>
+            <div class="desc">{{item.productAbstract}}</div>
+            <el-popover placement="bottom" width="220" trigger="hover" :content="item.productDetail	">
               <el-link type="primary" slot="reference" :underline="false">了解详情>></el-link>
             </el-popover>
           </div>
@@ -26,34 +26,43 @@
 <script>
 export default {
   name: 'SelectItems',
+  props: {
+    productList: Array
+  },
   data(){
     return {
-      currentProdId: [],
-      list:[
-        {
-          id: '1',
-          name: '订单保理',
-          desc: '订单保理简单介绍',
-          detail: '我是详情我是详情我是详情我是详情我是详情我是详情我是详情我是详情我是详情我是详情我是详情'
-        },
-        {
-          id: '2',
-          name: '电子债权凭证',
-          desc: '电子债权凭证产品简单介绍',
-          detail: '我是详情我是详情我是详情我是详情我是详情我是详情我是详情我是详情我是详情我是详情我是详情'
-        }
-      ]
+      // 选中的产品ID
+      prodIds: [],
+      // 选中的产品
+      selectProds: []
     }
   },
   methods: {
     handleSelect (item) {
-      if(!this.currentProdId.includes(item.id)) {
-        this.currentProdId.push(item.id);
+      if(!this.prodIds.includes(item.id)) {
+        this.prodIds.push(item.id);
+        this.selectProds.push(item);
+        this.autoSelectRDProd(item);
       }else {
-        const index = this.currentProdId.findIndex((val) => {
+        const index = this.prodIds.findIndex((val) => {
           return val === item.id;
         });
-        this.currentProdId.splice(index,1);
+        this.prodIds.splice(index,1);
+        this.selectProds.splice(index,1);
+      }
+      this.$emit('change', this.selectProds, item);
+    },
+    /**
+     * 如果是订单保理，自动选择电子债权凭证产品
+     * @param item
+     */
+    autoSelectRDProd (item) {
+      if (item.productType==='DDBL') {
+        const prod = this.productList.find((ditem) => ditem.productType==='RD');
+        if (!this.prodIds.includes(prod.id)) {
+          this.prodIds.push(prod.id);
+          this.selectProds.push(prod);
+        }
       }
     }
   }
