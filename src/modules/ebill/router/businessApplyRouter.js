@@ -33,7 +33,8 @@ const businessApplyRouter = [
         title:`基础信息维护交易查询`,
         root:'业务申请',
         keepAlive:true,
-        refreshIndex:0
+        refreshIndex:0,
+        notRequireAuth: true
       }
     },
     {

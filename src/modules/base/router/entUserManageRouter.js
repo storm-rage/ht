@@ -51,7 +51,7 @@ const entUserManage = [
     name: 'entDetail',
     component: () => import('../views/entUserManage/entManage/detail'),
     meta: {
-      title: '企业用户信息管理-详情',
+      title: '企业详情',
       parent: 'sysUser',
       isManage: false,
       keepAlive: true,

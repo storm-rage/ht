@@ -5,7 +5,7 @@
       <zj-content-block>
         <zj-header title="企业基础信息" />
         <el-row>
-          <h4 class="bl ml-20 mb-10">企业信息</h4>
+          <h4 class="bl zj-m-l-20 mb-10">企业信息</h4>
           <el-col :span="pageType === 'add' ? 24 : 8">
             <el-form-item label="企业名称：" prop="name">
               <template v-if="pageType === 'add'">
@@ -108,7 +108,7 @@
           </el-col>
         </el-row>
         <el-row>
-          <h4 class="bl ml-20 mb-10">企业联系人</h4>
+          <h4 class="bl zj-m-l-20 mb-10">企业联系人</h4>
           <el-col :span="8">
             <el-form-item label="企业联系人姓名：" prop="fastMailName">
               <el-input v-model="form.fastMailName" :disabled="isDetail" />
@@ -126,7 +126,7 @@
           </el-form-item>
         </el-row>
         <el-row>
-          <h4 class="bl ml-20 mb-10">法人信息</h4>
+          <h4 class="bl zj-m-l-20 mb-10">法人信息</h4>
           <el-col :span="8">
             <el-form-item label="法定代表人姓名：" prop="legalPersonName">
               <el-input v-model="form.legalPersonName" :disabled="isDetail" />
@@ -156,7 +156,7 @@
           </el-col>
         </el-row>
         <el-row>
-          <h4 class="bl ml-20 mb-10">银行账户信息（选填）</h4>
+          <h4 class="bl zj-m-l-20 mb-10">银行账户信息（选填）</h4>
           <el-col :span="8">
             <el-form-item label="银行账户名称：" prop="legalPersonName">
               <el-input v-model="form.legalPersonName" :disabled="isDetail" />
@@ -195,7 +195,7 @@
           </el-col>
         </el-row>
         <el-row>
-          <h4 class="bl ml-20 mb-10">控制人信息</h4>
+          <h4 class="bl zj-m-l-20 mb-10">控制人信息</h4>
           <el-col :span="8">
             <el-form-item label="控制人姓名：" prop="legalPersonName">
               <el-input v-model="form.legalPersonName" :disabled="isDetail" />

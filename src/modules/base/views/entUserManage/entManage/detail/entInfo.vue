@@ -4,138 +4,19 @@
       <zj-content-block>
         <zj-header title="企业基础信息" />
         <zj-content>
-          <zj-collapse title="企业信息">
-            <div class="info-body">
-              <el-row>
-                <el-col :span="8">
-                  <el-form-item label="企业名称：">
-                    <span>{{ detailData.name | value }}</span>
-                  </el-form-item>
-                </el-col>
-                <el-col :span="8">
-                  <el-form-item label="统一社会信用代码：">
-                    <span>{{ detailData.bizLicence | value }}</span>
-                  </el-form-item>
-                </el-col>
-                <el-col :span="8">
-                  <el-form-item label="平台客户类型：">
-                    <span>{{
-                      typeMap(dictionary.entTypeList, detailData.entType)
-                    }}</span>
-                  </el-form-item>
-                </el-col>
-                <el-col :span="8">
-                  <el-form-item label="企业注册地址：">
-                    <span>{{ detailData.address }}</span>
-                  </el-form-item>
-                </el-col>
-                <el-col :span="8">
-                  <el-form-item label="成立日期：">
-                    <span>{{ detailData.address }}</span>
-                  </el-form-item>
-                </el-col>
-                <el-col :span="8">
-                  <el-form-item label="注册资本：">
-                    <span>{{ detailData.address }}</span>
-                  </el-form-item>
-                </el-col>
-                <el-col :span="8">
-                  <el-form-item label="企业规模：">
-                    <span>{{
-                      typeMap(dictionary.scaleList, detailData.scale)
-                    }}</span>
-                  </el-form-item>
-                </el-col>
-                <el-col :span="8">
-                  <el-form-item label="企业经营类型：">
-                    <span>{{
-                      typeMap(dictionary.scaleList, detailData.scale)
-                    }}</span>
-                  </el-form-item>
-                </el-col>
-              </el-row>
-            </div>
-          </zj-collapse>
-          <zj-collapse title="法人信息">
-            <el-row class="info-body">
-              <el-col :span="8">
-                <el-form-item label="企业法人姓名：">
-                  <span>{{ detailData.legalPersonName | value }}</span>
-                </el-form-item>
-              </el-col>
-              <el-col :span="8">
-                <el-form-item label="法人身份证号码：">
-                  <span>{{
-                    typeMap(
-                      dictionary.userCertTypeList,
-                      detailData.legalCertType
-                    )
-                  }}</span>
-                </el-form-item>
-              </el-col>
-              <el-col :span="8">
-                <el-form-item label="法人手机手机号：">
-                  <span>{{ detailData.legalCertNo | value }}</span>
-                </el-form-item>
-              </el-col>
-            </el-row>
-          </zj-collapse>
+          <!-- 企业信息 -->
+          <slot name="entInfo"></slot>
 
-          <zj-collapse title="企业联系人">
-            <el-row class="info-body">
-              <el-col :span="8">
-                <el-form-item label="企业联系人姓名：">
-                  <span>{{ detailData.legalPersonName | value }}</span>
-                </el-form-item>
-              </el-col>
-              <el-col :span="8">
-                <el-form-item label="企业联系人手机号：">
-                  <span>{{
-                    typeMap(
-                      dictionary.userCertTypeList,
-                      detailData.legalCertType
-                    )
-                  }}</span>
-                </el-form-item>
-              </el-col>
-              <el-col :span="8">
-                <el-form-item label="企业联系地址：">
-                  <span>{{ detailData.legalCertNo | value }}</span>
-                </el-form-item>
-              </el-col>
-            </el-row>
-          </zj-collapse>
+          <!-- 法人信息 -->
+          <legal-person />
+          <!-- 企业联系人 -->
+          <ent-linkman />
 
-          <zj-collapse title="银行账户">
-            <zj-table :pager="false" :dataList="dataList">
-              <zj-table-column field="changeTime" title="银行账户名称" />
-              <zj-table-column field="changeItem" title="银行账号" />
-              <zj-table-column field="changeItem" title="银行账户开户行" />
-              <zj-table-column field="changeItem" title="银行联行号" />
-              <zj-table-column field="changeItem" title="银行类型" />
-              <zj-table-column field="changeItem" title="核查方式" />
-            </zj-table>
-          </zj-collapse>
+          <!-- 银行账户 -->
+          <bank-account />
 
-          <zj-collapse title="控制人信息">
-            <el-row>
-              <el-col :span="8">
-                <el-form-item label="控制人姓名：" prop="field1">
-                  546565465
-                </el-form-item>
-              </el-col>
-              <el-col :span="8">
-                <el-form-item label="控制人身份证号：" prop="field1">
-                  4234
-                </el-form-item>
-              </el-col>
-              <el-col :span="8">
-                <el-form-item label="控制人身份证有效期：" prop="field1">
-                  4324
-                </el-form-item>
-              </el-col>
-            </el-row>
-          </zj-collapse>
+          <!-- 控制人信息 -->
+          <controller />
 
           <zj-collapse title="天眼查信息">
             <zj-button
@@ -344,9 +225,18 @@
 </template>
 
 <script>
+import legalPerson from "../components/legalPerson";
+import entLinkman from "../components/entLinkman";
+import bankAccount from "../components/bankAccount";
+import controller from "../components/controller";
 import entInfo from "./entInfo";
 export default {
-  components: {},
+  components: {
+    legalPerson,
+    entLinkman,
+    bankAccount,
+    controller,
+  },
   mixins: [entInfo],
   data() {
     return {

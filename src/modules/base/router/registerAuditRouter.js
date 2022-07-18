@@ -5,15 +5,15 @@
 const registerAudit = [
   //主页面
   {
-    path:'/registerAudit',
-    name:'registerAudit',
+    path:'/platformAudit',
+    name:'platformAudit',
     component: () => import('../views/sysModules/register/registerAudit/index.vue'),
     meta: {
       title:'企业注册审核',
       root:'企业与用户管理',
       keepAlive:true,
       refreshIndex:0,
-      notRequireAuth: true
+      // notRequireAuth: true
     }
   },
   //申请信息审核页面
@@ -22,7 +22,7 @@ const registerAudit = [
     name:'registerAuditApplyAudit',
     component: () => import('../views/sysModules/register/registerAudit/registerAudit.vue'),
     meta: {
-      title:'申请信息审核',
+      title:'申请信息审核-审核',
       parent:'registerAudit',
       root:'企业与用户管理',
       keepAlive:true,
