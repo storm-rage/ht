@@ -26,7 +26,8 @@ export default {
         password: '', // 密码
         captcha: '', // 图片验证码
         smsCode: '', // 手机验证码
-        pwdVerifyMode: '1' //登录密码验证方式 1.登录密码验证 2.手机验证码验证
+        pwdVerifyMode: '1', //登录密码验证方式 1.登录密码验证 2.手机验证码验证
+        resId:"0",
       },
       // 保存登录成功后的信息
       loginSuccess: {},

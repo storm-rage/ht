@@ -1,7 +1,7 @@
 @import "~@assets/less/variables";
 .login{
   min-width: 970px;
-  min-height: 720px;
+  // min-height: 720px;
 }
 .LoginHeader{
   height: 8.982826948480845%;
@@ -12,10 +12,10 @@
   box-shadow: none;
 }
 .loginBody{
-  height: 69%;
+  height: 100%;
   box-sizing: content-box;
   min-height: 500px;
-  background: url("~@assets/img/login/login-bg.png") no-repeat;
+  background: url("~@assets/img/login/bg1.png") no-repeat;
   background-size: 100% 100%;
   .content{
     width: 320px;
@@ -52,10 +52,11 @@
     }
   }
   .el-card{
+    border-radius:0!important;
     width: 28%;
-    height: 86%;
+    height: 100%;
     float: right;
-    margin: 32px 13.4% 0 0;
+    margin: 0;
     border: 1px solid #e8eaec;
     padding: 0 35px 35px;
     min-width: 370px;
@@ -96,7 +97,7 @@
       letter-spacing: 4px!important;
      /* box-shadow: 0 2px 4px 0 @primary-main-color;*/
      /* background: @primary-main-color!important;*/
-      background: linear-gradient(to bottom right,#58DDE6, #2A98E8);
+      // background: linear-gradient(to bottom right,#58DDE6, #2A98E8);
       border: none;
       outline: none!important;
       &:active{

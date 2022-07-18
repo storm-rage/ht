@@ -30,7 +30,7 @@
       </template>
     <div class="zj-search-response">
       <zj-button
-        class="zj-m-l-10 mb-10 mt-10"
+        class="zj-m-l-10 zj-m-t-10 zj-m-b-10 mb-10 mt-10"
         type="primary"
         @click="openDialog"
         >新增</zj-button
@@ -43,18 +43,18 @@
       <zj-table
         ref="searchTable"
         :params="searchForm"
-        :api="zjControl.queryList"
+        :api="zjControl.relationLsit"
       >
-        <zj-table-column prop="id" title="买方企业名称" />
-        <zj-table-column field="" title="卖方企业名称" />
-        <zj-table-column field="" title="卖方银行账号" />
-        <zj-table-column field="" title="卖方企业银行账户户名" />
-        <zj-table-column field="" title="银行联行号" />
-        <zj-table-column field="" title="银行类型" />
-        <zj-table-column field="" title="贸易关系状态" />
-        <zj-table-column field="" title="协议" />
-        <zj-table-column field="" title="证明材料" />
-        <zj-table-column field="" title="上次更新时间" :formatter="date" />
+        <zj-table-column field="buyerEntName" title="买方企业名称" />
+        <zj-table-column field="buyerEntName" title="卖方企业名称" />
+        <zj-table-column field="bankAccount" title="卖方银行账号" />
+        <zj-table-column field="buyerEntName" title="卖方企业银行账户户名" />
+        <zj-table-column field="bankNo" title="银行联行号" />
+        <zj-table-column field="bankName" title="银行类型" />
+        <zj-table-column field="buyerEntName" title="贸易关系状态" />
+        <zj-table-column field="buyerEntName" title="协议" />
+        <zj-table-column field="buyerEntName" title="证明材料" />
+        <zj-table-column field="buyerEntName" title="上次更新时间" :formatter="date" />
         <zj-table-column title="操作" fixed="right">
           <template v-slot="{ row }">
             <zj-button type="text" @click="edit(row)">修改</zj-button>
@@ -92,7 +92,7 @@
           prop="entName"
           :class="{ 'zj-m-b-5': !editFlag }"
         >
-          <span class="static-text">{{ formModel.entName }}</span>
+          <span class="static-text">{{ relList.buyerEntName }}</span>
         </el-form-item>
         <el-form-item
           label="卖方企业名称："
@@ -171,7 +171,7 @@
         <div class="upFormItem">
           <zj-content style="padding-top: 0">
             <zj-content-tip
-              text="注：1.证明材料可为买卖双方发票，贸易合同等证明双方真实贸易关系的材料。2.支持上次pdf，图片和压缩包！"
+              text="注：1.证明材料可为买卖双方发票，贸易合同等证明双方真实贸易关系的材料。2.支持上传pdf，图片和压缩包！"
             ></zj-content-tip>
           </zj-content>
         </div>
@@ -187,9 +187,13 @@
 export default {
   data() {
     return {
+      relList:[],
+      formRules:{},
+      editFlag:"1",
       workflow: "",
       zjControl: {
-        queryList: this.$api.billLssue.queryList,
+        relationLsit: this.$api.tradeRelations.relationLsit,//查询列表
+        relationAdd: this.$api.tradeRelations.relationAdd,//新增贸易关系
       },
       searchForm: {},
       tableData: [{ id: 1 }],
@@ -201,17 +205,74 @@ export default {
   },
   created() {
     this.getApi();
+    this.relationLsitApi();
   },
   methods: {
+    //查询
+    relationLsitApi(){
+      let params = {
+        page : "1",
+        rows : "10"
+      }
+      this.zjControl.relationLsit(params).then(res=>{
+      if(res.code===200){
+        this.relList = res.data.rows[0]
+      }
+      console.log(this.relList,"1111111")
+    })
+    },
+    //清空
+    dataNull(){
+      this.formModel.invoiceTaxpayerId = ""
+      this.formModel.invoiceAddress = ""
+      this.formModel.invoicePhone = ""
+      this.formModel.invoiceBankInfo = ""
+      this.formModel.invoiceBankAccno = ""
+      this.formModel.invoiceEmail = ""
+    },
+    //查询
+    resetSearch(){
+      alert("-------------")
+    },
+    //取消
+    cancel(){
+      this.dataNull()
+    },
+    //保存
+    save(row){
+      if(this.type == "add"){
+        let params = {
+          // entName:this.formModel.entName,//买方企业名称
+          invoiceTaxpayerId:this.formModel.invoiceTaxpayerId,//卖方企业名称
+          invoiceAddress:this.formModel.invoiceAddress,//卖方银行账号
+          invoicePhone:this.formModel.invoicePhone,//卖方银行账号户名
+          invoiceBankInfo:this.formModel.invoiceBankInfo,//卖方企业开户行
+          invoiceBankAccno:this.formModel.invoiceBankAccno,//银行联号
+          invoiceEmail:this.formModel.invoiceEmail,//银行类型
+        }
+          this.zjControl.relationAdd(params).then(() => {
+          this.$Message.success('新增成功！')
+          this.dialogVisible = false;
+          this.dataNull()
+        })
+      }else{
+        alert("修改")
+        console.log(row,"1111111")
+      }
+    },
     //修改
     edit(row) {
-      this.type = "edit";
-      this.dialogVisible = true;
+      // this.type = "edit";
+      // this.dialogVisible = true;
+      // if(!this.tableEditReport(['searchTable'])){return}
+      // this.$refs.searchTable.setActiveRow(row)
     },
+    //新增
     openDialog() {
       this.type = "add";
       this.dialogVisible = true;
     },
+    //上传证明材料
     upCredential(row) {
       this.dialogVisible2 = true;
     },
