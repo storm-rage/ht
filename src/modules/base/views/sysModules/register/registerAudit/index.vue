@@ -26,47 +26,48 @@
             >
               <el-option
                 v-for="item in platFormAuditEntTypeList"
-                :key="item.value"
+                :key="item.code"
                 :label="item.desc"
-                :value="item.value"
+                :value="item.code"
               >
               </el-option>
             </el-select>
           </el-form-item>
           <el-form-item label="申请流水号：">
             <el-input
-              v-model="searchForm.nameLike"
+              v-model="searchForm.serialNoLike"
               placeholder=""
               @keyup.enter.native="enterSearch"
             />
           </el-form-item>
           <el-form-item label="企业注册状态：" class="col-right">
             <el-select
-              v-model="searchForm.entType"
+              v-model="searchForm.registerState"
               filterable
               placeholder="请选择"
               :popper-append-to-body="false"
             >
               <el-option
-                v-for="item in platFormAuditEntTypeList"
-                :key="item.value"
+                v-for="item in registerStateList"
+                :key="item.code"
                 :label="item.desc"
-                :value="item.value"
+                :value="item.code"
               >
               </el-option>
             </el-select>
           </el-form-item>
         </el-form>
       </template>
-      <zj-table
+      <!-- <zj-table
         ref="searchTable"
         :params="searchForm"
         :api="zjControl.tableApi"
-      >
-       <zj-table-column field="ebillCode" title="申请流水号">
+      > -->
+      <zj-table ref="searchTable" :dataList="[{}]">
+        <zj-table-column field="serialNo" title="申请流水号">
           <template v-slot="{ row }">
-            <span class="table-elbill-code" @click="toDetails(row)">{{
-              row.ebillCode
+            <span class="table-elbill-code" @click="toApplyAudit(row)">{{
+              row.serialNo
             }}</span>
           </template>
         </zj-table-column>
@@ -115,34 +116,35 @@
           :formatter="filter"
         />
         <zj-table-column
-          field="state"
+          field="registerState"
           title="企业注册状态"
           :formatter="
-            (obj) => typeMap(directory.platFormEntStateList, obj.cellValue)
+            (obj) => typeMap(directory.registerStateList, obj.registerState)
           "
         />
         <zj-table-column title="操作" fixed="right">
           <template v-slot="{ row }">
+            <zj-button type="text" @click="toApplyAudit(row)">审核</zj-button>
             <zj-button
               type="text"
-              @click="goChild('registerAuditApplyAudit', row)"
-              v-if="row.state === '3'"
-              >审核</zj-button
+              :api="zjBtn.getCertUserInfo"
+              @click="certificate(row)"
+              >发证</zj-button
             >
-            <zj-button
+            <!-- <zj-button
               type="text"
-              @click="goChild('registerAuditProtocolAudit', row)"
-              v-else-if="row.state === '4'"
-              >确认</zj-button
+              @click="toApplyAudit(row)"
+              v-if="row.registerState === '3'"
+              >审核</zj-button
             >
             <zj-button
               type="text"
               :api="zjBtn.getCertUserInfo"
               @click="certificate(row)"
-              v-else-if="row.state === '5'"
+              v-else-if="row.registerState === '5'"
               >发证</zj-button
-            >
-            <span v-else>——</span>
+            > -->
+            <!-- <span v-else>——</span> -->
           </template>
         </zj-table-column>
       </zj-table>
@@ -167,35 +169,22 @@ export default {
       zjControl: {
         getDirectory: this.$api.registerAudit.queryEntDataDirectory, //字典
         tableApi: this.$api.registerAudit.queryRegisterEntPage, //列表查询
-        expordData: this.$api.registerAudit.exportRegisterEnt, //导出数据
-
         getAuditDetail: this.$api.registerAudit.getAuditDetail, //查询审核详情
-
         getCertUserInfo: this.$api.registerAudit.getCertUserInfo, //查询待发证用户信息
         certKey: this.$api.registerAudit.makeCertKey, //制key
         submitEntIssuedCert: this.$api.registerAudit.submitEntIssuedCert, //发证完成
       },
       directory: {},
       searchForm: {
-        supplierTradeType: "", //快捷查询
         nameLike: "", //企业名称
         applyDatetimeStart: "", //注册申请日期开始
         applyDatetimeEnd: "", //注册申请日期结束
         entType: "", //平台客户类型
-        states: "", //企业注册状态
+        serialNoLike: "", //申请流水号
+        registerState: "", //企业注册状态
       },
-      platFormAuditEntTypeList: [
-        {
-          desc: "核心企业",
-          value: "B",
-        },
-        {
-          desc: "供应商",
-          value: "S",
-        },
-      ],
-      //快捷查询
-      quickCheck: "",
+      platFormAuditEntTypeList: [],
+      registerStateList: [],
     };
   },
   methods: {
@@ -208,20 +197,24 @@ export default {
             .replace(/desc/g, "label")
         );
         this.directory = res.data;
+        this.getEntTypeList(this.directory.platFormAuditEntTypeList || []);
+        this.getRegisterStateList(this.directory.registerStateList || []);
       });
     },
-    //快捷查询
-    quickQuery(code) {
-      this.quickCheck = code;
-      this.searchForm.supplierTradeType = code;
-      if (!this.zjBtn.tableApi) {
-        return;
-      }
-      this.search();
+    // 平台客户类型
+    getEntTypeList(data) {
+      data.forEach((item) => {
+        this.platFormAuditEntTypeList.push(item);
+      });
     },
-    //重置之前
-    beforeResetSearch() {
-      this.quickCheck = "";
+    // 企业注册状态
+    getRegisterStateList(data) {
+      data.forEach((item, index) => {
+        if (index !== 0 || index !== 1) {
+          //2-待平台初审 3-待平台复审 4-待发证 5-注册拒绝 6-平台拒绝
+          this.registerStateList.push(item);
+        }
+      });
     },
     //发证
     certificate(row) {
@@ -232,58 +225,15 @@ export default {
         this.search(false);
       }
     },
+    toApplyAudit(row) {
+      this.$router.push("/registerAuditApplyAudit");
+    },
   },
   created() {
     this.getDirectory();
-    this.getApi();
-  },
-  activated() {
-    if (sessionStorage.getItem("registerAuditAudit")) {
-      if (this.$refs.searchTable) {
-        this.search(false);
-      } else {
-        setTimeout(() => {
-          this.search(false);
-        }, 500);
-      }
-      sessionStorage.removeItem("registerAuditAudit");
-    }
+    // this.getApi();
   },
 };
 </script>
 <style scoped lang="less">
-.ent_user-audit {
-  .quickQuery {
-    li {
-      &:first-child {
-        border-left-color: transparent;
-      }
-      &:after {
-        content: "";
-        display: block;
-        clear: both;
-      }
-      float: left;
-      padding: 0 15px;
-      color: #33649d;
-      cursor: pointer;
-      &:hover {
-        color: #5494f2;
-        font-weight: bold;
-      }
-    }
-    &:after {
-      content: "";
-      display: block;
-      clear: both;
-    }
-    .check {
-      background-color: #fff;
-      font-weight: bold;
-      color: #5494f2;
-      border-left: 1px solid #d0d0d0;
-      border-right: 1px solid #d0d0d0;
-    }
-  }
-}
 </style>
