@@ -27,6 +27,11 @@ const productOpenApply = {
   getProductOpenApplyDetail(params) {
     return request.get('/product-open-apply/get-product-open-apply-detail',{params})
   },
+  /**
+   * 提交申请
+   * @param params
+   * @returns {Promise<AxiosResponse<any>>}
+   */
   submitProductOpenAplly (params) {
     return request.post('/product-open-apply/submit-product-open-apply',params);
   }

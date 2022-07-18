@@ -1,5 +1,6 @@
 import XEUtils from 'xe-utils'
-import 'vxe-table/lib/index.css'
+import '@assets/vxe-table-theme/index.scss'
+// import 'vxe-table/lib/index.css'
 import VXETable from 'vxe-table'
 export default {
   install: function (Vue) {
