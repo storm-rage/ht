@@ -8,8 +8,8 @@
     <!-- 右边搜索按钮 -->
     <el-row class="button-row">
       <slot name="rightBtns">
-        <vxe-button class="reset" icon="el-icon-refresh" @click="resetSearch">重置</vxe-button>
-        <vxe-button class="search" icon="el-icon-search" @click="search">查询</vxe-button>
+        <vxe-button class="reset" icon="el-icon-refresh" @click="resetSearch()">重置</vxe-button>
+        <vxe-button class="search" icon="el-icon-search" @click="search()">查询</vxe-button>
       </slot>
     </el-row>
     <!-- 搜索条件 -->

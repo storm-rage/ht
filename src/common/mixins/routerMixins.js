@@ -83,7 +83,11 @@ export default {
           if(this.beforeSearch && typeof(this.beforeSearch) === 'function'){
             this.beforeSearch()
           }
-          this.$refs[Ref].iRefresh(boo)
+          if (this.$refs[Ref]){
+            this.$refs[Ref].iRefresh(boo)
+          }else if (this.$parent.$refs[Ref]) {
+            this.$parent.$refs[Ref].iRefresh(boo)
+          }
         },
         resetSearch (boo) {
           if(this.beforeResetSearch && typeof(this.beforeResetSearch) === 'function'){

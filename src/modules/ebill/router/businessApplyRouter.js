@@ -7,10 +7,8 @@ const businessApplyRouter = [
       name: 'productOpenApply',
       component: () => import('../views/businessApply/productsOpened/index.vue'),
       meta:{
-        isMock:true,
         title:'产品开通申请',
         root:'业务申请',
-        notRequireAuth: true,
         keepAlive:true,
         refreshIndex:0
       }
@@ -20,11 +18,10 @@ const businessApplyRouter = [
     name: 'productsOpenedApply',
     component: () => import('../views/businessApply/productsOpened/apply/index.vue'),
     meta:{
-      isMock:false,
       title:'产品开通申请',
+      parent: 'productOpenApply',
       keepAlive:true,
-      refreshIndex:0,
-      notRequireAuth: true
+      refreshIndex:0
     }
   },
     {
