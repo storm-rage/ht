@@ -103,6 +103,7 @@
     export default login;
 </script>
 <style lang="less" scoped>
+/*覆写样式*/
 .loginBody /deep/ .el-link.el-link--primary {
     padding: 0!important;
     border-bottom: 3px solid #165DFF;
