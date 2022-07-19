@@ -1,12 +1,14 @@
 <template>
   <el-dialog
-    title="温馨提示"
+    title="融资复核拒绝"
     :visible.sync="dialogShow" width="600px"
     :close-on-click-modal="false" left
   >
-    <div>
-      <p>请提示复核人员在融资开始日下午3:00前完成审批，谢谢！是否确认提交复核？</p>
-    </div>
+    <el-form :model="dialogForm" ref="dialogForm" :rules="rules">
+      <el-form-item label="请输入拒绝原因：" prop="refuseReason">
+        <el-input type="textarea"></el-input>
+      </el-form-item>
+    </el-form>
     <div slot="footer" class="dialog-footer">
       <zj-button status="primary" @click="onConfirm">确认</zj-button>
       <zj-button status="primary" @click="cancel">取消</zj-button>
@@ -27,13 +29,17 @@ export default {
     return {
       dialogShow:false,
       dialogForm: {},
-
+      rules: {
+        refuseReason:[
+          {required: true, message:'请输入拒绝原因！', trigger:'blur'}
+        ]
+      }
     }
   },
   methods: {
     onConfirm() {
       // this.zjControl.xxx(this.form)
-      // this.goParent()
+      this.goParent()
       this.dialogShow = false
     },
     cancel() {
