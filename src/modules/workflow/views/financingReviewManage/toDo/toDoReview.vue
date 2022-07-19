@@ -204,11 +204,13 @@
       </zj-content-block>
 
       <!-- 底部按钮栏 -->
-      <el-row class="ta-c w85 fixed-footer-btns">
-        <zj-button @click="passRecheck">审核通过</zj-button>
-        <zj-button class="btn-warning" @click="rejectRecheck">审核拒绝</zj-button>
-        <zj-button class="back" @click="goParent">返回</zj-button>
-      </el-row>
+      <zj-content-footer>
+        <el-row class="ta-c w85 fixed-footer-btns">
+          <zj-button type="primary" @click="passRecheck">审核通过</zj-button>
+          <zj-button class="btn-warning" @click="rejectRecheck">审核拒绝</zj-button>
+          <zj-button class="back" @click="goParent">返回</zj-button>
+        </el-row>
+      </zj-content-footer>
     </zj-content-container>
 </template>
 
