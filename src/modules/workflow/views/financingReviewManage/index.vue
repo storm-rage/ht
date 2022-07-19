@@ -1,24 +1,28 @@
 <template>
   <zj-content-container>
-    <!--  融资申请  -->
+    <!--  融资复核管理  -->
     <el-tabs v-model="tabs" type="card" class="zj-tabs-card">
-      <el-tab-pane label="订单融资" name="orderFinancing" >
-        <orderFinancing :zjControl="zjControl" :uDictionary="uDictionary" :uBtn="zjBtn"/>
+      <el-tab-pane label="待办" name="toDo" >
+        <to-do :zjControl="zjControl" :mDictionary="mDictionary" :mBtn="zjBtn"/>
       </el-tab-pane>
-      <el-tab-pane label="入库融资/凭证融资" name="voucherFinancing" >
-        <voucherFinancing :zjControl="zjControl" :mDictionary="mDictionary" :mBtn="zjBtn"/>
+      <el-tab-pane label="已办" name="done" >
+        <done :zjControl="zjControl" :mDictionary="mDictionary" :mBtn="zjBtn"/>
+      </el-tab-pane>
+      <el-tab-pane label="已办结" name="settle" >
+        <settle :zjControl="zjControl" :mDictionary="mDictionary" :mBtn="zjBtn"/>
       </el-tab-pane>
     </el-tabs>
 
   </zj-content-container>
 </template>
 <script>
-import orderFinancing from "./orderFinancing/orderFinancing";
-import voucherFinancing from "./voucherFinancing/voucherFinancing";
+import toDo from "./toDo";
+import done from "./done";
+import settle from "./settle";
 export default {
-  name: "financingManage",
+  name: "financingReviewManage",
   components: {
-    orderFinancing,voucherFinancing
+    toDo,done,settle
   },
   data() {
     return {
@@ -41,8 +45,8 @@ export default {
         }
       ],
       tradeList: [],
-      tabs:'orderFinancing',
-      tabAtive:'orderFinancing',
+      tabs:'toDo',
+      tabAtive:'',
       zjControl: {},
       uDictionary:{},
       mDictionary:{}
@@ -93,8 +97,3 @@ export default {
   }
 };
 </script>
-<!-- 公共样式 -->
-<style lang="less">
-
-
-</style>

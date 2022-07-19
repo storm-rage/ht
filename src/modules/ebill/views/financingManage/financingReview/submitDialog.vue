@@ -5,7 +5,7 @@
     :close-on-click-modal="false" left
   >
     <div>
-      <p>请提示复核人员在融资开始日下午3:00前完成审批，谢谢！是否确认提交复核？</p>
+      <p>请您在融资开始日下午3:00之间发起融资申请，谢谢！是否确认复核通过？</p>
     </div>
     <div slot="footer" class="dialog-footer">
       <zj-button status="primary" @click="onConfirm">确认</zj-button>
@@ -27,7 +27,6 @@ export default {
     return {
       dialogShow:false,
       dialogForm: {},
-
     }
   },
   methods: {
