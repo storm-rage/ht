@@ -58,13 +58,14 @@ export default {
 .zj-login-type {
   display: flex;
   align-items: center;
-  justify-content: center;
+  // justify-content: center;
   margin-bottom: 25px;
   .flex-item {
-    flex: 1;
+    // flex: 1;
+    margin-right: 20px;
     text-align: center;
     .el-link {
-      font-size: 17px;
+      font-size: 16px;
     }
   }
 }

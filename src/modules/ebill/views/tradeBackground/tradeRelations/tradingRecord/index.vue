@@ -46,18 +46,18 @@
       <zj-table
         ref="searchTable"
         :params="searchForm"
-        :api="zjControl.tableApi"
+        :api="zjControl.relationLsit"
       >
-        <zj-table-column field="issueEntName" title="申请流水号" />
-        <zj-table-column field="issueEntName" title="买方企业名称" />
-        <zj-table-column field="issueEntName" title="卖方企业名称" />
-        <zj-table-column field="issueEntName" title="卖方银行账号" />
-        <zj-table-column field="issueEntName" title="卖方企业银行账户户名" />
-        <zj-table-column field="issueEntName" title="卖方企业开户行" />
-        <zj-table-column field="issueEntName" title="银行联行号" />
-        <zj-table-column field="issueEntName" title="银行类型" />
-        <zj-table-column field="issueEntName" title="申请状态" />
-        <zj-table-column field="ebillAmt" title="申请时间" :formatter="date" />
+        <zj-table-column field="bankAccount" title="申请流水号" />
+        <zj-table-column field="bankAccname" title="买方企业名称" />
+        <zj-table-column field="buyerEntId" title="卖方企业名称" />
+        <zj-table-column field="bankName" title="卖方银行账号" />
+        <zj-table-column field="bankAccname" title="卖方企业银行账户户名" />
+        <zj-table-column field="buyerEntName" title="卖方企业开户行" />
+        <zj-table-column field="bankNo" title="银行联行号" />
+        <zj-table-column field="sellerEntId" title="银行类型" />
+        <zj-table-column field="bankAccname" title="申请状态" />
+        <zj-table-column field="bankAccname" title="申请时间" :formatter="date" />
       </zj-table>
     </zj-list-layout>
   </div>
@@ -66,7 +66,9 @@
 export default {
   data() {
     return {
-      zjControl: {},
+      zjControl: {
+        relationLsit: this.$api.tradeRelations.relationLsit,//交易记录查询列表
+      },
       searchForm: {},
     };
   },

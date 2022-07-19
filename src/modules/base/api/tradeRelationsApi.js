@@ -26,7 +26,7 @@
     },
     //贸易关系操作记录
     recordPage:(params) => {
-      return request.post('/trade-relation-ent/query-trade-relation-record-ent-page',{params})
+      return request.get('/trade-relation-ent/query-trade-relation-record-ent-page',{params})
     },
     //修改贸易关系
     relationEnt:(params) => {

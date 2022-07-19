@@ -45,16 +45,16 @@
         :params="searchForm"
         :api="zjControl.relationLsit"
       >
-        <zj-table-column field="buyerEntName" title="买方企业名称" />
+        <zj-table-column field="agreementName" title="买方企业名称" />
         <zj-table-column field="buyerEntName" title="卖方企业名称" />
         <zj-table-column field="bankAccount" title="卖方银行账号" />
-        <zj-table-column field="buyerEntName" title="卖方企业银行账户户名" />
+        <zj-table-column field="bankAccname" title="卖方企业银行账户户名" />
         <zj-table-column field="bankNo" title="银行联行号" />
         <zj-table-column field="bankName" title="银行类型" />
-        <zj-table-column field="buyerEntName" title="贸易关系状态" />
-        <zj-table-column field="buyerEntName" title="协议" />
-        <zj-table-column field="buyerEntName" title="证明材料" />
-        <zj-table-column field="buyerEntName" title="上次更新时间" :formatter="date" />
+        <zj-table-column field="sellerEntId" title="贸易关系状态" />
+        <zj-table-column field="buyerIsHtEnterprise" title="协议" />
+        <zj-table-column field="sellerEntName" title="证明材料" />
+        <zj-table-column field="state" title="上次更新时间" :formatter="date" />
         <zj-table-column title="操作" fixed="right">
           <template v-slot="{ row }">
             <zj-button type="text" @click="edit(row)">修改</zj-button>
@@ -80,7 +80,7 @@
       top="6vh"
     >
       <el-form
-        ref="form"
+        ref="formModel"
         class="mbi-form"
         :model="formModel"
         :rules="formRules"
@@ -92,42 +92,42 @@
           prop="entName"
           :class="{ 'zj-m-b-5': !editFlag }"
         >
-          <span class="static-text">{{ relList.buyerEntName }}</span>
+          <span class="static-text">{{ relList.bankAccname }}</span>
         </el-form-item>
         <el-form-item
           label="卖方企业名称："
           :class="{ 'zj-m-b-5': !editFlag }"
           prop="invoiceTaxpayerId"
         >
-          <el-input v-model="formModel.invoiceTaxpayerId" />
+          <el-input v-model="formModel.buyerEntName" />
         </el-form-item>
         <el-form-item
           label="卖方银行账号："
           prop="invoiceAddress"
           :class="{ 'zj-m-b-5': !editFlag }"
         >
-          <el-input v-model="formModel.invoiceAddress" />
+          <el-input v-model="formModel.bankAccount" />
         </el-form-item>
         <el-form-item
           label="卖方银行账号户名："
           prop="invoicePhone"
           :class="{ 'zj-m-b-5': !editFlag }"
         >
-          <el-input v-model="formModel.invoicePhone" />
+          <el-input v-model="formModel.bankName" />
         </el-form-item>
         <el-form-item
           label="卖方企业开户行："
           prop="invoiceBankInfo"
           :class="{ 'zj-m-b-5': !editFlag }"
         >
-          <el-input v-model="formModel.invoiceBankInfo" />
+          <el-input v-model="formModel.bankName" />
         </el-form-item>
         <el-form-item
           label="银行联行号："
           prop="invoiceBankAccno"
           :class="{ 'zj-m-b-5': !editFlag }"
         >
-          <el-input v-model="formModel.invoiceBankAccno" />
+          <el-input v-model="formModel.bankName" />
         </el-form-item>
         <el-form-item
           label="银行类型："
@@ -135,13 +135,13 @@
           :class="{ 'zj-m-b-5': !editFlag }"
         >
           <!--        <span class="static-text" v-show="!editFlag">{{formModel.invoiceEmail}}</span>-->
-          <el-input v-model="formModel.invoiceEmail" />
+          <el-input v-model="formModel.bankName" />
         </el-form-item>
       </el-form>
 
       <el-row slot="footer" class="dialog-footer">
         <zj-button status="primary" @click="save">保存</zj-button>
-        <zj-button class="back" @click="dialogVisible = false">取消</zj-button>
+        <zj-button class="back" @click="dialogVisibleTo">取消</zj-button>
       </el-row>
     </el-dialog>
 
@@ -262,8 +262,10 @@ export default {
     },
     //修改
     edit(row) {
-      // this.type = "edit";
-      // this.dialogVisible = true;
+      this.type = "edit";
+      this.dialogVisible = true;
+      this.formModel =  {...row}
+      console.log(this.formModel)
       // if(!this.tableEditReport(['searchTable'])){return}
       // this.$refs.searchTable.setActiveRow(row)
     },
@@ -271,6 +273,11 @@ export default {
     openDialog() {
       this.type = "add";
       this.dialogVisible = true;
+    },
+    //取消
+    dialogVisibleTo(){
+      this.dialogVisible = false;
+      this.dataNull()
     },
     //上传证明材料
     upCredential(row) {
