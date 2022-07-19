@@ -194,6 +194,7 @@ export default {
       zjControl: {
         relationLsit: this.$api.tradeRelations.relationLsit,//查询列表
         relationAdd: this.$api.tradeRelations.relationAdd,//新增贸易关系
+        relationEnt: this.$api.tradeRelations.relationEnt,//修改贸易关系
       },
       searchForm: {},
       tableData: [{ id: 1 }],
@@ -218,7 +219,6 @@ export default {
       if(res.code===200){
         this.relList = res.data.rows[0]
       }
-      console.log(this.relList,"1111111")
     })
     },
     //清空
@@ -238,28 +238,6 @@ export default {
     cancel(){
       this.dataNull()
     },
-    //保存
-    save(row){
-      if(this.type == "add"){
-        let params = {
-          // entName:this.formModel.entName,//买方企业名称
-          invoiceTaxpayerId:this.formModel.invoiceTaxpayerId,//卖方企业名称
-          invoiceAddress:this.formModel.invoiceAddress,//卖方银行账号
-          invoicePhone:this.formModel.invoicePhone,//卖方银行账号户名
-          invoiceBankInfo:this.formModel.invoiceBankInfo,//卖方企业开户行
-          invoiceBankAccno:this.formModel.invoiceBankAccno,//银行联号
-          invoiceEmail:this.formModel.invoiceEmail,//银行类型
-        }
-          this.zjControl.relationAdd(params).then(() => {
-          this.$Message.success('新增成功！')
-          this.dialogVisible = false;
-          this.dataNull()
-        })
-      }else{
-        alert("修改")
-        console.log(row,"1111111")
-      }
-    },
     //修改
     edit(row) {
       this.type = "edit";
@@ -278,6 +256,44 @@ export default {
     dialogVisibleTo(){
       this.dialogVisible = false;
       this.dataNull()
+    },
+    //保存
+    save(row){
+      console.log(row,'============')
+      if(this.type == "add"){
+        alert("保存")
+        let params = {
+          entName:this.relList.bankAccname,//买方企业名称
+          invoiceTaxpayerId:this.formModel.buyerEntName,//卖方企业名称
+          invoiceAddress:this.formModel.bankAccount,//卖方银行账号
+          invoicePhone:this.formModel.invoicePhone,//卖方银行账号户名
+          invoiceBankInfo:this.formModel.invoiceBankInfo,//卖方企业开户行
+          invoiceBankAccno:this.formModel.invoiceBankAccno,//银行联号
+          invoiceEmail:this.formModel.invoiceEmail,//银行类型
+        }
+          this.zjControl.relationAdd(params).then(() => {
+          this.$Message.success('新增成功！')
+          this.dialogVisible = false;
+          this.dataNull()
+        })
+      }
+      if(this.type == "edit"){
+        alert("修改")
+        let params = {
+          entName:this.relList.bankAccname,//买方企业名称
+          invoiceTaxpayerId:this.formModel.buyerEntName,//卖方企业名称
+          invoiceAddress:this.formModel.bankAccount,//卖方银行账号
+          invoicePhone:this.formModel.invoicePhone,//卖方银行账号户名
+          invoiceBankInfo:this.formModel.invoiceBankInfo,//卖方企业开户行
+          invoiceBankAccno:this.formModel.invoiceBankAccno,//银行联号
+          invoiceEmail:this.formModel.invoiceEmail,//银行类型
+        }
+          this.zjControl.relationEnt(params).then(() => {
+          this.$Message.success('修改成功！')
+          this.dialogVisible = false;
+          this.dataNull()
+        })
+      }
     },
     //上传证明材料
     upCredential(row) {
