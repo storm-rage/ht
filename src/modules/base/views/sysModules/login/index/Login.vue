@@ -14,7 +14,7 @@
               <login-type v-model="userData.pwdVerifyMode" @change="handleChangeLoginType"></login-type>
                 <!--     登录表单       -->
                 <el-form status-icon ref="userForm" class="demo-ruleForm" :statusIcon="false" :model="userData" :rules="userRules" >
-                  <div>手机号</div>
+                  <div style="font-size:16px;">手机号</div>
                     <el-form-item prop="loginName">
                         <el-input type="text" v-model="userData.loginName" name="loginName"
                                   :placeholder="userData.pwdVerifyMode==='1'?'请输入账户名':'请输入手机号'"
@@ -27,7 +27,7 @@
                           </div>
                         </el-input>
                     </el-form-item>
-                  <div v-if="userData.pwdVerifyMode==='1'">密码</div> 
+                  <div style="font-size:16px;" v-if="userData.pwdVerifyMode==='1'">密码</div> 
                     <el-form-item prop="password" class="zj-m-b-18 password-block" v-if="userData.pwdVerifyMode==='1'">
                         <el-input v-model="userData.password" placeholder="请输入密码"
                                   size="medium"
@@ -44,7 +44,7 @@
                         </el-input>
 <!--                      <router-link to="/forgotPassword" class="fr right-text">忘记密码?</router-link>-->
                     </el-form-item>
-                    <div>图形验证码</div>
+                    <div style="font-size:16px;">图形验证码</div>
                     <el-form-item prop="captcha">
                         <el-input type="text" v-model="userData.captcha" placeholder="请输入验证码"
                                   :maxlength=4
@@ -64,7 +64,7 @@
                         </div>
                     </el-form-item>
                     <!--     当为首次登录时      -->
-                    <div v-if="isOneLogin||userData.pwdVerifyMode==='2'">手机验证码</div>
+                    <div style="font-size:16px;" v-if="isOneLogin||userData.pwdVerifyMode==='2'">手机验证码</div>
                     <el-form-item prop="smsCode" v-if="isOneLogin||userData.pwdVerifyMode==='2'" class="login-one">
                         <el-input placeholder="请输入手机验证码" v-model="userData.smsCode" size="medium">
                             <template slot="append">
