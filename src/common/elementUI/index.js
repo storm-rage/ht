@@ -4,7 +4,7 @@ import ElementUI from 'element-ui'
 
 export default {
   install: function (Vue) {
-    Vue.use(ElementUI)
-    Vue.prototype.$ELEMENT = { size: 'small' }
+    Vue.use(ElementUI,{size: 'small'})
+    // Vue.prototype.$ELEMENT = { size: 'small' }
   }
 }

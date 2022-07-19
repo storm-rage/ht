@@ -1389,5 +1389,15 @@
 </script>
 
 <style lang="less">
+.zj-table {
+  .zj-vxe-table {
+    .vxe-table--body-wrapper{
+      .el-tag +.el-tag{
+        margin-left: 2px;
+      }
+    }
+  }
+
+}
 </style>
 <!--<style lang="less" src="./ZjTable.less"/>-->
