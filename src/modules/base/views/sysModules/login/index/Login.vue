@@ -14,7 +14,8 @@
               <login-type v-model="userData.pwdVerifyMode" @change="handleChangeLoginType"></login-type>
                 <!--     登录表单       -->
                 <el-form status-icon ref="userForm" class="demo-ruleForm" :statusIcon="false" :model="userData" :rules="userRules" >
-                  <div style="font-size:16px;">手机号</div>
+                  <div style="font-size:16px;" v-if="userData.pwdVerifyMode==='1'">账户</div>
+                  <div style="font-size:16px;" v-else>手机号</div>
                     <el-form-item prop="loginName">
                         <el-input type="text" v-model="userData.loginName" name="loginName"
                                   :placeholder="userData.pwdVerifyMode==='1'?'请输入账户名':'请输入手机号'"
@@ -88,7 +89,20 @@
                   <a @click="$router.push('/forgotPassword')"  class="zj-f-r right-text pointer">忘记密码</a>
                 </el-row>
             </el-card>
+            <div class="fooTer">
+                <div class="logTop">
+                  <span>关于</span>
+                  <div>|</div>
+                  <span>帮助中心</span>
+                  <div>|</div>
+                  <span>公司主页</span>
+                  <div>|</div>
+                  <span>联系我们</span>
+                </div>
+                <div class="logBottom">@2021 海天</div>
+            </div>
         </div>
+        
         <!--    底部组件    -->
         <!-- <LoginFooter></LoginFooter> -->
         <!--    强制修改密码    -->
@@ -103,10 +117,43 @@
     export default login;
 </script>
 <style lang="less" scoped>
+/*覆写样式*/
 .loginBody /deep/ .el-link.el-link--primary {
     padding: 0!important;
     border-bottom: 3px solid #165DFF;
     color: #165DFF; }
+.fooTer{
+  position: absolute;
+  bottom: 0px;
+  right: 0;
+  width: 35%;
+  height: 15%;
+  background: #EDF4FB;
+  min-width: 370px;
+  .logTop{
+    width: 100%;
+    height: 80%;
+    padding: 20px 60px;
+    box-sizing: border-box;
+    display: flex;
+    justify-content: space-between;
+    span{
+      font-size: 16px;
+      color:#303133;
+    }
+    div{
+      color: #DCDFE6;
+    }
+  }
+  .logBottom{
+    width: 100%;
+    font-size: 14px;
+    color: #909399;
+    text-align: center;
+    position: absolute;
+    bottom: 10px;
+  }
+}
 </style>
 <style lang="less" src="./css/login.less"></style>
 <style lang="less" scoped src="./css/login_scoped.less"></style>
