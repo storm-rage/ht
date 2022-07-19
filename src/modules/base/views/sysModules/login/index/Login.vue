@@ -102,10 +102,11 @@
     import login from "./js/login"
     export default login;
 </script>
-<style lang="less" src="./css/login.less">
- .el-link.el-link--primary {
+<style lang="less" scoped>
+.loginBody /deep/ .el-link.el-link--primary {
     padding: 0!important;
     border-bottom: 3px solid #165DFF;
     color: #165DFF; }
 </style>
+<style lang="less" src="./css/login.less"></style>
 <style lang="less" scoped src="./css/login_scoped.less"></style>
