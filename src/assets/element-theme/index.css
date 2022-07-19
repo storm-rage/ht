@@ -54439,14 +54439,10 @@
     .el-link.el-link--default.is-disabled {
       color: #C0C4CC; }
   .el-link.el-link--primary {
-    padding: 0!important;
-    border-bottom: 3px solid #165DFF;
     color: #165DFF; }
     .el-link.el-link--primary:hover {
       color: #457dff; }
     .el-link.el-link--primary:after {
-      padding: 0!important;
-      border-bottom: 3px solid #165DFF;
       border-color: #165DFF; }
     .el-link.el-link--primary.is-disabled {
       color: #8baeff; }
