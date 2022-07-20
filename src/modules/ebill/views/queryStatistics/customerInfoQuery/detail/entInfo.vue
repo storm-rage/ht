@@ -1,7 +1,8 @@
 <template>
   <zj-content-container>
-    <!--  企业信息  -->
-      <zj-form :model="form">
+    <!--  企业信息明细  -->
+    <zj-top-header title="企业信息明细"/>
+    <zj-form :model="form">
         <zj-content-block>
           <zj-header title="客户基本信息"/>
           <el-row>

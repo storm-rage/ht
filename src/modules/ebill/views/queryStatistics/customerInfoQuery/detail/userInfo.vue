@@ -1,6 +1,7 @@
 <template>
   <zj-content-container>
-    <!--  用户信息  -->
+    <!--  客户信息明细  -->
+    <zj-top-header title="客户信息明细"/>
     <zj-list-layout>
       <zj-table ref="searchTable" :dataList="list">
         <zj-table-column field="field1" title="姓名"/>

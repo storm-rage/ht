@@ -13,18 +13,18 @@ const customerInfoQueryRouter = [
       notRequireAuth: true
     }
   },
-  // {
-  //   path: '/queryAccountBillDetail',
-  //   name: 'queryAccountBillDetail',
-  //   component: () => import('../views/queryStatistics/billSearch/detail'),
-  //   meta:{
-  //     isMock:false,
-  //     title:`企业信息明细`,
-  //     keepAlive:true,
-  //     parent:'billSearch',
-  //     refreshIndex:0,
-  //     notRequireAuth: true
-  //   }
-  // },
+  {
+    path: '/customerInfoQueryDetail',
+    name: 'customerInfoQueryDetail',
+    component: () => import('../views/queryStatistics/customerInfoQuery/detail'),
+    meta:{
+      isMock:false,
+      title:`企业信息明细`,
+      keepAlive:true,
+      parent:'customerInfoQuery',
+      refreshIndex:0,
+      notRequireAuth: true
+    }
+  },
 ]
 export default customerInfoQueryRouter

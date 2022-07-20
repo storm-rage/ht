@@ -1,7 +1,6 @@
 <template>
   <zj-content-container>
     <!--  企业信息明细  -->
-    <zj-top-header title="企业信息明细"/>
     <el-tabs v-model="tabs" type="card" class="zj-tabs-card">
       <el-tab-pane label="企业信息" name="entInfo" >
         <ent-info :zjControl="zjControl" :uDictionary="uDictionary" :uBtn="zjBtn"/>
