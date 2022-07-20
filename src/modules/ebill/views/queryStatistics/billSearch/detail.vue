@@ -5,25 +5,25 @@
       <zj-top-header title="对账单详情"/>
       <zj-content-block>
         <zj-header title="对账单信息"></zj-header>
-        <zj-table ref="searchTable" class="zj-search-table" :params="detail.row"
-                  :pager="false"
+        <zj-table ref="searchTable" class="zj-search-table" :dataList="detail.row"
+
         >
           <zj-table-column field="acctBillCode" title="对账单编号" />
           <zj-table-column field="companyName" title="买方名称" />
-          <zj-table-column field="supplierCode" title="供应商编码" :formatter="date"/>
-          <zj-table-column field="supplierName" title="供应商名称" :formatter="money"/>
-          <zj-table-column field="checkBillDate" title="对账日期" :formatter="money"/>
-          <zj-table-column field="estimatedPaymentDate" title="预计付款日期" :formatter="money"/>
+          <zj-table-column field="supplierCode" title="供应商编码"/>
+          <zj-table-column field="supplierName" title="供应商名称" />
+          <zj-table-column field="checkBillDate" title="对账日期" :formatter="date"/>
+          <zj-table-column field="estimatedPaymentDate" title="预计付款日期" :formatter="date"/>
           <zj-table-column field="checkBillAmt" title="对账单金额" :formatter="money"/>
-          <zj-table-column field="isApplyVoucher" title="是否申请开立债权凭证" :formatter="money"/>
+          <zj-table-column field="isApplyVoucher" title="是否申请开立债权凭证"/>
           <zj-table-column field="billSource" title="对账人" />
-          <zj-table-column field="billSource" title="对账单来源" :formatter="money"/>
+          <zj-table-column field="billSource" title="对账单来源" />
 
         </zj-table>
       </zj-content-block>
       <zj-content-block>
         <zj-header title="对账单明细"></zj-header>
-        <zj-table ref="searchTable" class="zj-search-table" :dataList="detail.billDetailList" :pager="false"
+        <zj-table ref="searchTable" class="zj-search-table" :dataList="detail.billDetailList"
         >
           <zj-table-column field="dnNo" title="DN合并号" />
           <zj-table-column field="customerNo" title="客户编号" />
@@ -61,22 +61,29 @@ export default {
         queryTrmAccountBillPage:this.$api.billSearch.queryTrmAccountBillPage,//TMS详情
       },
       detail: {
-        row: this.row,
+        row: [],
         billDetailList: [],
       },
-      billSource: this.row.billSource,
+      billSource: '',
     }
   },
   methods: {
-    attaDownLoad(){},
     getDetail() {
+      this.billSource = this.row.billSource
+      console.log(this.billSource)
+      this.detail.row.push(this.row)
+      let params = {
+        acctBillCode: this.row.acctBillCode,
+        page: 1,
+        rows: 10,
+      }
       if(this.billSource == 'SRM') {
-        this.zjControl.querySrmAccountBillPage(this.row.acctBillCode).then(res => {
-          this.detail.billDetailList = res.data
+        this.zjControl.querySrmAccountBillPage(params).then(res => {
+          this.detail.billDetailList = res.data.rows
         })
       }else if(this.billSource == 'TMS') {
-        this.zjControl.queryTrmAccountBillPage(this.row.acctBillCode).then(res => {
-          this.detail.billDetailList = res.data
+        this.zjControl.queryTrmAccountBillPage(params).then(res => {
+          this.detail.billDetailList = res.data.rows
         })
       }
     }
@@ -85,6 +92,7 @@ export default {
     this.getApi()
     this.getRow()
     this.getDetail()
+    console.log(this.row)
   }
 }
 </script>

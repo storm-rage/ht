@@ -5,12 +5,12 @@ const billSearchRouter = [
     name: 'queryAccountBill',
     component: () => import('../views/queryStatistics/billSearch'),
     meta: {
-      // isMock: true,
+      isMock: true,
       title: `对账单查询`,
       root: '查询统计',
       keepAlive: true,
       refreshIndex: 0,
-      // notRequireAuth: true
+      notRequireAuth: true
     }
   },
   {

@@ -1,7 +1,7 @@
 <template>
   <div>
     <zj-content-container>
-      <!--  对账单查询  -->
+      <!--  客户信息查询  -->
           <div class="zj-search-condition zj-m-b-20" style="border-bottom: none;">
             <zj-list-layout>
               <template slot="leftBtns">
@@ -94,7 +94,7 @@
               <zj-table ref="searchTable" :params="searchForm" :api="zjControl.queryStatementSrmAccountBillPage">
                 <zj-table-column title="对账单编号">
                   <template v-slot="{row}">
-                    <zj-button type="text" @click="goChild('queryAccountBillDetail',row)">{{row.acctBillCode}}</zj-button>
+                    <zj-button type="text" @click="goChild('queryAccountBillDetail',row.acctBillCode)">{{row.acctBillCode}}</zj-button>
                   </template>
                 </zj-table-column>
                 <zj-table-column field="companyName" title="买方名称"/>
