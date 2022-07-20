@@ -99,7 +99,7 @@ export default {
       this.goChild('multistageAgreementMaintain')
     },
     toDetail (row) {
-      this.goChild('multistageAgreementDetailToDo', row)
+      this.goChild('financingReviewSettleDetail', row)
     },
     toEdit (row) {
       this.goChild('productInfoManageEdit', row)
