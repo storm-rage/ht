@@ -1,6 +1,6 @@
 <template>
   <zj-content-container>
-    <zj-list-layout>
+    <zj-list-layout ref="dd">
       <template slot="searchForm">
         <el-form ref="searchForm" :model="searchForm" class="search-form">
           <el-form-item label="企业名称：">
@@ -107,7 +107,7 @@
                 </template>
               </template>
             </template>
-            <template v-else>——</template>
+            <template v-else>—</template>
           </template>
         </zj-table-column>
         <zj-table-column
@@ -210,7 +210,7 @@ export default {
     // 企业注册状态
     getRegisterStateList(data) {
       data.forEach((item, index) => {
-        if (index !== 0 || index !== 1) {
+        if (index !== 0 && index !== 1) {
           //2-待平台初审 3-待平台复审 4-待发证 5-注册拒绝 6-平台拒绝
           this.registerStateList.push(item);
         }

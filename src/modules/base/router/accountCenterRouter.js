@@ -23,7 +23,9 @@ const accountCenter = [
       title:'我的基本信息',
       root:'账户中心',
       keepAlive:true,
-      refreshIndex:0
+      refreshIndex:0,
+      notRequireAuth: true
+
     }
   },
   {
