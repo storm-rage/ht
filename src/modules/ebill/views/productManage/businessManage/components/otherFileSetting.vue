@@ -5,8 +5,8 @@
       <zj-content>
         <el-row>
           <el-col :span="24">
-            <el-form-item label="备注：" label-width="100px">
-              <el-input :disabled="!isEdit" v-model="form.field3"></el-input>
+            <el-form-item label="备注：" label-width="100px" prop="remark">
+              <el-input :disabled="!isEdit" v-model="form.remark"></el-input>
             </el-form-item>
           </el-col>
         </el-row>
@@ -48,14 +48,28 @@
 </template>
 <script>
 export default {
-  components: {},
-
   props: {
+    // 附件列表
+    attachList: {
+      type: Array,
+      default: () => {
+        return [];
+      }
+    },
+    remark:String,
     // 是否可以编辑表单
     isEdit: {
       type: Boolean,
       default: false
     },
+  },
+  watch: {
+    attachList () {
+      this.fileList = this.attachList;
+    },
+    remark () {
+      this.form.remark = this.remark
+    }
   },
   data() {
     return {
@@ -63,7 +77,7 @@ export default {
       form: {},
       rules: {},
       // 列表
-      fileList: [],
+      fileList: this.attachList,
       // 当前编辑行
       currentEditRow: {},
       // 当前编辑index
@@ -104,7 +118,8 @@ export default {
       const row =  {
         fileName: '',
         remark: '',
-        fileId: ''
+        fileId: '',
+        id: ''
       }
       this.fileList.push(row);
       this.$refs.fileTable.setActiveRow(row);

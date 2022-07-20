@@ -40,7 +40,7 @@
         </zj-content>
       </zj-content-block>
       <!--  产品业务设置    -->
-      <product-biz-setting ref="productSetting" title="产品业务设置" is-edit></product-biz-setting>
+      <order-product-biz-setting ref="productSetting" title="产品业务设置" is-edit></order-product-biz-setting>
     </el-form>
     <div slot="footer" class="zj-center" style="display: block;width: 100%">
       <el-button style="width: 100px" size="small" type="primary" @click="submit">确认</el-button>
@@ -49,10 +49,10 @@
   </el-dialog>
 </template>
 <script>
-import ProductBizSetting from '../../components/productBizSetting';
+import OrderProductBizSetting from '../../components/orderProductBizSetting';
 export default {
   components: {
-    ProductBizSetting
+    OrderProductBizSetting
   },
   data () {
     return {

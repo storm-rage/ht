@@ -97,7 +97,7 @@
     <zj-content-block v-if="currentContractRow.id">
       <zj-header title="贸易关系"></zj-header>
       <zj-content>
-        <zj-table ref="searchTradeTable" :params="tradeParams" :api="zjControl.tradeTableApi">
+        <zj-table ref="searchTradeTable" :pager="false" :dataList="tradeList">
           <zj-table-column field="buyerName" title="核心企业名称"/>
           <zj-table-column field="isHtEnterprise" title="核心企业是否海天集团" :formatter="(obj) => typeMap(dictionary.isHtEnterprise, obj.cellValue)"/>
           <zj-table-column
@@ -155,7 +155,9 @@ export default {
       // 贸易关系查询的参数
       tradeParams: {},
       // 字典
-      dictionary: {}
+      dictionary: {},
+      // 贸易关系列表
+      tradeList: []
     };
   },
   created() {
@@ -181,25 +183,33 @@ export default {
       }
     },
     /**
-     *
+     *合同详情
      * @param row
      */
     toContractDetail(row) {
       this.goChild('businessDetail',{id: row.id});
     },
     /**
-     *
+     *合同续签
      * @param row
      */
     toContractSign(row) {
-      this.$router.push({name: 'contractReSign'});
+      this.goChild('contractReSign',{id: row.id});
     },
     handleRadioChange({row}) {
       this.currentContractRow = row;
       this.tradeParams.id = row.id;
-      if (this.$refs.searchTradeTable) {
-        this.$refs.searchTradeTable.iRefresh(true)
-      }
+      this.getTradeList();
+    },
+    /**
+     * 出现贸易关系列表
+     */
+    getTradeList () {
+      this.zjControl.tradeTableApi(this.tradeParams).then(res => {
+        if (res.success) {
+          this.tradeList = res.data.tradeRelationModelList;
+        }
+      });
     },
     toMaintenance (row) {
       this.$router.push({name: 'tradeRelationMaintenance'})

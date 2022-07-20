@@ -6,7 +6,10 @@
                         :params="businessParamModel"
                         :dic="dictionary"></supplier-base-info>
     <!--  贸易关系  -->
-    <trade-detail :tradeList="tradeRelationModelList"></trade-detail>
+    <trade-detail
+      :tradeList="tradeRelationModelList"
+      :dic="dictionary"
+      :prodInfo="prodInfo"></trade-detail>
     <zj-content-footer>
       <zj-button  @click="goParent">返回</zj-button>
     </zj-content-footer>
@@ -31,7 +34,9 @@ export default {
       //贸易关系列表
       tradeRelationModelList: [],
       // 字典
-      dictionary: {}
+      dictionary: {},
+      // 产品信息
+      prodInfo: {}
     }
   },
   created() {
@@ -45,14 +50,18 @@ export default {
       this.zjControl.getBusinessParamDetail({id: this.row.id}).then(res => {
         this.businessParamModel = res.data.businessParamModel;
         this.tradeRelationModelList = res.data.tradeRelationModelList;
+        this.prodInfo = {
+          productTypes: this.businessParamModel.productType.split(','),
+          rdProductName: this.businessParamModel.rdProductName,
+          ddProductName: this.businessParamModel.ddProductName
+        }
       });
     },
     getDic () {
       this.zjControl.getDataDirectory().then(res => {
         this.dictionary = res.data
       })
-    },
-    back() {}
+    }
   }
 }
 </script>
