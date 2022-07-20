@@ -36,7 +36,7 @@ export default {
 <style lang="less">
 .logImg{
     width: 100%;
-    height: 100px;
+    height: 80px;
     text-align: center;
     .loginBody{
       display: inline-block;

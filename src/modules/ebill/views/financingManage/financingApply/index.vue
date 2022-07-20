@@ -16,7 +16,7 @@
 import orderFinancing from "./orderFinancing/orderFinancing";
 import voucherFinancing from "./voucherFinancing/voucherFinancing";
 export default {
-  name: "registerManage",
+  name: "financingManage",
   components: {
     orderFinancing,voucherFinancing
   },

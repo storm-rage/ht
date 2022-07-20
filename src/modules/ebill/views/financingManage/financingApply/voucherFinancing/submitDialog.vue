@@ -2,7 +2,7 @@
   <el-dialog
     title="温馨提示"
     :visible.sync="dialogShow" width="600px"
-    :close-on-click-modal="false" center
+    :close-on-click-modal="false" left
   >
     <div>
       <p>请提示复核人员在融资开始日下午3:00前完成审批，谢谢！是否确认提交复核？</p>
