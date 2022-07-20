@@ -206,9 +206,9 @@
       <!-- 底部按钮栏 -->
       <zj-content-footer>
         <el-row class="ta-c w85 fixed-footer-btns">
-          <zj-button type="primary" @click="passRecheck('复核通过')">审核通过</zj-button>
-          <zj-button class="btn-warning" @click="rejectRecheck('复核拒绝')">审核拒绝</zj-button>
-          <zj-button class="back" @click="back('返回上一层')">返回</zj-button>
+          <zj-button type="primary" @click="recheck('复核通过')">审核通过</zj-button>
+          <zj-button class="btn-warning" @click="recheck('复核拒绝')">审核拒绝</zj-button>
+          <zj-button class="back" @click="goParent">返回</zj-button>
         </el-row>
       </zj-content-footer>
       <pass-recheck-dialog ref="passRecheckDialog"/>
@@ -258,17 +258,11 @@ export default {
     attaDelete() {},
     attaDownLoad() {},
     infoUpload() {},
-    passRecheck(flag) {
-      this.$refs.passRecheckDialog.open(flag)
-    },
-    rejectRecheck(flag) {
-      this.$refs.passRecheckDialog.open(flag)
-    },
-    back(flag) {
+    recheck(flag) {
       this.$refs.passRecheckDialog.open(flag)
     },
     submit(){
-      this.$refs.submitDialog.open({form: this.form}, true)
+      // this.$refs.submitDialog.open({form: this.form}, true)
     },
   }
 }
