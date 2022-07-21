@@ -5,7 +5,7 @@
       <tempalte slot="searchForm">
         <el-form ref="searchForm" :model="searchForm">
           <el-form-item label="融资企业：">
-            <el-input v-model="searchForm.supplierName" @keyup.enter.native="enterSearch"/>
+            <el-input v-model.trim="searchForm.supplierName" @keyup.enter.native="enterSearch"/>
           </el-form-item>
           <el-form-item label="融资到期日：">
             <zj-date-range-picker
@@ -23,7 +23,7 @@
             />
           </el-form-item>
           <el-form-item label="融资申请流水号：">
-            <el-input v-model="searchForm.entName" @keyup.enter.native="enterSearch"/>
+            <el-input v-model.trim="searchForm.entName" @keyup.enter.native="enterSearch"/>
           </el-form-item>
         </el-form>
       </tempalte>

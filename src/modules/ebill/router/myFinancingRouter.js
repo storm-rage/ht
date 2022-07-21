@@ -18,7 +18,7 @@ const myFinancingRouter = [
     component: () => import('../views/financingManage/myFinancing/detail'),
     meta: {
       isMock: true,
-      title: '入库融资详情',
+      title: '融资详情',
       root: '融资管理',
       keepAlive: true,
       refreshIndex: 0,

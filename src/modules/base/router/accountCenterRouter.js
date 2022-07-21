@@ -1,51 +1,46 @@
 /**
- * 账户中心 路由
+ * 个人中心 路由
  */
 
 
 const accountCenter = [
   {
-    path: '/myEntBank',
-    name: 'myEntBank',
-    component: () => import('../views/sysModules/accountCenter/corporateBankAccount.vue'),
+    path: '/personalCenter',
+    name: 'personalCenter',
+    component: () => import('../views/sysModules/personalCenter/index.vue'),
     meta:{
-      title:'企业银行账户',
-      root:'账户中心',
+      title:'个人中心',
+      root:'个人中心',
       keepAlive:true,
-      refreshIndex:0
+      refreshIndex:0,
+      notRequireAuth: true
+
     }
   },
   {
-    path: '/myBasicInformation',
-    name: 'myBasicInformation',
-    component: () => import('../views/sysModules/accountCenter/myBasicInformation.vue'),
+    path: '/entInfoMaintain',
+    name: 'entInfoMaintain',
+    component: () => import('../views/sysModules/personalCenter/entInfoMaintain'),
     meta:{
-      title:'我的基本信息',
-      root:'账户中心',
+      title:'企业信息维护',
+      root:'个人中心',
       keepAlive:true,
-      refreshIndex:0
+      refreshIndex:0,
+      notRequireAuth: true
+
     }
   },
   {
-    path: '/myBillingInformation',
-    name: 'myBillingInformation',
-    component: () => import('../views/sysModules/accountCenter/myBillingInformation.vue'),
+    path: '/userInfoMaintain',
+    name: 'userInfoMaintain',
+    component: () => import('../views/sysModules/personalCenter/userInfoMaintain'),
     meta:{
-      title:'我的开票信息',
-      root:'账户中心',
+      title:'个人信息维护',
+      root:'个人中心',
       keepAlive:true,
-      refreshIndex:0
-    }
-  },
-  {
-    path: '/myBusinessUsers',
-    name: 'myBusinessUsers',
-    component: () => import('../views/sysModules/accountCenter/myBusinessUsers.vue'),
-    meta:{
-      title:'我的企业用户',
-      root:'账户中心',
-      keepAlive:true,
-      refreshIndex:0
+      refreshIndex:0,
+      notRequireAuth: true
+
     }
   }
 ]
