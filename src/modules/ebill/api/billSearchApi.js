@@ -20,7 +20,7 @@ const billSearch = {
   },
   //TMS详情
   queryTrmAccountBillPage: (params) => {
-    return request.get('/statement-account-bill/query-trm-account-bill-page',{params})
+    return request.get('/statement-account-bill/query-tms-account-bill-page',{params})
   },
 }
 export default billSearch
