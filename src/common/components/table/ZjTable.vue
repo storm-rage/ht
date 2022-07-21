@@ -562,6 +562,7 @@
           } else {
             this.tableData = res.data ? res.data.rows : []
             this.tablePagerTotal = res.data ? res.data.total : 0
+            this.$emit('after-load',this.tableData);
           }
           window.setTimeout(()=>{
             this.reqKey = true

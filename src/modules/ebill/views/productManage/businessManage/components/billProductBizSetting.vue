@@ -94,9 +94,6 @@ export default {
     handleBillMaintenanceDone (obj) {
       this.form = Object.assign({}, obj);
     },
-    getForm () {
-      return this.$refs.form;
-    },
     getData () {
       return this.form;
     }

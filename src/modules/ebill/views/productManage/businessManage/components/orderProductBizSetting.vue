@@ -82,7 +82,7 @@
                           :rules="[
                           {required: true,message: '请输入订单融资月利率',trigger: ['change','blur']}
                         ]">
-              <zj-number-input :disabled="!isEdit" v-model="form.factoringFinancingMonthRate">
+              <zj-number-input :disabled="!isEdit&&!isOnlyMonthRateEdit" v-model.trim="form.factoringFinancingMonthRate">
                 <template slot="append">%</template>
               </zj-number-input>&nbsp;<zj-text-tip text="注：订单融资日利率=订单融资月利率/30"></zj-text-tip>
             </el-form-item>
@@ -105,6 +105,11 @@ export default {
     },
     // 是否可以编辑表单
     isEdit: {
+      type: Boolean,
+      default: false
+    },
+    // 4.	若维护订单保理，只能维护“订单融资月利率”（单个贸易关系维护）
+    isOnlyMonthRateEdit: {
       type: Boolean,
       default: false
     },
@@ -165,7 +170,10 @@ export default {
       factoringCreditEndDateConfig: {
         disabledDate:(time)=> {
           if (this.form.factoringCreditStartDate) {
-            return time.getTime() < this.$moment(this.form.factoringCreditStartDate)
+            if (this.form.contractEndDate) {
+              return time.getTime() < this.$moment(this.form.factoringCreditStartDate) || time.getTime()>this.$moment(this.form.contractEndDate)
+            }
+            return time.getTime() < this.$moment(this.form.factoringCreditStartDate) || time.getTime() > this.$moment().add(2, 'years');
           }
         }
       }

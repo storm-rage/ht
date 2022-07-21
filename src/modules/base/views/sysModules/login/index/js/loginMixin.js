@@ -105,6 +105,7 @@ export default {
       this.$store.dispatch('user/setUserInfo', {
         userName: loginRes.userName,
         loginName: loginRes.loginName,
+        lastLoginTime: loginRes.lastLoginTime,
         // password:this.userData.password,
         entName: loginRes.entName,
         entType: loginRes.entType,

@@ -11,23 +11,23 @@
         <zj-collapse title="业务联系人" tipText="注：该联系人为签署商业保理合同业务联系人。">
           <el-row>
             <el-form-item label="联系人：" prop="businessPerson">
-              <el-input v-model="form.businessPerson" />
+              <el-input v-model.trim="form.businessPerson" />
             </el-form-item>
             <el-form-item label="联系号码：" prop="businessPhone">
-              <el-input v-model="form.businessPhone" />
+              <el-input v-model.trim="form.businessPhone" />
             </el-form-item>
             <el-form-item label="联系邮箱：" prop="businessEmail">
-              <el-input v-model="form.businessEmail" />
+              <el-input v-model.trim="form.businessEmail" />
             </el-form-item>
             <el-form-item label="联系地址：" prop="businessAddress">
-              <el-input v-model="form.businessAddress" />
+              <el-input v-model.trim="form.businessAddress" />
             </el-form-item>
           </el-row>
         </zj-collapse>
       </zj-content>
     </el-form>
     <zj-content-footer>
-      <zj-button type="primary" @click="submit" :api="zjBtn.openApply">确认申请</zj-button>
+      <zj-button type="primary" :disabled="loading" @click="submit" :api="zjBtn.openApply">确认申请</zj-button>
       <zj-button @click="goParent">返回</zj-button>
     </zj-content-footer>
   </div>
@@ -68,6 +68,7 @@ export default {
       },
       //产品
       productModelList: [],
+      loading: false,
       rules:{
         businessPerson:[
           {required: true,message: '请输入联系人',trigger: ['blur','change']}
@@ -120,12 +121,16 @@ export default {
             confirmButtonText: '确定',
             cancelButtonText: '取消'
           }).then(() => {
+            this.loading = true;
             this.zjControl.openApply(this.form).then(res => {
+              this.loading = false;
               //成功，关闭
               if (res.success) {
                 this.$message.success(res.msg);
                 this.goParent();
               }
+            }).catch(() => {
+              this.loading = false;
             })
           })
         }

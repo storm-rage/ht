@@ -57,7 +57,7 @@
                           {required: true,message: '请选择结算周期',trigger: ['change','blur']}
                         ]">
                 <el-select :disabled="!isEdit" v-model="form.settlementCycle" placeholder="请选择">
-                  <el-option v-for="(item,index) in dic.cactoringLogo"
+                  <el-option v-for="(item,index) in dic.settlementCycle"
                              :key="`${index}settlementCycle`"
                              :label="item.desc"
                              :value="item.code"></el-option>
@@ -102,11 +102,11 @@
       <other-file-setting ref="ofileSetting"
                           :is-edit="isEdit"
                           :remark="form.remark"
-                          :attachList="[]"></other-file-setting>
+                          :attachList="form.attachModelList"></other-file-setting>
     </el-form>
     <div slot="footer" class="zj-center" style="display: block;width: 100%">
-      <el-button size="small" :loading="loading" type="primary" v-if="isEdit" @click="save">保存</el-button>
-      <el-button size="small" @click="close">取 消</el-button>
+      <el-button size="small" style="width: 100px" :loading="loading" type="primary" v-if="isEdit" @click="save">保存</el-button>
+      <el-button size="small" style="width: 100px" @click="close">取 消</el-button>
     </div>
   </el-dialog>
 </template>
@@ -123,6 +123,23 @@ export default {
     bizId: String
   },
   computed: {
+    cactoringLogoList () {
+      if (this.dic.cactoringLogo) {
+        return this.dic.cactoringLogo.filter((item) => {
+          if (this.isRD&&this.isDDBL) {
+            return true;
+          }else if(this.isRD&&!this.isDDBL) {
+            //若开通凭证保理产品，则只能维护为“凭证保理”
+            return item.code!=='3'
+          }else if(!this.isRD&&this.isDDBL) {
+            //若开通订单保理产品，则只能维护为“订单保理”
+            return item.code!=='1'
+          }
+          return false;
+        });
+      }
+      return [];
+    },
     // 电子债券凭证
     isRD () {
       return this.prodInfo.productTypes&&this.prodInfo.productTypes.includes(ProductType.RD);
@@ -149,53 +166,98 @@ export default {
     }
   },
   methods: {
-    show(row,isEdit = false) {
-      this.$api.businessManage.getTradeRelationDetail({busTradeId: row.busTradeId,id: this.bizId,tradeId: row.tradeId}).then(res => {
-        this.form = res.data.tradeRelationModel
-        const businessParamModel = res.data.businessParamModel;
-        this.prodInfo = {
-          productTypes: businessParamModel.productType.split(','),
-          rdProductName: businessParamModel.rdProductName,
-          ddProductName: businessParamModel.ddProductName
-        }
+    show(row,isEdit = false,isNeedReq = true) {
+      if (isNeedReq) {
+        this.$api.businessManage.getTradeRelationDetail({busTradeId: row.busTradeId,id: this.bizId,tradeId: row.tradeId}).then(res => {
+          this.form = res.data.tradeRelationModel
+          const businessParamModel = res.data.businessParamModel;
+          this.prodInfo = {
+            productTypes: businessParamModel.productType.split(','),
+            rdProductName: businessParamModel.rdProductName,
+            ddProductName: businessParamModel.ddProductName
+          }
+          this.isEdit = isEdit;
+          this.dialogVisible = true;
+        });
+      }else {
+        this.form = {...row};
         this.isEdit = isEdit;
         this.dialogVisible = true;
-      });
-    },
-    async save () {
-      this.loading = true;
-      const valid = await this.$refs.form.validate();
-      console.log(valid);
-      if (valid) {
-        let rdChildValid = null;
-        let ddChildValid = null;
-        if (this.isRD) {
-          const billData = this.$refs.bbizSetting.getData();
-          if (billData.billFactoringModelList.length) {
-            rdChildValid = true;
-          }else {
-            rdChildValid = false;
-            this.$messageBox({
-              type:'warning',
-              content:`请维护${this.prodInfo.rdProductName}业务设置`
-            })
-          }
-        }
-        if(this.isDDBL) {
-          ddChildValid = await this.$refs.pbizSetting.getForm().validate();
-        }
-        console.info(rdChildValid)
-        console.info(ddChildValid)
-        if (rdChildValid===false||rdChildValid===null) {
-          this.loading = false;
-        }else if (ddChildValid===false||ddChildValid===null) {
-          this.loading = false;
-        }else {
-          // todo:
-        }
-      }else {
-        this.loading = false;
       }
+
+    },
+    save () {
+      this.loading = true;
+      this.$refs.form.validate((valid) => {
+        if (valid) {
+          // 附件
+          const fileData = this.$refs.ofileSetting.getData()
+          // 有三种情况
+          if (this.isRD&&!this.isDDBL) {
+            const billData = this.$refs.bbizSetting.getData();
+            if (billData.billFactoringModelList.length) {
+              // 赋值
+              this.form.attachModelList = fileData.list;
+              this.form.remark = fileData.remark;
+              this.form.openGraceDays = billData.openGraceDays;
+              this.form.billFactoringModelList = billData.billFactoringModelList;
+              this.$emit('done',this.form);
+              this.loading = false;
+              this.close();
+            }else {
+              this.loading = false;
+              this.$messageBox({
+                type:'warning',
+                content:`请维护${this.prodInfo.rdProductName}业务设置`
+              })
+              return;
+            }
+          }else if(!this.isRD&&this.isDDBL) {
+            this.$refs.pbizSetting.getForm().validate((valid) => {
+              if (valid) {
+                // 赋值
+                this.form.attachModelList = fileData.list;
+                this.form.remark = fileData.remark;
+                const orderData = this.$refs.pbizSetting.getData();
+                this.form.orderFactoringModel = orderData;
+                this.$emit('done',this.form);
+                this.loading = false;
+                this.close();
+              }else {
+                this.loading = false;
+              }
+            });
+          }else if(this.isRD&&this.isDDBL) {
+            const billData = this.$refs.bbizSetting.getData();
+            if (!billData.billFactoringModelList.length) {
+              this.loading = false;
+              this.$messageBox({
+                type:'warning',
+                content:`请维护${this.prodInfo.rdProductName}业务设置`
+              })
+              return;
+            }
+            this.$refs.pbizSetting.getForm().validate((valid) => {
+              if (valid) {
+                // 赋值
+                this.form.attachModelList = fileData.list;
+                this.form.remark = fileData.remark;
+                this.form.openGraceDays = billData.openGraceDays;
+                this.form.billFactoringModelList = billData.billFactoringModelList;
+                const orderData = this.$refs.pbizSetting.getData();
+                this.form.orderFactoringModel = orderData;
+                this.$emit('done',this.form);
+                this.loading = false;
+                this.close();
+              }else {
+                this.loading = false;
+              }
+            });
+          }
+        }else {
+          this.loading = false;
+        }
+      });
     },
     close () {
       this.dialogVisible = false;

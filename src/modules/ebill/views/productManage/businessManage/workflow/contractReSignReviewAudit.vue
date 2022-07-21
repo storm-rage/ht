@@ -25,7 +25,7 @@ export default {
     return {
       zjControl: {
         getDataDirectory: this.$api.businessManage.getDataDirectory,
-        getFirstAuditDetail: this.$api.businessManageWorkflow.getFirstAuditDetail
+        getContractRenewalRecheckDetail: this.$api.businessManageWorkflow.getContractRenewalRecheckDetail
       },
       // 字典
       dictionary: {},
@@ -45,7 +45,7 @@ export default {
   },
   methods: {
     getDetail() {
-      this.zjControl.getRecheckDetail({id: this.bizId}).then(res => {
+      this.zjControl.getContractRenewalRecheckDetail({id: this.bizId}).then(res => {
         this.businessParamModel = res.data.businessParamModel;
         this.tradeRelationModelList = res.data.tradeRelationModelList;
         this.prodInfo = {
