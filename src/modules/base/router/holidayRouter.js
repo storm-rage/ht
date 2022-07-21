@@ -5,7 +5,7 @@ const holidayRouter = [
   {
     path: '/holidaySet',
     name: 'holidaySet',
-    component: () => import('../../ebill/views/holiday'),
+    component: () => import('../views/holiday'),
     meta: {
       title:'节假日',
       // parent: 'home',
