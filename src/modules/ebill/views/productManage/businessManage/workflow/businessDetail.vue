@@ -5,18 +5,17 @@
     <!--  贸易关系  -->
     <trade-detail></trade-detail>
     <!--  其他附件    -->
-    <other-file-setting></other-file-setting>
+<!--    <other-file-setting></other-file-setting>-->
   </div>
 </template>
 <script>
 import SupplierBaseInfo from '../components/supplierBaseInfo';
-import OtherFileSetting from '../components/otherFileSetting';
+// import OtherFileSetting from '../components/otherFileSetting';
 import TradeDetail from '../detailPage/tradeDetail';
 export default {
   components: {
     SupplierBaseInfo,
-    TradeDetail,
-    OtherFileSetting
+    TradeDetail
   },
   data () {
     return {};

@@ -1,6 +1,6 @@
 <template>
   <div class="data-content-block">
-    <div class="content-block">
+    <div class="driver-content-block">
       <slot></slot>
     </div>
   </div>
@@ -19,7 +19,7 @@ export default {};
   border-radius: 8px;
   padding: 4px;
   margin-top: 20px;
-  .content-block {
+  .driver-content-block {
     background-image: linear-gradient(0deg,#FFFFFF 0%,#E8F4FF 100%);
     border-radius: 4px;
     padding: 20px;

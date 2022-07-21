@@ -33,6 +33,7 @@
   </div>
 </template>
 <script>
+import {ProductType} from '@modules/constant.js';
 import SelectItems from './selectItems';
 import {newValidateFixedPhone} from "@utils/rules";
 export default {
@@ -43,7 +44,7 @@ export default {
      * @returns {boolean}
      */
     isShowBusinessInfo () {
-      return this.form.productModelList.findIndex((item) => item.productType==='DDBL')>=0
+      return this.form.productModelList.findIndex((item) => item.productType===ProductType.DDBL)>=0
     }
   },
   data() {

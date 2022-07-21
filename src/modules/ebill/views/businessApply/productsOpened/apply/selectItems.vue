@@ -8,7 +8,7 @@
         </div>
         <div class="content">
           <div class="logo">
-            <img v-if="item.productType==='RD'" src='./img/bill.png' alt="图片">
+            <img v-if="item.productType=== constantProd.RD" src='./img/bill.png' alt="图片">
             <img v-else src='./img/order-fancing.png' alt="图片">
           </div>
           <div class="content-block">
@@ -24,6 +24,7 @@
   </el-row>
 </template>
 <script>
+import {ProductType} from '@modules/constant.js';
 export default {
   name: 'SelectItems',
   props: {
@@ -34,7 +35,9 @@ export default {
       // 选中的产品ID
       prodIds: [],
       // 选中的产品
-      selectProds: []
+      selectProds: [],
+      // 常量
+      constantProd: ProductType
     }
   },
   methods: {
@@ -57,8 +60,8 @@ export default {
      * @param item
      */
     autoSelectRDProd (item) {
-      if (item.productType==='DDBL') {
-        const prod = this.productList.find((ditem) => ditem.productType==='RD');
+      if (item.productType===ProductType.DDBl) {
+        const prod = this.productList.find((ditem) => ditem.productType===ProductType.RD);
         if (!this.prodIds.includes(prod.id)) {
           this.prodIds.push(prod.id);
           this.selectProds.push(prod);
