@@ -1,4 +1,4 @@
-const transferTransactionSearchRouter = [
+const voucherSignForRouter = [
   {
     path: '/voucherSignFor',
     name: 'voucherSignFor',
@@ -27,4 +27,4 @@ const transferTransactionSearchRouter = [
     }
   },
 ]
-export default transferTransactionSearchRouter
+export default voucherSignForRouter
