@@ -2,7 +2,7 @@
   <div>
     <zj-content-container>
       <!--  入库融资/凭证融资详情  -->
-      <zj-top-header title="入库融资/凭证融资详情"></zj-top-header>
+      <zj-top-header :title="titleInfo"></zj-top-header>
       <zj-content-block>
 
       </zj-content-block>
@@ -12,6 +12,11 @@
           <el-row class="hd-row">
             <el-col :span="12">
               <el-form-item label="融资企业：" >
+                {{form.entName}}
+              </el-form-item>
+            </el-col>
+            <el-col :span="12" v-if="this.productName === '订单融资'">
+              <el-form-item label="买方企业名称：" >
                 {{form.entName}}
               </el-form-item>
             </el-col>
@@ -62,22 +67,23 @@
             </el-col>
           </el-row>
         </el-form>
-        <h2>还款记录</h2>
-        <zj-table ref="searchTable" class="zj-search-table" :dataList="detail.voucherList"
-        >
-          <zj-table-column field="index" title="序号" />
-          <zj-table-column field="voucherNo" title="还款方式" />
-          <zj-table-column field="entName" title="凭证编号" />
-          <zj-table-column field="entName" title="还款日期" :formatter="date"/>
-          <zj-table-column field="entName" title="还款金额" :formatter="money"/>
-          <zj-table-column field="entName" title="还款本金" :formatter="money"/>
-          <zj-table-column field="entName" title="还款利息" :formatter="money"/>
-          <el-row slot="pager-left" class="slotRows" >
-            <span class="table-tips">还款金额合计：{{moneyNoSynbol(detail.total,' ')}}</span>
-            <span class="table-tips">已还款本金合计：{{moneyNoSynbol(detail.total,' ')}}</span>
-            <span class="table-tips">已还款利息合计：{{moneyNoSynbol(detail.total,' ')}}</span>
-          </el-row>
-        </zj-table>
+        <zj-collapse title="还款记录" class="zj-m-t-10">
+          <zj-table ref="searchTable" class="zj-search-table" :dataList="detail.voucherList"
+          >
+            <zj-table-column field="index" title="序号" />
+            <zj-table-column field="voucherNo" title="还款方式" />
+            <zj-table-column field="entName" title="凭证编号" />
+            <zj-table-column field="entName" title="还款日期" :formatter="date"/>
+            <zj-table-column field="entName" title="还款金额" :formatter="money"/>
+            <zj-table-column field="entName" title="还款本金" :formatter="money"/>
+            <zj-table-column field="entName" title="还款利息" :formatter="money"/>
+            <el-row slot="pager-left" class="slotRows" >
+              <span class="table-tips">还款金额合计：{{moneyNoSynbol(detail.total,' ')}}</span>
+              <span class="table-tips">已还款本金合计：{{moneyNoSynbol(detail.total,' ')}}</span>
+              <span class="table-tips">已还款利息合计：{{moneyNoSynbol(detail.total,' ')}}</span>
+            </el-row>
+          </zj-table>
+        </zj-collapse>
       </zj-content-block>
       <zj-content-block>
         <zj-header title="融资协议"></zj-header>
@@ -107,6 +113,11 @@
 export default {
   name: "detail",
   components: {},
+  computed: {
+    titleInfo() {
+      return this.productName === '订单融资'?'订单保理融资详情':this.productName === '凭证融资'?'入库融资/凭证融资详情':''
+    }
+  },
 
   data() {
     return {
@@ -115,11 +126,14 @@ export default {
       },
       detail:{},
       show: false,
+      productName: '',
 
     }
   },
   methods: {
-    attaDownLoad(){},
+    getDetail() {
+      this.productName = this.row.productName
+    },
     reject(){
       this.$refs.rejectDialog.open({form: this.form}, true)
 
@@ -128,6 +142,10 @@ export default {
       this.$refs.submitDialog.open({form: this.form}, true)
     },
 
+  },
+  created() {
+    this.getRow()
+    this.getDetail()
   }
 }
 </script>
