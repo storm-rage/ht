@@ -1,6 +1,7 @@
 <template>
   <zj-content-container>
     <!--  企业信息明细  -->
+    <zj-top-header :title="titleInfo"/>
     <el-tabs v-model="tabs" type="card" class="zj-tabs-card">
       <el-tab-pane label="企业信息" name="entInfo" >
         <ent-info :zjControl="zjControl" :uDictionary="uDictionary" :uBtn="zjBtn"/>
@@ -24,6 +25,11 @@ export default {
   name: "entInfoDetail",
   components: {
     entInfo,userInfo,
+  },
+  computed: {
+    titleInfo () {
+      return this.tabs === 'entInfo'?'企业信息明细':this.tabs === 'userInfo'?'客户信息明细':''
+    }
   },
   data() {
     return {

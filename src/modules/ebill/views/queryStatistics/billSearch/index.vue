@@ -107,12 +107,12 @@
                   </template>
                 </zj-table-column>
                 <zj-table-column field="estimatedPaymentDate" title="预计付款日期" :formatter="date"/>
-                <zj-table-column field="checkBillAmt" title="对账单金额" :formatter="obj=>typeMap(dictionary.checkBillStatus, obj.cellValue)"/>
+                <zj-table-column field="checkBillAmt" title="对账单金额" :formatter="money"/>
                 <zj-table-column field="isApplyVoucher" title="是否申请开立债权凭证" :formatter="obj=>typeMap(dictionary.isApplyVoucher, obj.cellValue)"/>
-                <zj-table-column field="billSource" title="对账单来源" :formatter="money"/>
-                <zj-table-column field="checkBillStatus" title="对账单状态" :formatter="money"/>
+                <zj-table-column field="billSource" title="对账单来源"/>
+                <zj-table-column field="checkBillStatus" title="对账单状态"/>
                 <zj-table-column field="isSettle" title="对账单是否已结算" :formatter="obj=>typeMap(dictionary.isSettle, obj.cellValue)"/>
-                <zj-table-column field="ebillCode" title="业务系统单号" :formatter="money"/>
+                <zj-table-column field="ebillCode" title="业务系统单号"/>
                 <zj-table-column field="isBusPush" title="开立凭证状态是否已推送业务系统" :formatter="obj=>typeMap(dictionary.isBusPush, obj.cellValue)"/>
                 <zj-table-column field="isHbkPush" title="开立凭证状态是否已推送海天银行" :formatter="obj=>typeMap(dictionary.isHbkPush, obj.cellValue)"/>
               </zj-table>

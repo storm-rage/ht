@@ -16,14 +16,36 @@
           <zj-table-column field="estimatedPaymentDate" title="预计付款日期" :formatter="date"/>
           <zj-table-column field="checkBillAmt" title="对账单金额" :formatter="money"/>
           <zj-table-column field="isApplyVoucher" title="是否申请开立债权凭证"/>
-          <zj-table-column field="billSource" title="对账人" />
+          <zj-table-column field="checkBillPerson" title="对账人" v-if="this.billSource === 'SRM'"/>
           <zj-table-column field="billSource" title="对账单来源" />
 
         </zj-table>
       </zj-content-block>
       <zj-content-block>
         <zj-header title="对账单明细"></zj-header>
-        <zj-table ref="searchTable" class="zj-search-table" :dataList="detail.billDetailList"
+        <!--    SRM    -->
+        <zj-table ref="searchTable" class="zj-search-table" :dataList="detail.billDetailList" v-if="this.billSource === 'SRM'"
+        >
+          <zj-table-column field="poNo" title="po单号" />
+          <zj-table-column field="dnNo" title="dn单号" />
+          <zj-table-column field="matterCode" title="物料编码" />
+          <zj-table-column field="matterName" title="物料名称" />
+          <zj-table-column field="unit" title="单位" />
+          <zj-table-column field="inputDate" title="入库日期" :formatter="date"/>
+          <zj-table-column field="storeHouse" title="仓库" />
+          <zj-table-column field="inputNumber" title="入库数量" />
+          <zj-table-column field="returnDate" title="退货数量" />
+          <zj-table-column field="level" title="等级" />
+          <zj-table-column field="orderPrice" title="订单单价" :formatter="money"/>
+          <zj-table-column field="convertPrice" title="折价" :formatter="money"/>
+          <zj-table-column field="settleAccountPrice" title="结算单价" :formatter="money"/>
+          <zj-table-column field="taxRate" title="税率%" :formatter="rate"/>
+          <zj-table-column field="netAmount" title="净额" :formatter="money"/>
+          <zj-table-column field="taxAmount" title="税额" :formatter="money"/>
+          <zj-table-column field="totalAmount" title="总计金额" :formatter="money"/>
+        </zj-table>
+        <!--    TMS    -->
+        <zj-table ref="searchTable" class="zj-search-table" :dataList="detail.billDetailList" v-if="this.billSource === 'TMS'"
         >
           <zj-table-column field="dnNo" title="DN合并号" />
           <zj-table-column field="customerNo" title="客户编号" />
