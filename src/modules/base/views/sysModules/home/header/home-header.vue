@@ -1,7 +1,7 @@
 <template>
   <header class="home-header">
     <div class="title">{{nowTimeTip}}好！{{userInfo.userName}}</div>
-    <div class="login-time">上次登录时间：2022-10-10 11:55:55</div>
+    <div class="login-time">上次登录时间：{{userInfo.lastLoginTime}}</div>
   </header>
 </template>
 <script>

@@ -11,6 +11,9 @@
   </div>
 </template>
 <script>
+/**
+ * 业务申请复核详情
+ */
 import SupplierBaseInfo from '../components/supplierBaseInfo';
 import TradeDetail from '../detailPage/tradeDetail';
 export default {
@@ -25,7 +28,7 @@ export default {
     return {
       zjControl: {
         getDataDirectory: this.$api.businessManage.getDataDirectory,
-        getFirstAuditDetail: this.$api.businessManageWorkflow.getFirstAuditDetail
+        getRecheckDetail: this.$api.businessManageWorkflow.getRecheckDetail
       },
       // 字典
       dictionary: {},

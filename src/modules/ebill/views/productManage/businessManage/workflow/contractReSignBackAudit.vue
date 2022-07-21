@@ -4,28 +4,33 @@
     <supplier-base-info title="供应商基本信息"
                         :params="businessParamModel"
                         :dic="dictionary"></supplier-base-info>
-    <!--  贸易关系  -->
-    <trade-detail :tradeList="tradeRelationModelList"
-                  :dic="dictionary"
-                  :prodInfo="prodInfo"></trade-detail>
+    <!-- 贸易关系   -->
+    <trade-list
+      ref="tradeInfo"
+      :tradeList="tradeRelationModelList"
+      :bizId="bizId"
+      :dic="dictionary"></trade-list>
   </div>
 </template>
 <script>
+/**
+ * 驳回
+ */
 import SupplierBaseInfo from '../components/supplierBaseInfo';
-import TradeDetail from '../detailPage/tradeDetail';
+import TradeList from '../contractSign/tradeList';
 export default {
   props: {
     bizId: String
   },
   components: {
     SupplierBaseInfo,
-    TradeDetail
+    TradeList
   },
   data () {
     return {
       zjControl: {
         getDataDirectory: this.$api.businessManage.getDataDirectory,
-        getFirstAuditDetail: this.$api.businessManageWorkflow.getFirstAuditDetail
+        getContractRenewalRecheckDetail: this.$api.businessManageWorkflow.getContractRenewalRecheckDetail
       },
       // 字典
       dictionary: {},
@@ -33,8 +38,6 @@ export default {
       businessParamModel: {},
       //贸易关系列表
       tradeRelationModelList: [],
-      // 产品信息
-      prodInfo: {}
     };
   },
   created() {
@@ -44,21 +47,19 @@ export default {
     this.getDetail();
   },
   methods: {
-    getDetail() {
-      this.zjControl.getRecheckDetail({id: this.bizId}).then(res => {
-        this.businessParamModel = res.data.businessParamModel;
-        this.tradeRelationModelList = res.data.tradeRelationModelList;
-        this.prodInfo = {
-          productTypes: this.businessParamModel.productType.split(','),
-          rdProductName: this.businessParamModel.rdProductName,
-          ddProductName: this.businessParamModel.ddProductName
-        }
-      });
-    },
     getDic () {
       this.zjControl.getDataDirectory().then(res => {
         this.dictionary = res.data
       })
+    },
+    getDetail() {
+      this.zjControl.getContractRenewalRecheckDetail({id: this.bizId}).then(res => {
+        this.businessParamModel = res.data.businessParamModel;
+        this.tradeRelationModelList = res.data.tradeRelationModelList;
+      });
+    },
+    getList() {
+      return this.$refs.tradeInfo.getList();
     }
   }
 };

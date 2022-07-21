@@ -1,16 +1,10 @@
 <template>
-  <zj-content-container>
-    <zj-top-header title="供应商额度管理"></zj-top-header>
+  <div>
     <el-form ref="form" label-width="160px">
-      <!--  供应商基本信息  -->
-      <supplier-base-info title="供应商基本信息"
-                          :params="businessParamModel"
-                          :dic="dictionary"></supplier-base-info>
-      <!--   贸易关系   -->
       <zj-content-block>
         <zj-header title="贸易关系"></zj-header>
         <zj-content>
-          <zj-table ref="tradeTable"  :dataList="tradeList" :pager="false">
+          <zj-table ref="tradeTable" :dataList="tradeList" :pager="false">
             <zj-table-column field="buyerName" title="核心企业名称"/>
             <zj-table-column field="isHtEnterprise"
                              title="核心企业是否海天集团"
@@ -37,7 +31,7 @@
       </zj-content-block>
       <!--   产品名称   -->
       <zj-content-block v-if="tradeRelationModel.orderFactoringModel">
-        <zj-header :title="businessParamModel.ddProductName"></zj-header>
+        <zj-header :title="ddProductName"></zj-header>
         <zj-content>
           <el-row :gutter="10">
             <el-col :span="8">
@@ -99,7 +93,7 @@
               field="factoringCredit"
               title="订单额度状态"
               :formatter="(obj) => typeMap(dictionary.factoringCredit, obj.cellValue)"/>
-            <zj-table-column title="操作" fixed="right">
+            <zj-table-column :visible="isEdit" title="操作" fixed="right">
               <template v-slot="{ row,rowIndex }">
                 <template v-if="$refs.financeTable.isActiveByRow(row)">
                   <zj-button type="text" @click="toSave(row,rowIndex)">保存</zj-button>
@@ -114,123 +108,55 @@
           </zj-table>
         </zj-content>
       </zj-content-block>
-      <!--  其他附件    -->
-      <other-file-setting ref="ofileSetting"
-                          is-edit
-                          :remark="tradeRelationModel.remark"
-                          :attachList="tradeRelationModel.attachModelList"></other-file-setting>
     </el-form>
     <quota-re-sign ref="quotaReSign" :dic="dictionary" @done="handleReSignInfo"></quota-re-sign>
-    <zj-content-footer>
-      <zj-button type="primary" :disabled="loading" :api="zjBtn.applyLimit" @click="apply">提交申请</zj-button>
-      <zj-button  @click="goParent">返回</zj-button>
-    </zj-content-footer>
-  </zj-content-container>
+  </div>
 </template>
 <script>
-import SupplierBaseInfo from '../components/supplierBaseInfo';
-import OtherFileSetting from '../components/otherFileSetting';
+/**
+ * 额度管理表单（初次提交申请和驳回）
+ */
 import QuotaReSign from './dialog/quotaReSign';
 export default {
+  props: {
+    isEdit: {
+      type: Boolean,
+      default: false
+    },
+    // 订单保理产品名称
+    ddProductName:String,
+    // 供应商名称
+    sellerName:String,
+    dictionary: Object,
+    params: Object,
+  },
   components: {
-    SupplierBaseInfo,
-    OtherFileSetting,
     QuotaReSign
+  },
+  watch: {
+    params: {
+      deep: true,
+      handler () {
+        this.tradeRelationModel = this.params||{};
+        this.tradeList = [this.tradeRelationModel];
+        this.orderTradeList = [this.tradeRelationModel.orderFactoringModel];
+      }
+    }
   },
   data () {
     return {
-      zjControl: {
-        getDataDirectory: this.$api.businessManage.getDataDirectory,
-        getTradeRelationDetail: this.$api.businessManage.getTradeRelationDetail,
-        applyLimit: this.$api.businessManage.applyLimit,
-        checkContractRenewal: this.$api.businessManage.checkContractRenewal
-      },
-      // 字典
-      dictionary: {},
-      // 客户基本信息
-      businessParamModel: {},
       // 单个贸易关系
       tradeRelationModel: {},
       //单个贸易关系列表
       tradeList: [],
       // 订单保理列表
       orderTradeList: [],
-      loading: false,
       currentEditRow: {}
     };
   },
-  created() {
-    this.getApi();
-    this.getDic();
-    this.getRow();
-    this.getDetail();
-  },
   methods: {
-    getDetail() {
-      this.zjControl.getTradeRelationDetail({id: this.row.id,busTradeId: this.row.busTradeId,tradeId: this.row.tradeId}).then(res => {
-        this.businessParamModel = res.data.businessParamModel;
-        this.tradeRelationModel = res.data.tradeRelationModel;
-        this.tradeList = [res.data.tradeRelationModel];
-        this.orderTradeList = [this.tradeRelationModel.orderFactoringModel];
-      });
-    },
-    getDic () {
-      this.zjControl.getDataDirectory().then(res => {
-        this.dictionary = res.data
-      })
-    },
-    /**
-     * 提交申请操作
-     */
-    apply() {
-      this.$confirm('是否确认提交？','提示',{
-        type: 'warning',
-        confirmButtonText: '确定',
-        cancelButtonText: '取消'
-      }).then(() => {
-        this.loading = true;
-        this.zjControl.checkContractRenewal({sellerId: this.businessParamModel.sellerId}).then(res => {
-          if (res.data.checkFlag) {
-            this.$confirm('该供应商有在途融资，是否发起额度续签？','提示',{
-              type: 'warning',
-              confirmButtonText: '确定',
-              cancelButtonText: '取消'
-            }).then(() => {
-              this.realSubmit();
-            }).catch(() => {
-              this.loading = false;
-            })
-          }else {
-            this.realSubmit();
-          }
-        }).catch(() => {
-          this.loading = false;
-        })
-      })
-    },
-    /**
-     * 提交数据到服务器
-     */
-    realSubmit () {
-      // 附件
-      const fileData = this.$refs.ofileSetting.getData();
-      const tradeRelationParamModel = this.tradeRelationModel;
-      tradeRelationParamModel.attachModelList = fileData.list;
-      tradeRelationParamModel.remark = fileData.remark;
-      const params = {
-        id: this.row.id,
-        tradeRelationParamModel
-      }
-      this.zjControl.applyLimit(params).then(res => {
-        this.loading = false;
-        //成功，关闭
-        if (res.success) {
-          this.$message.success(res.msg);
-          this.goParent();
-        }
-      }).catch(() => {
-        this.loading = false;
-      })
+    getData () {
+      return this.tradeRelationModel;
     },
     /**
      * 维护订单保理产品
@@ -251,7 +177,7 @@ export default {
      * @param row
      */
     toReSign () {
-      this.$refs.quotaReSign.show(this.tradeRelationModel, `额度续签-${this.businessParamModel.sellerName}`,`${this.businessParamModel.ddProductName}额度续签-${this.tradeRelationModel.buyerName}`)
+      this.$refs.quotaReSign.show(this.tradeRelationModel, `额度续签-${this.sellerName}`,`${this.ddProductName}额度续签-${this.tradeRelationModel.buyerName}`)
     },
     /**
      * 续签订单保理维护之后回调

@@ -12,7 +12,7 @@
             <el-form ref="searchForm" :model="searchForm">
               <el-form-item label="供应商名称：">
                 <el-input
-                  v-model="searchForm.sellerNameLike"
+                  v-model.trim="searchForm.sellerNameLike"
                   @keyup.enter.native="enterSearch"
                 />
               </el-form-item>
@@ -36,7 +36,7 @@
               </el-form-item>
               <el-form-item label="供应商统一社会信用代码：">
                 <el-input
-                  v-model="searchForm.bizLicence"
+                  v-model.trim="searchForm.bizLicence"
                   @keyup.enter.native="enterSearch"
                 />
               </el-form-item>
@@ -58,9 +58,9 @@
                     :api="zjControl.contractTableApi"
                     row-id="id"
                     :params="searchForm"
-                    @dataChange="handleDataChange"
+                    @after-load="handleDataChange"
                     @radio-change="handleRadioChange"
-                    :radio-config="{highlight: true,checkRowKey: defaultSelectRowId}">
+                    :radio-config="{highlight: true}">
             <zj-table-column type="radio" width="50"/>
             <zj-table-column field="sellerName" title="供应商名称"/>
             <zj-table-column field="isHtEnterprise" title="是否海天一级供应商" :formatter="(obj) => typeMap(dictionary.isHtEnterprise, obj.cellValue)"/>
@@ -115,7 +115,7 @@
               <!--贸易关系状态为“正常”时，才展示维护和额度管理-->
               <template v-if="row.state === '1'">
                 <zj-button type="text" :api="zjBtn.maintainTradeRelation" @click="toMaintenance(row)">维护</zj-button>
-                <zj-button type="text" :api="zjBtn.applyLimit" @click="toMaintenanceQuota(row)">额度管理</zj-button>
+                <zj-button type="text" v-if="isDDBL" :api="zjBtn.applyLimit" @click="toMaintenanceQuota(row)">额度管理</zj-button>
               </template>
               <template v-else>
                 ——
@@ -128,6 +128,8 @@
   </zj-content-container>
 </template>
 <script>
+import {ProductType} from '@modules/constant.js';
+
 export default {
   data() {
     return {
@@ -160,6 +162,12 @@ export default {
       tradeList: []
     };
   },
+  computed: {
+    // 订单保理
+    isDDBL () {
+      return this.currentContractRow.productType&&this.currentContractRow.productType.indexOf(ProductType.DDBL)>=0;
+    }
+  },
   created() {
     this.getApi();
     this.zjControl.getDataDirectory().then(res => {
@@ -173,13 +181,19 @@ export default {
     },
     /**
      * 列表查询响应回调
-     * @param obj
+     * @param rows
      */
-    handleDataChange(obj) {
+    handleDataChange(rows) {
       //默认勾选第一个供应商
-      if (obj&& obj.rows.length) {
-        this.defaultSelectRowId = obj.rows[0].id
-        this.handleRadioChange({row: obj.rows[0]})
+      if (rows&& rows.length) {
+        this.$refs.searchContractTable.setRadioRow(rows[0])
+        this.handleRadioChange({row: rows[0]})
+        // if (this.defaultSelectRowId) {
+        //
+        // }else {
+        //   this.defaultSelectRowId = rows[0].id
+        //   this.handleRadioChange({row: rows[0]})
+        // }
       }
     },
     /**
@@ -211,11 +225,19 @@ export default {
         }
       });
     },
+    /**
+     * 单个贸易关系维护
+     * @param row
+     */
     toMaintenance (row) {
-      this.$router.push({name: 'tradeRelationMaintenance'})
+      this.goChild('tradeRelationMaintenance',{id: this.currentContractRow.id,busTradeId:row.busTradeId,tradeId:row.tradeId});
     },
+    /**
+     * 额度管理
+     * @param row
+     */
     toMaintenanceQuota (row) {
-      this.$router.push({name: 'quotaMaintenance'})
+      this.goChild('quotaMaintenance',{id: this.currentContractRow.id,busTradeId:row.busTradeId,tradeId:row.tradeId});
     },
   }
 };

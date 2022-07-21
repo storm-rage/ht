@@ -1,5 +1,5 @@
 <template>
-  <el-form :model="form" ref="form" :rules="rules" label-width="160px">
+  <el-form :model="form" ref="form" label-width="160px">
     <zj-content-block>
       <zj-header :title="title"></zj-header>
       <zj-content>
@@ -32,23 +32,41 @@
           <zj-collapse title="供应商业务联系人"  class="zj-m-t-10">
             <el-row>
               <el-col :span="8">
-                <el-form-item label="联系人：" prop="businessPerson">
-                  <el-input :disabled="!isEdit" v-model="form.businessPerson"></el-input>
+                <el-form-item label="联系人："
+                              prop="businessPerson"
+                              :rules="[
+                          {required: true,message: '请输入联系人',trigger: ['change','blur']}
+                        ]">
+                  <el-input :disabled="!isEdit" v-model.trim="form.businessPerson"></el-input>
                 </el-form-item>
               </el-col>
               <el-col :span="8">
-                <el-form-item label="联系号码：" prop="businessPhone">
-                  <el-input :disabled="!isEdit" v-model="form.businessPhone"></el-input>
+                <el-form-item label="联系号码："
+                              prop="businessPhone"
+                              :rules="[
+                          {required: true,message: '请输入联系号码',trigger: ['change','blur']},
+                          {validator: newValidateFixedPhone,trigger: ['blur','change']}
+                        ]">
+                  <el-input :disabled="!isEdit" v-model.trim="form.businessPhone"></el-input>
                 </el-form-item>
               </el-col>
               <el-col :span="8">
-                <el-form-item label="联系邮箱：" prop="businessEmail">
-                  <el-input :disabled="!isEdit" v-model="form.businessEmail"></el-input>
+                <el-form-item label="联系邮箱："
+                              prop="businessEmail"
+                              :rules="[
+                          {required: true,message: '请输入联系邮箱',trigger: ['change','blur']},
+                          {type:'email',message: '请输入正确的联系邮箱',trigger: ['blur','change']}
+                        ]">
+                  <el-input :disabled="!isEdit" v-model.trim="form.businessEmail"></el-input>
                 </el-form-item>
               </el-col>
               <el-col :span="8">
-                <el-form-item label="联系地址：" prop="businessAddress">
-                  <el-input :disabled="!isEdit" v-model="form.businessAddress"></el-input>
+                <el-form-item label="联系地址："
+                              prop="businessAddress"
+                              :rules="[
+                          {required: true,message: '请输入联系地址',trigger: ['change','blur']}
+                        ]">
+                  <el-input :disabled="!isEdit" v-model.trim="form.businessAddress"></el-input>
                 </el-form-item>
               </el-col>
             </el-row>
@@ -56,18 +74,31 @@
           <zj-collapse title="供应商收款账户" class="zj-m-t-10">
             <el-row>
               <el-col :span="8">
-                <el-form-item label="银行账户名称：" >
-                  <el-input :disabled="!isEdit" v-model="form.bankAccname"></el-input>
+                <el-form-item label="银行账户名称："
+                              prop="bankAccname"
+                              :rules="[
+                          {required: true,message: '请输入银行账户名称',trigger: ['change','blur']}
+                        ]">
+                  <el-input :disabled="!isEdit" v-model.trim="form.bankAccname"></el-input>
                 </el-form-item>
               </el-col>
               <el-col :span="8">
-                <el-form-item label="开户银行：">
-                  <el-input :disabled="!isEdit" v-model="form.bankName"></el-input>
+                <el-form-item label="开户银行："
+                              prop="bankName"
+                              :rules="[
+                          {required: true,message: '请输入开户银行',trigger: ['change','blur']}
+                        ]">
+                  <el-input :disabled="!isEdit" v-model.trim="form.bankName"></el-input>
                 </el-form-item>
               </el-col>
               <el-col :span="8">
-                <el-form-item label="银行账号：">
-                  <el-input :disabled="!isEdit" v-model="form.bankAccno"></el-input>
+                <el-form-item label="银行账号："
+                              prop="bankAccno"
+                              :rules="[
+                          {required: true,message: '请输入银行账号',trigger: ['change','blur']},
+                          {validator: validateBankAcct,trigger: ['blur','change']}
+                        ]">
+                  <el-input :disabled="!isEdit" v-model.trim="form.bankAccno"></el-input>
                 </el-form-item>
               </el-col>
             </el-row>
@@ -78,6 +109,7 @@
   </el-form>
 </template>
 <script>
+import {newValidateFixedPhone,validateBankAcct} from "@utils/rules";
 export default {
   props: {
     // 标题
@@ -109,11 +141,12 @@ export default {
   data () {
     return {
       form: this.params,
-      rules: {},
       customList: []
     };
   },
   methods: {
+    newValidateFixedPhone,
+    validateBankAcct,
     getForm () {
       return this.$refs.form;
     },

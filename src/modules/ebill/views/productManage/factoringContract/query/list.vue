@@ -4,7 +4,7 @@
       <template slot="searchForm">
         <el-form ref="searchForm" :model="searchForm">
           <el-form-item label="供应商名称：">
-            <el-input v-model="searchForm.issueEntName" @keyup.enter.native="enterSearch"/>
+            <el-input v-model.trim="searchForm.issueEntName" @keyup.enter.native="enterSearch"/>
           </el-form-item>
 
           <el-form-item label="合同状态：">
@@ -30,7 +30,7 @@
           </el-form-item>
 
           <el-form-item label="合同编号：">
-            <el-input v-model="searchForm.issueEntName" @keyup.enter.native="enterSearch"/>
+            <el-input v-model.trim="searchForm.issueEntName" @keyup.enter.native="enterSearch"/>
           </el-form-item>
         </el-form>
       </template>
