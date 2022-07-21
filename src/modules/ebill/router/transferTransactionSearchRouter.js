@@ -2,7 +2,7 @@ const transferTransactionSearchRouter = [
   {
     path: '/transferTransactionSearch',
     name: 'transferTransactionSearch',
-    component: () => import('../views/voucherManage/transferTransactionSearch'),
+    component: () => import('../views/billLssue/transferTransactionSearch'),
     meta: {
       isMock: true,
       title: '转让交易查询',
@@ -15,7 +15,7 @@ const transferTransactionSearchRouter = [
   {
     path: '/transferTransactionSearchDetail',
     name: 'transferTransactionSearchDetail',
-    component: () => import('../views/voucherManage/transferTransactionSearch/detail'),
+    component: () => import('../views/billLssue/transferTransactionSearch/detail'),
     meta: {
       isMock: true,
       title: '转让交易详情',
