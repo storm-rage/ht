@@ -1,5 +1,6 @@
 <template>
   <zj-content-container>
+    <div></div>
     <zj-top-header title="企业注册审核"></zj-top-header>
     <el-form label-width="160px">
       <!-- 业务申请信息 -->
@@ -10,40 +11,40 @@
             <el-row>
               <el-col :span="8">
                 <el-form-item label="申请流水号：">
-                  <span>{{ detailData.name | value }}</span>
+                  <span>{{ detailData.serialNo | value }}</span>
                 </el-form-item>
               </el-col>
               <el-col :span="8">
                 <el-form-item label="申请类型：">
-                  <span>{{ detailData.bizLicence | value }}</span>
-                </el-form-item>
-              </el-col>
-              <el-col :span="8">
-                <el-form-item label="申请状态：">
                   <span>
                     {{
-                      typeMap(dictionary.entTypeList, detailData.entType)
+                      typeMap(dictionary.applyType, detailData.applyType)
                     }}</span
                   >
                 </el-form-item>
               </el-col>
               <el-col :span="8">
+                <el-form-item label="申请状态：">
+                  <span> {{ detailData.applyStatus }}</span>
+                </el-form-item>
+              </el-col>
+              <el-col :span="8">
                 <el-form-item label="申请时间：">
-                  <span> {{ detailData.address }}</span>
+                  <span> {{ detailData.applyDatetime }}</span>
                 </el-form-item>
               </el-col>
             </el-row>
           </zj-content>
         </zj-content-block>
         <!-- 企业基础信息 -->
-        <ent-info>
+        <ent-info ref="entInfo">
           <template slot="entInfo">
             <zj-collapse title="企业信息">
               <el-form ref="form" label-width="160px">
                 <el-row>
                   <el-col :span="8">
                     <el-form-item label="企业名称：">
-                      <span>{{ detailData.aaa | value }}</span>
+                      <span>{{ detailData.name | value }}</span>
                     </el-form-item>
                   </el-col>
                   <el-col :span="8">
@@ -53,7 +54,7 @@
                   </el-col>
                   <el-col :span="8">
                     <el-form-item label="平台客户类型：">
-                      <span>{{ detailData.bizLicence | value }}</span>
+                      <span>{{ detailData.aaaaaa | value }}</span>
                     </el-form-item>
                   </el-col>
                   <el-col :span="8">
@@ -61,19 +62,24 @@
                       <span>{{ detailData.address }}</span>
                     </el-form-item>
                   </el-col>
+                   <el-col :span="8">
+                    <el-form-item label="成立日期：">
+                      <span>{{ detailData.registerStartDate }}</span>
+                    </el-form-item>
+                  </el-col>
+                   <el-col :span="8">
+                    <el-form-item label="注册资本：">
+                      <span>{{ detailData.registerCapital }}</span>
+                    </el-form-item>
+                  </el-col>
                   <el-col :span="8">
                     <el-form-item label="企业规模：">
-                      <span></span>
+                      <span>{{ detailData.scale }}</span>
                     </el-form-item>
                   </el-col>
                   <el-col :span="8">
                     <el-form-item label="企业经营类型：">
-                      <span></span>
-                    </el-form-item>
-                  </el-col>
-                  <el-col :span="8">
-                    <el-form-item label="企业网址：">
-                      <span></span>
+                      <span>{{ typeMap(dictionary.custTypeList,detailData.custType) }}</span>
                     </el-form-item>
                   </el-col>
                 </el-row>
@@ -84,7 +90,7 @@
       </zj-content-block>
 
       <!-- 审批信息 -->
-      <zj-content-block class="zjcoll spxx mt-20" v-show="workflow === 'spxx'">
+      <zj-content-block v-show="workflow === 'spxx'">
         <!--操作记录 -->
         <operate-log></operate-log>
         <!--审核信息 -->
@@ -113,14 +119,14 @@
 
               <el-form-item label="注册企业简称：" prop="shortName">
                 <el-input
-                  v-model="form.shortName"
+                  v-model.trim="form.shortName"
                   :maxlength="101"
                   placeholder="请填写企业简称"
                 />
               </el-form-item>
               <el-form-item label="注册企业曾用名：" prop="beforeName">
                 <el-input
-                  v-model="form.beforeName"
+                  v-model.trim="form.beforeName"
                   placeholder="如有多个，使用逗号分隔"
                   :maxlength="200"
                 />
@@ -131,12 +137,12 @@
               </el-form-item>
               <el-form-item label="客户业务系统编码：" prop="customCode">
                 <el-input
-                  v-model="form.customCode"
+                  v-model.trim="form.customCode"
                   :maxlength="21"
                   placeholder="请填写客户编码"
                 />
                 <zj-content-tip
-                  class="ml-20"
+                  class="zj-m-l-10"
                   text="注：供应商在核心企业业务系统的编码，选填。"
                 ></zj-content-tip>
               </el-form-item>
@@ -333,18 +339,13 @@
       <zj-workflow v-model="workflow" :list="workflowList">
         <!-- 审核时 -->
         <el-row slot="right" v-if="$route.name === 'registerAuditApplyAudit'">
-          <el-row v-show="workflow === 'sqxx'" class="btn-w85">
-            <zj-button class="back" @click="goParent">返回</zj-button>
-          </el-row>
           <el-row v-show="workflow === 'spxx'" class="btn-w85">
-            <zj-button class="back" @click="goParent">返回</zj-button>
             <zj-button status="primary" @click="holdSave">暂存</zj-button>
             <zj-button class="pass" @click="auditPass">审核通过</zj-button>
             <zj-button class="retort" @click="auditReject">审核驳回</zj-button>
-            <zj-button class="reject" @click="registerRefuse"
-              >注册拒绝</zj-button
-            >
+            <zj-button class="reject" @click="registerRefuse">注册拒绝</zj-button>
           </el-row>
+            <zj-button v-show="workflow === 'sqxx'" class="back" @click="goParent">返回</zj-button>
         </el-row>
       </zj-workflow>
       <!-- 协议时 -->

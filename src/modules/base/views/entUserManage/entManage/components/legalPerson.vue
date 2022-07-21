@@ -10,12 +10,12 @@
           </el-col>
           <el-col :span="8">
             <el-form-item label="法人身份证号码：">
-              <span></span>
+              <span>{{ detailData.legalCertNo | value }}</span>
             </el-form-item>
           </el-col>
           <el-col :span="8">
             <el-form-item label="法人手机手机号：">
-              <span>{{ detailData.legalCertNo | value }}</span>
+              <span>{{ detailData.registerPhone | value }}</span>
             </el-form-item>
           </el-col>
         </el-row>
@@ -30,7 +30,11 @@ export default {
 
   data() {
     return {
-      detailData: {},
+      detailData: {
+        legalPersonName: "",
+        legalCertNo: "",
+        registerPhone: "",
+      },
     };
   },
 };

@@ -29,10 +29,6 @@ export default {
       workflowList: [
         { label: '申请信息', value: 'sqxx' }, { label: '审批信息', value: 'spxx' }
       ],
-      //折叠
-      sqxxCollapseList: ['entInfo', 'userInfo', 'attach', 'entOtherInfo'],
-      spxxCollapseList: ['spxx'],
-
     }
   },
   methods: {
@@ -59,55 +55,42 @@ export default {
         res.data.projectInfoList.map(item => { item.operationFlag = '' })
         this.detailData = res.data
 
-        //审核时
-        if (this.$route.name === 'registerAuditApplyAudit') {
-          //审批信息表单
-          if (res.data.entType) {
-            this.entTypeChange(res.data.entType)
-          }
-          for (let key in this.form) {
-            this.form[key] = res.data[key]
-          }
-          if (this.form.projectInfoList.length <= 0) {
-            this.form.projectInfoList.push({
-              id: '',
-              projectId: '',
-              projectName: '',
-              operationFlag: 'A',
-              selectProductList: []
-            })
-          }
-          //我的买方企业
-          this.myBuyersBlur()
-        }
-        //确认时
-        else if (this.$route.name === 'registerAuditProtocolAudit') {
-          this.initElse()
-        }
-        //获取预览图
-        this.initAttchInfo()
-        //所属项目初始化
-        this.projectInit()
+        // //审核时
+        // if (this.$route.name === 'registerAuditApplyAudit') {
+        //   //审批信息表单
+        //   if (res.data.entType) {
+        //     this.entTypeChange(res.data.entType)
+        //   }
+        //   for (let key in this.form) {
+        //     this.form[key] = res.data[key]
+        //   }
+        //   if (this.form.projectInfoList.length <= 0) {
+        //     this.form.projectInfoList.push({
+        //       id: '',
+        //       projectId: '',
+        //       projectName: '',
+        //       operationFlag: 'A',
+        //       selectProductList: []
+        //     })
+        //   }
+        //   //我的买方企业
+        //   this.myBuyersBlur()
+        // }
+        // //确认时
+        // else if (this.$route.name === 'registerAuditProtocolAudit') {
+        //   this.initElse()
+        // }
+        // //获取预览图
+        // this.initAttchInfo()
+        // //所属项目初始化
+        // this.projectInit()
       })
     },
   },
   mounted() {
-    this.getRow()
-    this.getApi()
-    this.eyeSkyId = this.row.id
-    this.getDirectory()
-    this.getAuditDetail()
-
-    if (this.$route.name === 'registerAuditApplyAudit') {
-      //获取所属项目
-      // this.projectApi = this.$api.registerAudit.getProjectList
-      // this.getProjectList()
-    }
-
-    //设置工作流--确认时
-    if (this.$route.name === 'registerAuditProtocolAudit') {
-      this.workflowList = []
-    }
-
+      // this.getApi()
+      // this.eyeSkyId = this.row.id
+      // this.getDirectory()
+      // this.getAuditDetail()
   }
 }

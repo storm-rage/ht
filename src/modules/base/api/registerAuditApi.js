@@ -14,9 +14,9 @@ const registerAudit = {
     return request.get('/platform-audit/query-register-ent-page', {params})
   },
   //导出数据
-  exportRegisterEnt: (params) => {
-    return download('/platform-audit/export-register-ent', params, 1, 'get')
-  },
+  // exportRegisterEnt: (params) => {
+  //   return download('/platform-audit/export-register-ent', params, 1, 'get')
+  // },
   //查询详情
   getAuditDetail: (params) => {
     return request.get('/platform-audit/get-platform-audit-detail', {params})

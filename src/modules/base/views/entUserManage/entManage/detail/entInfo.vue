@@ -5,18 +5,19 @@
         <zj-header title="企业基础信息" />
         <zj-content>
           <!-- 企业信息 -->
-          <slot name="entInfo"></slot>
+          <slot name="entInfo" />
 
           <!-- 法人信息 -->
-          <legal-person />
+          <legal-person ref="legalPerson" />
+          
           <!-- 企业联系人 -->
-          <ent-linkman />
+          <ent-linkman ref="entLinkman" />
 
           <!-- 银行账户 -->
-          <bank-account />
+          <bank-account ref="bank-account" />
 
           <!-- 控制人信息 -->
-          <controller />
+          <controller ref="controller" />
 
           <zj-collapse title="天眼查信息">
             <zj-button
