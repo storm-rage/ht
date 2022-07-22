@@ -1,8 +1,8 @@
-const myVouchersRouter = [
+const billLssueMyBillRouter = [
   {
-    path: '/myVouchers',
-    name: 'myVouchers',
-    component: () => import('../views/billLssue/myVouchers'),
+    path: '/billLssueMyBill',
+    name: 'billLssueMyBill',
+    component: () => import('../views/billLssue/myBill'),
     meta: {
       isMock: true,
       title: '我的凭证',
@@ -13,18 +13,18 @@ const myVouchersRouter = [
     }
   },
   {
-    path: '/myVouchersDetail',
-    name: 'myVouchersDetail',
-    component: () => import('../views/billLssue/myVouchers/detail'),
+    path: '/billLssueMyBillDetail',
+    name: 'billLssueMyBillDetail',
+    component: () => import('../views/billLssue/myBill/detail'),
     meta: {
       isMock: true,
       title: '电子债权凭证详情',
       root: '凭证管理',
       keepAlive: true,
       refreshIndex: 0,
-      parent:'myVouchers',
+      parent:'billLssueMyBill',
       notRequireAuth: true
     }
   },
 ]
-export default myVouchersRouter
+export default billLssueMyBillRouter
