@@ -143,7 +143,10 @@
       <zj-content-block>
         <h4 class="bl zj-m-l-20 mb-10">银行账户信息</h4>
         <zj-content>
-          <zj-button class="append zj-m-b-10 zj-m-l-10" type="primary" @click="openBankDialog(form)"
+          <zj-button
+            class="append zj-m-b-10 zj-m-l-10"
+            type="primary"
+            @click="openBankDialog(form)"
             >更换银行账户</zj-button
           >
           <zj-table
@@ -277,15 +280,15 @@
       <zj-button type="primary" @click="updateUserInfo">确认提交</zj-button>
       <zj-button class="back" @click="back">返回</zj-button>
     </zj-content-footer>
-    <bank-account ref="bankDialog"/>
+    <bank-account ref="bankDialog" />
   </zj-content-container>
 </template>
 
 <script>
-import bankAccount from './dialog/bankAccount'
+import bankAccount from "./dialog/bankAccount";
 export default {
   components: {
-    bankAccount
+    bankAccount,
   },
   data() {
     return {
@@ -322,7 +325,7 @@ export default {
           ...basicEntInfo.fastMailInfo,
           ...basicEntInfo.legalPersonInfo,
         };
-        this.form.entBankInfo = basicEntInfo.entBankInfo //银行账户信息
+        this.form.entBankInfo = basicEntInfo.entBankInfo; //银行账户信息
       });
     },
     updateUserInfo() {
@@ -338,7 +341,7 @@ export default {
       // };
     },
     openBankDialog(data) {
-      this.$refs.bankDialog.show(data)
+      this.$refs.bankDialog.show(data);
     },
     back() {
       this.$router.push("/personalCenter");
