@@ -27,7 +27,6 @@
                   @radio-change="handleRadioChange" :printConfig="{trigger:row}"
                   :radio-config="{highlight: true}">
           <zj-table-column type="radio" width="40px" fixed="left"/>
-          <zj-table-column field="id" title="id" width="40px"/>
           <zj-table-column field="code" title="角色代码" width="80px"/>
           <zj-table-column field="name" title="角色名称"/>
           <zj-table-column field="descr" title="角色描述"/>
