@@ -53,25 +53,25 @@
       <zj-table
         ref="searchTable"
         :params="searchForm"
-        :api="zjControl.tableApi"
+        :api="zjControl.sysNoticeAddPage"
       >
-        <zj-table-column field="ebillCode" title="类型" />
-        <zj-table-column field="issueEntName" title="标题" />
-        <zj-table-column field="issueEntName" title="对象" />
-        <zj-table-column field="issueEntName" title="内容" />
+        <zj-table-column field="type" title="类型" />
+        <zj-table-column field="theme" title="标题" />
+        <zj-table-column field="target" title="对象" />
+        <zj-table-column field="content" title="内容" />
         <zj-table-column
-          field="issueEntName"
+          field="validStartDatetime"
           title="有效期起始时间"
           :formatter="date"
         />
         <zj-table-column
-          field="issueEntName"
+          field="validEndDatetime"
           title="有效期截止时间"
           :formatter="date"
         />
-        <zj-table-column field="issueEntName" title="开关状态" />
+        <zj-table-column field="state" title="开关状态" />
         <zj-table-column
-          field="issueEntName"
+          field="createDatetime"
           title="创建时间"
           :formatter="date"
         />
@@ -80,19 +80,17 @@
             <zj-button
               type="text"
               @click="toDetail(row)"
-              :api="zjBtn.getEnterprise"
+              :api="zjBtn.sysNoticeAddDetails"
               >详情</zj-button
             >
             <zj-button
               type="text"
-              @click="toDetail(row)"
-              :api="zjBtn.getEnterprise"
+              @click="toEdit(row)"
               >修改</zj-button
             >
             <zj-button
               type="text"
-              @click="toDetail(row)"
-              :api="zjBtn.getEnterprise"
+              @click="toDel(row)"
               >删除</zj-button
             >
           </template>
@@ -131,7 +129,7 @@
         >
           <el-select
             v-if="type != 'info'"
-            v-model="formModel.isGenerateVoucher"
+            v-model="formModel.type"
             placeholder="请选择"
             clearable
             :disabled="true"
@@ -155,7 +153,7 @@
         >
           <el-input
             v-if="type != 'info'"
-            v-model="formModel.invoiceTaxpayerId"
+            v-model="formModel.theme"
           />
           <span v-else>标题标题标题</span>
         </el-form-item>
@@ -165,8 +163,8 @@
           :class="{ 'zj-m-b-5': !editFlag }"
         >
           <div v-if="type != 'info'">
-            <el-radio v-model="formModel.type" label="1">门户</el-radio>
-            <el-radio v-model="formModel.type" label="2">运营</el-radio>
+            <el-radio v-model="formModel.target" label="1">门户</el-radio>
+            <el-radio v-model="formModel.target" label="2">运营</el-radio>
           </div>
           <span v-else>标题标题标题</span>
         </el-form-item>
@@ -178,7 +176,7 @@
           <el-input
             v-if="type != 'info'"
             type="textarea"
-            v-model="formModel.invoicePhone"
+            v-model="formModel.content"
           />
           <p v-else>内容内容内容内容内容</p>
         </el-form-item>
@@ -196,8 +194,8 @@
         >
           <zj-date-range-picker
             v-if="type != 'info'"
-            :startDate.sync="formModel.expireDateStart"
-            :endDate.sync="formModel.expireDateEnd"
+            :startDate.sync="formModel.validStartDatetime"
+            :endDate.sync="formModel.validEndDatetime"
           />
           <span v-else>2021-01-01至2021-09-01</span>
         </el-form-item>
@@ -206,7 +204,7 @@
           prop="invoiceEmail"
           :class="{ 'zj-m-b-5': !editFlag }"
         >
-          <el-switch v-model="formModel.invoiceEmail" />
+          <el-switch v-model="formModel.state" />
         </el-form-item>
       </el-form>
 
@@ -222,17 +220,90 @@
 export default {
   data() {
     return {
-      zjControl: {},
+      zjControl: {
+        sysNoticeAddDirectory: this.$api.operatorAnnouncement.sysNoticeAddDirectory,//数据字典
+        sysNoticeAdd: this.$api.operatorAnnouncement.sysNoticeAdd,//新增公告信息
+        sysNoticeAddDelete: this.$api.operatorAnnouncement.sysNoticeAddDelete,//删除系统公告
+        sysNoticeAddPage: this.$api.operatorAnnouncement.sysNoticeAddPage,//查询系统公告集
+        sysNoticeAddAller: this.$api.operatorAnnouncement.sysNoticeAddAller,//修改系统公告
+        sysNoticeAddDetails: this.$api.operatorAnnouncement.sysNoticeAddDetails,//系统公告详情
+      },
       searchForm: {},
       dialogVisible: false,
       type: "info",
       tableData: [{ id: 1 }],
       formModel: {},
+      editFlag:"1",
+      formRules:{},
+      typeList:{},
     };
   },
+  created(){
+      this.apiDic()
+  },
   methods: {
-    add(e) {
+    apiDic(){
+      let params = {
+        id:"1"
+      }
+      this.zjControl.sysNoticeAddDirectory(params).then(res=>{
+      if(res.code===200){
+        console.log(res.data.typeList,"=====字典======")
+        this.typeList = res.data.typeList
+        console.log(this.typeList,"=====字典2======")
+      }})
+    },
+    cancel(){
+      alert("--")
+    },
+    //详情
+    toDetail(){
+      if(this.type !="add"  || this.type !="update" ){
+        this.dialogVisible = true;
+      }
+    },
+    //新增
+    add() {
+      this.type = "add"
       this.dialogVisible = true;
+    },
+    //修改
+    toEdit(row){
+      this.type = "update"
+      this.dialogVisible = true;
+      this.formModel =  {...row}
+      console.log(this.formModel,'-----修改------')
+    },
+    //删除
+    toDel(row){
+      this.$messageBox({
+        type:'warning',
+        content:'您确定要删除吗'
+      }).then(()=>{
+        this.zjControl.sysNoticeAddDelete({id:row.id}).then(()=>{
+          alert("已删除")
+        })
+      })
+    },
+    //保存
+    save(){
+      alert("===")
+      if(this.type == "add"){
+        alert("保存")
+        let params = {
+          state:this.formModel.state,//开关状态（ 1:开启 2:关闭）
+          target:this.formModel.target,//展示对象（1:核心企业 2:供应商,3:核心企业和供应商）
+          theme:this.formModel.theme,//公告主题
+          type:this.formModel.type,//公告类型（1:弹框,2:公告,3:宣传栏）
+          validEndDatetime:this.formModel.validEndDatetime,//有效结束日期
+          validStartDatetime:this.formModel.validStartDatetime,//有效开始日期
+          content:this.formModel.content,//内容
+        }
+          this.zjControl.sysNoticeAdd(params).then(() => {
+          this.$Message.success('新增成功！')
+          this.dialogVisible = false;
+        })
+      }
     },
   },
 };
