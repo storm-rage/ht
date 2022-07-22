@@ -8,6 +8,8 @@
     <trade-maintenance-form ref="tradeInfo"
                             :is-edit="isEdit"
                             :prods="prods"
+                            :oldCactoringLogo="tradeRelationModel.cactoringLogo"
+                            :productType="businessParamModel.productType"
                             :params="tradeRelationModel"
                             :dictionary="dictionary"></trade-maintenance-form>
     <!--  其他附件    -->
@@ -101,51 +103,7 @@ export default {
      * @returns {Promise<unknown>}
      */
     validData () {
-      return new Promise((resolve) => {
-        this.$refs.tradeInfo.getForm().validate((valid) => {
-          if (valid) {
-            const rdForm = this.$refs.tradeInfo.getRdForm();
-            const ddBlForm = this.$refs.tradeInfo.getDDBlForm()
-            if (rdForm && !ddBlForm) {
-              if(rdForm.getData().billFactoringModelList.length) {
-                resolve(true);
-              }else {
-                this.$messageBox({
-                  type:'warning',
-                  content:`请维护${this.businessParamModel.rdProductName}业务设置`
-                })
-                resolve(false)
-              }
-            }else if (!rdForm && ddBlForm) {
-              ddBlForm.getForm().validate((valid) => {
-                if (valid) {
-                  resolve(true);
-                }else {
-                  resolve(false)
-                }
-              })
-            }else if (rdForm && ddBlForm) {
-              if(!rdForm.getData().billFactoringModelList.length) {
-                this.$messageBox({
-                  type:'warning',
-                  content:`请维护${this.businessParamModel.rdProductName}业务设置`
-                })
-                resolve(false);
-              }else {
-                ddBlForm.getForm().validate((valid) => {
-                  if (valid) {
-                    resolve(true);
-                  }else {
-                    resolve(false)
-                  }
-                })
-              }
-            }
-          }else {
-            resolve(false)
-          }
-        })
-      })
+      return  this.$refs.tradeInfo.validForm
     },
     /**
      * 获取维护之后的数据
@@ -153,12 +111,16 @@ export default {
      */
     getData () {
       const params = this.$refs.tradeInfo.getData();
-      // 附件
-      const fileData = this.$refs.ofileSetting.getData()
-      // 赋值
-      params.attachModelList = fileData.list;
-      params.remark = fileData.remark;
-      return params;
+      if (params) {
+        // 附件
+        const fileData = this.$refs.ofileSetting.getData()
+        // 赋值
+        params.attachModelList = fileData.list;
+        params.remark = fileData.remark;
+        return params;
+      }else {
+        return null;
+      }
     }
   }
 };

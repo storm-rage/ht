@@ -1,40 +1,48 @@
 const transferNotifyRouter = [
   {
-    path: '/transferNoticeList',
-    name: 'transferNoticeList',
+    path: '/assignmentNotice',
+    name: 'assignmentNotice',
     component: () => import('../views/accountsReceivableManage/transferNotify/query/index'),
     meta: {
-      isMock: true,
-      title: `应收账款转让通知查询`,
+      title: '应收账款转让通知查询',
       root: '应收账款转让通知',
       keepAlive: true,
-      refreshIndex: 0,
-      notRequireAuth: true
+      refreshIndex: 0
     }
   },
   {
-    path: '/transferReceiptList',
-    name: 'transferReceiptList',
+    path: '/assignmentNoticeReceipt',
+    name: 'assignmentNoticeReceipt',
     component: () => import('../views/accountsReceivableManage/transferNotify/receipt/index'),
     meta: {
-      isMock: true,
-      title: `应收账款转让通知回执`,
+      title: '应收账款转让通知回执',
       root: '应收账款转让通知',
       keepAlive: true,
-      refreshIndex: 0,
-      notRequireAuth: true
+      refreshIndex: 0
     }
   },
   {
-    path: '/transferNotifyDetail',
-    name: 'transferNotifyDetail',
+    path: '/transferNotifyQueryDetail',
+    name: 'transferNotifyQueryDetail',
     component: () => import('../views/accountsReceivableManage/transferNotify/detail/index.vue'),
     meta:{
-      isMock:false,
-      title:`应收账款转让通知详情`,
+      title:'应收账款转让通知详情',
+      routeType: 'query',
+      parent: 'assignmentNotice',
       keepAlive:true,
-      refreshIndex:0,
-      notRequireAuth: true
+      refreshIndex:0
+    }
+  },
+  {
+    path: '/transferNotifyReceiptDetail',
+    name: 'transferNotifyReceiptDetail',
+    component: () => import('../views/accountsReceivableManage/transferNotify/detail/index.vue'),
+    meta:{
+      title:'应收账款转让通知详情',
+      routeType: 'receipt',
+      parent: 'assignmentNoticeReceipt',
+      keepAlive:true,
+      refreshIndex:0
     }
   },
   {
@@ -42,11 +50,10 @@ const transferNotifyRouter = [
     name: 'transferNotifyReceipt',
     component: () => import('../views/accountsReceivableManage/transferNotify/detail/receipt.vue'),
     meta:{
-      isMock:false,
-      title:`应收账款转让通知回执`,
+      title:'应收账款转让通知回执',
+      parent: 'assignmentNoticeReceipt',
       keepAlive:true,
-      refreshIndex:0,
-      notRequireAuth: true
+      refreshIndex:0
     }
   },
 ]

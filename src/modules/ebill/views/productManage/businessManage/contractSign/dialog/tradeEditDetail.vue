@@ -29,7 +29,7 @@
                             :rules="[
                           {required: true,message: '请选择保理标识',trigger: ['change','blur']}
                         ]">
-                <el-select :disabled="!isEdit" v-model="form.cactoringLogo">
+                <el-select :disabled="!isEditCactoringLogo||!isEdit" v-model="form.cactoringLogo" @change="handleCactoringLogoChange">
                   <el-option v-for="(item,index) in dic.cactoringLogo"
                              :key="`${index}cactoringLogo`"
                              :label="item.desc"
@@ -83,21 +83,23 @@
           </el-row>
         </zj-content>
       </zj-content-block>
-      <!--  订单保理产品业务设置    -->
-      <order-product-biz-setting ref="pbizSetting"
-                           v-if="isDDBL"
-                           :title="`${prodInfo.ddProductName}业务设置-${form.buyerName}`"
-                           :is-edit="isEdit"
-                           :dic="dic"
-                           :params="form.orderFactoringModel"></order-product-biz-setting>
-       <!--  电子凭证产品业务设置    -->
-      <bill-product-biz-setting v-if="isRD"
-                                ref="bbizSetting"
-                                :title="`${prodInfo.rdProductName}业务设置-${form.buyerName}`"
-                                :dic="dic"
-                                :openGraceDays="form.openGraceDays"
-                                :list="form.billFactoringModelList"
-                                :is-edit="isEdit"></bill-product-biz-setting>
+      <div v-if="isShowProdSetting">
+        <!--  订单保理产品业务设置    -->
+        <order-product-biz-setting ref="pbizSetting"
+                                   v-if="isDDBL"
+                                   :title="`${prodInfo.ddProductName}业务设置-${form.buyerName}`"
+                                   :is-edit="isEdit"
+                                   :dic="dic"
+                                   :params="form.orderFactoringModel"></order-product-biz-setting>
+        <!--  电子凭证产品业务设置    -->
+        <bill-product-biz-setting v-if="isRD"
+                                  ref="bbizSetting"
+                                  :title="`${prodInfo.rdProductName}业务设置-${form.buyerName}`"
+                                  :dic="dic"
+                                  :openGraceDays="form.openGraceDays"
+                                  :list="form.billFactoringModelList"
+                                  :is-edit="isEdit"></bill-product-biz-setting>
+      </div>
       <!--  其他附件    -->
       <other-file-setting ref="ofileSetting"
                           :is-edit="isEdit"
@@ -111,7 +113,7 @@
   </el-dialog>
 </template>
 <script>
-import {ProductType} from '@modules/constant.js';
+import {ProductType,CactoringLogo} from '@modules/constant.js';
 import OrderProductBizSetting from '../../components/orderProductBizSetting';
 import BillProductBizSetting from '../../components/billProductBizSetting';
 import OtherFileSetting from '../../components/otherFileSetting';
@@ -120,7 +122,11 @@ export default {
     // 字典
     dic: Object,
     // 业务ID
-    bizId: String
+    bizId: String,
+    isEditCactoringLogo: {
+      type: Boolean,
+      default: false
+    }
   },
   computed: {
     cactoringLogoList () {
@@ -147,6 +153,13 @@ export default {
     // 订单保理
     isDDBL () {
       return  this.prodInfo.productTypes&&this.prodInfo.productTypes.includes(ProductType.DDBL);
+    },
+    /**
+     * 是否显示产品设置
+     * @returns {boolean}
+     */
+    isShowProdSetting () {
+      return this.form.cactoringLogo !== CactoringLogo.NOTBL;
     }
   },
   components: {
@@ -186,73 +199,85 @@ export default {
       }
 
     },
+    handleCactoringLogoChange() {
+    },
     save () {
       this.loading = true;
       this.$refs.form.validate((valid) => {
         if (valid) {
           // 附件
           const fileData = this.$refs.ofileSetting.getData()
-          // 有三种情况
-          if (this.isRD&&!this.isDDBL) {
-            const billData = this.$refs.bbizSetting.getData();
-            if (billData.billFactoringModelList.length) {
-              // 赋值
-              this.form.attachModelList = fileData.list;
-              this.form.remark = fileData.remark;
-              this.form.openGraceDays = billData.openGraceDays;
-              this.form.billFactoringModelList = billData.billFactoringModelList;
-              this.$emit('done',this.form);
-              this.loading = false;
-              this.close();
-            }else {
-              this.loading = false;
-              this.$messageBox({
-                type:'warning',
-                content:`请维护${this.prodInfo.rdProductName}业务设置`
-              })
-              return;
-            }
-          }else if(!this.isRD&&this.isDDBL) {
-            this.$refs.pbizSetting.getForm().validate((valid) => {
-              if (valid) {
-                // 赋值
-                this.form.attachModelList = fileData.list;
-                this.form.remark = fileData.remark;
-                const orderData = this.$refs.pbizSetting.getData();
-                this.form.orderFactoringModel = orderData;
-                this.$emit('done',this.form);
-                this.loading = false;
-                this.close();
-              }else {
-                this.loading = false;
-              }
-            });
-          }else if(this.isRD&&this.isDDBL) {
-            const billData = this.$refs.bbizSetting.getData();
-            if (!billData.billFactoringModelList.length) {
-              this.loading = false;
-              this.$messageBox({
-                type:'warning',
-                content:`请维护${this.prodInfo.rdProductName}业务设置`
-              })
-              return;
-            }
-            this.$refs.pbizSetting.getForm().validate((valid) => {
-              if (valid) {
+          if (this.isShowProdSetting) {
+            // 有三种情况
+            if (this.isRD&&!this.isDDBL) {
+              const billData = this.$refs.bbizSetting.getData();
+              if (billData.billFactoringModelList.length) {
                 // 赋值
                 this.form.attachModelList = fileData.list;
                 this.form.remark = fileData.remark;
                 this.form.openGraceDays = billData.openGraceDays;
                 this.form.billFactoringModelList = billData.billFactoringModelList;
-                const orderData = this.$refs.pbizSetting.getData();
-                this.form.orderFactoringModel = orderData;
                 this.$emit('done',this.form);
                 this.loading = false;
                 this.close();
               }else {
                 this.loading = false;
+                this.$messageBox({
+                  type:'warning',
+                  content:`请维护${this.prodInfo.rdProductName}业务设置`
+                })
+                return;
               }
-            });
+            }else if(!this.isRD&&this.isDDBL) {
+              this.$refs.pbizSetting.getForm().validate((valid) => {
+                if (valid) {
+                  // 赋值
+                  this.form.attachModelList = fileData.list;
+                  this.form.remark = fileData.remark;
+                  const orderData = this.$refs.pbizSetting.getData();
+                  this.form.orderFactoringModel = orderData;
+                  this.$emit('done',this.form);
+                  this.loading = false;
+                  this.close();
+                }else {
+                  this.loading = false;
+                }
+              });
+            }else if(this.isRD&&this.isDDBL) {
+              const billData = this.$refs.bbizSetting.getData();
+              if (!billData.billFactoringModelList.length) {
+                this.loading = false;
+                this.$messageBox({
+                  type:'warning',
+                  content:`请维护${this.prodInfo.rdProductName}业务设置`
+                })
+                return;
+              }
+              this.$refs.pbizSetting.getForm().validate((valid) => {
+                if (valid) {
+                  // 赋值
+                  this.form.attachModelList = fileData.list;
+                  this.form.remark = fileData.remark;
+                  this.form.openGraceDays = billData.openGraceDays;
+                  this.form.billFactoringModelList = billData.billFactoringModelList;
+                  const orderData = this.$refs.pbizSetting.getData();
+                  this.form.orderFactoringModel = orderData;
+                  this.$emit('done',this.form);
+                  this.loading = false;
+                  this.close();
+                }else {
+                  this.loading = false;
+                }
+              });
+            }
+          }else {
+            // 非保理的清空
+            // 赋值
+            this.form.attachModelList = fileData.list;
+            this.form.remark = fileData.remark;
+            this.$emit('done',this.form);
+            this.loading = false;
+            this.close();
           }
         }else {
           this.loading = false;
