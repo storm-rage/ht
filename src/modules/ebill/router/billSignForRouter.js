@@ -1,8 +1,8 @@
-const voucherSignForRouter = [
+const billSignForRouter = [
   {
-    path: '/voucherSignFor',
-    name: 'voucherSignFor',
-    component: () => import('../views/billLssue/voucherSignFor'),
+    path: '/billSignFor',
+    name: 'billSignFor',
+    component: () => import('../views/billLssue/billSignFor'),
     meta: {
       isMock: true,
       title: '凭证签收',
@@ -13,9 +13,9 @@ const voucherSignForRouter = [
     }
   },
   {
-    path: '/voucherSignForDetail',
-    name: 'voucherSignForDetail',
-    component: () => import('../views/billLssue/voucherSignFor/components/voucherSignForDetail'),
+    path: '/billSignForDetail',
+    name: 'billSignForDetail',
+    component: () => import('../views/billLssue/billSignFor/billSignForDetail'),
     meta: {
       isMock: true,
       title: '电子债权凭证签收',
@@ -27,4 +27,4 @@ const voucherSignForRouter = [
     }
   },
 ]
-export default voucherSignForRouter
+export default billSignForRouter
