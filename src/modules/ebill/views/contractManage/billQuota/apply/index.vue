@@ -3,23 +3,25 @@
     <zj-content-block>
       <zj-header title="保理合同"></zj-header>
       <zj-content>
-        <zj-table ref="searchContractTable"  :dataList="contractList">
-          <zj-table-column field="field1" title="合同编号"/>
-          <zj-table-column field="field2" title="合同名称"/>
+        <zj-table ref="searchContractTable"  :dataList="contractList" :pager="false">
+          <zj-table-column field="contractNo" title="合同编号"/>
+          <zj-table-column field="contractName" title="合同名称"/>
           <zj-table-column
-            field="field3"
+            field="contractStartDate"
             title="合同生效日期"
             :formatter="date"
           />
           <zj-table-column
-            field="field4"
+            field="contractEndDate"
             title="合同失效日期"
             :formatter="date"
           />
-          <zj-table-column field="field5" title="合同状态"/>
+          <zj-table-column field="contractStatus"
+                           title="合同状态"
+                           :formatter="(obj) => typeMap(dictionary.contractStatus, obj.cellValue)"/>
           <zj-table-column title="操作" fixed="right">
             <template v-slot="{ row }">
-              <zj-button type="text" @click="toContractDetail(row)">详情</zj-button>
+              <zj-button type="text" :api="zjBtn.getContractDetail" @click="toContractDetail(row)">详情</zj-button>
             </template>
           </zj-table-column>
         </zj-table>
@@ -29,25 +31,33 @@
     <zj-content-block>
       <zj-header title="额度信息"></zj-header>
       <zj-content>
-        <zj-table ref="searchQuotaTable" :dataList="quotaList">
+        <zj-table ref="searchQuotaTable" :dataList="quotaList" :pager="false">
           <zj-table-column type="seq" title="序号" width="60"/>
-          <zj-table-column field="field2" title="买方企业名称" />
+          <zj-table-column field="buyerName" title="买方企业名称" />
           <zj-table-column
-            field="field3"
+            field="accountTransferStartDate"
             title="应收账款转让期限"
-          />
+          >
+            <template v-slot="{row}">
+              {{row.accountTransferStartDate}}～{{row.accountTransferEndDate}}
+            </template>
+          </zj-table-column>
           <zj-table-column
-            field="field4"
+            field="totalCreditAmount"
             title="授信额度"
             :formatter="money"
           />
-          <zj-table-column field="field5" title="额度期限（月）"/>
+          <zj-table-column field="factoringCreditEndDate" title="额度期限">
+            <template v-slot="{row}">
+              {{row.accountTransferStartDate}}～{{row.factoringCreditEndDate}}
+            </template>
+          </zj-table-column>
           <zj-table-column title="操作" fixed="right">
             <template v-slot="{ row }">
               <zj-button
                 type="text"
                 @click="toApplyPage(row)"
-                :api="zjBtn.getEnterprise">额度变更申请</zj-button>
+                :api="zjBtn.submitAdjustCreditApply">额度变更申请</zj-button>
             </template>
           </zj-table-column>
         </zj-table>
@@ -58,43 +68,45 @@
 
 <script>
 export default {
-  components: {},
-
   data() {
     return {
-      contractList: [
-        {
-          field1: '1221321323',
-          field2: '国内商业保理合同',
-          field3: '2022-06-01 10:10:10',
-          field4: '2023-06-01 10:10:10',
-          field5: '生效'
-        }
-      ],
-      quotaList: [
-        {
-          field1: '1',
-          field2: '海天a公司',
-          field3: '2022.09.09 ～ 2023.09.08',
-          field4: '100,000,000.00',
-          field5: '4'
-        },
-        {
-          field1: '2',
-          field2: '海天b公司',
-          field3: '2022.09.09 ～ 2023.09.08',
-          field4: '100,000,000.00',
-          field5: '5'
-        }
-      ]
+      zjControl: {
+        queryList: this.$api.billQuotaManage.queryAdjustCreditApplyList,
+        getDataDirectory: this.$api.billQuotaManage.getDataDirectory,
+        getContractDetail: this.$api.billQuotaManage.getContractDetail,
+        submitAdjustCreditApply: this.$api.billQuotaManage.submitAdjustCreditApply,
+      },
+      // 字典
+      dictionary: {},
+      // 合同信息
+      contractList: [],
+      // 额度信息
+      quotaList: []
     };
   },
+  created() {
+    this.getApi();
+    this.zjControl.getDataDirectory().then(res => {
+      this.dictionary = res.data
+    });
+    this.getList();
+  },
   methods: {
+    getList() {
+      this.zjControl.queryList().then(res => {
+        if (res.data && res.data.id) {
+          this.contractList = [res.data];
+          if (res.data.creditInfoList) {
+            this.quotaList = res.data.creditInfoList;
+          }
+        }
+      });
+    },
     toContractDetail(row) {
-      this.$router.push({name: 'contractDetail'})
+      this.goChild('contractDetail',{contractId: row.id});
     },
     toApplyPage(row) {
-      this.$router.push({name: 'quotaChangeApply'})
+      this.goChild('quotaChangeApply',{creditId: row.id});
     }
   }
 };

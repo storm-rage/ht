@@ -47,13 +47,41 @@ export default {
         this.selectProds.push(item);
         this.autoSelectRDProd(item);
       }else {
-        const index = this.prodIds.findIndex((val) => {
-          return val === item.id;
-        });
-        this.prodIds.splice(index,1);
-        this.selectProds.splice(index,1);
+        if (item.productType === ProductType.RD) {
+          // 如果开通了订单保理，则不允许勾掉凭证保理
+          const prod = this.selectProds.find((ditem) => ditem.productType === ProductType.DDBL);
+          if (!prod.length) {
+            const index = this.prodIds.findIndex((val) => {
+              return val === item.id;
+            });
+            this.delProd(index);
+          }
+        }else if (item.productType === ProductType.DDBL) {
+          // 如果勾掉了订单保理，则同时去掉凭证保理
+          const currentIndex = this.prodIds.findIndex((val) => {
+            return val === item.id;
+          });
+          const rdIndex = this.selectProds.findIndex((val) => {
+            return val.productType === ProductType.RD;
+          });
+          this.delProd(currentIndex);
+          this.delProd(rdIndex);
+        }else {
+          const index = this.prodIds.findIndex((val) => {
+            return val === item.id;
+          });
+          this.delProd(index);
+        }
       }
       this.$emit('change', this.selectProds, item);
+    },
+    /**
+     * 移除产品
+     * @param index
+     */
+    delProd(index) {
+      this.prodIds.splice(index,1);
+      this.selectProds.splice(index,1);
     },
     /**
      * 如果是订单保理，自动选择电子债权凭证产品

@@ -2,9 +2,9 @@
   <zj-content-block>
     <zj-header title="审核意见"></zj-header>
     <zj-content>
-      <el-form ref="form" :model="form" label-width="100px">
-        <el-form-item label="审核意见：" prop="remark">
-          <el-input type="textarea" v-model="form.remark" style="width: 100%"></el-input>
+      <el-form ref="form" :model="form" label-width="100px" hide-required-asterisk>
+        <el-form-item label="审核意见：" prop="notes" :rules="[{required: true,message: '请选输入审核意见'}]">
+          <el-input type="textarea" v-model="form.notes" style="width: 100%"></el-input>
         </el-form-item>
       </el-form>
     </zj-content>
@@ -15,7 +15,7 @@ export default {
   data () {
     return {
       form: {
-        remark: ''
+        notes: ''
       }
     }
   },

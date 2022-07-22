@@ -5,22 +5,23 @@
     <zj-content-block>
       <zj-header title="合同信息"></zj-header>
       <zj-content>
-        <zj-table :dataList="contractList">
+        <zj-table :dataList="contractList" :pager="false">
           <zj-table-column
-            field="field1"
+            field="contractNo"
             title="合同编号"/>
           <zj-table-column
-            field="field2"
+            field="contractName"
             title="合同名称"/>
           <zj-table-column
-            field="field3"
+            field="contractStartDate"
             title="合同生效日期"/>
           <zj-table-column
-            field="field4"
+            field="contractEndDate"
             title="合同失效日期"/>
           <zj-table-column
-            field="field5"
-            title="合同状态"/>
+            field="contractStatus"
+            title="合同状态"
+            :formatter="(obj) => typeMap(dic.ebContractStatusModel, obj.cellValue)"/>
         </zj-table>
       </zj-content>
     </zj-content-block>
@@ -28,19 +29,27 @@
     <zj-content-block>
       <zj-header title="额度信息"></zj-header>
       <zj-content>
-        <zj-table :dataList="quotaList">
+        <zj-table :dataList="quotaList" :pager="false">
           <zj-table-column
-            field="field1"
+            field="buyerName"
             title="买方企业名称"/>
           <zj-table-column
-            field="field2"
-            title="应收账款转让期限"/>
+            field="accountTransferStartDate"
+            title="应收账款转让期限">
+            <template v-slot="{row}">
+              {{row.accountTransferStartDate}}～{{row.accountTransferEndDate}}
+            </template>
+          </zj-table-column>
           <zj-table-column
-            field="field3"
+            field="totalCreditAmount"
             title="授信额度" :formatter="money"/>
           <zj-table-column
-            field="field4"
-            title="额度期限（月）"/>
+            field="factoringCreditEndDate"
+            title="额度期限">
+            <template v-slot="{row}">
+              {{row.accountTransferStartDate}}～{{row.factoringCreditEndDate}}
+            </template>
+          </zj-table-column>
         </zj-table>
       </zj-content>
     </zj-content-block>
@@ -48,13 +57,13 @@
     <zj-content-block>
       <zj-header title="协议信息"></zj-header>
       <zj-content>
-        <zj-table :dataList="fileList">
+        <zj-table :dataList="fileList" :pager="false">
           <zj-table-column type="seq" title="序号" width="60"/>
           <zj-table-column
-            field="field1"
+            field="agreementNo"
             title="合同/协议编号"/>
           <zj-table-column
-            field="field2"
+            field="fileName"
             title="合同/协议名称"/>
           <zj-table-column title="操作" fixed="right">
             <template v-slot="{ row }">
@@ -71,21 +80,21 @@
         <el-form ref="form" :model="form" :rules="rules" label-width="120px">
           <el-row :gutter="12">
             <el-col :span="8">
-              <el-form-item label="申请增加额度：" prop="field1">
-                <zj-number-input :disabled="!isEdit" formatterMoney v-model="form.field1" placeholder="请输入申请增加额度">
+              <el-form-item label="申请增加额度：" prop="applyAddCreditAmount">
+                <zj-number-input :disabled="!isEdit" formatterMoney v-model="form.applyAddCreditAmount" placeholder="请输入申请增加额度">
                   <template slot="append">元</template>
                 </zj-number-input>
-                <p class="zj-left">{{digitUp(form.field1)}}</p>
+                <p class="zj-left">{{digitUp(form.applyAddCreditAmount)}}</p>
               </el-form-item>
             </el-col>
             <el-col :span="8">
-              <el-form-item label="额度到期日：" prop="field2">
-                <el-date-picker v-model="form.field2" disabled type="date" placeholder="请选择额度到期日"></el-date-picker>
+              <el-form-item label="额度到期日：" prop="creditExpireDate">
+                <el-date-picker v-model="form.creditExpireDate" disabled type="date" placeholder="请选择额度到期日"></el-date-picker>
               </el-form-item>
             </el-col>
             <el-col :span="8">
-              <el-form-item label="调整后额度：" prop="field3">
-                {{money(form.field3)}}元
+              <el-form-item label="调整后额度：" prop="adjustCreditAmount">
+                {{money(form.adjustCreditAmount)}}元
               </el-form-item>
             </el-col>
           </el-row>
@@ -101,50 +110,60 @@ export default {
       type: Boolean,
       default: false
     },
-    title: String
+    title: String,
+    // 字典
+    dic:Object,
+    // 参数信息
+    detailInfo: Object,
+    // 附件信息
+    fileList: {
+      type: Array,
+      default: () => {
+        return []
+      }
+    }
+  },
+  watch: {
+    detailInfo: {
+      deep: true,
+      handler() {
+        if (this.detailInfo) {
+          this.contractList = [this.detailInfo];
+          this.quotaList = [this.detailInfo];
+          this.form = this.detailInfo;
+        }
+      }
+    }
   },
   data() {
     return {
-      contractList: [
-        {
-          field1: '4565654654',
-          field2: '国内商业保理合同',
-          field3: '2021-01-01',
-          field4: '2024-01-01',
-          field5: '生效'
-        }
-      ],
-      quotaList: [
-        {
-          field1: '海天a公司',
-          field2: '2022-09-09 ～ 2023-09-08',
-          field3: '100,000,000.00',
-          field4: '4',
-        }
-      ],
-      fileList: [
-        {
-          field1: '123455',
-          field2: '《国内商业保理合同》'
-        }
-      ],
+      zjControl: {
+        downApi: this.$api.baseCommon.downloadFile
+      },
+      // 合同信息
+      contractList: [],
+      // 额度信息
+      quotaList: [],
+      // 额度变更信息
       form: {
-        field1: '',
-        field2: '2024-03-01',
-        field3: '1999'
+        applyAddCreditAmount: '',
+        creditExpireDate: '',
+        adjustCreditAmount: ''
       },
       rules: {
-        field1: [
+        applyAddCreditAmount: [
           {required: true,message: '请输入申请增加额度',trigger: ['blur','change']}
         ],
-        field2: [
+        creditExpireDate: [
           {required: true,message: '请选择额度到期日',trigger: ['blur','change']}
         ]
       }
     }
   },
   methods: {
-    toDownload(row) {},
+    toDownload(row) {
+      this.zjControl.downApi(row);
+    },
     //获取表单
     getForm () {
       return this.$refs.form;

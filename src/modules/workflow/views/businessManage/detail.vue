@@ -4,11 +4,11 @@
     <!--  业务申请信息  -->
     <biz-apply-info></biz-apply-info>
     <!--  具体业务信息  -->
-    <business-detail></business-detail>
+    <business-detail biz-id="1"></business-detail>
     <!--  操作记录  -->
     <operate-log></operate-log>
     <zj-content-footer>
-      <zj-button @click="back">返回</zj-button>
+      <zj-button @click="goParent">返回</zj-button>
     </zj-content-footer>
   </zj-content-container>
 </template>
@@ -18,6 +18,9 @@ import OperateLog from '../components/operateLog';
 import AuditRemark from '../components/auditRemark';
 import BusinessDetail from '@modules/ebill/views/productManage/businessManage/workflow/businessDetail.vue';
 
+/**
+ * 点击流水号详情
+ */
 export default {
   components: {
     BizApplyInfo,
@@ -29,7 +32,6 @@ export default {
     return {}
   },
   methods: {
-    back () {}
   }
 };
 </script>

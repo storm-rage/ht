@@ -9,7 +9,7 @@
       <el-row :gutter="10" class="zj-m-b-15">
         <el-col :span="24">
           <el-form-item label="开单宽限天数："
-                        prop="openBillMaxDay"
+                        prop="openGraceDays"
                         :rules="[
                           {required: true,message: '请输入开单宽限天数',trigger: ['change','blur']}
                         ]">
@@ -24,7 +24,7 @@
           <el-form-item label="电子债权凭证期限区间：" required>
             <el-row :gutter="2" class="multi-form-item">
               <el-col :span="10">
-                <el-form-item :prop="`list[${index}].rdDateStart`"
+                <el-form-item :prop="`billFactoringModelList[${index}].rdDateStart`"
                               :rules="[
                                 {required: true,message: '请输入开始区间',trigger: ['change','blur']}
                               ]">
@@ -36,7 +36,7 @@
                 <span>～</span>
               </el-col>
               <el-col :span="11">
-                <el-form-item :prop="`list[${index}].rdDateEnd`"
+                <el-form-item :prop="`billFactoringModelList[${index}].rdDateEnd`"
                               :rules="[
                                 {required: true,message: '请输入结束区间',trigger: ['change','blur']}
                               ]">
@@ -49,7 +49,7 @@
         </el-col>
         <el-col :span="8">
           <el-form-item label="凭证可用折扣："
-                        :prop="`list[${index}].availableDiscountsRate`"
+                        :prop="`billFactoringModelList[${index}].availableDiscountsRate`"
                         :rules="[
                                 {required: true,message: '请输入凭证可用折扣',trigger: ['change','blur']}
                               ]">
@@ -60,7 +60,7 @@
         </el-col>
         <el-col :span="8">
           <el-form-item label="凭证融资月利率："
-                        :prop="`list[${index}].rdFinancingMonthRate`"
+                        :prop="`billFactoringModelList[${index}].rdFinancingMonthRate`"
                         :rules="[
                                 {required: true,message: '请输入凭证融资月利率',trigger: ['change','blur']}
                               ]">

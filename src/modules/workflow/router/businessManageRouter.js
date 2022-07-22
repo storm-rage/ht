@@ -1,15 +1,90 @@
 const businessManageRouter = [
   {
-    path: '/businessAudit',
-    name: 'businessAudit',
-    component: () => import('../views/businessManage/audit.vue'),
+    path: '/businessFirstAudit',
+    name: 'businessFirstAudit',
+    component: () => import('../views/businessManage/firstAudit.vue'),
     meta: {
-      isMock: true,
-      title: '供应商业务申请审核',
-      root: '我的代办',
+      title: '供应商业务申请初审',
+      parent: 'myTodo',
       keepAlive: true,
-      refreshIndex: 0,
-      notRequireAuth: true
+      refreshIndex: 0
+    }
+  },
+  {
+    path: '/businessReviewAudit',
+    name: 'businessReviewAudit',
+    component: () => import('../views/businessManage/businessReviewAudit.vue'),
+    meta: {
+      title: '供应商业务申请复核',
+      parent: 'myTodo',
+      keepAlive: true,
+      refreshIndex: 0
+    }
+  },
+  {
+    path: '/tradeChangeReviewAudit',
+    name: 'tradeChangeReviewAudit',
+    component: () => import('../views/businessManage/tradeChangeReviewAudit.vue'),
+    meta: {
+      title: '供应商业务申请维护复核',
+      parent: 'myTodo',
+      keepAlive: true,
+      refreshIndex: 0
+    }
+  },
+  {
+    path: '/tradeChangeBackAudit',
+    name: 'tradeChangeBackAudit',
+    component: () => import('../views/businessManage/tradeChangeBackAudit.vue'),
+    meta: {
+      title: '供应商业务申请驳回维护',
+      parent: 'myTodo',
+      keepAlive: true,
+      refreshIndex: 0
+    }
+  },
+  {
+    path: '/contractReSignReviewAudit',
+    name: 'contractReSignReviewAudit',
+    component: () => import('../views/businessManage/contractReSignReviewAudit.vue'),
+    meta: {
+      title: '续签合同申请复核',
+      parent: 'myTodo',
+      keepAlive: true,
+      refreshIndex: 0
+    }
+  },
+  {
+    path: '/contractReSignBackAudit',
+    name: 'contractReSignBackAudit',
+    component: () => import('../views/businessManage/contractReSignBackAudit.vue'),
+    meta: {
+      title: '续签合同申请驳回维护',
+      parent: 'myTodo',
+      keepAlive: true,
+      refreshIndex: 0
+    }
+  },
+  {
+    path: '/quotaChangeReviewAudit',
+    name: 'quotaChangeReviewAudit',
+    component: () => import('../views/businessManage/quotaChangeReviewAudit.vue'),
+    meta: {
+      title: '供应商额度申请复核',
+      parent: 'myTodo',
+      keepAlive: true,
+      refreshIndex: 0
+    }
+  },
+  {
+    path: '/quotaChangeBackAudit',
+    name: 'quotaChangeBackAudit',
+    component: () => import('../views/businessManage/quotaChangeBackAudit.vue'),
+    meta: {
+      title: '供应商额度申请驳回维护',
+      parent: 'myTodo',
+      keepAlive: true,
+      refreshIndex: 0
     }
   },
   {
@@ -17,12 +92,10 @@ const businessManageRouter = [
     name: 'businessApplyDetail',
     component: () => import('../views/businessManage/detail.vue'),
     meta: {
-      isMock: true,
       title: '供应商业务申请交易详情',
-      root: '我的代办',
+      parent: 'myTodo',
       keepAlive: true,
-      refreshIndex: 0,
-      notRequireAuth: true
+      refreshIndex: 0
     }
   }
 ]

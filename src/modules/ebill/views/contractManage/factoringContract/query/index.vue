@@ -4,11 +4,11 @@
       <template slot="searchForm">
         <el-form ref="searchForm" :model="searchForm">
           <el-form-item label="合同编号：">
-            <el-input v-model="searchForm.issueEntName" @keyup.enter.native="enterSearch"/>
+            <el-input v-model.trim="searchForm.contractNo" @keyup.enter.native="enterSearch"/>
           </el-form-item>
 
           <el-form-item label="合同签署类型：">
-            <el-select v-model="contractType">
+            <el-select v-model="searchForm.applyType">
               <el-option value="1"/>
               <el-option value="2"/>
               <el-option value="3"/>
@@ -17,24 +17,24 @@
 
           <el-form-item label="申请日期：" class="col-right">
             <zj-date-range-picker
-              :startDate.sync="searchForm.expireDateStart"
-              :endDate.sync="searchForm.expireDateEnd"
+              :startDate.sync="searchForm.applyStartDate"
+              :endDate.sync="searchForm.applyEndDate"
             />
           </el-form-item>
 
           <el-form-item label="申请状态：">
-            <el-select v-model="applicationStatus">
+            <el-select v-model="searchForm.applyStatus">
               <el-option value="全部"/>
               <el-option value="待复核"/>
             </el-select>
           </el-form-item>
 
           <el-form-item label="申请流水号：">
-            <el-input v-model="searchForm.issueEntName" @keyup.enter.native="enterSearch"/>
+            <el-input v-model.trim="searchForm.serialNo" @keyup.enter.native="enterSearch"/>
           </el-form-item>
 
           <el-form-item label="签约结果：">
-            <el-select v-model="signingResults">
+            <el-select v-model="searchForm.contractSignStatus">
               <el-option value="全部"/>
               <el-option value="待复核"/>
               <el-option value="3"/>
@@ -44,13 +44,13 @@
       </template>
       <zj-table ref="searchTable" :dataList="list" :params="searchForm" :api="zjControl.tableApi">
         <zj-table-column type="seq" title="序号" width="60"/>
-        <zj-table-column field="field1" title="申请流水号" />
-        <zj-table-column field="field2" title="合同签署类型" />
-        <zj-table-column field="field3" title="合同编号" />
-        <zj-table-column field="field4" title="合同名称"/>
-        <zj-table-column field="field5" title="申请状态"/>
-        <zj-table-column field="field6" title="签约结果"/>
-        <zj-table-column field="field7" title="申请时间"/>
+        <zj-table-column field="serialNo" title="申请流水号" />
+        <zj-table-column field="applyType" title="合同签署类型" />
+        <zj-table-column field="contractNo" title="合同编号" />
+        <zj-table-column field="contractName" title="合同名称"/>
+        <zj-table-column field="applyStatus" title="申请状态"/>
+        <zj-table-column field="contractSignStatus" title="签约结果"/>
+        <zj-table-column field="applyDate" title="申请时间"/>
         <zj-table-column title="操作" fixed="right">
           <template v-slot="{row}">
             <zj-button type="text" @click="toViewDetail(row)" :api="zjBtn.getEnterprise">详情</zj-button>

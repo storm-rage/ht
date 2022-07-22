@@ -20,7 +20,7 @@ import multistageAgreementSearch from "./multistageAgreementSearch/multistageAgr
 import toDo from "./multistageAgreementSearch/toDo";
 import done from "./multistageAgreementSearch/done";
 export default {
-  name: "registerManage",
+  name: "multistageAgreementManage",
   components: {
     multistageAgreementSearch,toDo,done
   },

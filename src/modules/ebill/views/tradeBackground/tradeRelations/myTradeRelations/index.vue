@@ -4,10 +4,10 @@
       <template slot="searchForm">
       <el-form ref="searchForm" :model="searchForm">
         <el-form-item label="买方企业名称：" class="col-center">
-          <el-input v-model="searchForm.ebillCode" />
+          <el-input v-model.trim="searchForm.ebillCode" />
         </el-form-item>
         <el-form-item label="卖方企业名称：" class="col-center">
-          <el-input v-model="searchForm.ebillCode" />
+          <el-input v-model.trim="searchForm.ebillCode" />
         </el-form-item>
         <el-form-item label="贸易关系状态：" class="col-center">
           <el-select
@@ -209,6 +209,9 @@ export default {
     this.relationLsitApi();
   },
   methods: {
+    change(){
+      console.log(this.$fefs.searchForm,"--------")
+    },
     //查询
     relationLsitApi(){
       let params = {

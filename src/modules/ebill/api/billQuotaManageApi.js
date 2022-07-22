@@ -18,7 +18,7 @@ const billQuotaManage = {
    * @returns {Promise<AxiosResponse<any>>}
    */
   downloadTemplate(params, type = 1, method = 'post') {
-    return download('/common/download-file', params, type, method)
+    return download('/adjust-credit-apply/download-template', params, type, method)
   },
   /**
    * 合同管理-额度变更申请/复核-提交校验
@@ -26,7 +26,7 @@ const billQuotaManage = {
    * @returns {Promise<AxiosResponse<any>>}
    */
   submitCheck(params) {
-    return request.get('/adjust-credit-apply/submit-check', {params})
+    return request.post('/adjust-credit-apply/submit-check', params)
   },
   //======================================额度变更申请==================================================
   /**

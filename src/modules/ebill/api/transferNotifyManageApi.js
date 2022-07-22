@@ -43,5 +43,13 @@ export default {
    */
   queryAssignmentNoticeRecordPage (params) {
     return request.get('/assignment-notice-record/query-assignment-notice-record-page', {params})
-  }
+  },
+  /**
+   * 应收账款转让通知回执-下载应收账款转让通知确认函
+   * @param params
+   * @returns {Promise<AxiosResponse<any>>}
+   */
+  downloadTemplate(params) {
+    return request.post('/assignment-notice-record/download-template', params);
+  },
 };
