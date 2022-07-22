@@ -32,6 +32,7 @@
     <trade-edit-detail ref="tradeEditDetail"
                        :dic="dic"
                        :bizId="bizId"
+                       :is-edit-cactoringLogo="isEditCactoringLogo"
                        @done="handleTradeEdit"></trade-edit-detail>
   </div>
 </template>
@@ -48,7 +49,12 @@ export default {
     // 字典
     dic: Object,
     // 业务ID
-    bizId: String
+    bizId: String,
+    // 是否可以修改保理标识，初审可以修改
+    isEditCactoringLogo: {
+      type: Boolean,
+      default: false
+    }
   },
   components: {TradeEditDetail},
   created() {

@@ -1,15 +1,13 @@
 const billQuotaManageRouter = [
   {
-    path: '/quotaApplyList',
-    name: 'quotaApplyList',
+    path: '/adjustCreditApply',
+    name: 'adjustCreditApply',
     component: () => import('../views/contractManage/billQuota/apply/index.vue'),
     meta: {
-      isMock: true,
       title: '额度变更申请',
       root: '合同管理',
       keepAlive: true,
-      refreshIndex: 0,
-      notRequireAuth: true
+      refreshIndex: 0
     },
   },
   {
@@ -17,12 +15,10 @@ const billQuotaManageRouter = [
     name: 'contractDetail',
     component: () => import('../views/contractManage/billQuota/apply/contractDetail/index.vue'),
     meta: {
-      isMock: false,
       title: '国内商业保理合同详情',
-      root: '合同管理',
+      parent: 'adjustCreditApply',
       keepAlive: true,
-      refreshIndex: 0,
-      notRequireAuth: true
+      refreshIndex: 0
     },
   },
   {
@@ -30,25 +26,21 @@ const billQuotaManageRouter = [
     name: 'quotaChangeApply',
     component: () => import('../views/contractManage/billQuota/apply/detailPage/index.vue'),
     meta: {
-      isMock: false,
       title: '额度变更申请',
-      root: '合同管理',
+      parent: 'adjustCreditApply',
       keepAlive: true,
-      refreshIndex: 0,
-      notRequireAuth: true
+      refreshIndex: 0
     },
   },
   {
-    path: '/quotaReviewList',
-    name: 'quotaReviewList',
+    path: '/adjustCreditReview',
+    name: 'adjustCreditReview',
     component: () => import('../views/contractManage/billQuota/review/index.vue'),
     meta: {
-      isMock: true,
       title: '额度变更复核',
       root: '合同管理',
       keepAlive: true,
-      refreshIndex: 0,
-      notRequireAuth: true
+      refreshIndex: 0
     },
   },
   {
@@ -56,25 +48,21 @@ const billQuotaManageRouter = [
     name: 'quotaChangeReview',
     component: () => import('../views/contractManage/billQuota/review/detailPage/index.vue'),
     meta: {
-      isMock: false,
       title: '额度变更复核',
-      root: '合同管理',
+      parent: 'adjustCreditReview',
       keepAlive: true,
-      refreshIndex: 0,
-      notRequireAuth: true
+      refreshIndex: 0
     },
   },
   {
-    path: '/quotaChangeQuery',
-    name: 'quotaChangeQuery',
+    path: '/creditChangeDeal',
+    name: 'creditChangeDeal',
     component: () => import('../views/contractManage/billQuota/query/index.vue'),
     meta: {
-      isMock: true,
       title: '额度变更交易查询',
       root: '合同管理',
       keepAlive: true,
-      refreshIndex: 0,
-      notRequireAuth: true
+      refreshIndex: 0
     },
   },
   {
@@ -82,12 +70,10 @@ const billQuotaManageRouter = [
     name: 'changeDetail',
     component: () => import('../views/contractManage/billQuota/query/detailPage/index.vue'),
     meta: {
-      isMock: false,
       title: '额度变更交易详情',
-      root: '合同管理',
+      parent: 'creditChangeDeal',
       keepAlive: true,
-      refreshIndex: 0,
-      notRequireAuth: true
+      refreshIndex: 0
     },
   }
 ]

@@ -4,44 +4,43 @@
       <template slot="searchForm">
         <el-form ref="searchForm" :model="searchForm">
           <el-form-item label="转出方：">
-            <el-input v-model="searchForm.issueEntName" />
+            <el-input v-model.trim="searchForm.fromEntName" @keyup.enter.native="enterSearch"/>
           </el-form-item>
           <el-form-item label="签收方/资金方：">
-            <el-input v-model="searchForm.issueEntName" />
+            <el-input v-model.trim="searchForm.toEntName" @keyup.enter.native="enterSearch"/>
           </el-form-item>
           <el-form-item label="转让日期：" class="col-right">
             <zj-date-range-picker
-              :startDate.sync="searchForm.expireDateStart"
-              :endDate.sync="searchForm.expireDateEnd"
+              :startDate.sync="searchForm.transferDateStart"
+              :endDate.sync="searchForm.transferDateEnd"
             />
           </el-form-item>
           <el-form-item label="签署回执日期：">
             <zj-date-range-picker
-              :startDate.sync="searchForm.expireDateStart"
-              :endDate.sync="searchForm.expireDateEnd"
+              :startDate.sync="searchForm.receiveDateStart"
+              :endDate.sync="searchForm.receiveDateEnd"
             />
           </el-form-item>
           <el-form-item label="申请流水号：">
-            <el-input v-model="searchForm.issueEntName" />
+            <el-input v-model.trim="searchForm.serialNo" @keyup.enter.native="enterSearch"/>
           </el-form-item>
         </el-form>
       </template>
       <zj-table
         ref="searchTable"
-        :dataList="list"
         :params="searchForm"
         :api="zjControl.tableApi"
       >
-        <zj-table-column field="field1" title="申请流水号">
+        <zj-table-column field="serialNo" title="申请流水号">
           <template v-slot="{ row }">
-            <el-link type="primary" :underline="false" @click="toDetail(row)">{{row.field1}}</el-link>
+            <el-link type="primary" :underline="false" @click="toDetail(row)">{{row.serialNo}}</el-link>
           </template>
         </zj-table-column>
-        <zj-table-column field="field2" title="转出方" />
-        <zj-table-column field="field3" title="签收方/资金方" />
-        <zj-table-column field="field4" title="转让日期" :formatter="date" />
-        <zj-table-column field="field5" title="签署回执日期" :formatter="date" />
-        <zj-table-column field="field6" title="保理合同编号" />
+        <zj-table-column field="fromEntName" title="转出方" />
+        <zj-table-column field="toEntName" title="签收方/资金方" />
+        <zj-table-column field="tranferDate" title="转让日期" :formatter="date" />
+        <zj-table-column field="receiveDate" title="签署回执日期" :formatter="date" />
+        <zj-table-column field="contractNo" title="保理合同编号" />
       </zj-table>
     </zj-list-layout>
   </div>
@@ -50,26 +49,26 @@
 export default {
   data() {
     return {
-      zjControl: {},
-      searchForm: {},
-      list: [
-        {
-          field1: '34534534543545',
-          field2: '法师法师打发',
-          field3: '天太热特然退热贴',
-          field4: '2022-09-09',
-          field5: '2022-09-09',
-          field6: '757567567567567'
-        }
-      ]
+      zjControl: {
+        tableApi: this.$api.transferNotifyManage.queryAssignmentNoticeRecordPage
+      },
+      searchForm: {
+        fromEntName: '',
+        toEntName: '',
+        transferDateStart: '',
+        transferDateEnd: '',
+        receiveDateStart: '',
+        receiveDateEnd: '',
+        serialNo:''
+      }
     };
   },
   created() {
-    // this.getApi();
+    this.getApi();
   },
   methods: {
     toDetail(row) {
-      this.$router.push({name: 'transferNotifyDetail'})
+      this.goChild('transferNotifyQueryDetail',{serialNo: row.serialNo})
     },
   },
 };

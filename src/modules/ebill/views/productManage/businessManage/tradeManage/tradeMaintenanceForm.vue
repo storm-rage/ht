@@ -35,7 +35,7 @@
                               :rules="[
                           {required: true,message: '请选择保理标识',trigger: ['change','blur']}
                         ]">
-                  <el-select v-model="form.cactoringLogo" placeholder="请选择" :disabled="!isEdit">
+                  <el-select v-model="form.cactoringLogo" placeholder="请选择" :disabled="!isEdit"  @change="handleCactoringLogoChange">
                     <el-option v-for="(item,index) in cactoringLogoList"
                                :key="`${index}cactoringLogo`"
                                :label="item.desc"
@@ -74,7 +74,7 @@
         </div>
       </zj-content>
     </zj-content-block>
-    <zj-content-block>
+    <zj-content-block v-if="isShowProdTree">
       <zj-header title="请选择需要维护产品"></zj-header>
       <zj-content>
         <el-tree
@@ -107,7 +107,7 @@
   </el-form>
 </template>
 <script>
-import {ProductType} from "@modules/constant";
+import {ProductType,CactoringLogo} from "@modules/constant";
 import OrderProductBizSetting from '../components/orderProductBizSetting';
 import BillProductBizSetting from '../components/billProductBizSetting';
 
@@ -124,19 +124,59 @@ export default {
       type: Boolean,
       default: false
     },
-    dictionary: Object,
-    params: Object,
+    dictionary: {
+      type: Object,
+      required: true
+    },
+    // 一开始的非保理标识，用于处理非保理的情况
+    oldCactoringLogo: {
+      type: String,
+      required: true
+    },
+    params: {
+      type: Object,
+      required: true
+    },
     // 开通的产品
-    prods:Array
+    prods:{
+      type: Array,
+      required: true
+    },
+    // 产品类型
+    productType:{
+      type: String,
+      required: true
+    }
   },
   computed: {
     cactoringLogoList () {
       if (this.dictionary.cactoringLogo && this.form.cactoringLogo) {
-        return this.dictionary.cactoringLogo.filter((item) => {
-          return item.code==='2'||item.code === String(this.form.cactoringLogo)
-        });
+        if (this.form.cactoringLogo===CactoringLogo.NOTBL) {
+          // 非保理只能改成非保理和选择的产品类型
+          if (this.productType.indexOf(ProductType.DDBL)>=0) {
+            return this.dictionary.cactoringLogo.filter((item) => {
+              return item.code===CactoringLogo.NOTBL||item.code === CactoringLogo.ORDERBL
+            })
+          }else if(this.productType.indexOf(ProductType.RD)>=0){
+            return this.dictionary.cactoringLogo.filter((item) => {
+              return item.code===CactoringLogo.NOTBL||item.code === CactoringLogo.BILLBL
+            })
+          }
+        }else {
+          // 只能选非保理和当前保理之间切换
+          return this.dictionary.cactoringLogo.filter((item) => {
+            return item.code===CactoringLogo.NOTBL||item.code === String(this.form.cactoringLogo)
+          });
+        }
       }
       return [];
+    },
+    /**
+     * 是否显示产品树
+     * @returns {boolean}
+     */
+    isShowProdTree () {
+      return this.oldCactoringLogo !== CactoringLogo.NOTBL && this.form.cactoringLogo !== CactoringLogo.NOTBL;
     },
     // 产品树
     treeData () {
@@ -202,38 +242,131 @@ export default {
         return item.code !== 'ALL';
       })
     },
+    /**
+     * 处理保理标识改变事件
+     */
+    handleCactoringLogoChange () {
+      if (this.form.cactoringLogo === CactoringLogo.NOTBL) {
+        this.needMaintenanceProducts = [];
+        if (this.oldCactoringLogo !== CactoringLogo.NOTBL) {
+          // todo:如果一开始不是非保理需要清空选中
+        }
+      }else {
+        // 如果一开始是非保理添加需要维护的产品信息
+        if (this.oldCactoringLogo === CactoringLogo.NOTBL) {
+          if (this.form.cactoringLogo === CactoringLogo.ORDERBL) {
+            const order = this.prods.find((prod) => prod.code === ProductType.DDBL);
+            const bill = this.prods.find((prod) => prod.code === ProductType.RD);
+            //订单保理
+            const orderRow = {
+              code: ProductType.DDBL,
+              label: order.ddProductName
+            }
+            const billRow = {
+              code: ProductType.RD,
+              label: bill.rdProductName
+            }
+            this.needMaintenanceProducts=[orderRow,billRow]
+          }else if (this.form.cactoringLogo === CactoringLogo.BILLBL) {
+            const bill = this.prods.find((prod) => prod.code === ProductType.RD);
+            //凭证保理
+            const billRow = {
+              code: ProductType.RD,
+              label: bill.rdProductName
+            }
+            this.needMaintenanceProducts=[billRow]
+          }
+        }
+      }
+    },
     getForm () {
       return this.$refs.form;
     },
     getData () {
-      const codes = this.needMaintenanceProducts.map((item) => {
-        return item.code
-      });
-      if (codes.length) {
-        if (codes.includes(ProductType.RD)&&!codes.includes(ProductType.DDBL)) {
-          // 只包含电子凭证保理
-          const billData = this.$refs.bbizSetting.getData();
-          // 赋值
-          this.form.openGraceDays = billData.openGraceDays;
-          this.form.billFactoringModelList = billData.billFactoringModelList;
+      // 切换非保理不用清空，非保理应该不更新那些信息
+      if (this.form.cactoringLogo === CactoringLogo.NOTBL) {
+        const codes = this.needMaintenanceProducts.map((item) => {
+          return item.code
+        });
+        if (codes.length) {
+          if (codes.includes(ProductType.RD)&&!codes.includes(ProductType.DDBL)) {
+            // 只包含电子凭证保理
+            const billData = this.$refs.bbizSetting.getData();
+            // 赋值
+            this.form.openGraceDays = billData.openGraceDays;
+            this.form.billFactoringModelList = billData.billFactoringModelList;
 
-        }else if (!codes.includes(ProductType.RD)&&codes.includes(ProductType.DDBL)) {
-          // 赋值
-          const orderData = this.$refs.pbizSetting.getData();
-          this.form.orderFactoringModel = orderData;
+          }else if (!codes.includes(ProductType.RD)&&codes.includes(ProductType.DDBL)) {
+            // 赋值
+            const orderData = this.$refs.pbizSetting.getData();
+            this.form.orderFactoringModel = orderData;
 
-        }else if (codes.includes(ProductType.RD)&&codes.includes(ProductType.DDBL)) {
-          // 赋值
-          const billData = this.$refs.bbizSetting.getData();
-          const orderData = this.$refs.pbizSetting.getData();
-          this.form.orderFactoringModel = orderData;
-          this.form.openGraceDays = billData.openGraceDays;
-          this.form.billFactoringModelList = billData.billFactoringModelList;
+          }else if (codes.includes(ProductType.RD)&&codes.includes(ProductType.DDBL)) {
+            // 赋值
+            const billData = this.$refs.bbizSetting.getData();
+            const orderData = this.$refs.pbizSetting.getData();
+            this.form.orderFactoringModel = orderData;
+            this.form.openGraceDays = billData.openGraceDays;
+            this.form.billFactoringModelList = billData.billFactoringModelList;
+          }
+          return this.form;
+        }else {
+          return null
         }
-        return this.form;
       }else {
-        return null
+        return this.form;
       }
+    },
+    /**
+     * 校验表单
+     * @returns {Promise<unknown>}
+     */
+    validForm() {
+      return new Promise((resolve) => {
+        this.getForm().validate((valid) => {
+          if (valid) {
+            const rdForm = this.getRdForm();
+            const ddBlForm = this.getDDBlForm()
+            if (rdForm && !ddBlForm) {
+              if(rdForm.getData().billFactoringModelList.length) {
+                resolve(true);
+              }else {
+                this.$messageBox({
+                  type:'warning',
+                  content:`请维护${this.businessParamModel.rdProductName}业务设置`
+                })
+                resolve(false)
+              }
+            }else if (!rdForm && ddBlForm) {
+              ddBlForm.getForm().validate((valid) => {
+                if (valid) {
+                  resolve(true);
+                }else {
+                  resolve(false)
+                }
+              })
+            }else if (rdForm && ddBlForm) {
+              if(!rdForm.getData().billFactoringModelList.length) {
+                this.$messageBox({
+                  type:'warning',
+                  content:`请维护${this.businessParamModel.rdProductName}业务设置`
+                })
+                resolve(false);
+              }else {
+                ddBlForm.getForm().validate((valid) => {
+                  if (valid) {
+                    resolve(true);
+                  }else {
+                    resolve(false)
+                  }
+                })
+              }
+            }
+          }else {
+            resolve(false)
+          }
+        })
+      });
     },
     getRdForm () {
       return this.$refs.bbizSetting;

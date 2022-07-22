@@ -51,6 +51,7 @@ export default {
     toPass() {
       this.$refs.auditRemark.getForm().clearValidate();
       const {notes} = this.$refs.auditRemark.getData()
+      // todo:校验
       this.$refs.tradeInfo.validData().then(valid => {
         if (valid) {
           this.passLoading = true;

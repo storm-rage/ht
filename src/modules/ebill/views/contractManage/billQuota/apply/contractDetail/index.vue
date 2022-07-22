@@ -8,33 +8,33 @@
           <el-row>
             <el-col :span="8">
               <el-form-item label="合同类型：">
-                <span>国内商业保理合同</span>
+                <span>{{detailInfo.contractName}}</span>
               </el-form-item>
             </el-col>
             <el-col :span="8">
               <el-form-item label="合同编号：">
-                <span>xxxxxxx</span>
+                <span>{{detailInfo.contractNo}}</span>
               </el-form-item>
             </el-col>
             <el-col :span="8">
               <el-form-item label="合同有效期间：">
-                <span>2022.09.09 至 2023.09.08</span>
+                <span>{{detailInfo.contractStartDate}} 至 2023.09.08</span>
               </el-form-item>
             </el-col>
           </el-row>
           <el-row>
             <el-form-item label="合同状态：">
-              <span>生效</span>
+              <span>{{typeMap(dictionary.contractStatus, detailInfo.contractStatus)}}</span>
             </el-form-item>
           </el-row>
         </el-form>
-        <zj-table :dataList="contractList">
+        <zj-table :dataList="contractList" :pager="false">
           <zj-table-column type="seq" title="序号" width="60"/>
           <zj-table-column
-            field="field1"
+            field="contractName"
             title="合同/协议编号"/>
           <zj-table-column
-            field="field2"
+            field="contractNo"
             title="合同名称"/>
           <zj-table-column title="操作" fixed="right">
             <template v-slot="{ row }">
@@ -47,19 +47,26 @@
     <zj-content-block>
       <zj-header title="额度信息"></zj-header>
       <zj-content>
-        <zj-table :dataList="quotaList"  @radio-change="handleRadioChange" :radio-config="{highlight: true}">
+        <zj-table :dataList="quotaList" :pager="false"  @radio-change="handleRadioChange" :radio-config="{highlight: true}">
           <zj-table-column type="radio"  width="50"/>
           <zj-table-column type="seq" title="序号" width="50"/>
           <zj-table-column
-            field="field1"
+            field="buyerName"
             title="买方企业名称"
           />
           <zj-table-column
-            field="field2"
-            title="应收账款转让期限"
-          />
-          <zj-table-column field="field3" title="授信额度" :formatter="money"/>
-          <zj-table-column field="field4" title="额度期限（月）" />
+            field="accountTransferStartDate"
+            title="应收账款转让期限">
+            <template v-slot="{row}">
+              {{row.accountTransferStartDate}}～{{row.accountTransferEndDate}}
+            </template>
+          </zj-table-column>
+          <zj-table-column field="totalCreditAmount" title="授信额度" :formatter="money"/>
+          <zj-table-column field="factoringCreditEndDate" title="额度期限" >
+            <template v-slot="{row}">
+              {{row.accountTransferStartDate}}～{{row.factoringCreditEndDate}}
+            </template>
+          </zj-table-column>
         </zj-table>
       </zj-content>
     </zj-content-block>
@@ -92,42 +99,57 @@
       </zj-content>
     </zj-content-block>
     <zj-content-footer>
-      <zj-button @click="$router.push('/productsOpened')">返回</zj-button>
+      <zj-button @click="goParent">返回</zj-button>
     </zj-content-footer>
   </zj-content-container>
 </template>
 
 <script>
+// todo：缺少接口，下载协议参数
 export default {
   data() {
     return {
-      contractList: [
-        {
-          field1: 'fsdfsdffsfd',
-          field2: '国内商业保理合同'
-        }
-      ],
-      quotaList: [
-        {
-          field1: '1',
-          field2: '海天a公司',
-          field3: '2022.09.09 ～ 2023.09.08',
-          field4: '100,000,000.00',
-          field5: '4'
-        },
-        {
-          field1: '2',
-          field2: '海天b公司',
-          field3: '2022.09.09 ～ 2023.09.08',
-          field4: '100,000,000.00',
-          field5: '5'
-        }
-      ],
-      fileList: []
+      zjControl: {
+        getDataDirectory: this.$api.billQuotaManage.getDataDirectory,
+        getContractDetail: this.$api.billQuotaManage.getContractDetail,
+        downApi: this.$api.baseCommon.downloadFile
+      },
+      // 字典
+      dictionary: {},
+      // 合同信息列表
+      contractList: [],
+      // 额度信息
+      quotaList: [],
+      // 协议信息列表
+      fileList: [],
+      // 合同详情信息
+      detailInfo:{}
     };
   },
+  created() {
+    this.getApi();
+    this.getDic();
+    this.getRow();
+    this.getDetail();
+  },
   methods: {
-    toDownload(row) {},
+    getDetail() {
+      this.zjControl.getContractDetail({contractId: this.row.contractId}).then(res => {
+        this.detailInfo = res.data;
+        this.contractList = [this.detailInfo];
+        if (res.data && res.data.creditInfoList) {
+          this.quotaList = res.data.creditInfoList;
+        }
+      });
+    },
+    getDic () {
+      this.zjControl.getDataDirectory().then(res => {
+        this.dictionary = res.data
+      })
+    },
+    toDownload(row) {
+      this.zjControl.downApi(row);
+    },
     handleRadioChange({row}){
       if (row.field1 === '1') {
         this.fileList = [{
