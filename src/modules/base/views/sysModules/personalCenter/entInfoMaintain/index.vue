@@ -14,7 +14,7 @@
           </el-col>
           <el-col :span="16">
             <el-form-item label="平台客户类型：" prop="entType">
-              <span>{{ this.form.entType | value }}</span>
+              <span>{{ typeMap(dictionary.entType, this.form.entType) }}</span>
             </el-form-item>
           </el-col>
         </el-row>
@@ -49,8 +49,8 @@
             </el-form-item>
           </el-col>
           <el-col :span="8">
-            <el-form-item label="成立日期：" prop="invoiceTaxpayerId">
-              {{ this.form.expireDateStart | value }}
+            <el-form-item label="成立日期：" prop="registerStartDate">
+              {{ this.form.registerStartDate | value }}
             </el-form-item>
           </el-col>
           <el-col :span="8">
@@ -111,7 +111,7 @@
           </el-col>
           <el-col :span="8">
             <el-form-item label="法定代表人证件类型：" prop="legalPersonName">
-              <span>{{ this.form.legalCertType }}</span>
+              <span>{{ this.form.legalCertType | value }}</span>
             </el-form-item>
           </el-col>
         </el-row>
@@ -146,7 +146,7 @@
           <zj-button
             class="append zj-m-b-10 zj-m-l-10"
             type="primary"
-            @click="openBankDialog(form)"
+            @click="openBankDialog(entData.entBankInfos)"
             >更换银行账户</zj-button
           >
           <zj-table
@@ -186,18 +186,13 @@
             <zj-table-column title="操作">
               <template v-slot="{ row, rowIndex }">
                 <template v-if="!$refs.bank.isActiveByRow(row)">
-                  <zj-button type="text" @click="sysUserEdit(row)"
-                    >修改</zj-button
-                  >
-                  <zj-button type="text" @click="sysUserDel(rowIndex)"
-                    >删除</zj-button
-                  >
+                  <zj-button type="text" @click="bankEdit(row)">修改</zj-button>
                 </template>
                 <template v-if="$refs.bank.isActiveByRow(row)">
-                  <zj-button type="text" @click="sysUserSave(row, rowIndex)"
+                  <zj-button type="text" @click="bankSave(row, rowIndex)"
                     >保存</zj-button
                   >
-                  <zj-button type="text" @click="sysUserCancel(row, rowIndex)"
+                  <zj-button type="text" @click="bankCancel(row, rowIndex)"
                     >取消</zj-button
                   >
                 </template>
@@ -212,44 +207,30 @@
         <zj-content>
           <zj-table
             ref="pubAttach"
-            :dataList="form.pubAttachList"
+            :dataList="attachInfo"
             :pager="false"
-            keep-source
             auto-resize
           >
             <zj-table-column type="seq" title="序号" width="50" />
-            <zj-table-column title="附件类型">
-              <template v-slot="{ row }">
-                <span
-                  v-if="
-                    (form.entType === 'B' || form.entType === 'S') &&
-                    row.busType !== 'QYZZ' &&
-                    row.busType !== 'QYKZRZ'
-                  "
-                  class="error"
-                  >*</span
-                >
-                {{ typeMap(dictionary.busTypeList, row.busType) }}
-              </template>
-            </zj-table-column>
-            <zj-table-column field="fileName" title="附件名称" />
+            <zj-table-column field="type" title="附件类型" />
+            <zj-table-column field="name" title="附件名称" />
             <zj-table-column title="操作">
               <template v-slot="{ row }">
-                <zj-button
+                <!-- <zj-button
                   type="text"
                   class="zj-m-r-10"
                   @click="pubAttachDownload(row)"
                   v-if="row.fileId"
                   >下载</zj-button
-                >
-                <zj-upload
+                > -->
+                <!-- <zj-upload
                   :httpRequest="pubAttachUpload"
                   :data="{ row }"
                   class="zj-inline"
                   v-if="!isDetail"
                 >
                   <zj-button type="text">上传</zj-button>
-                </zj-upload>
+                </zj-upload> -->
               </template>
             </zj-table-column>
           </zj-table>
@@ -273,14 +254,15 @@
     </el-form>
 
     <zj-content-footer>
-      <el-checkbox v-model="agreeCheck"
+      <el-checkbox v-model="agreeCheck" v-if="isAgreeCheck"
         >我已阅读并同意
         <zj-button type="text">《银行账户变更通知》</zj-button>
       </el-checkbox>
       <zj-button type="primary" @click="updateUserInfo">确认提交</zj-button>
       <zj-button class="back" @click="back">返回</zj-button>
     </zj-content-footer>
-    <bank-account ref="bankDialog" />
+
+    <bank-account ref="bankDialog" @getEntBankInfo="getEntBankInfo" />
   </zj-content-container>
 </template>
 
@@ -301,6 +283,13 @@ export default {
       rules: {},
       dictionary: {},
       agreeCheck: false,
+      isAgreeCheck: false, //是否需要勾选协议
+      attachInfo: [
+        { type: "营业执照", name: "" },
+        { type: "法定代表人身份证", name: "" },
+      ],
+      pubAttachUpload: "",
+      oldRow: {},
     };
   },
   created() {
@@ -325,7 +314,8 @@ export default {
           ...basicEntInfo.fastMailInfo,
           ...basicEntInfo.legalPersonInfo,
         };
-        this.form.entBankInfo = basicEntInfo.entBankInfo; //银行账户信息
+        this.form.entBankInfo = [basicEntInfo.entBankInfo]; //银行账户信息
+        // this.attachInfo = res.data.
       });
     },
     updateUserInfo() {
@@ -339,6 +329,55 @@ export default {
       //     type: "warning",
       //   });
       // };
+    },
+    //企业操作员编辑检测
+    bankIng() {
+      let key = this.$refs.bank.getActiveRecord() ? true : false;
+      if (key) {
+        this.$messageBox({
+          content: "请您先保存正在编辑的数据",
+          type: "info",
+        });
+      }
+      return key;
+    },
+    //修改银行账户
+    bankEdit(row) {
+      this.oldRow = JSON.parse(JSON.stringify(row));
+      this.$refs.bank.setActiveRow(row);
+    },
+    //保存企业操作员
+    bankSave(row, rowIndex) {
+      this.form = { ...this.form, ...row };
+      this.$refs.bank.clearActived();
+    },
+    //删除银行账户
+    sysUserDel(rowIndex) {
+      if (this.bankIng()) {
+        return;
+      }
+      this.form.entBankInfo.splice(rowIndex, 1);
+    },
+    //取消银行账户编辑
+    bankCancel(row, rowIndex) {
+      // if (!row.save) {
+      //   this.form.entBankInfo.splice(rowIndex, 1);
+      // } else {
+      //   this.form.entBankInfo.splice(
+      //     rowIndex,
+      //     1,
+      //     JSON.parse(JSON.stringify(this.oldRow))
+      //   );
+      // }
+      this.$refs.bank.clearActived();
+    },
+    // 获取更换后的银行账户
+    getEntBankInfo(data) {
+      console.log(data);
+      this.isAgreeCheck = true;
+      this.form = { ...this.form, ...data };
+      this.form.entBankInfo = [data];
+      console.log(this.form.entBankInfo);
     },
     openBankDialog(data) {
       this.$refs.bankDialog.show(data);
