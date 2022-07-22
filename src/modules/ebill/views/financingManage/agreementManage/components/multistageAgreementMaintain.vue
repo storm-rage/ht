@@ -39,18 +39,18 @@
           <li class="explain-item">直接上传合同附件即可，保理公司会根据上传的合同维护对应的阶段性协议。保理公司维护后，您可使用阶段性协议发起融资。</li>
         </ol>
       </div>
-      <zj-table ref="searchTable" :dataList="list" >
+      <zj-table ref="searchTable" :dataList="list" :pager="false">
         <zj-table-column field="index" title="序号"/>
         <zj-table-column field="fileName" title="合同附件"/>
         <zj-table-column field="remark" title="附件说明"/>
         <zj-table-column title="操作">
           <template v-slot="{row}">
-            <zj-button typ="text" @click="attaDownload(row.fileId)">下载</zj-button>
-            <zj-button typ="text" @click="attaDelete(row.fileId)">删除</zj-button>
+            <zj-button type="text" @click="attaDownload(row.fileId)">下载</zj-button>
+            <zj-button type="text" @click="attaDelete(row.fileId)">删除</zj-button>
           </template>
         </zj-table-column>
       </zj-table>
-      <el-row class="button-row">
+      <el-row class="button-row zj-center">
         <zj-button type="primary" icon="el-icon-circle-plus-outline" @click="addAtta">新增</zj-button>
       </el-row>
     </zj-content-block>

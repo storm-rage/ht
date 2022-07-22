@@ -32,7 +32,7 @@
               <zj-table ref="searchTable" :dataList="list" :radio-config="{highlight: true}">
                 <zj-table-column title="凭证编号">
                   <template v-slot="{row}">
-                    <zj-button type="text" @click="goChild('myVouchersDetail',row)">{{row.field1}}</zj-button>
+                    <zj-button type="text" @click="goChild('billLssueMyBillDetail',row)">{{row.field1}}</zj-button>
                   </template>
                 </zj-table-column>
                 <zj-table-column field="field3" title="签发人"/>
