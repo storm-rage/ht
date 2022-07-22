@@ -9,7 +9,8 @@ const agreementManageRouter = [
       title: `阶段性协议管理`,
       root: '融资管理',
       keepAlive: true,
-      refreshIndex: 0
+      refreshIndex: 0,
+      notRequireAuth: true
     }
   }
   // {
