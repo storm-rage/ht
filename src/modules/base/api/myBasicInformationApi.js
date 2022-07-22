@@ -1,30 +1,27 @@
-// 我的基本信息
+// 个人中心
 import request from '@common/axios/request'
 
 const myBasicInformation = {
-  //获取详情
-  getDetail:(params) => {
-    return request.get('/account-center/get-ent-invoice-info',{params})
+  //数据字典
+  getDirectory: (params) => {
+    return request.get('/personal-center/get-directory', { params })
   },
-  //修改开票信息
-  updateInfo:(params) => {
-    return request.post('/account-center/update-user-invoice-info',params)
+  //我的基本信息
+  getUserInfo: (params) => {
+    return request.get('/personal-center/get-my-basic-info', { params })
   },
-  //企业信息
-  getEntInfo:(params)=>{
-    return request.get('/account-center/get-ent-info',{params})
+  //维护企业信息详情
+  getEntInfo: (params) => {
+    return request.get('/personal-center/get-ent-info', { params })
   },
-  //个人信息
-  getUserInfo:(params)=>{
-    return request.get('/account-center/get-user-info',{params})
+  //维护企业信息修改
+  updateUserInfo: (params) => {
+    return request.post('/personal-center/update-user-info', { params })
   },
-  //修改邮箱地址
-  updateUserInfo:(params) => {
-    return request.post('/account-center/update-user-info',params)
+  //文件上传
+  uploadFile: (params) => {
+    return request.post('/personal-center/upload-file', { params })
   },
-  queryEntUsersInfoPage:(params) => {
-    return request.get('/account-center/query-ent-users-info-page',{params})
-  }
 }
 
 export default myBasicInformation
