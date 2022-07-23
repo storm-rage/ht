@@ -30,7 +30,7 @@ const personalCenterRouter = [
     }
   },
   {
-    path: '/userInfoMaintain',
+    path: '/userInfoMaintain/:id',
     name: 'userInfoMaintain',
     component: () => import('../views/sysModules/personalCenter/userInfoMaintain'),
     meta:{

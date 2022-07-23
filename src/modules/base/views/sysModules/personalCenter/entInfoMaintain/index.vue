@@ -206,14 +206,14 @@
         <zj-header title="企业附件" />
         <zj-content>
           <zj-table
-            ref="pubAttach"
+            ref="attach"
             :dataList="attachInfo"
             :pager="false"
             auto-resize
           >
             <zj-table-column type="seq" title="序号" width="50" />
             <zj-table-column field="type" title="附件类型" />
-            <zj-table-column field="name" title="附件名称" />
+            <zj-table-column field="fileName" title="附件名称" />
             <zj-table-column title="操作">
               <template v-slot="{ row }">
                 <!-- <zj-button
@@ -223,14 +223,14 @@
                   v-if="row.fileId"
                   >下载</zj-button
                 > -->
-                <!-- <zj-upload
-                  :httpRequest="pubAttachUpload"
+                <zj-upload
+                  :httpRequest="handleFileUpload"
                   :data="{ row }"
                   class="zj-inline"
                   v-if="!isDetail"
                 >
                   <zj-button type="text">上传</zj-button>
-                </zj-upload> -->
+                </zj-upload>
               </template>
             </zj-table-column>
           </zj-table>
@@ -285,10 +285,9 @@ export default {
       agreeCheck: false,
       isAgreeCheck: false, //是否需要勾选协议
       attachInfo: [
-        { type: "营业执照", name: "" },
-        { type: "法定代表人身份证", name: "" },
+        { fileId: "", type: "营业执照", fileName: "" },
+        { fileId: "", type: "法定代表人身份证", fileName: "" },
       ],
-      pubAttachUpload: "",
       oldRow: {},
     };
   },
@@ -315,13 +314,20 @@ export default {
           ...basicEntInfo.legalPersonInfo,
         };
         this.form.entBankInfo = [basicEntInfo.entBankInfo]; //银行账户信息
-        // this.attachInfo = res.data.
+        this.attachInfo[0].name = res.data.attachInfo.qyyzAttachName; // 营业执照
+        this.attachInfo[1].name = res.data.attachInfo.qyfrzjAttachName; // 法定代表人证件
       });
     },
     updateUserInfo() {
+      // 营业执照
+      this.form.qyyzFileId = this.attachInfo[0].fileId;
+      this.form.qyyzAttachName = this.attachInfo[0].fileName;
+      // 法定代表人证件
+      this.form.qyfrzjFileId = this.attachInfo[1].fileId;
+      this.form.qyfrzjAttachName = this.attachInfo[1].fileName;
       this.zjControl.updateUserInfo(this.form).then((res) => {
         this.getEntInfo();
-        this.$message.success("修改成功");
+        this.$message.success("修改成功!");
       });
       // if (this.agreeCheck) {
       // } else {
@@ -371,13 +377,22 @@ export default {
       // }
       this.$refs.bank.clearActived();
     },
+    //上传附件
+    handleFileUpload({ file, data }) {
+      let formData = new FormData();
+      formData.append("bizType", "ent");
+      formData.append("file", file);
+      this.zjControl.uploadFile(formData).then((res) => {
+        data.row.fileId = res.data.fileId;
+        data.row.fileName = res.data.fileName;
+        this.$message.success("附件上传成功!");
+      });
+    },
     // 获取更换后的银行账户
     getEntBankInfo(data) {
-      console.log(data);
       this.isAgreeCheck = true;
       this.form = { ...this.form, ...data };
       this.form.entBankInfo = [data];
-      console.log(this.form.entBankInfo);
     },
     openBankDialog(data) {
       this.$refs.bankDialog.show(data);

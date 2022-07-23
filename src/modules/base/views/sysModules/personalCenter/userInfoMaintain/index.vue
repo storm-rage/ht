@@ -6,12 +6,7 @@
       <zj-content>
         <el-form ref="form" label-width="160px">
           <el-row>
-            <el-col :span="8">
-              <el-form-item label="用户姓名：">
-                <span>xxxxxxx</span>
-              </el-form-item>
-            </el-col>
-            <el-col :span="8">
+            <el-col :span="24" v-if="pageType !== 2">
               <el-form-item label="角色：">
                 <el-select
                   v-model="form.a"
@@ -19,33 +14,49 @@
                   placeholder="请选择"
                   :popper-append-to-body="false"
                 >
-                  <el-option :label="经办员" :value="经办员" />
+                  <el-option label="经办员" value="经办员" />
                 </el-select>
               </el-form-item>
             </el-col>
             <el-col :span="8">
-              <el-form-item label="海天业务系统账号：">
-                <el-input v-model="form.a" />
+              <el-form-item label="用户姓名：">
+                <el-input v-model="form.userName" :disabled="pageType !== 3" />
               </el-form-item>
             </el-col>
             <el-col :span="8">
-              <el-form-item label="证件类型：">
+              <el-form-item label="角色：" v-if="pageType === 2">
                 <el-select
                   v-model="form.a"
                   filterable
                   placeholder="请选择"
                   :popper-append-to-body="false"
-                  v-if="isAdd"
+                  :disabled="pageType === 2"
                 >
-                  <el-option :label="身份证号码" :value="身份证号码" />
+                  <el-option label="经办员" value="经办员" />
                 </el-select>
-                <span v-else>62434343</span>
+              </el-form-item>
+            </el-col>
+            <el-col :span="8">
+              <el-form-item label="海天业务系统账号：">
+                <el-input v-model="form.htSysCode" :disabled="pageType === 1" />
+              </el-form-item>
+            </el-col>
+            <el-col :span="8">
+              <el-form-item label="证件类型：">
+                <el-select
+                  v-model="form.certType"
+                  filterable
+                  placeholder="请选择"
+                  :popper-append-to-body="false"
+                  :disabled="pageType !== 3"
+                >
+                  <el-option label="身份证号码" value="身份证号码" />
+                </el-select>
               </el-form-item>
             </el-col>
             <el-col :span="8">
               <el-form-item label="证件号码：">
-                <el-input v-model="form.a" v-if="isAdd" />
-                <span v-else>xxxxxxx</span>
+                <el-input v-model="form.certNo" :disabled="pageType !== 3" />
               </el-form-item>
             </el-col>
             <el-col :span="8">
@@ -53,24 +64,26 @@
                 <zj-date-range-picker
                   :startDate.sync="form.certStartDate"
                   :endDate.sync="form.certEndDate"
-                  @startChange="certStartChange"
-                  @endChange="certEndChange"
+                  :disabled="pageType === 1"
                 />
               </el-form-item>
             </el-col>
             <el-col :span="8">
               <el-form-item label="手机号码/用户名：">
-                <el-input v-model="form.a" />
+                <el-input v-model="form.mobileNo" :disabled="pageType === 1" />
               </el-form-item>
             </el-col>
             <el-col :span="8">
               <el-form-item label="邮箱：">
-                <el-input v-model="form.a" />
+                <el-input v-model="form.email" :disabled="pageType === 1" />
               </el-form-item>
             </el-col>
             <el-col :span="8">
-              <el-form-item label="邮箱：">
-                <el-input v-model="form.a" />
+              <el-form-item label="银行卡号：">
+                <el-input
+                  v-model="form.bankAcctNo"
+                  :disabled="pageType === 1"
+                />
               </el-form-item>
             </el-col>
           </el-row>
@@ -80,19 +93,19 @@
     <zj-content-block>
       <zj-header title="身份证"></zj-header>
       <zj-content>
-        <zj-table :pager="false">
+        <zj-table :pager="false" ref="attach" :dataList="attachInfo">
           <zj-table-column type="seq" width="60" title="序号" />
-          <zj-table-column field="field2" title="附件类型" />
-          <zj-table-column field="field2" title="附件" />
+          <zj-table-column field="type" title="附件类型" />
+          <zj-table-column field="fileName" title="附件" />
           <zj-table-column title="操作" fixed="right">
-            <template v-slot="{ row, rowIndex }">
+            <template v-slot="{ row }">
               <zj-upload
-                class="zj-inline"
                 :httpRequest="handleFileUpload"
-                :autoUpload="false"
-                :onChange="handleFileChange"
+                :data="{ row }"
+                class="zj-inline"
+                v-if="pageType !== 1"
               >
-                <zj-button slot="trigger" type="text">上传</zj-button>
+                <zj-button type="text">上传</zj-button>
               </zj-upload>
             </template>
             <template>
@@ -102,7 +115,7 @@
             </template>
           </zj-table-column>
         </zj-table>
-        <zj-content>
+        <zj-content v-show="pageType !== 1">
           <zj-content-tip
             text="注：1.请将身份证正、反面完整放在同一页上，并加盖企业公章。请确保身份证在有效期内。"
           ></zj-content-tip>
@@ -110,12 +123,13 @@
           <zj-content-tip text="2.支持上传的文档格式：PDF。"></zj-content-tip>
           <br />
           <zj-content-tip
+            v-show="pageType === 3"
             text=" 3.委托授权书请下载，加盖公司公章后上传。"
           ></zj-content-tip>
         </zj-content>
       </zj-content>
     </zj-content-block>
-    <zj-content-block>
+    <zj-content-block v-show="pageType !== 1">
       <zj-content class="zj-m-l-20">
         <h4 class="zj-m-b-20">
           请将以上已盖章影像资料对应的纸质版邮递至以下地址：
@@ -124,17 +138,17 @@
           <el-row>
             <el-col :span="8">
               <el-form-item label="收件人：">
-                <span>xxxxxxx</span>
+                {{ this.platformFastMail.fastMailName }}
               </el-form-item>
             </el-col>
             <el-col :span="16">
               <el-form-item label="收件人电话：">
-                <span>xxxxxxx</span>
+                <span>{{ this.platformFastMail.fastMailPhone }}</span>
               </el-form-item>
             </el-col>
             <el-col :span="8">
               <el-form-item label="收件地址：">
-                <span>xxxxxxx</span>
+                <span>{{ this.platformFastMail.fastMailAddress }}</span>
               </el-form-item>
             </el-col>
           </el-row>
@@ -142,8 +156,18 @@
       </zj-content>
     </zj-content-block>
     <zj-content-footer>
-      <zj-button type="primary" @click="submit">维护本人信息</zj-button>
-      <zj-button type="primary" @click="submit">更换操作人员</zj-button>
+      <zj-button type="primary" @click="pageType = 2" v-show="pageType == 1"
+        >维护本人信息</zj-button
+      >
+      <zj-button type="primary" @click="pageType = 3" v-show="pageType === 1"
+        >更换操作人员</zj-button
+      >
+      <zj-button
+        type="primary"
+        @click="submit"
+        v-show="pageType === 2 || pageType === 3"
+        >确认提交</zj-button
+      >
       <zj-button class="back" @click="back">返回</zj-button>
     </zj-content-footer>
   </zj-content-container>
@@ -154,25 +178,82 @@ export default {
 
   data() {
     return {
+      zjControl: {
+        ...this.$api.myBasicInformation,
+      },
       form: {},
-      fileList: [
-        {
-          field1: "海天a公司",
-          field2: "是",
-          field3: "54354343423X4645656456",
-          field4: "订单保理",
-          field5: "生效",
-          field6: "2022.09.09 ～ 2023.09.08",
-          field7: "100,000,000.00",
-          field8: "生效",
-        },
-      ],
-      pageType: "detail",
+      dictionary: {},
+      attachInfo: [{ fileId: "", type: "身份证影印件", fileName: "" }],
+      platformFastMail: {},
+      pageType: 1, // 1详情 2维护本人信息 3更换操作人员
     };
   },
+  created() {
+    this.getDirectory();
+    this.getPersonalInfo();
+  },
   methods: {
+    // 获取字典
+    getDirectory() {
+      this.zjControl.getDirectory().then((res) => {
+        this.dictionary = res.data;
+      });
+    },
+    // 获取个人信息
+    getPersonalInfo() {
+      let params = { roleId: this.$route.params.id };
+      this.zjControl.getPersonalInfo(params).then((res) => {
+        this.form = res.data.userInfo;
+        this.platformFastMail = res.data.platformFastMail;
+      });
+    },
+    // 确认提交
+    submit() {
+      if (this.pageType === 2) {
+        this.updatePersonalInfo();
+      }
+      if (this.pageType === 3) {
+        this.updateOperator();
+      }
+    },
+    // 维护本人信息
+    updatePersonalInfo() {
+      // 身份证附件
+      this.form.identitycardFileId = this.attachInfo[0].fileId;
+      this.form.identitycardFileName = this.attachInfo[0].fileName;
+      this.zjControl.updatePersonalInfo(this.form).then((res) => {
+        this.getPersonalInfo();
+        this.$message.success("修改成功!");
+      });
+    },
+    // 更换操作人员
+    updateOperator() {
+      // 身份证附件
+      this.form.identitycardFileId = this.attachInfo[0].fileId;
+      this.form.identitycardFileName = this.attachInfo[0].fileName;
+      this.zjControl.updateOperator(this.form).then((res) => {
+        this.getPersonalInfo();
+        this.$message.success("修改成功!");
+      });
+    },
+    //上传附件
+    handleFileUpload({ file, data }) {
+      let formData = new FormData();
+      formData.append("bizType", "user");
+      formData.append("file", file);
+      this.zjControl.uploadFile(formData).then((res) => {
+        data.row.fileId = res.data.fileId;
+        data.row.fileName = res.data.fileName;
+        this.$message.success("附件上传成功!");
+      });
+    },
+    toDownload() {},
     back() {
-      this.$router.push("/personalCenter")
+      if (this.pageType === 1) {
+        this.$router.push("/personalCenter");
+      } else {
+        this.pageType = 1;
+      }
     },
   },
 };
