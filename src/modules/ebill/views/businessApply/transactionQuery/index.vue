@@ -5,32 +5,29 @@
         <el-form ref="searchForm" :model="searchForm">
           <el-form-item label="申请日期：" class="col-right">
             <zj-date-range-picker
-              :startDate.sync="searchForm.expireDateStart"
-              :endDate.sync="searchForm.expireDateEnd"
+              :startDate.sync="searchForm.applyDatetimeStart"
+              :endDate.sync="searchForm.applyDatetimeEnd"
             />
           </el-form-item>
           <el-form-item label="申请状态：" class="col-center">
             <el-select
-              v-model="searchForm.isGenerateVoucher"
+              v-model="searchForm.applyStatus"
               placeholder="请选择"
               clearable
               :popper-append-to-body="false"
             >
               <el-option value="" label="全部"></el-option>
-              <!-- <el-option
-              v-for="item in dictionary.isGenerateVouchers"
-              :key="item.code"
-              :label="item.desc"
-              :value="item.code"
-            >
-            </el-option> -->
+              <el-option
+                v-for="item in dictionary.applyStatus"
+                :key="item.code"
+                :label="item.desc"
+                :value="item.code"
+              >
+              </el-option>
             </el-select>
           </el-form-item>
           <el-form-item label="申请流水号：" class="col-center">
-            <el-input
-              v-model="searchForm.ebillCode"
-              @keyup.enter.native="enterSearch"
-            />
+            <el-input v-model="searchForm.serialNo" />
           </el-form-item>
         </el-form>
       </template>
@@ -40,15 +37,21 @@
         :params="searchForm"
         :api="zjControl.tableApi"
       >
-        <zj-table-column field="issueEntName" title="申请流水号" />
-        <zj-table-column field="ebillAmt" title="申请时间" :formatter="date" />
-        <zj-table-column field="transferAmt" title="申请产品" />
+        <zj-table-column field="serialNo" title="申请流水号" />
+        <zj-table-column
+          field="busType"
+          title="申请类型"
+          :formatter="(obj) => typeMap(dictionary.busType, obj.busType)"
+        />
+        <zj-table-column
+          field="applyDatetime"
+          title="申请时间"
+          :formatter="date"
+        />
         <zj-table-column
           field="state"
           title="申请状态"
-          :formatter="
-            (obj) => typeMap(dictionary.enterpriseStateList, obj.cellValue)
-          "
+          :formatter="(obj) => typeMap(dictionary.applyStatus, obj.applyStatus)"
         />
       </zj-table>
     </zj-list-layout>
@@ -58,14 +61,24 @@
 export default {
   data() {
     return {
-      zjControl: {},
+      zjControl: {
+        ...this.$api.maintainTransaction,
+      },
       searchForm: {},
+      dictionary: {},
     };
   },
   created() {
     this.getApi();
+    this.getDirectory();
   },
   methods: {
+    // 获取字典
+    getDirectory() {
+      this.zjControl.getDirectory().then((res) => {
+        this.dictionary = res.data;
+      });
+    },
     toBillDetails(row) {
       console.log(row);
     },

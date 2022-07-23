@@ -16,7 +16,7 @@ const myBasicInformation = {
   },
   //维护企业信息修改
   updateUserInfo: (params) => {
-    return request.post('/personal-center/update-ent-info', { params })
+    return request.post('/personal-center/update-ent-info', params )
   },
   //文件上传
   uploadFile: (params) => {
@@ -28,11 +28,11 @@ const myBasicInformation = {
   },
    //维护个人信息修改
    updatePersonalInfo: (params) => {
-    return request.post('/personal-center/update-personal-info', { params })
+    return request.post('/personal-center/update-personal-info', params )
   },
    //更换操作人员
    updateOperator: (params) => {
-    return request.post('/personal-center/updateOperator', { params })
+    return request.post('/personal-center/updateOperator', params)
   },
 }
 

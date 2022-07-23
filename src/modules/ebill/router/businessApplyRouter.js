@@ -25,16 +25,14 @@ const businessApplyRouter = [
     }
   },
     {
-      path: '/transactionQuery',
-      name: 'transactionQuery',
+      path: '/basicInfoApplyRecord',
+      name: 'basicInfoApplyRecord',
       component: () => import('../views/businessApply/transactionQuery/index.vue'),
       meta:{
-        isMock:true,
         title:`基础信息维护交易查询`,
         root:'业务申请',
         keepAlive:true,
         refreshIndex:0,
-        notRequireAuth: true
       }
     },
     {

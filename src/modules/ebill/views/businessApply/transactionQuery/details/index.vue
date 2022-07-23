@@ -7,28 +7,28 @@
       <el-form ref="form" label-width="160px">
         <el-row>
           <el-col :span="8">
-            <el-form-item label="申请流水号：" prop="field1">
-              546565465
+            <el-form-item label="申请流水号：">
+              {{ this.detailData.serialNo }}
             </el-form-item>
           </el-col>
           <el-col :span="8">
-            <el-form-item label="业务类型：" prop="field1">
-              546565465
+            <el-form-item label="业务类型：">
+              {{ this.detailData.busType }}
             </el-form-item>
           </el-col>
           <el-col :span="8">
-            <el-form-item label="申请时间：" prop="field1">
-              546565465
+            <el-form-item label="申请时间：">
+              {{ this.detailData.applyDatetime }}
             </el-form-item>
           </el-col>
           <el-col :span="8">
             <el-form-item label="申请状态：" prop="field1">
-              546565465
+              {{ this.detailData.applyStatus }}
             </el-form-item>
           </el-col>
           <el-col :span="8">
             <el-form-item label="拒绝原因：" prop="field1">
-              546565465
+              {{ this.detailData.rejectReason }}
             </el-form-item>
           </el-col>
         </el-row>
@@ -152,12 +152,31 @@ export default {
   data() {
     return {
       zjControl: {},
-      searchForm: {},
       detailData: {},
+      dictionary: {},
     };
   },
-  created() {},
-  methods: {},
+  created() {
+    this.getDirectory();
+  },
+  methods: {
+    // 获取字典
+    getDirectory() {
+      this.zjControl.getDirectory().then((res) => {
+        this.dictionary = res.data;
+      });
+    },
+    // 获取详情
+    getDetail() {
+      let params = {
+        busType: this.$route.params.busType,
+        serialNo: this.$route.params.serialNo,
+      };
+      this.zjControl.getDetail(params).then((res) => {
+        this.detailData = res.data;
+      });
+    },
+  },
 };
 </script>
 <style lang="less" scoped>
