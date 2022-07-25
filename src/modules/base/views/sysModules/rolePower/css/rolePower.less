@@ -19,6 +19,7 @@
     overflow-y: auto;
     .zj-search-form {
       margin: 20px 20px 0;
+      min-width: 540px;
     }
     .button-row {
       margin: 20px 0;
@@ -27,29 +28,29 @@
       }
     }
   }
-}
-/*中间图标*/
-.role-center{
-  width: 1px;
-  height: 100%;
-  background-color: #dedede;
-  margin: 0 10px;
-}
-/*右侧*/
-.role-right{
-  min-width: 540px;
-  flex: 1;
-  padding: 30px 20px 20px;
-  .power-config {
-    margin-bottom: 10px;
-    font-weight: bold;
+  /*中间图标*/
+  .role-center{
+    width: 1px;
+    height: 100%;
+    background-color: #dedede;
+    margin: 0 10px;
   }
-}
-.content-block {
-  display: flex;
-  justify-content: space-between;
-  height: 300px;
-  .role-left,.role-right {
-    min-width: 300px;
+  /*右侧*/
+  .role-right{
+    min-width: 540px;
+    flex: 1;
+    padding: 30px 20px 20px;
+    .power-config {
+      margin-bottom: 10px;
+      font-weight: bold;
+    }
+  }
+  .content-block {
+    display: flex;
+    justify-content: space-between;
+    height: 300px;
+    .role-left,.role-right {
+      min-width: 300px;
+    }
   }
 }
