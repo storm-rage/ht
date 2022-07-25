@@ -35,6 +35,28 @@ export const CactoringLogo = {
   BILLBL: '1'
 };
 /**
+ * 企业类型
+ * @type {{}}
+ */
+export const EntType = {
+  // 保理
+  BL: 'BL',
+  // 运营
+  YY: 'O',
+  // 供应商
+  GYS: 'S',
+  // 核心企业
+  HX: 'B'
+};
+/**
+ * 协议模板类型
+ * @type {{}}
+ */
+export const TemplateType = {
+  // 额度调整申请书
+  EDTZSQS: 'EDTZSQS'
+};
+/**
  * 工作流的操作标识
  * @type {{REJECT: string, PASS: string, BACK: string}}
  */

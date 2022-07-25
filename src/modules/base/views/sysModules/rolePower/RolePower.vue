@@ -103,4 +103,4 @@
   export default rolePower
 </script>
 
-<style lang="less" src="./css/rolePower.less" />
+<style lang="less" src="./css/rolePower.less"/>

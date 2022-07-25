@@ -1,11 +1,12 @@
 <template>
   <div>
     <!-- 非凭证确认收款信息   -->
-    <other-confirm-payment-info :detail-info="bizDetailInfo"
-                                :isEdit="false"
+    <other-confirm-payment-info ref="paymentInfo"
+                                :detail-info="bizDetailInfo"
+                                :isEdit="true"
                                 :dictionary="dictionary"></other-confirm-payment-info>
     <!-- 附件信息   -->
-    <payment-file :is-edit="false" :attach-list="bizDetailInfo.attachModelList"></payment-file>
+    <payment-file ref="paymentFile" :is-edit="true" :attach-list="bizDetailInfo.attachModelList"></payment-file>
   </div>
 </template>
 
@@ -14,7 +15,7 @@ import OtherConfirmPaymentInfo from '../components/otherConfirmPaymentInfo';
 import PaymentFile from '../../components/clearingFileInfo';
 
 export default {
-  name: 'OtherConfirmPaymentAudit',
+  name: 'OtherConfirmPaymentBackAudit',
   props: {
     bizDetailInfo: {
       type: Object,
@@ -29,5 +30,13 @@ export default {
     OtherConfirmPaymentInfo,
     PaymentFile
   },
+  methods: {
+    getForm() {
+      return this.$refs.paymentInfo.getForm();
+    },
+    getData() {
+      return {form: this.$refs.paymentInfo.getData(),fileData:this.$refs.paymentFile.getData()}
+    },
+  }
 }
 </script>

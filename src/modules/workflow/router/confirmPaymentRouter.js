@@ -4,12 +4,10 @@ const confirmPaymentRouter = [
     name: 'billConfirmPaymentAudit',
     component: () => import('../views/clearingManage/confirmPayment/billPaymentAudit'),
     meta: {
-      isMock: false,
       title: '凭证确认收款审核',
-      root: '我的代办',
+      parent: 'myTodo',
       keepAlive: true,
-      refreshIndex: 0,
-      notRequireAuth: true
+      refreshIndex: 0
     }
   },
   {
@@ -17,12 +15,10 @@ const confirmPaymentRouter = [
     name: 'billConfirmPaymentDetail',
     component: () => import('../views/clearingManage/confirmPayment/billPaymentDetail'),
     meta: {
-      isMock: false,
       title: '凭证收款交易详情',
-      root: '我的代办',
+      parent: 'myTodo',
       keepAlive: true,
-      refreshIndex: 0,
-      notRequireAuth: true
+      refreshIndex: 0
     }
   },
   {
@@ -30,12 +26,10 @@ const confirmPaymentRouter = [
     name: 'otherConfirmPaymentAudit',
     component: () => import('../views/clearingManage/confirmPayment/otherPaymentAudit'),
     meta: {
-      isMock: false,
       title: '非凭证确认收款审核',
-      root: '我的代办',
+      parent: 'myTodo',
       keepAlive: true,
-      refreshIndex: 0,
-      notRequireAuth: true
+      refreshIndex: 0
     }
   },
   {
@@ -43,12 +37,54 @@ const confirmPaymentRouter = [
     name: 'otherConfirmPaymentDetail',
     component: () => import('../views/clearingManage/confirmPayment/otherPaymentDetail'),
     meta: {
-      isMock: false,
       title: '订单保理收款交易详情',
-      root: '我的代办',
+      parent: 'myTodo',
       keepAlive: true,
-      refreshIndex: 0,
-      notRequireAuth: true
+      refreshIndex: 0
+    }
+  },
+  {
+    path: '/billConfirmPaymentBackAudit',
+    name: 'billConfirmPaymentBackAudit',
+    component: () => import('../views/clearingManage/confirmPayment/billPaymentBackAudit'),
+    meta: {
+      title: '凭证收款驳回审核',
+      parent: 'myTodo',
+      keepAlive: true,
+      refreshIndex: 0
+    }
+  },
+  {
+    path: '/billConfirmPaymentBackDetail',
+    name: 'billConfirmPaymentBackDetail',
+    component: () => import('../views/clearingManage/confirmPayment/billPaymentBackDetail'),
+    meta: {
+      title: '凭证收款交易详情',
+      parent: 'myTodo',
+      keepAlive: true,
+      refreshIndex: 0
+    }
+  },
+  {
+    path: '/otherConfirmPaymentBackAudit',
+    name: 'otherConfirmPaymentBackAudit',
+    component: () => import('../views/clearingManage/confirmPayment/otherPaymentBackAudit'),
+    meta: {
+      title: '非凭证确认收款驳回审核',
+      parent: 'myTodo',
+      keepAlive: true,
+      refreshIndex: 0
+    }
+  },
+  {
+    path: '/otherConfirmPaymentBackDetail',
+    name: 'otherConfirmPaymentBackDetail',
+    component: () => import('../views/clearingManage/confirmPayment/otherPaymentBackDetail'),
+    meta: {
+      title: '凭证收款交易详情',
+      parent: 'myTodo',
+      keepAlive: true,
+      refreshIndex: 0
     }
   },
   {
@@ -56,12 +92,10 @@ const confirmPaymentRouter = [
     name: 'advancePaymentAudit',
     component: () => import('../views/clearingManage/confirmPayment/advancePaymentAudit'),
     meta: {
-      isMock: false,
-      title: '确认提前还款审核',
-      root: '我的代办',
+      title: '确认提前还款复核',
+      parent: 'myTodo',
       keepAlive: true,
-      refreshIndex: 0,
-      notRequireAuth: true
+      refreshIndex: 0
     }
   },
   {
@@ -69,12 +103,10 @@ const confirmPaymentRouter = [
     name: 'advancePaymentDetail',
     component: () => import('../views/clearingManage/confirmPayment/advancePaymentDetail'),
     meta: {
-      isMock: false,
       title: '确认提前还款详情',
-      root: '我的代办',
+      parent: 'myTodo',
       keepAlive: true,
-      refreshIndex: 0,
-      notRequireAuth: true
+      refreshIndex: 0
     }
   }
 ];
