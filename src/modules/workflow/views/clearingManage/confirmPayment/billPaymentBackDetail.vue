@@ -21,7 +21,7 @@ import BizApplyInfo from '../../components/bizApplyInfo';
 import OperateLog from '../../components/operateLog';
 import BillConfirmPaymentDetail from '@modules/ebill/views/clearingManage/confirmPaymentManage/workflow/billConfirmPaymentDetail.vue';
 export default {
-  name: 'BillPaymentDetail',
+  name: 'BillPaymentBackDetail',
   components: {
     BizApplyInfo,
     OperateLog,
@@ -31,7 +31,7 @@ export default {
     return {
       zjControl: {
         getDirectory: this.$api.confirmPaymentManage.getDirectory,
-        getBillReceiptReviewDetail: this.$api.confirmPaymentManageWorkflow.getBillReceiptReviewDetail
+        getBillReceiptPendingDetail: this.$api.confirmPaymentManageWorkflow.getBillReceiptPendingDetail
       },
       // 字典
       dictionary: {},
@@ -51,7 +51,7 @@ export default {
       });
     },
     getDetail() {
-      this.zjControl.getBillReceiptReviewDetail({id: this.row.id}).then(res => {
+      this.zjControl.getBillReceiptPendingDetail({id: this.row.id}).then(res => {
         this.detailInfo = res.data;
       });
     },

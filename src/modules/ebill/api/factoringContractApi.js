@@ -46,6 +46,34 @@ export default {
   submitEbContractApply(params) {
     return request.get('/eb-contract-manage-enterprise/submit-eb-contract-apply', {params})
   },
+  /**
+   * 保理合同签约申请-去签约-详情
+   * @param params
+   * @returns {Promise<AxiosResponse<any>>}
+   */
+  queryEbContractReviewSignDetail(params) {
+    return request.get('/eb-contract-apply-review/query-eb-contract-review-sign-detail', {params})
+  },
+  /**
+   * 保理合同签约复核-列表
+   * @param params
+   * @returns {Promise<AxiosResponse<any>>}
+   */
+  queryEbContractReviewSignPage(params) {
+    return request.get('/eb-contract-apply-review/query-eb-contract-review-sign-detail', {params})
+  },
+  /**
+   * 保理合同签约复核-复核(通过,拒绝)
+   * @param params
+   * @returns {Promise<AxiosResponse<any>>}
+   */
+  submitEbContractApplyReview(params) {
+    return request.post('/eb-contract-apply-review/submit-eb-contract-apply-review', params)
+  },
+  ///eb-contract-apply/query-eb-contract-apply-sign-detail
+  queryEbContractApplySignDetail(params) {
+    return request.get('/eb-contract-apply-review/query-eb-contract-review-sign-detail', {params})
+  },
   //=================================运营端Api================================
   /**
    * 保理合同-待办-合同确认 or 取消

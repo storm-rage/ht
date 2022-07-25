@@ -67,9 +67,6 @@ export default {
       dictionary: {}
     }
   },
-  mounted() {
-    console.log(this.$refs.searchForm.getBoundingClientRect);
-  },
   created() {
     this.getApi()
     this.zjControl.getDataDirectory().then(res => {

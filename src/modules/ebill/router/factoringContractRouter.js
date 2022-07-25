@@ -4,16 +4,14 @@
  */
 const factoringContractRouter = [
   {
-    path: '/factoringContractQuery',
-    name: 'factoringContractQuery',
+    path: '/ebContractManagement',
+    name: 'ebContractManagement',
     component: () => import('../views/productManage/factoringContract/query/list.vue'),
     meta: {
-      isMock: false,
       title: '保理合同查询',
       root: '产品管理',
       keepAlive: true,
-      refreshIndex: 0,
-      notRequireAuth: true
+      refreshIndex: 0
     },
   },
   {
@@ -21,12 +19,10 @@ const factoringContractRouter = [
     name: 'factoringContractDetail',
     component: () => import('../views/productManage/factoringContract/detailPage/index.vue'),
     meta: {
-      isMock: false,
       title: '供应商保理合同详情',
-      root: '产品管理',
+      parent: 'ebContractManagement',
       keepAlive: true,
-      refreshIndex: 0,
-      notRequireAuth: true
+      refreshIndex: 0
     },
   },
 ];

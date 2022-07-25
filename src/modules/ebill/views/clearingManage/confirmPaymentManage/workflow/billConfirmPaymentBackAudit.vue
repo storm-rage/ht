@@ -3,7 +3,7 @@
   <!-- 凭证确认收款信息   -->
   <bill-confirm-payment-info :detail-info="bizDetailInfo"></bill-confirm-payment-info>
   <!-- 附件信息   -->
-  <payment-file :is-edit="false" :attach-list="bizDetailInfo.attachModelList"></payment-file>
+  <payment-file ref="paymentFile" :is-edit="true" :attach-list="bizDetailInfo.attachModelList"></payment-file>
 </div>
 </template>
 
@@ -11,7 +11,7 @@
 import BillConfirmPaymentInfo from '../components/billConfirmPaymentInfo';
 import PaymentFile from '../../components/clearingFileInfo';
 export default {
-  name: 'BillConfirmPaymentAudit',
+  name: 'BillConfirmPaymentBackAudit',
   props: {
     bizDetailInfo: {
       type: Object,
@@ -21,6 +21,11 @@ export default {
   components: {
     BillConfirmPaymentInfo,
     PaymentFile
+  },
+  methods: {
+    getData() {
+      return this.$refs.paymentFile.getData();
+    },
   }
 }
 </script>

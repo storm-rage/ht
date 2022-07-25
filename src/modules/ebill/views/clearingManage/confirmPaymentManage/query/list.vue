@@ -4,42 +4,48 @@
       <template slot="searchForm">
         <el-form ref="searchForm" :model="searchForm">
           <el-form-item label="资金流水号：">
-            <el-input v-model="searchForm.issueEntName" @keyup.enter.native="enterSearch"/>
+            <el-input v-model.trim="searchForm.capitalSerialno" @keyup.enter.native="enterSearch"/>
           </el-form-item>
           <el-form-item label="收款日期：" class="col-right">
             <zj-date-range-picker
-              :startDate.sync="searchForm.expireDateStart"
-              :endDate.sync="searchForm.expireDateEnd"
+              :startDate.sync="searchForm.repayDateStart"
+              :endDate.sync="searchForm.repayDateEnd"
             />
           </el-form-item>
           <el-form-item label="收款金额：">
-            <zj-amount-range :startAmt.sync="searchForm.ebillAmtStart" :endAmt.sync="searchForm.ebillAmtEnd"></zj-amount-range>
+            <zj-amount-range :startAmt.sync="searchForm.repayAmtStart"
+                             :endAmt.sync="searchForm.repayAmtEnd"></zj-amount-range>
           </el-form-item>
           <el-form-item label="付款方名称：">
-            <el-input v-model="searchForm.issueEntName" @keyup.enter.native="enterSearch"/>
+            <el-input v-model.trim="searchForm.payerEntNameLike" @keyup.enter.native="enterSearch"/>
           </el-form-item>
           <el-form-item label="业务系统单号：">
-            <el-input v-model="searchForm.issueEntName" @keyup.enter.native="enterSearch"/>
+            <el-input v-model.trim="searchForm.outOrederNo" @keyup.enter.native="enterSearch"/>
           </el-form-item>
           <el-form-item label="供应商简称：">
-            <el-input v-model="searchForm.issueEntName" @keyup.enter.native="enterSearch"/>
+            <el-input v-model.trim="searchForm.entShortNameLike" @keyup.enter.native="enterSearch"/>
           </el-form-item>
         </el-form>
       </template>
-      <zj-table ref="searchTable" :dataList="list" :params="searchForm" :api="zjControl.tableApi" @radio-change="handleRadioChange" :radio-config="{highlight: true}">
+      <zj-table ref="searchTable"
+                :params="searchForm"
+                :api="zjControl.tableApi"
+                @after-load="handleDataChange"
+                @radio-change="handleRadioChange"
+                :radio-config="{highlight: true}">
         <zj-table-column type="radio" width="40px" fixed="left"></zj-table-column>
-        <zj-table-column field="field1" title="资金流水号" />
-        <zj-table-column field="field2" title="付款方名称" />
-        <zj-table-column field="field3" title="收款金额" :formatter="money"/>
-        <zj-table-column field="field4" title="收款时间"/>
-        <zj-table-column field="field5" title="收款方名称"/>
-        <zj-table-column field="field6" title="收款账号"/>
-        <zj-table-column field="field7" title="业务系统单号"/>
-        <zj-table-column field="field8" title="已关联金额" :formatter="money"/>
-        <zj-table-column field="field9" title="供应商简称"/>
+        <zj-table-column field="capitalSerialno" title="资金流水号" />
+        <zj-table-column field="payerEntName" title="付款方名称" />
+        <zj-table-column field="repayAmt" title="收款金额" :formatter="money"/>
+        <zj-table-column field="repayDate" title="收款时间"/>
+        <zj-table-column field="repayEntName" title="收款方名称"/>
+        <zj-table-column field="repayAcctNo" title="收款账号"/>
+        <zj-table-column field="outOrederNo" title="业务系统单号"/>
+        <zj-table-column field="relationAmt" title="已关联金额" :formatter="money"/>
+        <zj-table-column field="entShortName" title="供应商简称"/>
       </zj-table>
     </zj-list-layout>
-    <zj-content-block>
+    <zj-content-block v-if="currentSelectRow.id">
       <zj-header title="确认收款"></zj-header>
       <zj-content-tip style="display: block;width: 100%;">
         <div class="zj-m-l-20">
@@ -49,8 +55,13 @@
       </zj-content-tip>
       <zj-content>
         <zj-tabs v-model="activeComp">
-          <el-tab-pane :label="item.label" v-for="(item,index) in tabsList" :key="`${index}b`" :name="item.name" >
-            <component :is="activeComp" v-if="item.name === activeComp"></component>
+          <el-tab-pane :label="item.label"
+                       v-for="(item,index) in tabsList"
+                       :key="`${index}b`"
+                       :name="item.name" >
+            <component :is="activeComp"
+                       v-if="item.name === activeComp"
+                       :bizId="currentSelectRow.id"></component>
           </el-tab-pane>
         </zj-tabs>
       </zj-content>
@@ -68,30 +79,21 @@ export default {
 
   data() {
     return {
-      zjControl: {},
-      searchForm:{
-        issueEntName: '',
-        expireDateStart: '',
-        expireDateEnd: '',
-        ebillAmtStart: '',
-        ebillAmtEnd: '',
-        ebillCode:'',
-        issueDateStart: '',
-        issueDateEnd: '',
+      zjControl: {
+        tableApi: this.$api.confirmPaymentManage.queryCapitalFlowPage,
+        queryBillPage: this.$api.confirmPaymentManage.queryBillPage,
+        queryNoBillPage: this.$api.confirmPaymentManage.queryNoBillPage
       },
-      list: [
-        {
-          field1: '555544565',
-          field2: '发顺丰到付',
-          field3: '10000',
-          field4: '2022-09-10',
-          field5: '国内商业保理合同',
-          field6: '62343434324',
-          field7: 'X4565464565',
-          field8: '20000',
-          field9: '生效'
-        }
-      ],
+      searchForm:{
+        capitalSerialno: '',
+        repayDateStart: '',
+        repayDateEnd: '',
+        repayAmtStart: '',
+        repayAmtEnd: '',
+        payerEntNameLike:'',
+        outOrederNo: '',
+        entShortNameLike: '',
+      },
       tabsList: [
         {
           label: '凭证收款',
@@ -102,15 +104,32 @@ export default {
           name: 'otherPayment'
         }
       ],
-      activeComp: 'billPayment'
+      activeComp: 'billPayment',
+      // 当前选中的行
+      currentSelectRow: {}
     }
   },
   created() {
-    // this.getApi()
+    this.getApi()
   },
   methods: {
+    /**
+     * 列表查询响应回调
+     * @param rows
+     */
+    handleDataChange(rows) {
+      //默认勾选第一个
+      if (rows&& rows.length) {
+        this.$refs.searchTable.setRadioRow(rows[0])
+        this.handleRadioChange({row: rows[0]})
+      }
+    },
+    /**
+     * 单选处理
+     * @param row
+     */
     handleRadioChange({ row }) {
-
+      this.currentSelectRow = row;
     },
     batchSubmitApply () {},
     toViewDetail() {

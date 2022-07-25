@@ -1,3 +1,7 @@
+/**
+ * 额度变更路由
+ * @type {any}
+ */
 const billQuotaManageRouter = [
   {
     path: '/adjustCreditApply',
