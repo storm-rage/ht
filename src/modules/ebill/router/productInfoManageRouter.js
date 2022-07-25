@@ -32,21 +32,7 @@ const productInfoManageRouter = [
     component: () => import('../views/productManage/productInfoManage/edit'),
     meta: {
       isMock: true,
-      title: '修改产品信息',
-      root: '产品信息管理',
-      keepAlive: true,
-      refreshIndex: 0,
-      parent:'productInfoManage',
-      notRequireAuth: true
-    }
-  },
-  {
-    path: '/productInfoManageAdd',
-    name: 'productInfoManageAdd',
-    component: () => import('../views/productManage/productInfoManage/add'),
-    meta: {
-      isMock: true,
-      title: '新增产品',
+      title: '产品信息',
       root: '产品信息管理',
       keepAlive: true,
       refreshIndex: 0,

@@ -51,7 +51,6 @@
             <el-col :span="8">
               <el-form-item label="证件有效期：">
                 <zj-date-range-picker
-                  class="el-form-item__regExpire"
                   :startDate.sync="form.certStartDate"
                   :endDate.sync="form.certEndDate"
                   @startChange="certStartChange"
@@ -172,30 +171,23 @@ export default {
     };
   },
   methods: {
-    back() {},
+    back() {
+      this.$router.push("/personalCenter")
+    },
   },
 };
 </script>
 
 <style lang="less" scoped>
-//证件有效期
-/deep/.el-form-item__regExpire {
-  .zj-date-range-picker {
-    width: 100px;
-    .el-input__inner {
-      padding-left: 3px;
-    }
-    & ~ span {
-      display: inline-block;
-      width: 20px;
-      text-align: center;
-    }
+/deep/ .zj-date-range-picker {
+  width: 100px;
+  .el-input__inner {
+    padding-left: 3px;
   }
-  .el-form-item {
-    margin-bottom: 0;
-    .el-form-item__error {
-      top: 14px;
-    }
+  & ~ span {
+    display: inline-block;
+    width: 20px;
+    text-align: center;
   }
 }
 </style>

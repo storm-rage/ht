@@ -4,7 +4,7 @@
       <zj-top-header :title="titleInfo"></zj-top-header>
       <h3 class="zj-center" v-if="workflow === 'pzxx'">融单编号：{{}}</h3>
       <zj-content-block v-if="workflow === 'pzxx'">
-        <voucher-detail/>
+        <bill-detail/>
       </zj-content-block>
 
       <zj-content-block v-if="workflow === 'mybj'">
@@ -88,16 +88,16 @@
 </template>
 
 <script>
-import voucherDetail from './components/voucherDetail'
+import billDetail from './components/billDetail'
 import locus from './components/locus'
 
 import tradeContract from '../../queryStatistics/financingTransactionQuery/tradeBackgroundInfo/tradeContract'
 import invoice from '../../queryStatistics/financingTransactionQuery/tradeBackgroundInfo/invoice'
 import attaList from '../../queryStatistics/financingTransactionQuery/tradeBackgroundInfo/attaList'
 export default {
-  name: "myVouchersDetail",
+  name: "billLssueMyBillDetail",
   components: {
-    voucherDetail,
+    billDetail,
     locus,
     tradeContract,
     invoice,

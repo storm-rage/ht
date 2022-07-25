@@ -24,6 +24,7 @@ export default {
     handleClickDropdown (name) {
       if(name==='center') {
         // todo: 跳转个人中心
+        this.$router.push('/personalCenter')
       }else if (name === 'logout') {
         this.$confirm('您确定要退出吗？','提示',{
           confirmButtonText: '确定',

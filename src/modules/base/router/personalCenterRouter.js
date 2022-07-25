@@ -3,7 +3,7 @@
  */
 
 
-const accountCenter = [
+const personalCenterRouter = [
   {
     path: '/personalCenter',
     name: 'personalCenter',
@@ -14,11 +14,10 @@ const accountCenter = [
       keepAlive:true,
       refreshIndex:0,
       notRequireAuth: true
-
     }
   },
   {
-    path: '/entInfoMaintain',
+    path: '/entInfoMaintain/:id',
     name: 'entInfoMaintain',
     component: () => import('../views/sysModules/personalCenter/entInfoMaintain'),
     meta:{
@@ -40,9 +39,8 @@ const accountCenter = [
       keepAlive:true,
       refreshIndex:0,
       notRequireAuth: true
-
     }
   }
 ]
 
-export default accountCenter
+export default personalCenterRouter

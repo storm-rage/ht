@@ -41,7 +41,7 @@ export default {
         }
       ],
       tradeList: [],
-      tabs:'multistageAgreementSearch',
+      tabs:'multistageAgreementMaintain',
       tabAtive:'',
       zjControl: {},
       uDictionary:{},

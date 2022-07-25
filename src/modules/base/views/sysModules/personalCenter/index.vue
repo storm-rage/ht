@@ -1,7 +1,7 @@
 <template>
   <!-- 个人中心 -->
   <zj-content-container>
-    <zj-center>
+    <zj-content>
       <zj-header>我的账户</zj-header>
       <div style="width: 80%; margin: 0 auto">
         <zj-tabs v-model="tabAtive" tab-position="left">
@@ -11,15 +11,18 @@
               <el-form ref="form">
                 <el-row>
                   <el-col :span="24">
-                    <el-form-item label="企业名称：" prop="field1">
+                    <el-form-item label="企业名称：">
+                      {{ userBaseInfo.entInfo.name | value }}
                     </el-form-item>
                   </el-col>
                   <el-col :span="24">
-                    <el-form-item label="统一社会信用代码：" prop="field1">
+                    <el-form-item label="统一社会信用代码：">
+                      {{ userBaseInfo.entInfo.bizLicence | value }}
                     </el-form-item>
                   </el-col>
                   <el-col :span="24">
-                    <el-form-item label="注册地址：" prop="field1">
+                    <el-form-item label="注册地址：">
+                      {{ userBaseInfo.entInfo.address | value }}
                     </el-form-item>
                   </el-col>
                 </el-row>
@@ -31,14 +34,18 @@
               <el-form ref="form">
                 <el-row>
                   <el-col :span="24">
-                    <el-form-item label="姓名：" prop="field1"> </el-form-item>
-                  </el-col>
-                  <el-col :span="24">
-                    <el-form-item label="绑定手机：" prop="field1">
+                    <el-form-item label="姓名：" prop="field1">
+                      {{ userBaseInfo.userInfo.userName | value }}
                     </el-form-item>
                   </el-col>
                   <el-col :span="24">
-                    <el-form-item label="注册地址：" prop="field1">
+                    <el-form-item label="绑定手机：" prop="field1">
+                      {{ userBaseInfo.userInfo.mobileNo | value }}
+                    </el-form-item>
+                  </el-col>
+                  <el-col :span="24">
+                    <el-form-item label="角色：" prop="field1">
+                      {{ userBaseInfo.userInfo.roleName | value }}
                     </el-form-item>
                   </el-col>
                 </el-row>
@@ -51,28 +58,80 @@
               <el-form ref="form" label-width="120px">
                 <el-row>
                   <el-col :span="24">
-                    <el-form-item label="企业名称：" prop="field1">
-                      <el-input v-model="form.field1" v-if="isEdit" />
+                    <el-form-item label="企业名称：" prop="entName">
+                      <el-input v-model="invoiceForm.entName" v-if="isEdit" />
+                      <span v-else>{{
+                        userBaseInfo.invoiceInfo.entName | value
+                      }}</span>
                     </el-form-item>
                   </el-col>
                   <el-col :span="24">
-                    <el-form-item label="纳税人识别号：" prop="field1">
-                      <el-input v-model="form.field1" v-if="isEdit" />
+                    <el-form-item
+                      label="纳税人识别号："
+                      prop="invoiceTaxpayerId"
+                    >
+                      <el-input
+                        v-model="invoiceForm.invoiceTaxpayerId"
+                        v-if="isEdit"
+                      />
+                      <span v-else>{{
+                        userBaseInfo.invoiceInfo.invoiceTaxpayerId | value
+                      }}</span>
                     </el-form-item>
                   </el-col>
                   <el-col :span="24">
-                    <el-form-item label="地址、电话：" prop="field1">
-                      <el-input v-model="form.field1" v-if="isEdit" />
+                    <el-form-item label="地址：" prop="invoiceAddress">
+                      <el-input
+                        v-model="invoiceForm.invoiceAddress"
+                        v-if="isEdit"
+                      />
+                      <span v-else>{{
+                        userBaseInfo.invoiceInfo.invoiceAddress | value
+                      }}</span>
                     </el-form-item>
                   </el-col>
                   <el-col :span="24">
-                    <el-form-item label="开户行及账号：" prop="field1">
-                      <el-input v-model="form.field1" v-if="isEdit" />
+                    <el-form-item label="电话：" prop="invoicePhone">
+                      <el-input
+                        v-model="invoiceForm.invoicePhone"
+                        v-if="isEdit"
+                      />
+                      <span v-else>{{
+                        userBaseInfo.invoiceInfo.invoicePhone | value
+                      }}</span>
                     </el-form-item>
                   </el-col>
                   <el-col :span="24">
-                    <el-form-item label="电子邮箱：" prop="field1">
-                      <el-input v-model="form.field1" v-if="isEdit" />
+                    <el-form-item label="开户行：" prop="invoiceBankInfo">
+                      <el-input
+                        v-model="invoiceForm.invoiceBankInfo"
+                        v-if="isEdit"
+                      />
+                      <span v-else>{{
+                        userBaseInfo.invoiceInfo.invoiceBankInfo | value
+                      }}</span>
+                    </el-form-item>
+                  </el-col>
+                  <el-col :span="24">
+                    <el-form-item label="银行账号：" prop="invoiceBankAccno">
+                      <el-input
+                        v-model="invoiceForm.invoiceBankAccno"
+                        v-if="isEdit"
+                      />
+                      <span v-else>{{
+                        userBaseInfo.invoiceInfo.invoiceBankAccno | value
+                      }}</span>
+                    </el-form-item>
+                  </el-col>
+                  <el-col :span="24">
+                    <el-form-item label="电子邮箱：" prop="invoiceEmail">
+                      <el-input
+                        v-model="invoiceForm.invoiceEmail"
+                        v-if="isEdit"
+                      />
+                      <span v-else>{{
+                        userBaseInfo.invoiceInfo.invoiceEmail | value
+                      }}</span>
                     </el-form-item>
                   </el-col>
                 </el-row>
@@ -81,11 +140,11 @@
           </el-tab-pane>
         </zj-tabs>
       </div>
-    </zj-center>
+    </zj-content>
     <zj-content-footer>
       <zj-button
         type="primary"
-        @click="$router.push('/entInfoMaintain')"
+        @click="$router.push(`/entInfoMaintain/${userBaseInfo.entInfo.id}`)"
         v-show="tabAtive === 'myBasicInformation'"
         >维护企业信息</zj-button
       >
@@ -97,11 +156,11 @@
       >
       <zj-button
         type="primary"
-        @click="isEdit = true"
+        @click="handleUpdate"
         v-show="tabAtive === 'myBillingInformation' && !isEdit"
         >修改</zj-button
       >
-      <zj-button type="primary" @click="toUpdate" v-show="isEdit"
+      <zj-button type="primary" @click="updateInvoiceInfo" v-show="isEdit"
         >保存</zj-button
       >
       <zj-button class="back" @click="back">返回</zj-button>
@@ -114,10 +173,18 @@ export default {
   name: "personalCenter",
   data() {
     return {
-      zjControl: {},
+      zjControl: {
+        ...this.$api.myBasicInformation,
+        ...this.$api.myBillingInformation,
+      },
       tabAtive: "myBasicInformation",
-      isEdit: false,
-      form:{}
+      isEdit: false, // 开票编辑
+      invoiceForm: {}, //开票表单
+      userBaseInfo: {
+        entInfo: {},
+        invoiceInfo: {},
+        userInfo: {},
+      },
       // tabsList: [
       //   { label: "我的基本信息", name: "myBasicInformation" },
       //   { label: "我的开票信息", name: "myBillingInformation" },
@@ -125,9 +192,28 @@ export default {
       // dictionary: {},
     };
   },
+  created() {
+    this.getUserInfo();
+  },
   methods: {
+    //获取我的基本信息
+    getUserInfo() {
+      this.zjControl.getUserInfo().then((res) => {
+        this.userBaseInfo = res.data;
+      });
+    },
+    //修改开票信息
+    updateInvoiceInfo() {
+      this.zjControl.updateInvoiceInfo(this.invoiceForm).then((res) => {
+        this.isEdit = false;
+        this.getUserInfo();
+      });
+    },
+    handleUpdate() {
+      this.invoiceForm = this.userBaseInfo.invoiceInfo;
+      this.isEdit = true;
+    },
     back() {},
-    toUpdate() {},
   },
 };
 </script>
