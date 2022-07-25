@@ -19,9 +19,9 @@
           </el-row>
         </el-form>
         <el-row class="button-row">
-          <zj-button type="primary" icon="el-icon-circle-plus-outline" @click="addRole">新增角色</zj-button>
-          <zj-button class="reset" icon="el-icon-refresh" @click="resetSearch">重置</zj-button>
-          <zj-button class="search" icon="el-icon-search" @click="search">查询</zj-button>
+          <vxe-button type="primary" icon="el-icon-circle-plus-outline" @click="addRole">新增角色</vxe-button>
+          <vxe-button class="reset" icon="el-icon-refresh" @click="resetSearch">重置</vxe-button>
+          <vxe-button class="search" icon="el-icon-search" @click="search">查询</vxe-button>
         </el-row>
         <zj-table ref="searchTable" :api="zjControl.search" :params="searchForm" :dataList="currentRoleList"
                   @radio-change="handleRadioChange" :printConfig="{trigger:row}"
@@ -53,7 +53,7 @@
     <el-dialog
       title="新增角色"
       :visible.sync="dialogVisible"
-      width="80%"
+      width="60%"
     >
       <div class="content-block">
         <div class="role-left">
@@ -91,8 +91,8 @@
       </div>
 
       <div slot="footer" class="zj-center" style="display: block;width: 100%">
-        <el-button style="width: 100px" size="small" @click="close">取消</el-button>
-        <el-button style="width: 100px" size="small" type="primary" @click="submit">确认</el-button>
+        <zj-button style="width: 100px" size="small" @click="close">取消</zj-button>
+        <zj-button style="width: 100px" size="small" type="primary" @click="submit">确认</zj-button>
       </div>
     </el-dialog>
   </div>
