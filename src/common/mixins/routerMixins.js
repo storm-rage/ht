@@ -87,6 +87,8 @@ export default {
             this.$refs[Ref].iRefresh(boo)
           }else if (this.$parent.$refs[Ref]) {
             this.$parent.$refs[Ref].iRefresh(boo)
+          }else if (this.$parent.$parent.$refs[Ref]) {
+            this.$parent.$parent.$refs[Ref].iRefresh(boo)
           }
         },
         resetSearch (boo) {

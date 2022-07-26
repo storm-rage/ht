@@ -5,17 +5,17 @@
       <el-row>
         <el-col :span="8">
           <el-form-item label="企业联系人姓名：">
-            <span>{{ detailData.legalPersonName | value }}</span>
+            <span>{{ detailData.fastMailName | value }}</span>
           </el-form-item>
         </el-col>
         <el-col :span="8">
           <el-form-item label="企业联系人手机号：">
-            <span></span>
+           <span>{{ detailData.fastMailPhone | value }}</span>
           </el-form-item>
         </el-col>
         <el-col :span="8">
           <el-form-item label="企业联系地址：">
-            <span>{{ detailData.legalCertNo | value }}</span>
+            <span>{{ detailData.fastMailAddress | value }}</span>
           </el-form-item>
         </el-col>
       </el-row>
