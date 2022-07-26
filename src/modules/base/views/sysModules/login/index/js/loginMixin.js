@@ -1,20 +1,20 @@
-import LoginHeader from '../../components/LoginHeader'
-import LoginFooter from '../../components/LoginFooter'
 import LoginEditPassword from "../../editPassword/LoginEditPassword";
 // import FaceRecognition from "../../faceRecognition/FaceRecognition"
 import sw_cookie from "@utils/cookie";
 import frozenDialog from "../../components/frozenDialog";
 import {getMenuPower} from '@utils/menuTree';
 import LoginType from '../loginType';
+import HtLoginHeader from '../loginHeader';
+import HtLoginFooter from '../loginFooter';
 
 export default {
   name: 'login',
   components: {
-    LoginHeader,
-    LoginFooter,
     LoginEditPassword,
     frozenDialog,
-    LoginType
+    LoginType,
+    HtLoginHeader,
+    HtLoginFooter
   },
   data() {
     const validLoginName = (rule,value,callback) => {
