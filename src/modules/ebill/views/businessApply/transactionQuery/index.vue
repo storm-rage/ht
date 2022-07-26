@@ -1,5 +1,5 @@
 <template>
-</zj-content-container>
+<zj-content-container>
     <zj-list-layout>
       <template slot="searchForm">
         <el-form ref="searchForm" :model="searchForm">
