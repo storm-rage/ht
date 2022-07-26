@@ -1,5 +1,5 @@
 <template>
-  <zj-content-container>
+</zj-content-container>
     <zj-list-layout>
       <template slot="searchForm">
         <el-form ref="searchForm" :model="searchForm">
@@ -37,11 +37,17 @@
         :params="searchForm"
         :api="zjControl.tableApi"
       >
-        <zj-table-column field="serialNo" title="申请流水号" />
+        <zj-table-column title="申请流水号">
+          <template v-slot="{ row }">
+            <zj-button type="text" @click="toDetail(row)">{{
+              row.serialNo
+            }}</zj-button>
+          </template>
+        </zj-table-column>
         <zj-table-column
           field="busType"
           title="申请类型"
-          :formatter="(obj) => typeMap(dictionary.busType, obj.busType)"
+          :formatter="obj => typeMap(dictionary.busType, obj.cellValue)"
         />
         <zj-table-column
           field="applyDatetime"
@@ -49,9 +55,9 @@
           :formatter="date"
         />
         <zj-table-column
-          field="state"
+          field="applyStatus"
           title="申请状态"
-          :formatter="(obj) => typeMap(dictionary.applyStatus, obj.applyStatus)"
+          :formatter="obj => typeMap(dictionary.applyStatus, obj.cellValue)"
         />
       </zj-table>
     </zj-list-layout>
@@ -79,8 +85,20 @@ export default {
         this.dictionary = res.data;
       });
     },
-    toBillDetails(row) {
-      console.log(row);
+    toDetail(row) {
+      let path = "";
+      if (row.busType === "YHGL") {
+        path = "/transactionQueryUser";
+      } else {
+        path = "/transactionQueryEnt";
+      }
+      this.$router.push({
+        path: path,
+        query: {
+          busType: row.busType,
+          serialNo: row.serialNo,
+        },
+      });
     },
   },
 };

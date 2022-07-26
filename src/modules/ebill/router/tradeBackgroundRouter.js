@@ -52,8 +52,8 @@ const tradeBackgroundRouter = [
     }
   },
   {
-    path: '/myStatement',
-    name: 'myStatement',
+    path: '/myAccountBill',
+    name: 'myAccountBill',
     component: () => import('../views/tradeBackground/myStatement/index.vue'),
     meta: {
       isMock: true,

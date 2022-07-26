@@ -216,13 +216,7 @@
             <zj-table-column field="fileName" title="附件名称" />
             <zj-table-column title="操作">
               <template v-slot="{ row }">
-                <!-- <zj-button
-                  type="text"
-                  class="zj-m-r-10"
-                  @click="pubAttachDownload(row)"
-                  v-if="row.fileId"
-                  >下载</zj-button
-                > -->
+  
                 <zj-upload
                   :httpRequest="handleFileUpload"
                   :data="{ row }"
@@ -314,8 +308,8 @@ export default {
           ...basicEntInfo.legalPersonInfo,
         };
         this.form.entBankInfo = [basicEntInfo.entBankInfo]; //银行账户信息
-        this.attachInfo[0].name = res.data.attachInfo.qyyzAttachName; // 营业执照
-        this.attachInfo[1].name = res.data.attachInfo.qyfrzjAttachName; // 法定代表人证件
+        this.attachInfo[0].fileName = res.data.attachInfo.qyyzAttachName; // 营业执照
+        this.attachInfo[1].fileName = res.data.attachInfo.qyfrzjAttachName; // 法定代表人证件
       });
     },
     updateUserInfo() {

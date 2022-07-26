@@ -9,12 +9,18 @@
             <el-col :span="24" v-if="pageType !== 2">
               <el-form-item label="角色：">
                 <el-select
-                  v-model="form.a"
+                  v-model="roleId"
                   filterable
                   placeholder="请选择"
                   :popper-append-to-body="false"
+                  @change="getPersonalInfo"
                 >
-                  <el-option label="经办员" value="经办员" />
+                  <el-option
+                    v-for="item in dictionary.roleId"
+                    :key="item.code"
+                    :label="item.desc"
+                    :value="item.code"
+                  />
                 </el-select>
               </el-form-item>
             </el-col>
@@ -26,13 +32,19 @@
             <el-col :span="8">
               <el-form-item label="角色：" v-if="pageType === 2">
                 <el-select
-                  v-model="form.a"
+                  v-model="roleId"
                   filterable
                   placeholder="请选择"
                   :popper-append-to-body="false"
+                  @change="getPersonalInfo"
                   :disabled="pageType === 2"
                 >
-                  <el-option label="经办员" value="经办员" />
+                  <el-option
+                    v-for="item in dictionary.roleId"
+                    :key="item.code"
+                    :label="item.desc"
+                    :value="item.code"
+                  />
                 </el-select>
               </el-form-item>
             </el-col>
@@ -50,7 +62,12 @@
                   :popper-append-to-body="false"
                   :disabled="pageType !== 3"
                 >
-                  <el-option label="身份证号码" value="身份证号码" />
+                  <el-option
+                    v-for="item in dictionary.legalCertType"
+                    :key="item.code"
+                    :label="item.desc"
+                    :value="item.code"
+                  />
                 </el-select>
               </el-form-item>
             </el-col>
@@ -107,8 +124,6 @@
               >
                 <zj-button type="text">上传</zj-button>
               </zj-upload>
-            </template>
-            <template>
               <zj-button v-if="row.fileId" type="text" @click="toDownload(row)"
                 >下载</zj-button
               >
@@ -186,33 +201,42 @@ export default {
       attachInfo: [{ fileId: "", type: "身份证影印件", fileName: "" }],
       platformFastMail: {},
       pageType: 1, // 1详情 2维护本人信息 3更换操作人员
+      roleId: "", //  角色
     };
   },
   created() {
+    this.roleId = this.$route.params.id;
     this.getDirectory();
-    this.getPersonalInfo();
   },
   methods: {
     // 获取字典
     getDirectory() {
       this.zjControl.getDirectory().then((res) => {
         this.dictionary = res.data;
+        this.getPersonalInfo();
       });
     },
     // 获取个人信息
     getPersonalInfo() {
-      let params = { roleId: this.$route.params.id };
+      this.form = {};
+      let params = { roleId: this.roleId };
       this.zjControl.getPersonalInfo(params).then((res) => {
         this.form = res.data.userInfo;
         this.platformFastMail = res.data.platformFastMail;
+        // 角色权限
+        this.dictionary.roleId = this.dictionary.roleId.filter((item) => {
+          return this.form.roleIds.indexOf(item.code) !== -1;
+        });
       });
     },
     // 确认提交
     submit() {
       if (this.pageType === 2) {
+        this.form.roleId = this.roleId;
         this.updatePersonalInfo();
       }
       if (this.pageType === 3) {
+        this.form.roleId = this.roleId;
         this.updateOperator();
       }
     },
@@ -247,6 +271,7 @@ export default {
         this.$message.success("附件上传成功!");
       });
     },
+    //下载附件
     toDownload() {},
     back() {
       if (this.pageType === 1) {

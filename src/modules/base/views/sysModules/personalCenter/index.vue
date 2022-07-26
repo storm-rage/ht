@@ -150,7 +150,9 @@
       >
       <zj-button
         type="primary"
-        @click="$router.push(`/userInfoMaintain/${userBaseInfo.userInfo.roleIds[0]}`)"
+        @click="
+          $router.push(`/userInfoMaintain/${userBaseInfo.userInfo.roleIds[0]}`)
+        "
         v-show="tabAtive === 'myBasicInformation'"
         >维护个人信息</zj-button
       >
@@ -214,7 +216,9 @@ export default {
       this.invoiceForm = this.userBaseInfo.invoiceInfo;
       this.isEdit = true;
     },
-    back() {},
+    back() {
+      this.$router.push("/home");
+    },
   },
 };
 </script>
