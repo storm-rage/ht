@@ -4,7 +4,7 @@
     <zj-content-block>
       <zj-header title="用户信息"></zj-header>
       <zj-content>
-        <el-form ref="form" label-width="160px">
+        <el-form ref="form" :model="form" :rules="rules" label-width="160px">
           <el-row>
             <el-col :span="24" v-if="pageType !== 2">
               <el-form-item label="角色：">
@@ -25,8 +25,11 @@
               </el-form-item>
             </el-col>
             <el-col :span="8">
-              <el-form-item label="用户姓名：">
-                <el-input v-model="form.userName" :disabled="pageType !== 3" />
+              <el-form-item label="用户姓名：" prop="userName">
+                <el-input
+                  v-model.trim="form.userName"
+                  :disabled="pageType !== 3"
+                />
               </el-form-item>
             </el-col>
             <el-col :span="8">
@@ -49,12 +52,15 @@
               </el-form-item>
             </el-col>
             <el-col :span="8">
-              <el-form-item label="海天业务系统账号：">
-                <el-input v-model="form.htSysCode" :disabled="pageType === 1" />
+              <el-form-item label="海天业务系统账号：" prop="htSysCode">
+                <el-input
+                  v-model.trim="form.htSysCode"
+                  :disabled="pageType === 1"
+                />
               </el-form-item>
             </el-col>
             <el-col :span="8">
-              <el-form-item label="证件类型：">
+              <el-form-item label="证件类型：" prop="certType">
                 <el-select
                   v-model="form.certType"
                   filterable
@@ -72,12 +78,15 @@
               </el-form-item>
             </el-col>
             <el-col :span="8">
-              <el-form-item label="证件号码：">
-                <el-input v-model="form.certNo" :disabled="pageType !== 3" />
+              <el-form-item label="证件号码：" prop="certNo">
+                <el-input
+                  v-model.trim="form.certNo"
+                  :disabled="pageType !== 3"
+                />
               </el-form-item>
             </el-col>
             <el-col :span="8">
-              <el-form-item label="证件有效期：">
+              <el-form-item label="证件有效期：" prop="certStartDate">
                 <zj-date-range-picker
                   :startDate.sync="form.certStartDate"
                   :endDate.sync="form.certEndDate"
@@ -86,19 +95,25 @@
               </el-form-item>
             </el-col>
             <el-col :span="8">
-              <el-form-item label="手机号码/用户名：">
-                <el-input v-model="form.mobileNo" :disabled="pageType === 1" />
+              <el-form-item label="手机号码/用户名：" prop="mobileNo">
+                <el-input
+                  v-model.trim="form.mobileNo"
+                  :disabled="pageType === 1"
+                />
               </el-form-item>
             </el-col>
             <el-col :span="8">
-              <el-form-item label="邮箱：">
-                <el-input v-model="form.email" :disabled="pageType === 1" />
+              <el-form-item label="邮箱：" prop="email">
+                <el-input
+                  v-model.trim="form.email"
+                  :disabled="pageType === 1"
+                />
               </el-form-item>
             </el-col>
             <el-col :span="8">
               <el-form-item label="银行卡号：">
                 <el-input
-                  v-model="form.bankAcctNo"
+                  v-model.trim="form.bankAcctNo"
                   :disabled="pageType === 1"
                 />
               </el-form-item>
@@ -188,6 +203,7 @@
   </zj-content-container>
 </template>
 <script>
+import { newValidateFixedPhone } from "@utils/rules";
 export default {
   components: {},
 
@@ -202,6 +218,56 @@ export default {
       platformFastMail: {},
       pageType: 1, // 1详情 2维护本人信息 3更换操作人员
       roleId: "", //  角色
+      rules: {
+        userName: [
+          {
+            required: true,
+            message: "请输入用户姓名",
+            trigger: ["blur"],
+          },
+        ],
+        certType: [
+          {
+            required: true,
+            message: "请输入证件类型",
+            trigger: ["blur"],
+          },
+        ],
+        certNo: [
+          {
+            required: true,
+            message: "请输入证件号码",
+            trigger: ["blur"],
+          },
+        ],
+        certStartDate: [
+          {
+            required: true,
+            message: "请输入证件有效期",
+            trigger: ["blur"],
+          },
+        ],
+        mobileNo: [
+          {
+            required: true,
+            message: "请输入手机号码/用户名",
+            trigger: ["blur"],
+          },
+          { validator: newValidateFixedPhone, trigger: ["blur"] },
+        ],
+        email: [
+          {
+            required: true,
+            message: "请输入邮箱",
+            trigger: ["blur"],
+          },
+          {
+            type: "email",
+            message: "请输入正确的邮箱",
+            trigger: ["blur"],
+          },
+        ],
+      },
     };
   },
   created() {
