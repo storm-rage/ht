@@ -1,9 +1,12 @@
 <template>
   <div>
-    <detail-page ref="detailPage" :stepList="stepList" :stepActive="4" title="合同签约申请"></detail-page>
-
+    <detail-page ref="detailPage"
+                 :stepList="stepList"
+                 :stepActive="4"
+                 :detail-info="detailInfo"
+                 title="合同签约申请"></detail-page>
     <zj-content-footer>
-      <zj-button @click="back">返回</zj-button>
+      <zj-button @click="goParent">返回</zj-button>
     </zj-content-footer>
   </div>
 </template>
@@ -14,6 +17,11 @@ export default {
   components: {DetailPage},
   data() {
     return {
+      zjControl: {
+        queryMyEbContractDetail: this.$api.factoringContract.queryMyEbContractDetail
+      },
+      // 详情信息
+      detailInfo: {},
       stepList: [
         {
           title: '签约申请',
@@ -38,9 +46,16 @@ export default {
       ]
     };
   },
+  created() {
+    this.getApi();
+    this.getRow();
+    this.getDetail();
+  },
   methods: {
-    back() {
-      this.$router.push("/quotaChangeApplication");
+    getDetail() {
+      this.zjControl.queryMyEbContractDetail({contractId: this.row.contractId}).then(res => {
+        this.detailInfo = res.data;
+      });
     }
   },
 };

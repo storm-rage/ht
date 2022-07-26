@@ -9,56 +9,56 @@
         <zj-content>
           <el-row :gutter="10">
             <el-col>
-              <el-form-item label="凭证编号：" prop="field1">
-                1234566
+              <el-form-item label="凭证编号：" prop="ebillCode">
+                {{form.ebillCode}}
               </el-form-item>
             </el-col>
             <el-col>
-              <el-form-item label="签发日期："  prop="field1">
-                2021-09-09
+              <el-form-item label="签发日期："  prop="payableIssuanceDate">
+                {{form.payableIssuanceDate}}
               </el-form-item>
             </el-col>
             <el-col>
-              <el-form-item label="签发人：" prop="field1">
-                广州材料工程有限公司1
+              <el-form-item label="签发人：" prop="payEntName">
+                {{form.payEntName}}
               </el-form-item>
             </el-col>
             <el-col>
-              <el-form-item label="原始持有人："  prop="field1">
-                广州材料工程有限公司
+              <el-form-item label="原始持有人："  prop="receiptEntName">
+                {{form.receiptEntName}}
               </el-form-item>
             </el-col>
             <el-col>
-              <el-form-item label="凭证金额："  prop="field1">
-                {{money('100000')}}
+              <el-form-item label="凭证金额："  prop="payableAmt">
+                {{money(form.payableAmt)}}
               </el-form-item>
             </el-col>
             <el-col>
-              <el-form-item label="凭证到期日："  prop="field1">
-                {{date('2022-09-01')}}
+              <el-form-item label="凭证到期日："  prop="payableExpireDate">
+                {{date(form.payableExpireDate)}}
               </el-form-item>
             </el-col>
             <el-col>
-              <el-form-item label="备注："  prop="field1">
-               方式方法士大夫撒发射点发射点发生十分士大夫士大夫十分士大夫士大夫是否是否收到十分十分大师傅撒发射点发射点十分士大夫的
+              <el-form-item label="备注："  prop="remark">
+               {{form.remark}}
               </el-form-item>
             </el-col>
           </el-row>
           <el-row class="zj-m-t-5">
             <el-col>
-              <el-form-item label="凭证实际到期日：" prop="field1" :rules="[
+              <el-form-item label="凭证实际到期日：" prop="actualExpireDate" :rules="[
                 {required: true,message: '请选择凭证实际到期日',trigger: ['blur','change']}
               ]">
-               <el-date-picker disabled v-model="form.field1"></el-date-picker>
+               <el-date-picker disabled v-model="form.actualExpireDate"></el-date-picker>
               </el-form-item>
             </el-col>
             <el-col>
-              <el-form-item label="确认凭证金额：" prop="field1" :rules="[
+              <el-form-item label="确认凭证金额：" prop="billConfirmAmt" :rules="[
                 {required: true,message: '请输入确认凭证金额',trigger: ['blur','change']}
               ]">
-                <zj-number-input v-model="form.field1">
+                <zj-number-input v-model="form.billConfirmAmt" :max="form.payableAmt">
                 </zj-number-input>
-                <p class="zj-right" style="width: 220px">{{digitUp(form.field1)}}</p>
+                <p class="zj-right" style="width: 220px">{{digitUp(form.billConfirmAmt)}}</p>
               </el-form-item>
             </el-col>
           </el-row>
@@ -66,17 +66,29 @@
       </zj-content-block>
     </el-form>
     <div slot="footer" class="zj-center" style="display: block;width: 100%">
-      <el-button style="width: 100px" size="small" type="primary" @click="submit">确定</el-button>
+      <el-button style="width: 100px" size="small"
+                 :disabled="loading"
+                 :loading="loading" type="primary" @click="submit">确定</el-button>
       <el-button style="width: 100px" size="small" @click="close">取消</el-button>
     </div>
   </el-dialog>
 </template>
 <script>
 export default {
+  props: {
+    bizId: {
+      type: String,
+      required: true
+    }
+  },
   data () {
     return {
+      zjControl: {
+        billConfirmReceipt: this.$api.confirmPaymentManage.billConfirmReceipt,
+      },
       dialogVisible: false,
-      form: {}
+      form: {},
+      loading: false
     };
   },
   methods: {
@@ -85,11 +97,32 @@ export default {
       this.dialogVisible = true;
     },
     close () {
+      this.loading = false;
       this.dialogVisible = false;
     },
     submit () {
       this.$refs.form.validate((valid) => {
         if (valid) {
+          this.loading = true;
+          this.zjControl.billConfirmReceipt({
+            // 凭证ID
+            accountId: this.form.id,
+            // 凭证实际到期日
+            actualExpireDate: this.form.billConfirmAmt,
+            // 确认凭证金额
+            billConfirmAmt: this.form.billConfirmAmt,
+            // 资金流水ID
+            id: this.bizId
+          }).then((res) => {
+            this.loading = false;
+            //成功，关闭
+            if (res.success) {
+              this.$message.success(res.msg);
+              this.$emit('done')
+            }
+          }).catch(() => {
+            this.loading = false
+          });
         }
       });
     }

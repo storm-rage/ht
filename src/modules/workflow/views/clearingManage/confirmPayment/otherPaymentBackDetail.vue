@@ -1,10 +1,10 @@
 <template>
   <zj-content-container>
-    <zj-top-header title="凭证收款交易详情"></zj-top-header>
+    <zj-top-header title="订单保理收款交易详情"></zj-top-header>
     <!--  业务申请信息  -->
     <biz-apply-info :biz-info="detailInfo"></biz-apply-info>
     <!--  具体业务信息  -->
-    <bill-confirm-payment-detail :biz-detail-info="detailInfo"></bill-confirm-payment-detail>
+    <other-confirm-payment-detaill :biz-detail-info="detailInfo" :dictionary="dictionary"></other-confirm-payment-detaill>
     <!--  操作记录  -->
     <operate-log :log-list="detailInfo.operateLogList"></operate-log>
     <zj-content-footer>
@@ -15,23 +15,23 @@
 
 <script>
 /**
- * 凭证确认还款流水详情页面
+ * 非凭证确认还款流水详情页面
  */
 import BizApplyInfo from '../../components/bizApplyInfo';
 import OperateLog from '../../components/operateLog';
-import BillConfirmPaymentDetail from '@modules/ebill/views/clearingManage/confirmPaymentManage/workflow/billConfirmPaymentDetail.vue';
+import OtherConfirmPaymentDetail from '@modules/ebill/views/clearingManage/confirmPaymentManage/workflow/otherConfirmPaymentDetail.vue';
 export default {
-  name: 'BillPaymentDetail',
+  name: 'OtherPaymentBackDetail',
   components: {
     BizApplyInfo,
     OperateLog,
-    BillConfirmPaymentDetail
+    OtherConfirmPaymentDetail
   },
   data () {
     return {
       zjControl: {
         getDirectory: this.$api.confirmPaymentManage.getDirectory,
-        getBillReceiptReviewDetail: this.$api.confirmPaymentManageWorkflow.getBillReceiptReviewDetail
+        getNoBillReceiptPendingDetail: this.$api.confirmPaymentManageWorkflow.getNoBillReceiptPendingDetail,
       },
       // 字典
       dictionary: {},
@@ -51,7 +51,7 @@ export default {
       });
     },
     getDetail() {
-      this.zjControl.getBillReceiptReviewDetail({id: this.row.id}).then(res => {
+      this.zjControl.getNoBillReceiptPendingDetail({id: this.row.id}).then(res => {
         this.detailInfo = res.data;
       });
     },

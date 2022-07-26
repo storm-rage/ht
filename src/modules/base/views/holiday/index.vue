@@ -39,6 +39,12 @@ export default {
   data() {
     let self = this
     return {
+      zjControl: {
+        getHolidayDirectory: this.$api.holidaySet.getHolidayDirectory,
+        getHolidayList: this.$api.holidaySet.getHolidayList,
+        getHolidayTemplate: this.$api.holidaySet.getHolidayTemplate,
+        importHolidayTemplate: this.$api.holidaySet.importHolidayTemplate,
+      },
       dayType: '',
       isHoliday: [],
       events: [],
@@ -79,24 +85,25 @@ export default {
     }
   },
   created() {
+    this.getApi();
     this.getDics()
   },
   methods: {
     // 字典
     getDics() {
-      this.$api.holiday.getDics().then(ret => {
+      this.zjControl.getHolidayDirectory().then(ret => {
         this.isHoliday = ret.data.isHoliday
       })
     },
     // 导出
     downTemplate() {
-      this.$api.holiday.getTemplate()
+      this.zjControl.getHolidayTemplate()
     },
     //上传
-    dayUpload({file, data}) {
+    dayUpload({file}) {
       let formData = new FormData()
       formData.append('file', file)
-      this.$api.holiday.importTemplate(formData).then(ret => {
+      this.zjControl.importHolidayTemplate(formData).then(ret => {
         this.$messageBox({
           type: 'success',
           content: ret.msg || '操作成功',
@@ -124,7 +131,7 @@ export default {
       this.getList({dateStart: this.startDate, dateEnd: this.endDate})
     },
     getList(params) {
-      this.$api.holiday.getList(params).then(ret => {
+      this.zjControl.getHolidayList(params).then(ret => {
         ret.data.map(item => {
           let obj = {
             title: '休',

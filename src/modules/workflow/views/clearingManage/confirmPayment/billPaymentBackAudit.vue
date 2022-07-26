@@ -1,17 +1,17 @@
 <template>
   <zj-content-container>
-    <zj-top-header title="非凭证确认收款审核"></zj-top-header>
+    <zj-top-header title="凭证确认收款驳回审核"></zj-top-header>
     <!--  业务申请信息  -->
     <biz-apply-info :biz-info="detailInfo"></biz-apply-info>
     <!--  具体业务信息  -->
-    <other-confirm-payment-audit :biz-detail-info="detailInfo" :dictionary="dictionary"></other-confirm-payment-audit>
+    <bill-confirm-payment-back-audit ref="bizInfo" :biz-detail-info="detailInfo"></bill-confirm-payment-back-audit>
     <!--  操作记录  -->
     <operate-log :log-list="detailInfo.operateLogList"></operate-log>
     <!--  审批意见  -->
     <audit-remark ref="auditRemark"></audit-remark>
     <zj-content-footer>
-      <zj-button type="primary" :disabled="rejectLoading" :loading="passLoading" :api="zjBtn.noBillReceiptReview" @click="toPass">审核通过</zj-button>
-      <zj-button type="primary" :disabled="rejectLoading" :loading="passLoading" :api="zjBtn.noBillReceiptReview" @click="toReject">驳回</zj-button>
+      <zj-button :disabled="rejectLoading" :loading="passLoading" :api="zjBtn.billReceiptReview" type="primary" @click="toPass">审核通过</zj-button>
+      <zj-button :disabled="passLoading" :loading="rejectLoading" :api="zjBtn.billReceiptReview" type="primary" @click="toReject">驳回</zj-button>
       <zj-button  @click="goParent">返回</zj-button>
     </zj-content-footer>
   </zj-content-container>
@@ -19,34 +19,35 @@
 
 <script>
 /**
- * 非凭证确认还款复核页面
+ * 凭证确认还款复核驳回处理页面
+ * todo:参数需要调整
  */
 import BizApplyInfo from '../../components/bizApplyInfo';
 import OperateLog from '../../components/operateLog';
 import AuditRemark from '../../components/auditRemark';
-import OtherConfirmPaymentAudit from '@modules/ebill/views/clearingManage/confirmPaymentManage/workflow/otherConfirmPaymentAudit.vue';
+import BillConfirmPaymentBackAudit from '@modules/ebill/views/clearingManage/confirmPaymentManage/workflow/billConfirmPaymentBackAudit.vue';
 import {OperResult} from "@modules/constant";
 export default {
-  name: 'OtherPaymentAudit',
+  name: 'BillPaymentBackAudit',
   components: {
     BizApplyInfo,
     OperateLog,
     AuditRemark,
-    OtherConfirmPaymentAudit
+    BillConfirmPaymentBackAudit
   },
   data () {
     return {
       zjControl: {
         getDirectory: this.$api.confirmPaymentManage.getDirectory,
-        noBillReceiptReview: this.$api.confirmPaymentManageWorkflow.noBillReceiptReview,
-        getNoBillReceiptReviewDetail: this.$api.confirmPaymentManageWorkflow.getNoBillReceiptReviewDetail,
+        billReceiptPending: this.$api.confirmPaymentManageWorkflow.billReceiptPending,
+        getBillReceiptPendingDetail: this.$api.confirmPaymentManageWorkflow.getBillReceiptPendingDetail
       },
       // 字典
       dictionary: {},
       rejectLoading: false,
       passLoading: false,
       detailInfo: {}
-    };
+    }
   },
   created() {
     this.getApi();
@@ -61,7 +62,7 @@ export default {
       });
     },
     getDetail() {
-      this.zjControl.getBillReceiptReviewDetail({id: this.row.id}).then(res => {
+      this.zjControl.getBillReceiptPendingDetail({id: this.row.id}).then(res => {
         this.detailInfo = res.data;
       });
     },
@@ -73,8 +74,9 @@ export default {
         cancelButtonText: '取消'
       }).then(() => {
         const {notes} = this.$refs.auditRemark.getData()
+        // todo: this.$refs.bizInfo.getData();
         this.passLoading = true;
-        this.zjControl.recheckContractRenewal({
+        this.zjControl.billReceiptPending({
           id: this.row.id,
           notes,
           operResult: OperResult.PASS
@@ -95,7 +97,7 @@ export default {
         if (valid) {
           const {notes} = this.$refs.auditRemark.getData()
           this.rejectLoading = true;
-          this.zjControl.recheckContractRenewal({
+          this.zjControl.billReceiptPending({
             id: this.row.id,
             notes,
             operResult: OperResult.REJECT

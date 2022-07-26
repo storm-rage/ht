@@ -27,6 +27,7 @@
 
 <script>
 import DetailPage from '../../detail/index';
+import {TemplateType} from '@modules/constant';
 export default {
   components: {DetailPage},
   data() {
@@ -71,7 +72,12 @@ export default {
      * 下载额度调整申请书
      */
     toDownload() {
-      this.zjControl.downloadTemplate()
+      this.zjControl.downloadTemplate({
+        templateType:  TemplateType.EDTZSQS,
+        applyAddCreditAmount: this.$refs.detailPage.$data.form.applyAddCreditAmount,
+        contractId: this.detailInfo.contractId,
+        creditId: this.row.creditId
+      })
     },
     /**
      * 提交申请

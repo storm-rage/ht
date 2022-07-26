@@ -6,34 +6,34 @@
         <el-row :gutter="10" v-if="isBill">
           <el-col :span="8">
             <el-form-item label="确认收款总金额：">
-              {{money('10000')}}
+              {{money(billInfo.confirmRepaymentTotalAmt)}}
             </el-form-item>
           </el-col>
           <el-col :span="8">
             <el-form-item label="确认收款日期：">
-              {{date('2022-09-09')}}
+              {{date(billInfo.confirmRepaymentDate)}}
             </el-form-item>
           </el-col>
         </el-row>
         <zj-table ref="supplierTable"
                   :pager="false"
-                  :dataList="supplierList" >
-          <zj-table-column field="field1" title="资金流水号"/>
-          <zj-table-column field="field2" title="付款方名称"/>
+                  :dataList="[bankCapitalFlow]" >
+          <zj-table-column field="capitalSerialno" title="资金流水号"/>
+          <zj-table-column field="payerEntName" title="付款方名称"/>
           <zj-table-column
-            field="field3"
+            field="repayAmt"
             title="收款金额"
             :formatter="money"
           />
           <zj-table-column
-            field="field4"
+            field="repayDate"
             title="收款时间"
           />
-          <zj-table-column field="field5" title="收款方名称"/>
-          <zj-table-column field="field6" title="收款账号" />
-          <zj-table-column field="field7" title="SA单号"/>
-          <zj-table-column field="field8" title="已关联金额" :formatter="money"/>
-          <zj-table-column field="field9" title="供应商简称"/>
+          <zj-table-column field="repayEntName" title="收款方名称"/>
+          <zj-table-column field="repayAcctNo" title="收款账号" />
+          <zj-table-column field="outOrederNo" title="业务系统单号"/>
+          <zj-table-column field="relationAmt" title="已关联金额" :formatter="money"/>
+          <zj-table-column field="entShortName" title="供应商简称"/>
         </zj-table>
       </zj-content>
     </zj-content-block>
@@ -49,23 +49,13 @@ export default {
     isBill: {
       type: Boolean,
       default: true
-    }
-  },
-  data () {
-    return {
-      supplierList: [
-        {
-          field1: '12312312',
-          field2: '士大夫士大夫的',
-          field3: '10000',
-          field4: '2022-10-10',
-          field5: '发士大夫士大夫大师傅',
-          field6: '6232423434',
-          field7: 'SA666546546',
-          field8: '20000',
-          field9: '十分士大夫地方'
-        }
-      ],
+    },
+    // bill信息
+    billInfo: Object,
+    // 银行流水信息
+    bankCapitalFlow: {
+      type: Object,
+      required: true
     }
   }
 }

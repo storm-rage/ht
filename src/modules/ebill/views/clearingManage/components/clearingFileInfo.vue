@@ -5,7 +5,8 @@
       <zj-content>
         <zj-table ref="fileTable"
                   :dataList="fileList"
-                  :pager="false" keep-source
+                  :pager="false"
+                  keep-source
                   :edit-config="{trigger: 'manual',mode: 'row',icon: '-',autoClear: false,showStatus: true}">
           <zj-table-column type="seq" title="序号" width="50"/>
           <zj-table-column
@@ -17,7 +18,9 @@
           <zj-table-column title="操作" fixed="right">
             <template v-slot="{ row, rowIndex }">
               <template v-if="$refs.fileTable.isActiveByRow(row)">
-                <zj-upload class="zj-inline" :httpRequest="handleFileUpload" :autoUpload="false" :onChange="handleFileChange">
+                <zj-upload class="zj-inline"
+                           :httpRequest="handleFileUpload"
+                           :beforeUpload="handleFileBeforeUpload">
                   <zj-button slot="trigger" type="text">上传</zj-button>
                 </zj-upload>
                 <zj-button type="text" @click="toSave(row,rowIndex)">保存</zj-button>
@@ -36,8 +39,8 @@
         </div>
         <el-row class="zj-m-t-20">
           <el-col>
-            <el-form-item label="业务描述：" prop="remark">
-              <el-input type="textarea" v-model="form.remark" :disabled="!isEdit"></el-input>
+            <el-form-item label="业务描述：" prop="busDesc">
+              <el-input type="textarea" v-model="form.busDesc" :disabled="!isEdit"></el-input>
             </el-form-item>
           </el-col>
         </el-row>
@@ -49,24 +52,47 @@
 /**
  * 凭证收款和非凭证收款,清算申请附件信息
  */
+import {OperateFlag} from '@modules/constant.js';
 export default {
   props: {
+    // 附件列表
+    attachList: {
+      type: Array,
+      default: () => {
+        return [];
+      }
+    },
+    busDesc:String,
     isEdit: {
       type: Boolean,
       default: true
     }
   },
+  watch: {
+    attachList () {
+      this.fileList = this.attachList;
+    },
+    busDesc () {
+      this.form.busDesc = this.busDesc
+    }
+  },
   data () {
     return {
+      zjControl: {
+        downApi: this.$api.baseCommon.downloadFile,
+        uploadApi: this.$api.baseCommon.uploadFile
+      },
       form: {
-        remark: ''
+        busDesc: ''
       },
       // 列表
       fileList: [],
       // 当前编辑行
       currentEditRow: {},
       // 当前编辑index
-      currentEditIndex: 0
+      currentEditIndex: 0,
+      // 删除列表
+      delList: []
     }
   },
   methods: {
@@ -74,15 +100,18 @@ export default {
       return this.$refs.form;
     },
     getData () {
-      return {form: this.form, list: this.fileList}
+      return {busDesc: this.form.busDesc, list: this.fileList.concat(this.delList)}
     },
     // 下载
     toDownload (row) {
+      this.zjControl.downApi(row);
     },
     // 删除
     delFile (row,index) {
-      if (row.fileId) {
-        //发送请求
+      if (row.id) {
+        row.operateFlag = OperateFlag.DEL;
+        this.delList.push({...row});
+        this.$delete(this.fileList, index);
       }else {
         this.$delete(this.fileList, index);
       }
@@ -103,7 +132,9 @@ export default {
       const row =  {
         fileName: '',
         remark: '',
-        fileId: ''
+        fileId: '',
+        operateFlag: OperateFlag.ADD,
+        id: ''
       }
       this.fileList.push(row);
       this.$refs.fileTable.setActiveRow(row);
@@ -140,15 +171,51 @@ export default {
     toEditFile (row) {
       if (!this.isTableEdit()) {return;}
       this.currentEditRow = {...row};
+      row.operateFlag = OperateFlag.UPDATE
       this.$refs.fileTable.setActiveRow(row);
     },
-    handleFileChange(file) {
-      let currentFile = this.fileList[this.currentEditIndex];
-      currentFile.fileName = file.name;
-      currentFile.file = file;
-      this.$set(this.fileList, this.currentEditIndex, currentFile);
+    /**
+     * 处理文件上传前：
+     * 支持pdf、图片、压缩包、word和excel
+     * @param file
+     */
+    handleFileBeforeUpload(file) {
+      const fileName = file.name;
+      if (fileName) {
+        const names = fileName.split('.');
+        const fileType = names[1].toLowerCase();
+        const supportFileTypes = ['pdf','bmp','gif','jpeg','png','zip','rar','doc','docx','xlsx','xls'];
+        if (!supportFileTypes.includes(fileType)) {
+          this.$messageBox({
+            type: 'warning',
+            content: '上传文件格式有误！只支持上传BMP格式、GIF格式、JPEG格式、PNG格式、ZIP格式、RAR格式、PDF格式、DOC格式、DOCX格式、XLSX格式以及XLS格式！',
+            title: '提示',
+            showConfirmButton: true,
+            center: true
+          })
+          return false;
+        }else {
+          return true
+        }
+      }
+      return false;
     },
-    handleFileUpload () {}
+    /**
+     * 上传文件
+     * @param file
+     */
+    handleFileUpload ({file}) {
+      let formData = new FormData()
+      formData.append('file',file)
+      this.zjControl.uploadApi(formData).then(res => {
+        let currentFile = this.fileList[this.currentEditIndex];
+        const {fileId, fileName} = res.data;
+        currentFile.fileName = fileName;
+        currentFile.fileId = fileId
+        this.$set(this.fileList, this.currentEditIndex, currentFile);
+        this.$message.success('附件上传成功!')
+      })
+    }
   }
 }
 </script>
