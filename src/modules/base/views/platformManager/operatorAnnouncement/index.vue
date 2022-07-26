@@ -2,32 +2,21 @@
   <div class="operatorAnnouncement">
     <zj-list-layout>
       <template slot="searchForm">
-        <!-- <div class="zj-search-condition">
-      <el-row class="button-row">
-        <zj-button class="reset" icon="el-icon-refresh" @click="resetSearch"
-          >重置</zj-button
-        >
-        <zj-button class="search" icon="el-icon-search" @click="search"
-          >查询</zj-button
-        >
-      </el-row> 
-    </div>-->
         <el-form ref="searchForm" :model="searchForm">
           <el-form-item label="类型：" class="col-center">
             <el-select
-              v-model="searchForm.isGenerateVoucher"
+              v-model="typeListRes"
               placeholder="请选择"
               clearable
               :popper-append-to-body="false"
             >
-              <el-option value="" label="全部"></el-option>
-              <!-- <el-option
-              v-for="item in dictionary.isGenerateVouchers"
-              :key="item.code"
-              :label="item.desc"
-              :value="item.code"
-            >
-            </el-option> -->
+              <el-option
+                v-for="(item, index) in typeList"
+                :key="index"
+                :label="item.desc"
+                :value="item.code"
+              >
+              </el-option>
             </el-select>
           </el-form-item>
           <el-form-item label="转让申请日期：" class="col-right">
@@ -83,16 +72,8 @@
               :api="zjBtn.sysNoticeAddDetails"
               >详情</zj-button
             >
-            <zj-button
-              type="text"
-              @click="toEdit(row)"
-              >修改</zj-button
-            >
-            <zj-button
-              type="text"
-              @click="toDel(row)"
-              >删除</zj-button
-            >
+            <zj-button type="text" @click="toEdit(row)">修改</zj-button>
+            <zj-button type="text" @click="toDel(row)">删除</zj-button>
           </template>
         </zj-table-column>
       </zj-table>
@@ -135,14 +116,13 @@
             :disabled="true"
             :popper-append-to-body="false"
           >
-            <el-option value="" label="公告"></el-option>
-            <!-- <el-option
-              v-for="item in dictionary.isGenerateVouchers"
-              :key="item.code"
+            <el-option
+              v-for="(item, index) in typeList"
+              :key="index"
               :label="item.desc"
               :value="item.code"
             >
-            </el-option> -->
+            </el-option>
           </el-select>
           <span v-else>公告</span>
         </el-form-item>
@@ -151,10 +131,7 @@
           :class="{ 'zj-m-b-5': !editFlag }"
           prop="invoiceTaxpayerId"
         >
-          <el-input
-            v-if="type != 'info'"
-            v-model="formModel.theme"
-          />
+          <el-input v-if="type != 'info'" v-model="formModel.theme" />
           <span v-else>标题标题标题</span>
         </el-form-item>
         <el-form-item
@@ -162,10 +139,10 @@
           prop="invoiceAddress"
           :class="{ 'zj-m-b-5': !editFlag }"
         >
-          <div v-if="type != 'info'">
-            <el-radio v-model="formModel.target" label="1">门户</el-radio>
-            <el-radio v-model="formModel.target" label="2">运营</el-radio>
-          </div>
+          <el-radio-group v-model="formModel.target" v-if="type != 'info'">
+            <el-radio :label="1" value="1">门户</el-radio>
+            <el-radio :label="2" value="2">运营</el-radio>
+          </el-radio-group>
           <span v-else>标题标题标题</span>
         </el-form-item>
         <el-form-item
@@ -209,7 +186,7 @@
       </el-form>
 
       <el-row slot="footer" class="dialog-footer">
-        <zj-button type="primary" @click="save">保存</zj-button>
+        <zj-button type="primary" v-if="!type == ''" @click="save">保存</zj-button>
         <zj-button class="back" @click="dialogVisible = false">取消</zj-button>
       </el-row>
     </el-dialog>
@@ -221,88 +198,125 @@ export default {
   data() {
     return {
       zjControl: {
-        sysNoticeAddDirectory: this.$api.operatorAnnouncement.sysNoticeAddDirectory,//数据字典
-        sysNoticeAdd: this.$api.operatorAnnouncement.sysNoticeAdd,//新增公告信息
-        sysNoticeAddDelete: this.$api.operatorAnnouncement.sysNoticeAddDelete,//删除系统公告
-        sysNoticeAddPage: this.$api.operatorAnnouncement.sysNoticeAddPage,//查询系统公告集
-        sysNoticeAddAller: this.$api.operatorAnnouncement.sysNoticeAddAller,//修改系统公告
-        sysNoticeAddDetails: this.$api.operatorAnnouncement.sysNoticeAddDetails,//系统公告详情
+        sysNoticeAddDirectory:
+          this.$api.operatorAnnouncement.sysNoticeAddDirectory, //数据字典
+        sysNoticeAdd: this.$api.operatorAnnouncement.sysNoticeAdd, //新增公告信息
+        sysNoticeAddDelete: this.$api.operatorAnnouncement.sysNoticeAddDelete, //删除系统公告
+        sysNoticeAddPage: this.$api.operatorAnnouncement.sysNoticeAddPage, //查询系统公告集
+        sysNoticeAddAller: this.$api.operatorAnnouncement.sysNoticeAddAller, //修改系统公告
+        sysNoticeAddDetails: this.$api.operatorAnnouncement.sysNoticeAddDetails, //系统公告详情
       },
       searchForm: {},
       dialogVisible: false,
       type: "info",
       tableData: [{ id: 1 }],
       formModel: {},
-      editFlag:"1",
-      formRules:{},
-      typeList:{},
+      editFlag: "1",
+      formRules: {},
+      typeListRes: "",
+      typeList: [],
     };
   },
-  created(){
-      this.apiDic()
+  created() {
+    this.apiDic();
+  },
+  watch: {
+    dialogVisible(value) {
+      if (!value) {
+        this.formModel = {};
+        // this.$set()
+      }
+    },
   },
   methods: {
-    apiDic(){
+    apiDic() {
       let params = {
-        id:"1"
-      }
-      this.zjControl.sysNoticeAddDirectory(params).then(res=>{
-      if(res.code===200){
-        console.log(res.data.typeList,"=====字典======")
-        this.typeList = res.data.typeList
-        console.log(this.typeList,"=====字典2======")
-      }})
+        id: "1",
+      };
+      this.zjControl.sysNoticeAddDirectory(params).then((res) => {
+        if (res.code === 200) {
+          // console.log(res.data.typeList, "=====字典======");
+          this.typeList = res.data.typeList;
+        }
+      });
     },
-    cancel(){
-      alert("--")
+    cancel() {
+      // alert("X");
     },
     //详情
-    toDetail(){
-      if(this.type !="add"  || this.type !="update" ){
-        this.dialogVisible = true;
-      }
+    toDetail(row) {
+      this.type = "";
+      this.dialogVisible = true;
+      this.formModel = {...row};
     },
     //新增
     add() {
-      this.type = "add"
+      this.type = "add";
+      this.formModel.type = "公告"
       this.dialogVisible = true;
     },
     //修改
-    toEdit(row){
-      this.type = "update"
+    toEdit(row) {
+      this.type = "update";
       this.dialogVisible = true;
-      this.formModel =  {...row}
-      console.log(this.formModel,'-----修改------')
+      this.formModel = {...row};
+      if (this.formModel.target === "门户") {
+        this.formModel.target = 1;
+      } else {
+        this.formModel.target = 2;
+      }
+      if(this.formModel.state == "开启"){
+        this.formModel.state = true
+      }else{
+        this.formModel.state = false
+      }
+      this.formModel.id = row.id
+      // console.log(row)
     },
     //删除
-    toDel(row){
+    toDel(row) {
       this.$messageBox({
-        type:'warning',
-        content:'您确定要删除吗'
-      }).then(()=>{
-        this.zjControl.sysNoticeAddDelete({id:row.id}).then(()=>{
-          alert("已删除")
-        })
-      })
+        type: "warning",
+        content: "您确定要删除吗",
+      }).then(() => {
+        this.zjControl.sysNoticeAddDelete({ id: row.id }).then(() => {
+          alert("已删除");
+        });
+      });
     },
     //保存
-    save(){
-      alert("===")
-      if(this.type == "add"){
-        alert("保存")
+    save() {
+      if (this.type === "add") {
+        alert("保存");
         let params = {
-          state:this.formModel.state,//开关状态（ 1:开启 2:关闭）
-          target:this.formModel.target,//展示对象（1:核心企业 2:供应商,3:核心企业和供应商）
-          theme:this.formModel.theme,//公告主题
-          type:this.formModel.type,//公告类型（1:弹框,2:公告,3:宣传栏）
-          validEndDatetime:this.formModel.validEndDatetime,//有效结束日期
-          validStartDatetime:this.formModel.validStartDatetime,//有效开始日期
-          content:this.formModel.content,//内容
-        }
-          this.zjControl.sysNoticeAdd(params).then(() => {
-          this.$Message.success('新增成功！')
+          state: this.formModel.state, //开关状态（ 1:开启 2:关闭）
+          target: this.formModel.target, //展示对象（1:核心企业 2:供应商,3:核心企业和供应商）
+          theme: this.formModel.theme, //公告主题
+          type: this.formModel.type, //公告类型（1:弹框,2:公告,3:宣传栏）
+          validEndDatetime: this.formModel.validEndDatetime, //有效结束日期
+          validStartDatetime: this.formModel.validStartDatetime, //有效开始日期
+          content: this.formModel.content, //内容
+        };
+        this.zjControl.sysNoticeAdd(params).then((res) => {
+          this.$Message.success("新增成功！");
           this.dialogVisible = false;
-        })
+        });
+      } else if (this.type === "update") {
+        alert("修改");
+        let params = {
+          state: this.formModel.state, //开关状态（ 1:开启 2:关闭）
+          target: this.formModel.target, //展示对象（1:核心企业 2:供应商,3:核心企业和供应商）
+          theme: this.formModel.theme, //公告主题
+          type: this.formModel.type, //公告类型（1:弹框,2:公告,3:宣传栏）
+          validEndDatetime: this.formModel.validEndDatetime, //有效结束日期
+          validStartDatetime: this.formModel.validStartDatetime, //有效开始日期
+          content: this.formModel.content, //内容
+          id: this.formModel.id
+        };
+        this.zjControl.sysNoticeAddAller(params).then((res) => {
+          this.$Message.success("修改成功！");
+          this.dialogVisible = false;
+        });
       }
     },
   },

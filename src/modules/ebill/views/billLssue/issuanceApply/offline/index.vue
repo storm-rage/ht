@@ -45,7 +45,11 @@
         </el-form>
       </template>
       <div class="zj-search-response">
-        <zj-table ref="searchTable" :params="searchForm" :api="''">
+        <zj-table
+          ref="searchTable"
+          :params="searchForm"
+          :api="zjControl.offlineList"
+        >
           <zj-table-column prop="id" title="对账单编号" />
           <zj-table-column field="" title="供应商编码" />
           <zj-table-column field="" title="供应商名称" />
@@ -85,7 +89,9 @@
 export default {
   data() {
     return {
-      zjControl: {},
+      zjControl: {
+        offlineList: this.$api.issuanceApply.offlineList, //线上对账单-查询
+      },
       searchForm: {},
       tableData: [{ id: 1 }],
     };
@@ -101,7 +107,6 @@ export default {
 };
 </script>
 <style lang="less" scoped>
-
 .zj-search-condition {
   margin-top: 10px;
   margin-left: 20px;

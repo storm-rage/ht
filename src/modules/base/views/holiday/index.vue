@@ -84,19 +84,20 @@ export default {
   methods: {
     // 字典
     getDics() {
-      this.$api.holiday.getDics().then(ret => {
+      this.$api.holidayRouter.holidayDirectory().then(ret => {
+        // console.log(ret,"===========")
         this.isHoliday = ret.data.isHoliday
       })
     },
     // 导出
     downTemplate() {
-      this.$api.holiday.getTemplate()
+      this.$api.holidayRouter.holidayTemplate()
     },
     //上传
     dayUpload({file, data}) {
       let formData = new FormData()
       formData.append('file', file)
-      this.$api.holiday.importTemplate(formData).then(ret => {
+      this.$api.holidayRouter.holidayListTo(formData).then(ret => {
         this.$messageBox({
           type: 'success',
           content: ret.msg || '操作成功',
@@ -124,7 +125,7 @@ export default {
       this.getList({dateStart: this.startDate, dateEnd: this.endDate})
     },
     getList(params) {
-      this.$api.holiday.getList(params).then(ret => {
+      this.$api.holidayRouter.holidayList(params).then(ret => {
         ret.data.map(item => {
           let obj = {
             title: '休',

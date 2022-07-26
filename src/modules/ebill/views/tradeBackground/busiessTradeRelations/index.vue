@@ -2,57 +2,57 @@
   <div>
     <zj-list-layout>
       <template slot="searchForm">
-      <el-form ref="searchForm" :model="searchForm">
-        <el-form-item label="买方企业名称：" class="col-center">
-          <el-input v-model="searchForm.ebillCode" />
-        </el-form-item>
-        <el-form-item label="卖方企业名称：" class="col-center">
-          <el-input v-model="searchForm.ebillCode" />
-        </el-form-item>
-        <el-form-item label="申请日期：" class="col-right">
-          <zj-date-range-picker
-            :startDate.sync="searchForm.expireDateStart"
-            :endDate.sync="searchForm.expireDateEnd"
-          />
-        </el-form-item>
-        <el-form-item label="贸易关系状态：" class="col-center">
-          <el-select
-            v-model="searchForm.isGenerateVoucher"
-            placeholder="请选择"
-            clearable
-            :popper-append-to-body="false"
-          >
-            <el-option value="" label="全部"></el-option>
-            <!-- <el-option
+        <el-form ref="searchForm" :model="searchForm">
+          <el-form-item label="买方企业名称：" class="col-center">
+            <el-input v-model="searchForm.ebillCode" />
+          </el-form-item>
+          <el-form-item label="卖方企业名称：" class="col-center">
+            <el-input v-model="searchForm.ebillCode" />
+          </el-form-item>
+          <el-form-item label="申请日期：" class="col-right">
+            <zj-date-range-picker
+              :startDate.sync="searchForm.expireDateStart"
+              :endDate.sync="searchForm.expireDateEnd"
+            />
+          </el-form-item>
+          <el-form-item label="贸易关系状态：" class="col-center">
+            <el-select
+              v-model="searchForm.isGenerateVoucher"
+              placeholder="请选择"
+              clearable
+              :popper-append-to-body="false"
+            >
+              <el-option value="" label="全部"></el-option>
+              <!-- <el-option
               v-for="item in dictionary.isGenerateVouchers"
               :key="item.code"
               :label="item.desc"
               :value="item.code"
             >
             </el-option> -->
-          </el-select>
-        </el-form-item>
-        
-        <el-form-item label="买方是否海天集团：" class="col-center">
-          <el-select
-            v-model="searchForm.isGenerateVoucher"
-            placeholder="请选择"
-            clearable
-            :popper-append-to-body="false"
-          >
-            <el-option value="" label="全部"></el-option>
-            <!-- <el-option
+            </el-select>
+          </el-form-item>
+
+          <el-form-item label="买方是否海天集团：" class="col-center">
+            <el-select
+              v-model="searchForm.isGenerateVoucher"
+              placeholder="请选择"
+              clearable
+              :popper-append-to-body="false"
+            >
+              <el-option value="" label="全部"></el-option>
+              <!-- <el-option
               v-for="item in dictionary.isGenerateVouchers"
               :key="item.code"
               :label="item.desc"
               :value="item.code"
             >
             </el-option> -->
-          </el-select>
-        </el-form-item>
-      </el-form>
+            </el-select>
+          </el-form-item>
+        </el-form>
       </template>
-    <!-- <div class="zj-search-response"> -->
+      <!-- <div class="zj-search-response"> -->
       <zj-table
         ref="searchTable"
         :params="searchForm"
@@ -78,7 +78,7 @@
           </template>
         </zj-table-column>
       </zj-table>
-    <!-- </div> -->
+      <!-- </div> -->
     </zj-list-layout>
     <el-dialog
       :visible.sync="dialogVisible"
@@ -97,7 +97,7 @@
         label="top"
       >
         <el-form-item
-          :label="type == 'disable' ? '请录入冻结原因：':'请录入解冻原因：'"
+          :label="type == 'disable' ? '请录入冻结原因：' : '请录入解冻原因：'"
           prop="cause"
         >
           <el-input type="textarea" v-model="cause"></el-input>
