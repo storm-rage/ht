@@ -37,6 +37,7 @@
 </template>
 <script>
 import DetailPage from '../../detail/index';
+import {TemplateType} from "@modules/constant";
 export default {
   components: {DetailPage},
   data() {
@@ -84,11 +85,16 @@ export default {
      * 下载额度调整申请书
      */
     toDownload() {
-      this.zjControl.downloadTemplate()
+      this.zjControl.downloadTemplate({
+        templateType:  TemplateType.EDTZSQS,
+        applyAddCreditAmount: this.detailInfo.applyAddCreditAmount,
+        contractId: this.detailInfo.contractId,
+        creditId: this.detailInfo.creditId
+      })
     },
     toReview() {
       if (this.agreeCheck) {
-        const money = this.money(this.$refs.detailPage.$data.form.field1);
+        const money = this.money(this.detailInfo.applyAddCreditAmount);
         this.$confirm(`您本次申请调整额度：<b style="font-size: 18px;">${money}</b>元，请确认。`,'额度调整复核确认',{
           dangerouslyUseHTMLString: true,
           confirmButtonText: '确定',

@@ -54,6 +54,15 @@ const billQuotaManage = {
     return request.get('/adjust-credit-apply/get-adjust-credit-apply-detail', {params})
   },
   /**
+   * 合同管理-额度变更申请-保理合同详情-协议列表
+   * @param params
+   * @returns {Promise<AxiosResponse<any>>}
+   */
+  getContractAgreementList(params) {
+    return request.get('/adjust-credit-apply/get-contract-r-agreement-list',{params})
+
+  },
+  /**
    * 合同管理-额度变更申请-申请提交
    * @param params
    * @returns {Promise<AxiosResponse<any>>}

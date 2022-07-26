@@ -5,12 +5,12 @@
         <el-form ref="searchForm" :model="searchForm">
           <el-form-item label="合同编号：">
             <el-input
-              v-model="searchForm.issueEntName"
+              v-model="searchForm.contractNo"
               @keyup.enter.native="enterSearch"
             />
           </el-form-item>
           <el-form-item label="合同签署类型：">
-            <el-select v-model="searchForm.issueEntName">
+            <el-select v-model="searchForm.applyType">
               <el-option value="全部" />
             </el-select>
           </el-form-item>

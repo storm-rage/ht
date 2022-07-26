@@ -1,54 +1,29 @@
 <template>
   <el-form :model="form" ref="form" :rules="rules">
     <zj-content-block>
-      <zj-header title="企业附件"></zj-header>
+      <zj-header :title="title"></zj-header>
       <zj-content>
-        <zj-table
-          ref="fileTable"
-          :dataList="fileList"
-          :pager="false"
-        >
+        <zj-table ref="fileTable" :dataList="fileList" :pager="false">
           <zj-table-column type="seq" title="序号" width="60" />
-          <zj-table-column
-            field="remark"
-            title="附件类型"
-            :edit-render="{ name: '$input', props: { maxlength: 200 } }"
-          />
-          <zj-table-column
-            field="fileName"
-            title="附件名称"
-            :edit-render="{ name: '$input', props: { maxlength: 200 } }"
-          />
+          <zj-table-column field="type" title="附件类型" />
+          <zj-table-column field="fileName" title="附件名称" />
           <zj-table-column title="操作" fixed="right">
-            <template v-slot="{ row, rowIndex }">
-              <template v-if="$refs.fileTable.isActiveByRow(row)">
+            <template v-slot="{ row }">
+              <template v-if="isEdit">
                 <zj-upload
                   class="zj-inline"
                   :httpRequest="handleFileUpload"
-                  :autoUpload="false"
-                  :onChange="handleFileChange"
+                  :data="{ row }"
                 >
                   <zj-button slot="trigger" type="text">上传</zj-button>
                 </zj-upload>
-                <zj-button
-                  type="text"
-                  style="margin-left: 0px"
-                  @click="toCancel(row, rowIndex)"
-                  >取消</zj-button
-                >
               </template>
-              <template v-else>
+              <template>
                 <zj-button
-                  v-if="row.fileId"
+                  v-show="row.fileId"
                   type="text"
                   @click="toDownload(row)"
                   >下载</zj-button
-                >
-                <zj-button
-                  v-if="isEdit"
-                  type="text"
-                  @click="delFile(row, rowIndex)"
-                  >删除</zj-button
                 >
               </template>
             </template>
@@ -67,6 +42,9 @@ export default {
     isEdit: {
       type: Boolean,
       default: false,
+    },
+    title: {
+      type: String,
     },
   },
   data() {
@@ -91,31 +69,14 @@ export default {
     },
     // 下载
     toDownload(row) {},
-    // 删除
-    delFile(row, index) {
-      if (row.fileId) {
-        //发送请求
-      } else {
-        this.$delete(this.fileList, index);
-      }
+    handleFileUpload({ file, data }) {
+      let formData = new FormData();
+      formData.append("file", file);
+      this.$api.baseCommon.uploadFile(formData).then((res) => {
+        data.row.fileId = res.data.fileId;
+        data.row.fileName = res.data.fileName;
+      });
     },
-    isTableEdit() {
-      let key = true;
-      if (this.$refs.fileTable && this.$refs.fileTable.getActiveRecord()) {
-        key = false;
-      }
-      if (!key) {
-        this.$log.alert("请保存当前正在编辑的数据");
-      }
-      return key;
-    },
-    handleFileChange(file) {
-      let currentFile = this.fileList[this.currentEditIndex];
-      currentFile.fileName = file.name;
-      currentFile.file = file;
-      this.$set(this.fileList, this.currentEditIndex, currentFile);
-    },
-    handleFileUpload() {},
   },
 };
 </script>

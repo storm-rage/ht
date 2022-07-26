@@ -1,5 +1,5 @@
 <template>
-  <div class="my-home" style="background: rgba(0,0,0,0)">
+  <div class="my-home" ref="myHome" style="background: rgba(0,0,0,0);padding-bottom: 10px">
    <!-- 顶部   -->
     <home-header></home-header>
     <!--  内容区域  -->

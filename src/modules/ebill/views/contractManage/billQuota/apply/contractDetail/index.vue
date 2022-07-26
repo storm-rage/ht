@@ -47,7 +47,11 @@
     <zj-content-block>
       <zj-header title="额度信息"></zj-header>
       <zj-content>
-        <zj-table :dataList="quotaList" :pager="false"  @radio-change="handleRadioChange" :radio-config="{highlight: true}">
+        <zj-table :dataList="quotaList"
+                  ref="quotaTable"
+                  :pager="false"
+                  @radio-change="handleRadioChange"
+                  :radio-config="{highlight: true}">
           <zj-table-column type="radio"  width="50"/>
           <zj-table-column type="seq" title="序号" width="50"/>
           <zj-table-column
@@ -70,26 +74,28 @@
         </zj-table>
       </zj-content>
     </zj-content-block>
-    <zj-content-block>
+    <zj-content-block v-if="currentRow.id">
       <zj-header title="相关协议"></zj-header>
       <zj-content>
-        <zj-table :dataList="fileList">
+        <zj-table :dataList="fileList" :pager="false">
           <zj-table-column type="seq" title="序号" />
           <zj-table-column
-            field="field1"
+            field="contractNo"
             title="协议编号"
           />
           <zj-table-column
-            field="field2"
+            field="entCoreName"
             title="买方企业名称"
           />
-          <zj-table-column field="field3" title="合同/协议名称" />
+          <zj-table-column field="contractName" title="合同/协议名称" />
           <zj-table-column
-            field="field4"
+            field="contractStartDate"
             title="生效日期"
             :formatter="date"
           />
-          <zj-table-column field="field5" title="合同/协议状态" />
+          <zj-table-column field="status"
+                           title="合同/协议状态"
+                           :formatter="(obj) => typeMap(dictionary.contractStatus, obj.cellValue)"/>
           <zj-table-column title="操作" fixed="right">
             <template v-slot="{ row }">
               <zj-button type="text" @click="toDownload(row)">下载</zj-button>
@@ -105,13 +111,13 @@
 </template>
 
 <script>
-// todo：缺少接口，下载协议参数
 export default {
   data() {
     return {
       zjControl: {
         getDataDirectory: this.$api.billQuotaManage.getDataDirectory,
         getContractDetail: this.$api.billQuotaManage.getContractDetail,
+        getContractAgreementList: this.$api.billQuotaManage.getContractAgreementList,
         downApi: this.$api.baseCommon.downloadFile
       },
       // 字典
@@ -123,7 +129,9 @@ export default {
       // 协议信息列表
       fileList: [],
       // 合同详情信息
-      detailInfo:{}
+      detailInfo:{},
+      // 当前选中的行
+      currentRow: {}
     };
   },
   created() {
@@ -139,6 +147,7 @@ export default {
         this.contractList = [this.detailInfo];
         if (res.data && res.data.creditInfoList) {
           this.quotaList = res.data.creditInfoList;
+          this.$refs.quotaTable.setRadioRow(this.quotaList[0]);
         }
       });
     },
@@ -151,23 +160,14 @@ export default {
       this.zjControl.downApi(row);
     },
     handleRadioChange({row}){
-      if (row.field1 === '1') {
-        this.fileList = [{
-          field1: '123455',
-          field2: '海天b公司',
-          field3: '《应收账款保理业务申请书》',
-          field4: '2022.09.09',
-          field5: '生效'
-        }]
-      }else {
-        this.fileList = [{
-          field1: '645645645',
-          field2: '海天A公司',
-          field3: '《应收账款保理业务申请书》',
-          field4: '2022.09.09',
-          field5: '生效'
-        }]
-      }
+      this.currentRow = row;
+      this.zjControl.getContractAgreementList({
+        buyerId: row.buyerId,
+        contractId: this.row.contractId,
+        creditId: row.id
+      }).then(res => {
+        this.fileList = res.data.agreementInfoList||[];
+      });
     }
   },
 };

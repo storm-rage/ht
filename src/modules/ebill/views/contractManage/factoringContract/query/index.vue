@@ -42,18 +42,18 @@
           </el-form-item>
         </el-form>
       </template>
-      <zj-table ref="searchTable" :dataList="list" :params="searchForm" :api="zjControl.tableApi">
+      <zj-table ref="searchTable" :params="searchForm" :api="zjControl.tableApi">
         <zj-table-column type="seq" title="序号" width="60"/>
         <zj-table-column field="serialNo" title="申请流水号" />
         <zj-table-column field="applyType" title="合同签署类型" />
         <zj-table-column field="contractNo" title="合同编号" />
         <zj-table-column field="contractName" title="合同名称"/>
-        <zj-table-column field="applyStatus" title="申请状态"/>
-        <zj-table-column field="contractSignStatus" title="签约结果"/>
+        <zj-table-column field="applyStatusDesc" title="申请状态"/>
+        <zj-table-column field="applyTypeDesc" title="签约结果"/>
         <zj-table-column field="applyDate" title="申请时间"/>
         <zj-table-column title="操作" fixed="right">
           <template v-slot="{row}">
-            <zj-button type="text" @click="toViewDetail(row)" :api="zjBtn.getEnterprise">详情</zj-button>
+            <zj-button type="text" @click="toViewDetail(row)" :api="zjBtn.queryMyEbContractDetail">详情</zj-button>
           </template>
         </zj-table-column>
       </zj-table>
@@ -64,36 +64,27 @@
 export default {
   data() {
     return {
-      zjControl: {},
-      searchForm:{
-        issueEntName: '',
-        expireDateStart: '',
-        expireDateEnd: '',
-        ebillAmtStart: '',
-        ebillAmtEnd: '',
-        ebillCode:'',
-        issueDateStart: '',
-        issueDateEnd: '',
+      zjControl: {
+        tableApi: this.$api.factoringContract.queryMyEbContractPage,
+        queryMyEbContractDetail: this.$api.factoringContract.queryMyEbContractDetail
       },
-      list: [
-        {
-          field1: '5435455',
-          field2: '首次签约合同',
-          field3: '789797898',
-          field4: '国内商业保理合同',
-          field5: '待复核',
-          field6: '签约成功',
-          field7: '2021.01.01 11:11:22'
-        }
-      ]
+      searchForm:{
+        contractNo: '',
+        applyType: '',
+        applyStartDate: '',
+        applyEndDate: '',
+        applyStatus: '',
+        serialNo:'',
+        contractSignStatus: ''
+      }
     }
   },
   created() {
-    // this.getApi()
+    this.getApi()
   },
   methods: {
-    toViewDetail() {
-      this.$router.push({name: 'mySignContractDetail'});
+    toViewDetail(row) {
+      this.goChild('mySignContractDetail',{contractId: row.contractId})
     }
   }
 }

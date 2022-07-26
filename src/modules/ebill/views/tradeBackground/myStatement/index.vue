@@ -4,35 +4,40 @@
       <template slot="searchForm">
         <el-form ref="searchForm" :model="searchForm">
           <el-form-item label="对账单编号：">
-            <el-input
-              v-model="searchForm.issueEntName"
-              @keyup.enter.native="enterSearch"
-            />
+            <el-input v-model="searchForm.acctBillCode" />
           </el-form-item>
           <el-form-item label="买方名称：" class="col-right">
-            <zj-date-range-picker
-              :startDate.sync="searchForm.expireDateStart"
-              :endDate.sync="searchForm.expireDateEnd"
-            />
+            <el-input v-model="searchForm.companyName" />
           </el-form-item>
 
           <el-form-item label="对账单状态：" class="col-center">
-             <el-select v-model="searchForm.a">
-              <el-option value="全部" />
+            <el-select v-model="searchForm.checkBillStatus">
+              <el-option
+                v-for="item in dictionary.checkBillStatus"
+                :key="item.code"
+                :label="item.desc"
+                :value="item.code"
+              >
+              </el-option>
             </el-select>
           </el-form-item>
 
           <el-form-item label="对账单日期：">
             <zj-date-range-picker
-              :startDate.sync="searchForm.expireDateStart"
-              :endDate.sync="searchForm.expireDateEnd"
+              :startDate.sync="searchForm.earliestInputOrPassDate"
+              :endDate.sync="searchForm.latestInputOrPassDate"
             />
           </el-form-item>
 
           <el-form-item label="是否申请开立债权凭证：">
-           <el-select v-model="searchForm.a">
-              <el-option value="是" />
-              <el-option value="否" />
+            <el-select v-model="searchForm.isApplyVoucher">
+              <el-option
+                v-for="item in dictionary.isApplyVoucher"
+                :key="item.code"
+                :label="item.desc"
+                :value="item.code"
+              >
+              </el-option>
             </el-select>
           </el-form-item>
         </el-form>
@@ -41,59 +46,75 @@
         ref="searchTable"
         :params="searchForm"
         :api="zjControl.tableApi"
+        @checkbox-change="tableCheckChange"
+        @checkbox-all="tableCheckChange"
       >
-        <zj-table-column type="checkbox" width="40px" fixed="left"></zj-table-column>
+        <zj-table-column
+          type="checkbox"
+          width="40px"
+          fixed="left"
+        ></zj-table-column>
         <zj-table-column field="ebillCode" title="对账单编号">
           <template v-slot="{ row }">
-            <span class="table-elbill-code" @click="toDetails(row)">{{
-              row.ebillCode
+            <span class="table-elbill-code" @click="goChild('queryAccountBillDetail',row)">{{
+              row.acctBillCode
             }}</span>
           </template>
         </zj-table-column>
-        <zj-table-column field="issueEntName" title="买方名称" />
-        <zj-table-column field="issueEntName" title="供应商名称" />
-        <zj-table-column field="ebillAmt" title="对账日期" :formatter="date" />
+        <zj-table-column field="companyName" title="买方名称" />
+        <zj-table-column field="supplierName" title="供应商名称" />
         <zj-table-column
-          field="transferAmt"
+          field="checkBillDate"
+          title="对账日期"
+          :formatter="date"
+        />
+        <zj-table-column
+          field="earliestInputOrPassDate"
           title="入库日期/放行日期"
           :formatter="date"
         />
         <zj-table-column
-          field="issueDate"
+          field="checkBillAmt"
           title="对账单金额"
           :formatter="money"
         />
         <zj-table-column
-          field="issueDate"
+          field="isApplyVoucher"
           title="是否申请开立债权凭证"
+          :formatter="
+            (obj) => typeMap(dictionary.isApplyVoucher, obj.cellValue)
+          "
         />
         <zj-table-column
-          field="state"
+          field="checkBillStatus"
           title="对账单状态"
           :formatter="
-            (obj) => typeMap(dictionary.enterpriseStateList, obj.cellValue)
+            (obj) => typeMap(dictionary.checkBillStatus, obj.cellValue)
           "
         />
         <zj-table-column title="操作" fixed="right">
-          <template>
+          <template v-slot="{ row }">
             <zj-button
               type="text"
-              @click="openAlert"
+              @click="applyOpenVoucherBatch([row.id])"
               :api="zjBtn.getEnterprise"
+              v-if="row.isApplyVoucher === '0'"
               >申请开立凭证</zj-button
             >
+            <span v-else>--</span>
           </template>
         </zj-table-column>
       </zj-table>
 
       <!-- 工作流 -->
-      <zj-workflow v-model="workflow">
-        <el-row slot="right">
-          <zj-button @click="openAlert" :api="zjBtn.passBillSignBatch"
-            >申请开立凭证</zj-button
-          >
-        </el-row>
-      </zj-workflow>
+      <zj-content-footer>
+        <zj-button
+          type="primary"
+          @click="applyOpenVoucherBatch(ids)"
+          :api="zjBtn.passBillSignBatch"
+          >申请开立凭证</zj-button
+        >
+      </zj-content-footer>
     </zj-list-layout>
   </zj-content-container>
 </template>
@@ -101,56 +122,50 @@
 export default {
   data() {
     return {
-      zjControl: {},
-      searchForm: {
-        issueEntName: "",
-        expireDateStart: "",
-        expireDateEnd: "",
-        ebillAmtStart: "",
-        ebillAmtEnd: "",
-        ebillCode: "",
-        issueDateStart: "",
-        issueDateEnd: "",
+      zjControl: {
+        ...this.$api.myAccountBill,
       },
-      contractType: "", // 合同签署类型
-      applicationStatus: "", // 申请状态
-      signingResults: "", // 签约结果
-      workflow: "",
+      searchForm: {},
+      dictionary: {},
+      ids: [],
     };
   },
   created() {
     this.getApi();
+    this.getDirectory();
   },
   methods: {
-    toDetails(row) {
-      console.log(row);
+    // 获取字典
+    getDirectory() {
+      this.zjControl.getDirectory().then((res) => {
+        this.dictionary = res.data;
+      });
     },
-    openAlert() {
-      this.$confirm( '选择对账单是否申请开立债权凭证？','温馨提示', {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
-        type: 'warning'
-      }).then(()=> {
-        
-      })
-    }
+    //开立凭证
+    applyOpenVoucherBatch(ids) {
+      this.$confirm("选择对账单是否申请开立债权凭证？", "温馨提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning",
+      }).then(() => {
+        let params = { ids: ids };
+        this.zjControl.applyOpenVoucherBatch(params).then((res) => {
+          this.$message.success("申请成功!");
+          this.search()
+        });
+      });
+    },
+    // 获取选中账单id
+    tableCheckChange({ records }) {
+      this.ids = []
+      records.forEach(item => {
+        this.ids.push(item.id)
+      });
+      console.log(this.ids)
+    },
   },
 };
 </script>
 
 <style lang="less" scoped>
-/deep/#ZjWorkflow {
-  .workflow-top {
-    .el-row {
-      padding: 5px 0 0;
-      text-align: center;
-    }
-  }
-  .workflow-bottom {
-    .right {
-      width: 100%;
-      text-align: center;
-    }
-  }
-}
 </style>

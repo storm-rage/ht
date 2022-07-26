@@ -1,15 +1,16 @@
+/**
+ * 保理合同（企业端）
+ */
 const contractManageRouter = [
   {
-    path: '/contractSignQuery',
-    name: 'contractSignQuery',
+    path: '/ebContractManageEnterprise',
+    name: 'ebContractManageEnterprise',
     component: () => import('../views/contractManage/factoringContract/query/index.vue'),
     meta: {
-      isMock: true,
       title: '我签约的保理合同',
       root: '合同管理',
       keepAlive: true,
-      refreshIndex: 0,
-      notRequireAuth: true
+      refreshIndex: 0
     },
   },
   {
@@ -17,25 +18,21 @@ const contractManageRouter = [
     name: 'mySignContractDetail',
     component: () => import('../views/contractManage/factoringContract/query/detailPage/index.vue'),
     meta: {
-      isMock: false,
       title: '合同签约详情',
-      root: '合同管理',
+      parent: 'ebContractManageEnterprise',
       keepAlive: true,
-      refreshIndex: 0,
-      notRequireAuth: true
+      refreshIndex: 0
     },
   },
   {
-    path: '/contractSignApplyList',
-    name: 'contractSignApplyList',
+    path: '/ebContractApply',
+    name: 'ebContractApply',
     component: () => import('../views/contractManage/factoringContract/apply/index.vue'),
     meta: {
-      isMock: true,
       title: '保理合同签约申请',
       root: '合同管理',
       keepAlive: true,
-      refreshIndex: 0,
-      notRequireAuth: true
+      refreshIndex: 0
     },
   },
   {
@@ -43,25 +40,21 @@ const contractManageRouter = [
     name: 'contractSignApply',
     component: () => import('../views/contractManage/factoringContract/apply/detailPage/index.vue'),
     meta: {
-      isMock: false,
       title: '合同签约申请',
-      root: '合同管理',
+      parent: 'ebContractApply',
       keepAlive: true,
-      refreshIndex: 0,
-      notRequireAuth: true
+      refreshIndex: 0
     },
   },
   {
-    path: '/contractSignReviewList',
-    name: 'contractSignReviewList',
+    path: '/ebContractApplyReview',
+    name: 'ebContractApplyReview',
     component: () => import('../views/contractManage/factoringContract/review/index.vue'),
     meta: {
-      isMock: true,
       title: '保理合同签约复核',
       root: '合同管理',
       keepAlive: true,
-      refreshIndex: 0,
-      notRequireAuth: true
+      refreshIndex: 0
     },
   },
   {
@@ -69,12 +62,10 @@ const contractManageRouter = [
     name: 'contractSignReview',
     component: () => import('../views/contractManage/factoringContract/review/detailPage/index.vue'),
     meta: {
-      isMock: false,
       title: '合同签约复核',
-      root: '合同管理',
+      parent: 'ebContractApplyReview',
       keepAlive: true,
-      refreshIndex: 0,
-      notRequireAuth: true
+      refreshIndex: 0
     },
   },
   {

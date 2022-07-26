@@ -50,7 +50,7 @@ export default {
         if (item.productType === ProductType.RD) {
           // 如果开通了订单保理，则不允许勾掉凭证保理
           const prod = this.selectProds.find((ditem) => ditem.productType === ProductType.DDBL);
-          if (!prod.length) {
+          if (!prod) {
             const index = this.prodIds.findIndex((val) => {
               return val === item.id;
             });
@@ -61,10 +61,10 @@ export default {
           const currentIndex = this.prodIds.findIndex((val) => {
             return val === item.id;
           });
+          this.delProd(currentIndex);
           const rdIndex = this.selectProds.findIndex((val) => {
             return val.productType === ProductType.RD;
           });
-          this.delProd(currentIndex);
           this.delProd(rdIndex);
         }else {
           const index = this.prodIds.findIndex((val) => {
@@ -88,7 +88,7 @@ export default {
      * @param item
      */
     autoSelectRDProd (item) {
-      if (item.productType===ProductType.DDBl) {
+      if (item.productType===ProductType.DDBL) {
         const prod = this.productList.find((ditem) => ditem.productType===ProductType.RD);
         if (!this.prodIds.includes(prod.id)) {
           this.prodIds.push(prod.id);

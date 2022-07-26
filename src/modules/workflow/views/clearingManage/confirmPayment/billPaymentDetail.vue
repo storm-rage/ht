@@ -2,13 +2,13 @@
   <zj-content-container>
     <zj-top-header title="凭证收款交易详情"></zj-top-header>
     <!--  业务申请信息  -->
-    <biz-apply-info></biz-apply-info>
+    <biz-apply-info :biz-info="detailInfo"></biz-apply-info>
     <!--  具体业务信息  -->
-    <bill-confirm-payment-detail></bill-confirm-payment-detail>
+    <bill-confirm-payment-detail :biz-detail-info="detailInfo"></bill-confirm-payment-detail>
     <!--  操作记录  -->
-    <operate-log></operate-log>
+    <operate-log :log-list="detailInfo.operateLogList"></operate-log>
     <zj-content-footer>
-      <zj-button  @click="back">返回</zj-button>
+      <zj-button  @click="goParent">返回</zj-button>
     </zj-content-footer>
   </zj-content-container>
 </template>
@@ -28,10 +28,33 @@ export default {
     BillConfirmPaymentDetail
   },
   data () {
-    return {};
+    return {
+      zjControl: {
+        getDirectory: this.$api.confirmPaymentManage.getDirectory,
+        getBillReceiptReviewDetail: this.$api.confirmPaymentManageWorkflow.getBillReceiptReviewDetail
+      },
+      // 字典
+      dictionary: {},
+      detailInfo: {}
+    };
+  },
+  created() {
+    this.getApi();
+    this.getDic();
+    this.getRow();
+    this.getDetail();
   },
   methods: {
-    back () {}
+    getDic() {
+      this.zjControl.getDirectory().then((res) => {
+        this.dictionary = res.data
+      });
+    },
+    getDetail() {
+      this.zjControl.getBillReceiptReviewDetail({id: this.row.id}).then(res => {
+        this.detailInfo = res.data;
+      });
+    },
   }
 }
 </script>

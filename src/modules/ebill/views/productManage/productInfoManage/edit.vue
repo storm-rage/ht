@@ -15,7 +15,7 @@
                 </el-col>
                 <el-col :span="8">
                   <el-form-item label="业务类型：" prop="busType">
-                    <el-select v-model="infoForm.busType"  :disabled="row.id">
+                    <el-select v-model="infoForm.busType"  :disabled="row.id ? true : false">
                       <el-option
                         v-for="item in dictionary.busType"
                         :label="item.desc"
@@ -27,7 +27,7 @@
                 </el-col>
                 <el-col :span="8">
                   <el-form-item label="产品类型：" prop="productType">
-                    <el-select v-model="infoForm.productType" :disabled="row.id">
+                    <el-select v-model="infoForm.productType" :disabled="row.id ? true : false">
                       <el-option
                         v-for="item in dictionary.productType"
                         :label="item.desc"
@@ -407,7 +407,6 @@ export default {
     this.getRow()
     this.queryProductDirectory()
     this.getDetail()
-    console.log(this.row)
 
   }
 };
