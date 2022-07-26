@@ -75,5 +75,13 @@
     "> 1%",
     "last 2 versions",
     "not dead"
-  ]
+  ],
+  "description": "```\r npm install\r ```",
+  "main": ".eslintrc.js",
+  "repository": {
+    "type": "git",
+    "url": "ssh://git@git.haday.cn:9022/supply_chain_finance/izejin-htgyl-web.git"
+  },
+  "author": "",
+  "license": "ISC"
 }

@@ -5,7 +5,7 @@ const holidayRouter = [
   {
     path: '/holidaySet',
     name: 'holidaySet',
-    component: () => import('../views/holiday'),
+    component: () => import('../views/holiday/index.vue'),
     meta: {
       title:'节假日',
       // parent: 'home',
