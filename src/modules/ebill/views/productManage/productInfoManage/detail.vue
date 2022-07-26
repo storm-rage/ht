@@ -17,7 +17,7 @@
             <zj-table-column field="status" title="产品状态" :formatter="obj=>typeMap(dictionary.status, obj.cellValue)"/>
           </zj-table>
         </div>
-        <el-form :model="infoForm" ref="infoForm" :rules="rules" label-width="220px">
+        <el-form :model="infoForm" ref="infoForm" label-width="220px">
           <zj-content-block>
             <zj-header :title="`产品设置-${typeMap(dictionary.productType,infoForm.productType)}`"></zj-header>
             <el-row v-if="this.row.productType === 'DDBL'">
