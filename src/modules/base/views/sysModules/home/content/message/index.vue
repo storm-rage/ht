@@ -2,7 +2,7 @@
   <home-content-block class="home-content-message">
     <zj-header title="站内信">
       <template slot="right">
-        <right-more-btn @click="toMore"></right-more-btn>
+        <right-more-btn @click.native="toMore"></right-more-btn>
       </template>
     </zj-header>
     <div class="message-list-block">
@@ -52,7 +52,7 @@ export default {
   },
   methods: {
     toMore () {
-
+      this.goChild('homeNotice')
     }
   }
 };

@@ -5,34 +5,7 @@
   background: none !important;
   padding-left: 0!important;
 }
-.confirmButtonClass{
-  background-color: #FFF;
-  color: #169BD5;
-}
 
-.login_pass .el-checkbox__input,.login_pass .el-checkbox__inner{
-  width: 14px!important;
-  height: 14px!important;
-  transform: translateY(-0.25px);
-  color: #7E7E7E;
-}
-.login_pass .el-checkbox__label{
-  font-size: 14px!important;
-  margin-left: -5px;
-  cursor: auto;
-  color: #7E7E7E;
-}
-
-.browser-tip {
-  position: absolute;
-  right: 13%;
-  width: 350px;
-  border: 1px solid #dab866;
-  background-color: #fef4dc;
-  color: #d2ba83;
-  font-size: 12px;
-  padding: 3px 0 3px 15px;
-}
 /*覆写样式*/
 .loginBody {
   .el-input--prefix {
@@ -58,17 +31,15 @@
     }
   }
 }
-
-.login-one{
-  .el-input__inner{
-    width: 150px;
-    border-radius: 4px;
-  }
+//验证码
+.login-code{
   .el-input-group__append{
-    // padding-right: 0!important;
-    width: 130px;
-    button{
-      // width: 100%;
+    width: 37%;
+  }
+  /*小屏适配问题*/
+  @media only screen and (max-width: 1400px) {
+    .el-input-group__append{
+      width: 47%;
     }
   }
 }
