@@ -1,15 +1,13 @@
 const productInfoManageRouter = [
   {
-    path: '/productInfoManage',
-    name: 'productInfoManage',
+    path: '/pubProductSetting',
+    name: 'pubProductSetting',
     component: () => import('../views/productManage/productInfoManage'),
     meta: {
-      isMock: true,
       title: '产品信息管理',
       root: '产品信息管理',
       keepAlive: true,
       refreshIndex: 0,
-      notRequireAuth: true
     }
   },
   {
@@ -17,13 +15,11 @@ const productInfoManageRouter = [
     name: 'productInfoManageDetail',
     component: () => import('../views/productManage/productInfoManage/detail'),
     meta: {
-      isMock: true,
       title: '产品详情',
       root: '产品信息管理',
       keepAlive: true,
       refreshIndex: 0,
-      parent:'productInfoManage',
-      notRequireAuth: true
+      parent:'pubProductSetting',
     }
   },
   {
@@ -31,13 +27,11 @@ const productInfoManageRouter = [
     name: 'productInfoManageEdit',
     component: () => import('../views/productManage/productInfoManage/edit'),
     meta: {
-      isMock: true,
       title: '产品信息',
       root: '产品信息管理',
       keepAlive: true,
       refreshIndex: 0,
-      parent:'productInfoManage',
-      notRequireAuth: true
+      parent:'pubProductSetting',
     }
   },
 
