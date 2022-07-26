@@ -248,7 +248,6 @@ export default {
         addProductSetting: this.$api.productInfoManage.addProductSetting,//修改产品配置
       },
       infoForm: {},
-      row: {},
       rules: {
         productName: [
           {required: true, message: '请填写产品名称', trigger: 'blur'},
@@ -408,8 +407,6 @@ export default {
     this.getRow()
     this.queryProductDirectory()
     this.getDetail()
-    console.log(this.row)
-    console.log(this.row.id)
 
   }
 };
