@@ -83,6 +83,7 @@
           node-key="code"
           default-expand-all
           :props="defaultProps"
+          :default-checked-keys="treeDefaultSelect"
           @check="handleTreeChange"
         ></el-tree>
       </zj-content>
@@ -146,7 +147,14 @@ export default {
     productType:{
       type: String,
       required: true
-    }
+    },
+    // 产品树默认选中
+    // treeDefaultSelect: {
+    //   type: Array,
+    //   default:() => {
+    //     return [];
+    //   }
+    // }
   },
   computed: {
     cactoringLogoList () {
@@ -212,6 +220,12 @@ export default {
       handler () {
         this.form = this.params||{};
         this.tradeList = [this.form];
+        if (this.params.billFactoringModelList) {
+          this.treeDefaultSelect.push(ProductType.RD)
+        }
+        if (this.params.orderFactoringModel) {
+          this.treeDefaultSelect.push(ProductType.DDBL)
+        }
       }
     }
   },
@@ -228,7 +242,9 @@ export default {
       // 勾选的产品
       needMaintenanceProducts: [],
       // 常量
-      constProductType: ProductType
+      constProductType: ProductType,
+      // 默认选中
+      treeDefaultSelect: []
     };
   },
   methods: {
