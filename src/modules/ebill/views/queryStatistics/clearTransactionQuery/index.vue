@@ -56,19 +56,19 @@
                   </el-form-item>
                 </el-form>
               </template>
-              <zj-table ref="searchTable" :params="searchForm" :api="zjControl.queryFactoringCreditPage">
+              <zj-table ref="searchTable" :params="searchForm" :api="zjControl.queryExpireClearPage">
                 <zj-table-column title="申请流水号">
                   <template v-slot="{row}">
-                    <zj-button type="text" @click="goChild">{{row.serialNo}}</zj-button>
+                    <zj-button type="text" @click="toDetail(row)" :api="zjBtn.getExpireClearDetail">{{row.serialNo}}</zj-button>
                   </template>
                 </zj-table-column>
-                <zj-table-column field="clearType" title="申请类型"/>
+                <zj-table-column field="clearType" title="申请类型" :formatter="obj=>typeMap(dictionary.applyType,obj.cellValue)"/>
                 <zj-table-column field="payEntName" title="核心企业名称"/>
                 <zj-table-column field="repaymentEntName" title="收款人名称"/>
                 <zj-table-column field="clearTotalCount" title="清算总笔数" />
                 <zj-table-column field="clearTotalAmt" title="清算总金额" :formatter="money"/>
                 <zj-table-column field="applyDatetime" title="申请时间" :formatter="date"/>
-                <zj-table-column field="applyStatus" title="申请状态" :formatter="obj=>typeMap(dictionary,obj.cellValue)"/>
+                <zj-table-column field="applyStatus" title="申请状态" :formatter="obj=>typeMap(dictionary.applyStatus,obj.cellValue)"/>
               </zj-table>
             </zj-list-layout>
           </div>
@@ -104,6 +104,9 @@ export default {
       this.zjControl.getDirectory().then(res => {
         this.dictionary = Object.assign({}, res.data)
       })
+    },
+    toDetail(row) {
+      this.goChild('queryExpireClearDetail',row)
     },
     toExport() {
       this.zjControl.exportFactoringCredit()

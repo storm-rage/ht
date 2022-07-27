@@ -23,7 +23,7 @@
                     >
                       <el-option label="全部" value=""></el-option>
                       <el-option
-                        v-for="item in dictionary.checkBillStatus"
+                        v-for="item in dictionary.isHtEnterprise"
                         :key="item.code"
                         :label="item.desc"
                         :value="item.code"
@@ -39,7 +39,7 @@
                     >
                       <el-option label="全部" value=""></el-option>
                       <el-option
-                        v-for="item in dictionary.checkBillStatus"
+                        v-for="item in dictionary.factoringCreditStatus"
                         :key="item.code"
                         :label="item.desc"
                         :value="item.code"
@@ -62,7 +62,7 @@
                 <zj-table-column field="estimatedPaymentDate" title="额度到期日" :formatter="date"/>
                 <zj-table-column field="estimatedPaymentDate" title="授信额度" :formatter="money"/>
                 <zj-table-column field="estimatedPaymentDate" title="剩余可用额度" :formatter="money"/>
-                <zj-table-column field="billSource" title="融资状态" :formatter="obj=>typeMap(dictionary,obj.cellValue)"/>
+                <zj-table-column field="billSource" title="融资状态" :formatter="obj=>typeMap(dictionary.factoringCreditStatus,obj.cellValue)"/>
               </zj-table>
             </zj-list-layout>
           </div>
