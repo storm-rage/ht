@@ -70,19 +70,19 @@
         <zj-table :dataList="detailInfo.contractAgreementList" :pager="false">
           <zj-table-column type="seq" title="序号" width="60"/>
           <zj-table-column
-            field="field1"
+            field="contractNo"
             title="合同/协议编号"/>
           <zj-table-column
-            field="field3"
+            field="buyerName"
             title="买方企业名称"/>
           <zj-table-column
-            field="field2"
+            field="contractName"
             title="合同/协议名称"/>
           <zj-table-column
-            field="field4"
+            field="signTypeDesc"
             title="签署类型"/>
           <zj-table-column
-            field="field5"
+            field="agreementPerson"
             title="协议相关方"/>
           <zj-table-column title="操作" fixed="right">
             <template v-slot="{ row }">
@@ -95,6 +95,9 @@
   </zj-content-container>
 </template>
 <script>
+/**
+ * 通用详情页面（查询，申请，复核）
+ */
 export default {
   props: {
     title: String,
@@ -102,6 +105,7 @@ export default {
       type: Object,
       required: true
     },
+    dictionary: Object,
     stepActive: {
       type: Number,
       default: 0
@@ -118,24 +122,7 @@ export default {
     return {
       zjControl: {
         downApi: this.$api.baseCommon.downloadFile
-      },
-      quotaList: [
-        {
-          field1: '海天a公司',
-          field2: '2022-09-09 ～ 2023-09-08',
-          field3: '100,000,000.00',
-          field4: '4',
-        }
-      ],
-      fileList: [
-        {
-          field1: '123455',
-          field2: '《国内商业保理合同》',
-          field3: '海天a公司',
-          field4: '双签',
-          field5: '海天保理公司'
-        }
-      ]
+      }
     }
   },
   methods: {

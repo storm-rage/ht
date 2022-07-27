@@ -96,6 +96,7 @@ export default {
       if (this.agreeCheck) {
         const money = this.money(this.detailInfo.applyAddCreditAmount);
         this.$confirm(`您本次申请调整额度：<b style="font-size: 18px;">${money}</b>元，请确认。`,'额度调整复核确认',{
+          type: 'warning',
           dangerouslyUseHTMLString: true,
           confirmButtonText: '确定',
           cancelButtonText: '取消'

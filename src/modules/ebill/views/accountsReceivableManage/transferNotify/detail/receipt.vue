@@ -98,6 +98,7 @@ export default {
     toReceipt() {
       if (this.agreeCheck) {
         this.$confirm('是否确认签署？', '温馨提示', {
+          type: 'warning',
           dangerouslyUseHTMLString: true,
           confirmButtonText: '确定',
           cancelButtonText: '取消'

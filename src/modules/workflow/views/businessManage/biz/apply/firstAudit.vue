@@ -10,18 +10,26 @@
      <!--  审批意见  -->
     <audit-remark ref="auditRemark"></audit-remark>
     <zj-content-footer>
-      <zj-button type="primary" :disabled="rejectLoading" :loading="passLoading" :api="zjBtn.submitFirstAudit" @click="toPass">审核通过</zj-button>
-      <zj-button type="primary" :disabled="passLoading" :loading="rejectLoading" :api="zjBtn.submitFirstAudit" @click="toReject">拒绝</zj-button>
+      <zj-button type="primary"
+                 :disabled="rejectLoading"
+                 :loading="passLoading"
+                 :api="zjBtn.submitFirstAudit"
+                 @click="toPass">审核通过</zj-button>
+      <zj-button type="primary"
+                 :disabled="passLoading"
+                 :loading="rejectLoading"
+                 :api="zjBtn.submitFirstAudit"
+                 @click="toReject">拒绝</zj-button>
       <zj-button @click="goParent">返回</zj-button>
     </zj-content-footer>
   </zj-content-container>
 </template>
 <script>
-import {OperResult} from '@modules/constant.js';
-import BizApplyInfo from '../components/bizApplyInfo';
-import OperateLog from '../components/operateLog';
-import AuditRemark from '../components/auditRemark';
-import BusinessFirstAudit from '@modules/ebill/views/productManage/businessManage/workflow/businessFirstAudit.vue';
+import {OperResult} from "@modules/constant";
+import BizApplyInfo from '../../../components/bizApplyInfo';
+import OperateLog from '../../../components/operateLog';
+import AuditRemark from '../../../components/auditRemark';
+import BusinessFirstAudit from '@modules/ebill/views/productManage/businessManage/workflow/biz/apply/audit.vue';
 /**
  * 初审和业务维护驳回操作
  */

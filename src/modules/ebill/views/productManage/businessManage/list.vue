@@ -18,7 +18,7 @@
               </el-form-item>
               <el-form-item label="是否海天一级供应商：">
                 <el-select v-model="searchForm.isHtEnterprise">
-                  <el-option value="全部" />
+                  <el-option value="" label="全部"></el-option>
                   <el-option
                     v-for="item in dictionary.isHtEnterprise"
                     :key="`${item.code}isHtEnterprise`"
@@ -42,7 +42,7 @@
               </el-form-item>
               <el-form-item label="是否签署保理合同：">
                 <el-select v-model="searchForm.isFactoringContract">
-                  <el-option value="全部" />
+                  <el-option value="" label="全部"></el-option>
                   <el-option
                     v-for="item in dictionary.isFactoringContract"
                     :key="`${item.code}isFactoringContract`"

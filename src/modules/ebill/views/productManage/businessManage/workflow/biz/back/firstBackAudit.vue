@@ -6,18 +6,19 @@
                         :dic="dictionary"></supplier-base-info>
     <!-- 贸易关系   -->
     <trade-list
-      ref="tradeInfo"
-      :tradeList="tradeRelationModelList"
-      :bizId="bizId"
-      :dic="dictionary"></trade-list>
+    ref="tradeInfo"
+    :tradeList="tradeRelationModelList"
+    :is-edit-cactoringLogo="true"
+    :bizId="bizId"
+    :dic="dictionary"></trade-list>
   </div>
 </template>
 <script>
 /**
- * 驳回
+ * 初审和驳回
  */
-import SupplierBaseInfo from '../components/supplierBaseInfo';
-import TradeList from '../contractSign/tradeList';
+import SupplierBaseInfo from '../../../components/supplierBaseInfo';
+import TradeList from '../../../contractSign/tradeList';
 export default {
   props: {
     bizId: String
@@ -30,7 +31,7 @@ export default {
     return {
       zjControl: {
         getDataDirectory: this.$api.businessManage.getDataDirectory,
-        getContractRenewalRecheckDetail: this.$api.businessManageWorkflow.getContractRenewalRecheckDetail
+        getApplyRebutDetail: this.$api.businessManageWorkflow.getApplyRebutDetail
       },
       // 字典
       dictionary: {},
@@ -53,13 +54,13 @@ export default {
       })
     },
     getDetail() {
-      this.zjControl.getContractRenewalRecheckDetail({id: this.bizId}).then(res => {
+      this.zjControl.getApplyRebutDetail({id: this.bizId}).then(res => {
         this.businessParamModel = res.data.businessParamModel;
         this.tradeRelationModelList = res.data.tradeRelationModelList;
       });
     },
     getList() {
-      return this.$refs.tradeInfo.getList();
+     return this.$refs.tradeInfo.getList();
     }
   }
 };
