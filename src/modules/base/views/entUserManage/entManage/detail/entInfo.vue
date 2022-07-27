@@ -5,13 +5,13 @@
         <zj-header title="企业基础信息" />
         <zj-content>
           <!-- 企业信息 -->
-          <slot name="entInfo" />
+          <slot name="entInfo"/>
 
           <!-- 法人信息 -->
-          <legal-person ref="legalPerson" />
+          <legal-person ref="legalPerson" :detailData="detailData" />
           
           <!-- 企业联系人 -->
-          <ent-linkman ref="entLinkman" />
+          <ent-linkman ref="entLinkman" :detailData="detailData" />
 
           <!-- 银行账户 -->
           <bank-account ref="bank-account" />
@@ -19,7 +19,7 @@
           <!-- 控制人信息 -->
           <controller ref="controller" />
 
-          <zj-collapse title="天眼查信息">
+          <!-- <zj-collapse title="天眼查信息">
             <zj-button
               type="text"
               @click="activeEyeSky = !activeEyeSky"
@@ -35,7 +35,7 @@
               :entId="eyeSkyId"
               @eyeSkyChange="eyeSkyChange"
             />
-          </zj-collapse>
+          </zj-collapse> -->
         </zj-content>
       </zj-content-block>
 
