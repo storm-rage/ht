@@ -6,11 +6,11 @@
  const operatorAnnouncement = {
     //新增公告信息
     sysNoticeAdd:(params) => {
-      return request.post('/sys-notice/add-sys-notice',{params})
+      return request.post('/sys-notice/add-sys-notice',params)
     },
     //删除系统公告
     sysNoticeAddDelete:(params) => {
-      return request.post('/sys-notice/del-sys-notice',{params})
+      return request.post('/sys-notice/del-sys-notice',params)
     },
     //查询系统公告集1
     sysNoticeAddPage:(params) => {
@@ -22,11 +22,11 @@
     },
     //修改系统公告
     sysNoticeAddAller:(params) => {
-      return request.post('/sys-notice/update-sys-notice',{params})
+      return request.post('/sys-notice/update-sys-notice',params)
     },
     //系统公告详情
     sysNoticeAddDetails:(params) => {
-      return request.post('/sys-notice/get-sys-notice-details',{params})
+      return request.post('/sys-notice/get-sys-notice-details',params)
     },
     //数据字典
     sysNoticeAddDirectory:(params) => {
