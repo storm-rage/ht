@@ -20,7 +20,7 @@
 <script>
 /**
  * 非凭证确认还款复核驳回处理页面
- * todo:参数需要调整
+ *
  */
 import BizApplyInfo from '../../components/bizApplyInfo';
 import OperateLog from '../../components/operateLog';
@@ -76,12 +76,15 @@ export default {
             cancelButtonText: '取消'
           }).then(() => {
             const {notes} = this.$refs.auditRemark.getData()
-            //todo:this.$refs.bizInfo.getData()
+            const bizData = this.$refs.bizInfo.getData()
             this.passLoading = true;
             this.zjControl.noBillReceiptPending({
               id: this.row.id,
               notes,
-              operResult: OperResult.PASS
+              operResult: OperResult.PASS,
+              attachModelList: bizData.fileData.list,
+              busDesc: bizData.fileData.busDesc,
+              confirmRepaymentTotalAmt:bizData.form.confirmRepaymentTotalAmt
             }).then(res => {
               this.passLoading = false;
               //成功，关闭

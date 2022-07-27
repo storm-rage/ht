@@ -4,12 +4,10 @@
     <!--  业务申请信息  -->
     <biz-apply-info></biz-apply-info>
     <!--  具体业务信息  -->
-    <trade-change-review-audit
+    <trade-change-back-audit
       ref="tradeInfo"
       :is-edit="true"
-      biz-id="1"
-      bus-trade-id="1"
-      trade-id="1"></trade-change-review-audit>
+      biz-id="1"></trade-change-back-audit>
     <!--  操作记录  -->
     <operate-log></operate-log>
     <!--  审批意见  -->
@@ -22,11 +20,11 @@
   </zj-content-container>
 </template>
 <script>
-import {OperResult} from '@modules/constant.js';
-import BizApplyInfo from '../components/bizApplyInfo';
-import OperateLog from '../components/operateLog';
-import AuditRemark from '../components/auditRemark';
-import TradeChangeReviewAudit from '@modules/ebill/views/productManage/businessManage/workflow/tradeChangeReviewAudit.vue';
+import {OperResult} from "@modules/constant";
+import BizApplyInfo from '../../../components/bizApplyInfo';
+import OperateLog from '../../../components/operateLog';
+import AuditRemark from '../../../components/auditRemark';
+import TradeChangeBackAudit from '@modules/ebill/views/productManage/businessManage/workflow/tradeChange/back/audit.vue';
 
 /**
  * 单个维护贸易背景复核驳回再处理
@@ -36,12 +34,12 @@ export default {
     BizApplyInfo,
     OperateLog,
     AuditRemark,
-    TradeChangeReviewAudit
+    TradeChangeBackAudit
   },
   data () {
     return {
       zjControl: {
-        submitTradeRecheck: this.$api.businessManageWorkflow.submitTradeRecheck
+        submitTradeRebut: this.$api.businessManageWorkflow.submitTradeRebut
       },
       rejectLoading: false,
       passLoading: false
@@ -51,15 +49,16 @@ export default {
     toPass() {
       this.$refs.auditRemark.getForm().clearValidate();
       const {notes} = this.$refs.auditRemark.getData()
-      // todo:校验
+      // 校验
       this.$refs.tradeInfo.validData().then(valid => {
         if (valid) {
+          const tradeRelationParamModel = this.$refs.tradeInfo.getData();
           this.passLoading = true;
           this.zjControl.submitTradeRecheck({
             id: this.row.id,
             notes,
-            controlFlag: '1',
-            operResult: OperResult.PASS
+            operResult: OperResult.PASS,
+            tradeRelationParamModel
           }).then(res => {
             this.passLoading = false;
             //成功，关闭
@@ -81,7 +80,6 @@ export default {
           this.zjControl.submitTradeRecheck({
             id: this.row.id,
             notes,
-            controlFlag: '1',
             operResult: OperResult.REJECT
           }).then(res => {
             this.rejectLoading = false;

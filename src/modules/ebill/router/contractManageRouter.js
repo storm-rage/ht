@@ -67,19 +67,6 @@ const contractManageRouter = [
       keepAlive: true,
       refreshIndex: 0
     },
-  },
-  {
-    path: '/contractSignReview2',
-    name: 'contractSignReview2',
-    component: () => import('../views/contractManage/factoringContract/review/detailPage/index.vue'),
-    meta: {
-      isMock: false,
-      title: '合同签约复核122',
-      root: '合同管理',
-      keepAlive: true,
-      refreshIndex: 0,
-      notRequireAuth: true
-    },
   }
 ]
 export default contractManageRouter

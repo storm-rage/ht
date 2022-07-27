@@ -78,6 +78,7 @@
         <zj-header title="供应商额度信息"></zj-header>
         <zj-content>
           <zj-table
+            ref="quotaTable"
             :pager="false"
             :dataList="quotaList"
             @radio-change="handleRadioChange"
@@ -97,13 +98,13 @@
               field="bizLicence"
               title="核心企业统一社会信用代码"/>
             <zj-table-column
-              field="field4"
+              field="factoringFlagDesc"
               title="保理标识"/>
             <zj-table-column
               field="stateDesc"
               title="贸易关系状态"/>
             <zj-table-column
-              field="field6"
+              field="factoringCreditEndDate"
               title="额度有效期">
               <template v-slot="{row}">
                 {{row.factoringCreditStartDate}}～{{row.factoringCreditEndDate}}
@@ -114,7 +115,7 @@
               :formatter="money"
               title="授信额度" />
             <zj-table-column
-              field="field8"
+              field="factoringCreditDesc"
               title="额度状态"/>
           </zj-table>
         </zj-content>
@@ -128,17 +129,17 @@
               width="60"
               title="序号"/>
             <zj-table-column
-              field="field1"
+              field="contractNo"
               title="合同/协议编号"/>
             <zj-table-column
-              field="field2"
+              field="contractName"
               title="合同/协议名称"/>
             <zj-table-column
-              field="field3"
+              field="signDate"
               title="生效日期"/>
             <zj-table-column
-              field="field4"
-              title="合同/协议状态"/>
+              field="contractStatus"
+              title="合同/协议状态" :formatter="(obj)=>typeMap(dictionary.contractStatus, obj.cellValue)"/>
             <zj-table-column title="操作" fixed="right">
               <template v-slot="{ row }">
                 <zj-button type="text" @click="toDownload(row)">下载</zj-button>
@@ -163,7 +164,7 @@
               field="fileName"
               title="附件名称"/>
             <zj-table-column
-              field="bizType"
+              field="createDatetime"
               title="上传日期"/>
             <zj-table-column title="操作" fixed="right">
               <template v-slot="{ row }">
@@ -180,13 +181,15 @@
   </zj-content-container>
 </template>
 <script>
+// todo:默认选中
 export default {
   data () {
     return {
       zjControl: {
-        getEbContractCreditDetail: this.$api.factoringContract.getEbContractCreditDetail,
+        getEbContractDetail: this.$api.factoringContract.getEbContractDetail,
         downApi: this.$api.baseCommon.downloadFile,
-        getOtherFileDetail: this.$api.factoringContract.getEbContractCreditDetail,
+        getEbContractFileByEnterId: this.$api.factoringContract.getEbContractFileByEnterId,
+        getDirectory: this.$api.factoringContract.getEbContractYyDirectory,
       },
       // 客户基本信息
       customerInfo: {},
@@ -197,19 +200,33 @@ export default {
       // 其他附件列表
       fileList: [],
       // 当前选中的行
-      currentRow: {}
+      currentRow: {},
+      // 字典
+      dictionary: {}
     };
   },
   created() {
     this.getApi();
+    this.getDic();
     this.getRow();
     this.getDetail();
   },
   methods: {
+    getDic() {
+      this.zjControl.getDirectory().then((res) => {
+        this.dictionary = res.data
+      });
+    },
     getDetail() {
-      this.zjControl.getEbContractCreditDetail({id: this.row.id}).then(res => {
+      this.zjControl.getEbContractDetail({id: this.row.id}).then(res => {
         this.customerInfo = res.data.enterpriseBasicInfo || {};
         this.quotaList = res.data.supplierCreditInfoList || [];
+        if (this.quotaList.length) {
+          this.$nextTick(() => {
+            this.$refs.quotaTable.setRadioRow(this.quotaList[0]);
+            this.handleRadioChange({row: this.quotaList[0]});
+          });
+        }
         this.fileList = res.data.otherFileList || [];
       });
     },
@@ -218,9 +235,8 @@ export default {
     },
     handleRadioChange ({row}) {
       this.currentRow = row;
-      // todo:?
-      this.zjControl.getOtherFileDetail({}).then(res => {
-
+      this.zjControl.getEbContractFileByEnterId({id: this.row.id,enterId: row.enterId}).then(res => {
+        this.agreementFileList = res.data.contractAgreementList||[];
       });
     }
   }

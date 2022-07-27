@@ -87,6 +87,7 @@ export default {
         if (valid) {
           const money = this.money(this.$refs.detailPage.$data.form.applyAddCreditAmount);
           this.$confirm(`您本次申请调整额度：<b style="font-size: 18px;">${money}</b>元，请确认。`,'额度调整申请确认',{
+            type: 'warning',
             dangerouslyUseHTMLString: true,
             confirmButtonText: '确定',
             cancelButtonText: '取消'

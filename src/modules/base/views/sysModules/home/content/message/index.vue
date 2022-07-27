@@ -52,7 +52,7 @@ export default {
   },
   methods: {
     toMore () {
-      this.goChild('homeNotice')
+      this.goChild('homeMessage')
     }
   }
 };

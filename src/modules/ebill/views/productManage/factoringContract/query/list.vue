@@ -9,16 +9,27 @@
 
           <el-form-item label="合同状态：">
             <el-select v-model="searchForm.contractStatus">
-              <el-option value="1"/>
-              <el-option value="2"/>
-              <el-option value="3"/>
+              <el-option value="" label="全部"></el-option>
+              <el-option
+                v-for="item in dictionary.contractStatus"
+                :key="`${item.code}contractStatus`"
+                :label="item.desc"
+                :value="item.code"
+              >
+              </el-option>
             </el-select>
           </el-form-item>
 
           <el-form-item label="是否海天一级供应商：">
             <el-select v-model="searchForm.isHtEnterprise">
-              <el-option value="全部"/>
-              <el-option value="待复核"/>
+              <el-option value="" label="全部"></el-option>
+              <el-option
+                v-for="item in dictionary.isHtEnterprise"
+                :key="`${item.code}isHtEnterprise`"
+                :label="item.desc"
+                :value="item.code"
+              >
+              </el-option>
             </el-select>
           </el-form-item>
 
@@ -45,7 +56,7 @@
         <zj-table-column field="contractStatusDesc" title="合同状态"/>
         <zj-table-column title="操作" fixed="right">
           <template v-slot="{row}">
-            <zj-button type="text" @click="toViewDetail(row)" :api="zjBtn.getEbContractCreditDetail">详情</zj-button>
+            <zj-button type="text" @click="toViewDetail(row)" :api="zjBtn.getEbContractDetail">详情</zj-button>
           </template>
         </zj-table-column>
       </zj-table>
@@ -58,7 +69,8 @@ export default {
     return {
       zjControl: {
         tableApi: this.$api.factoringContract.queryEbContractPage,
-        getEbContractCreditDetail: this.$api.factoringContract.getEbContractCreditDetail
+        getDirectory: this.$api.factoringContract.getEbContractYyDirectory,
+        getEbContractDetail: this.$api.factoringContract.getEbContractDetail
       },
       searchForm:{
         supplierName: '',
@@ -67,13 +79,21 @@ export default {
         contractStartDate: '',
         contractEndDate: '',
         contractNo:''
-      }
+      },
+      // 字典
+      dictionary: {}
     }
   },
   created() {
-    this.getApi()
+    this.getApi();
+    this.getDic();
   },
   methods: {
+    getDic() {
+      this.zjControl.getDirectory().then((res) => {
+        this.dictionary = res.data
+      });
+    },
     toViewDetail(row) {
       this.goChild('factoringContractDetail', {id: row.id});
     }

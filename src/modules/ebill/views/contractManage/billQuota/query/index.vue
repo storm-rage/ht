@@ -28,7 +28,7 @@
           </el-form-item>
           <el-form-item label="申请状态：">
             <el-select v-model="searchForm.applyStatus">
-              <el-option value="全部" />
+              <el-option value="" />
               <el-option
                 v-for="item in dictionary.applyStatus"
                 :key="`${item.code}applyStatus`"
@@ -70,7 +70,7 @@
               <el-popover placement="left" width="280" trigger="hover">
                 <p>拒绝时间：{{row.stateChangeDatetime}}</p>
                 <p>拒绝原因：{{row.rejectReason}}</p>
-                <el-link slot="reference" :underline="false" type="primary">拒绝</el-link>
+                <el-link slot="reference" :underline="false" type="primary">{{typeMap(dictionary.applyStatus, row.applyStatus)}}</el-link>
               </el-popover>
             </span>
             <span v-else>{{typeMap(dictionary.applyStatus, row.applyStatus)}}</span>

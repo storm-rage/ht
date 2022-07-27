@@ -1,6 +1,6 @@
 <template>
   <div class="home-notice">
-    <zj-header title="公告">
+    <zj-header title="站内信">
       <el-button slot="right" type="primary" size="mini" style="width: 100px">全部已读</el-button>
     </zj-header>
     <zj-content-block>
