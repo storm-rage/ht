@@ -26,11 +26,9 @@
 <script>
 // 业务申请信息
 export default {
-  components: {},
-
+   props: ['detailData'],
   data() {
     return {
-      detailData: {}
     };
   },
 };

@@ -14,33 +14,17 @@ const entUserManage = [
       root: '客户信息管理',
       keepAlive: true,
       refreshIndex: 0,
-      notRequireAuth: true
     }
   },
   //新增
   {
     path: '/entManageAdd',
     name: 'entManageAdd',
-    // component: () => import('../views/entUserManage/entManage/addEnterPrises/AddEnterPrises.vue'),
     component: () => import('../views/entUserManage/entManage/enterpriseManage.vue'),
     meta: {
       title: '企业信息管理-新增',
       parent: 'sysEnterprise',
       pageType: 'add',
-      keepAlive: true,
-      refreshIndex: 0,
-      notRequireAuth: true
-    }
-  },
-  //详情
-  {
-    path: '/entDealDetail',
-    name: 'entDealDetail',
-    component: () => import('../views/entUserManage/entManage/enterpriseManage.vue'),
-    meta: {
-      title: '企业信息申请交易详情',
-      parent: 'sysEnterprise',
-      pageType: 'detail',
       keepAlive: true,
       refreshIndex: 0,
       notRequireAuth: true
@@ -52,7 +36,7 @@ const entUserManage = [
     component: () => import('../views/entUserManage/entManage/detail'),
     meta: {
       title: '企业详情',
-      parent: 'sysUser',
+      parent: 'sysEnterprise',
       isManage: false,
       keepAlive: true,
       refreshIndex: 0,

@@ -32,7 +32,7 @@ const myBasicInformation = {
   },
    //更换操作人员
    updateOperator: (params) => {
-    return request.post('/personal-center/updateOperator', params)
+    return request.post('/personal-center/update-operator', params)
   },
 }
 

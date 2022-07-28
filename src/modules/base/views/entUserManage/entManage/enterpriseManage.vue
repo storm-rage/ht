@@ -24,8 +24,36 @@ export default {
   data() {
     return {
       pageType: this.$route.meta.pageType,
+      zjControl: {
+        queryEntDictionary: this.$api.entInfoManage.queryEntDictionary,
+        addEnterprise: this.$api.entInfoManage.addEnterprise,
+        updateEnterprise: this.$api.entInfoManage.updateEnterprise
+      },
     };
   },
+  created() {
+     this.queryEntDictionary()
+  },
+  mounted: {
+     // 获取字典
+    queryEntDictionary() {
+      this.zjControl.queryEntDictionary().then((res) => {
+        this.dictionary = res.data;
+      });
+    },
+    // 新增
+    addEnterprise() {
+      this.zjControl.addEnterprise({id: this.row.id}).then(res => {
+     
+      })
+    },
+    // 修改
+    updateEnterprise() {
+      this.zjControl.updateEnterprise({id: this.row.id}).then(res => {
+   
+      })
+    },
+  }
 };
 </script>
 

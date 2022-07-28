@@ -48,6 +48,9 @@
         :api="zjControl.tableApi"
         @checkbox-change="tableCheckChange"
         @checkbox-all="tableCheckChange"
+        :checkbox-config="{
+          checkMethod: canBeSelect,
+        }"
       >
         <zj-table-column
           type="checkbox"
@@ -56,9 +59,11 @@
         ></zj-table-column>
         <zj-table-column field="ebillCode" title="对账单编号">
           <template v-slot="{ row }">
-            <span class="table-elbill-code" @click="goChild('queryAccountBillDetail',row)">{{
-              row.acctBillCode
-            }}</span>
+            <span
+              class="table-elbill-code"
+              @click="goChild('queryAccountBillDetail', row)"
+              >{{ row.acctBillCode }}</span
+            >
           </template>
         </zj-table-column>
         <zj-table-column field="companyName" title="买方名称" />
@@ -151,17 +156,21 @@ export default {
         let params = { ids: ids };
         this.zjControl.applyOpenVoucherBatch(params).then((res) => {
           this.$message.success("申请成功!");
-          this.search()
+          this.search();
         });
       });
     },
     // 获取选中账单id
     tableCheckChange({ records }) {
-      this.ids = []
-      records.forEach(item => {
-        this.ids.push(item.id)
+      console.log(records);
+      this.ids = [];
+      records.forEach((item) => {
+        this.ids.push(item.id);
       });
-      console.log(this.ids)
+      console.log(this.ids);
+    },
+    canBeSelect({ row }) {
+      return row.isApplyVoucher === '0';
     },
   },
 };
