@@ -33,7 +33,7 @@
   <div class="zj-search-response">
     <zj-table ref="searchTable"
               :api="zjControl.tableApi" :params="searchForm"
-              v-if="tableFlag" @dataChange="tableDataChange"
+              v-if="tableFlag" @before-load="tableDataChange"
               @checkbox-change="tableCheckChange" @checkbox-all="tableCheckChange"
     >
       <zj-table-column fixed="left" type="checkbox" width="30"/>
