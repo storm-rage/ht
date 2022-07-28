@@ -2,7 +2,7 @@
   <zj-content-container>
     <!--  订单融资  -->
     <zj-list-layout>
-      <tempalte slot="searchForm">
+      <template slot="searchForm">
         <el-form ref="searchForm" :model="searchForm">
           <el-form-item label="供应商名称：">
             <el-input
@@ -23,7 +23,7 @@
             </el-select>
           </el-form-item>
         </el-form>
-      </tempalte>
+      </template>
 
       <zj-table ref="searchTable" :dataList="list"  @radio-change="handleRadioChange" :radio-config="{highlight: true}">
         <zj-table-column field="field1" title="供应商名称"/>

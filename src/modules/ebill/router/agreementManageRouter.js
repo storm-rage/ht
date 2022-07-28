@@ -14,8 +14,8 @@ const agreementManageRouter = [
     }
   },
   {
-    path: '/financingAgreementManage',
-    name: 'financingAgreementManage',
+    path: '/frontBackAgreeManage',
+    name: 'frontBackAgreeManage',
     component: () => import('../views/financingManage/agreementManage'),
     meta:{
       isMock: true,
