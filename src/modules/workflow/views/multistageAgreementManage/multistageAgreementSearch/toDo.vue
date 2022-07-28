@@ -2,7 +2,7 @@
   <zj-content-container>
     <!--  阶段性协议查询  -->
     <zj-list-layout>
-      <tempalte slot="searchForm">
+      <template slot="searchForm">
         <el-form ref="searchForm" :model="searchForm">
           <el-form-item label="供应商名称：">
             <el-input v-model="searchForm.supplierName" @keyup.enter.native="enterSearch"/>
@@ -23,7 +23,7 @@
             <el-input v-model="searchForm.entName" @keyup.enter.native="enterSearch"/>
           </el-form-item>
         </el-form>
-      </tempalte>
+      </template>
       <zj-table ref="searchTable" :dataList="list"  @radio-change="handleRadioChange" :radio-config="{highlight: true}">
         <zj-table-column field="field1" title="申请流水号">
           <template v-slot="{row}">

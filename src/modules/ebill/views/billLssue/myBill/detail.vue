@@ -8,7 +8,7 @@
       </zj-content-block>
 
       <zj-content-block v-if="workflow === 'mybj'">
-        <el-content-block>
+        <zj-content-block>
           <zj-header title="凭证信息"/>
           <zj-table ref="searchTable" class="zj-search-table" :dataList="list" :radio-config="{highlight: true}"
           >
@@ -20,8 +20,8 @@
             <zj-table-column field="voucherAcc" title="凭证金额" :formatter="money"/>
             <zj-table-column field="voucherAcc" title="凭证到期日" :formatter="date"/>
           </zj-table>
-        </el-content-block>
-        <el-content-block>
+        </zj-content-block>
+        <zj-content-block>
           <zj-header title="对账单信息-${}"/>
           <zj-table ref="searchTable" :dataList="list"  :radio-config="{highlight: true}">
             <zj-table-column field="field2" title="对账单名称"/>
@@ -36,8 +36,8 @@
             <zj-table-column field="field5" title="对账人" />
             <zj-table-column field="field5" title="对账单来源" />
           </zj-table>
-        </el-content-block>
-        <el-content-block>
+        </zj-content-block>
+        <zj-content-block>
           <zj-header title="对账单明细-${}"/>
           <zj-table ref="searchTable" :dataList="list"  :radio-config="{highlight: true}">
             <zj-table-column field="field2" title="对账单名称"/>
@@ -52,8 +52,8 @@
             <zj-table-column field="field5" title="对账人" />
             <zj-table-column field="field5" title="对账单来源" />
           </zj-table>
-        </el-content-block>
-        <el-content-block>
+        </zj-content-block>
+        <zj-content-block>
           <zj-header title="贸易背景资料（资产编号：12345）"/>
           <el-tabs v-model="tabs" type="card" class="zj-tabs-card">
             <el-tab-pane label="贸易合同信息" name="tradeContract" >
@@ -66,7 +66,7 @@
               <attaList />
             </el-tab-pane>
           </el-tabs>
-        </el-content-block>
+        </zj-content-block>
       </zj-content-block>
 
       <zj-content-block v-if="workflow === 'lzgj'">
