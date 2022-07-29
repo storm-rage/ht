@@ -145,7 +145,7 @@
       <zj-button type="primary">提交复核</zj-button>
       <zj-button
         class="back"
-        @click="$router.push('/issuanceApply')"
+        @click="$router.push('/openBillApply')"
         :api="zjBtn.passBillSignBatch"
         >返回</zj-button
       ></ZjContentFooter
