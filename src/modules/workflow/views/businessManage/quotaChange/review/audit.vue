@@ -75,7 +75,7 @@ export default {
             id: this.row.id,
             notes,
             busTradeId: '1',
-            operResult: OperResult.REJECT
+            operResult: OperResult.BACK
           }).then(res => {
             this.rejectLoading = false;
             //成功，关闭

@@ -21,44 +21,19 @@ import SupplierBaseInfo from '../../../components/supplierBaseInfo';
 import TradeList from '../../../contractSign/tradeList';
 export default {
   props: {
-    bizId: String
+    bizId:String,
+    // 字典
+    dictionary: Object,
+    // 客户基本信息
+    businessParamModel: String,
+    //贸易关系列表
+    tradeRelationModelList: Array
   },
   components: {
     SupplierBaseInfo,
     TradeList
   },
-  data () {
-    return {
-      zjControl: {
-        getDataDirectory: this.$api.businessManage.getDataDirectory,
-        getFirstAuditDetail: this.$api.businessManageWorkflow.getFirstAuditDetail
-      },
-      // 字典
-      dictionary: {},
-      // 客户基本信息
-      businessParamModel: {},
-      //贸易关系列表
-      tradeRelationModelList: [],
-    };
-  },
-  created() {
-    this.getDic();
-  },
-  mounted() {
-    this.getDetail();
-  },
   methods: {
-    getDic () {
-      this.zjControl.getDataDirectory().then(res => {
-        this.dictionary = res.data
-      })
-    },
-    getDetail() {
-      this.zjControl.getFirstAuditDetail({id: this.bizId}).then(res => {
-        this.businessParamModel = res.data.businessParamModel;
-        this.tradeRelationModelList = res.data.tradeRelationModelList;
-      });
-    },
     getList() {
      return this.$refs.tradeInfo.getList();
     }

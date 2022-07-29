@@ -6,7 +6,7 @@
           class="export"
           icon="el-icon-download"
           @click="toExport"
-          :api="zjBtn.exportAccountBill"
+          v-if="zjBtn.exportAccountBill"
           >导出</vxe-button
         >
       </template>
@@ -14,19 +14,19 @@
         <el-form ref="searchForm" :model="searchForm">
           <el-form-item label="当前持有人：">
             <el-input
-              v-model="searchForm.holderNameLike"
+              v-model.trim="searchForm.holderNameLike"
               @keyup.enter.native="enterSearch"
             />
           </el-form-item>
           <el-form-item label="签发人：">
             <el-input
-              v-model="searchForm.payEntName"
+              v-model.trim="searchForm.payEntNameLike"
               @keyup.enter.native="enterSearch"
             />
           </el-form-item>
           <el-form-item label="原始凭证编号：">
             <el-input
-              v-model="searchForm.rootCode"
+              v-model.trim="searchForm.rootCode"
               @keyup.enter.native="enterSearch"
             />
           </el-form-item>
@@ -38,13 +38,13 @@
           </el-form-item>
           <el-form-item label="收款单号：">
             <el-input
-              v-model="searchForm.repaymentOrderNo"
+              v-model.trim="searchForm.repaymentOrderNo"
               @keyup.enter.native="enterSearch"
             />
           </el-form-item>
           <el-form-item label="凭证编号：">
             <el-input
-              v-model="searchForm.ebillCode"
+              v-model.trim="searchForm.ebillCode"
               @keyup.enter.native="enterSearch"
             />
           </el-form-item>
@@ -55,6 +55,7 @@
         ref="searchTable"
         :params="searchForm"
         :api="zjControl.queryBillClearPage"
+        @before-load="handleBeforeLoad"
         @checkbox-change="tableCheckChange"
         @checkbox-all="tableCheckChange"
       >
@@ -114,13 +115,13 @@
             <zj-button
               type="text"
               @click="singleClearingApply(row)"
-              :api="zjBtn.getEnterprise"
+              :api="zjBtn.submitClearApply"
               >清算申请</zj-button
             >
           </template>
         </zj-table-column>
         <div slot="pager-left" style="position: absolute; left: 10px; top: 0">
-          <span>实际付款金额汇总：</span>{{ money("100000000") }}
+          <span>实际付款金额汇总：</span>{{ money(totalPayAmt) }}
         </div>
       </zj-table>
     </zj-list-layout>
@@ -132,7 +133,7 @@
       <zj-button
         type="primary"
         @click="batchClearingApply"
-        :api="zjBtn.passBillSignBatch"
+        :api="zjBtn.submitClearApply"
         >清算申请</zj-button
       >
     </zj-content-footer>
@@ -141,37 +142,61 @@
 
 <script>
 import footerBtnMixin from "../mixins/footerBtnMixin";
+import BigNumber from 'bignumber.js';
 export default {
   mixins: [footerBtnMixin],
   data() {
     return {
       showBottomBtn: false,
       zjControl: {
-        getBillClearDictionary:
-          this.$api.expireClearingManage.getBillClearDictionary,
         queryBillClearPage: this.$api.expireClearingManage.queryBillClearPage,
         exportAccountBill: this.$api.expireClearingManage.exportAccountBill,
+        submitClearApply: this.$api.expireClearingManage.submitClearApply
       },
       searchForm: {
         clearType: "00",
+        actualExpireDateBegin: '',
+        actualExpireDateEnd: '',
+        holderNameLike: '',
+        payEntNameLike: '',
+        rootCode: '',
+        repaymentOrderNo: '',
+        ebillCode: ''
       },
       dictionary: {},
+      // 实际付款金额汇总
+      totalPayAmt: 0
     };
   },
   created() {
     this.getApi();
-    this.getDirectory();
+    // this.getDirectory();
   },
   methods: {
     // 获取字典
     getDirectory() {
-      this.zjControl.getBillClearDictionary().then((res) => {
+      this.zjControl.getDictionary().then((res) => {
         this.dictionary = res.data;
       });
+    },
+    /**
+     * 列表数据加载前回调
+     * @param rows
+     */
+    handleBeforeLoad({rows}) {
+      if (rows && rows.length) {
+        this.totalPayAmt = rows.reduce((total, currentRow) => {
+          return new BigNumber(total).plus(currentRow.payAmt).toFixed(2);
+        }, 0);
+      }
     },
     tableCheckChange({ records }) {
       this.showBottomBtn = records.length > 0;
     },
+    /**
+     * todo:跳转凭证详情
+     * @param row
+     */
     toViewDetail(row) {},
     /**
      * 批量清算申请
@@ -187,14 +212,47 @@ export default {
           center: true,
         });
       }
-      this.$router.push({ name: "billClearingApply" });
+      const clearId = records.map((item) => {
+        return item.id;
+      })
+      if (records.length > 1) {
+        const firstRecord = records[0];
+        const valid1 = records.filter((item) => {
+          return item.actualExpireDate===firstRecord.actualExpireDate;
+        });
+        const valid2 = records.filter((item) => {
+          return item.payEntName===firstRecord.payEntName&&item.holderName===firstRecord.holderName;
+        });
+        if (valid1.length !== records.length) {
+          this.$confirm('凭证实际到期日不一致，是否确认提交？','提示',{
+            type: 'warning',
+            confirmButtonText: '确定',
+            cancelButtonText: '取消'
+          }).then(() => {
+            this.goChild('billClearingApply',{clearId, clearType: this.searchForm.clearType})
+          })
+        }else if (valid2.length !== records.length) {
+          this.$messageBox({
+            type: 'warning',
+            content: '所选的签发人+当前持有人必须一致',
+            title: '提示',
+            showConfirmButton: true,
+            center: true
+          })
+          return;
+        }else {
+          this.goChild('billClearingApply',{clearId, clearType: this.searchForm.clearType})
+        }
+      }else {
+        this.goChild('billClearingApply',{clearId, clearType: this.searchForm.clearType})
+      }
     },
     /**
      * 单笔清算申请
      * @param row
      */
     singleClearingApply(row) {
-      this.$router.push({ name: "billClearingApply" });
+      this.goChild('billClearingApply',{clearId: [row.id], clearType: this.searchForm.clearType})
     },
     toExport() {
       this.zjControl.exportAccountBill(this.searchForm);

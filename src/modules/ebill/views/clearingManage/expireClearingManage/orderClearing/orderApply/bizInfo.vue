@@ -7,17 +7,17 @@
         <el-row :gutter="10">
           <el-col :span="8">
             <el-form-item label="供应商名称：">
-              方法士大夫士大夫
+              {{baseInfo.holderName}}
             </el-form-item>
           </el-col>
           <el-col :span="8">
             <el-form-item label="核心企业名称：">
-              哥哥豆腐干豆腐干更广泛广泛大概
+              {{baseInfo.payEntName}}
             </el-form-item>
           </el-col>
           <el-col :span="8">
             <el-form-item label="待清算金额总计：">
-              {{money('122222')}}
+              {{money(baseInfo.totalEbillAmt)}}
             </el-form-item>
           </el-col>
         </el-row>
@@ -25,22 +25,22 @@
           <el-row :gutter="10">
             <el-col :span="8">
               <el-form-item label="收款账户名称：">
-                感豆腐干豆腐干梵蒂冈的灌灌灌灌郭德纲
+                {{baseInfo.bankAccname}}
               </el-form-item>
             </el-col>
             <el-col :span="8">
               <el-form-item label="收款账号：">
-                623423324324324324
+                {{baseInfo.bankAccno}}
               </el-form-item>
             </el-col>
             <el-col :span="8">
               <el-form-item label="收款账户开户行：">
-                广泛大锅饭大概公分的个古风格梵蒂冈地方官
+                {{baseInfo.bankName}}
               </el-form-item>
             </el-col>
             <el-col :span="8">
               <el-form-item label="银行联行号：">
-                12123232
+                {{baseInfo.bankNo}}
               </el-form-item>
             </el-col>
           </el-row>
@@ -54,22 +54,22 @@
         <zj-table ref="billTable"
                   :pager="false"
                   :dataList="billList" >
-          <zj-table-column field="field1" title="核心企业代码"/>
-          <zj-table-column field="field2" title="核心企业名称"/>
+          <zj-table-column field="payEntCode" title="核心企业代码"/>
+          <zj-table-column field="payEntName" title="核心企业名称"/>
           <zj-table-column
-            field="field3"
+            field="holderCode"
             title="供应商编码"
           />
           <zj-table-column
-            field="field4"
+            field="holderName"
             title="供应商名称"
           >
           </zj-table-column>
-          <zj-table-column field="field6" title="融资流水号" />
-          <zj-table-column field="field5" title="收款单号"/>
-          <zj-table-column field="field7" title="确认收款日期" :formatter="date"/>
-          <zj-table-column field="field9" title="确认收款金额" :formatter="money"/>
-          <zj-table-column field="field9" title="实际付款金额" :formatter="money"/>
+          <zj-table-column field="capitalSerialno" title="融资流水号" />
+          <zj-table-column field="repaymentOrderNo" title="收款单号"/>
+          <zj-table-column field="confirmRepaymentDate" title="确认收款日期" :formatter="date"/>
+          <zj-table-column field="confirmRepaymentAmt" title="确认收款金额" :formatter="money"/>
+          <zj-table-column field="actualPaymentAmt" title="实际付款金额" :formatter="money"/>
         </zj-table>
       </zj-content>
     </zj-content-block>
@@ -80,13 +80,18 @@
  * 业务信息，工作流共享
  */
 export default {
-  data () {
-    return {
-      billList: [
-        {
-
-        }
-      ]
+  props: {
+    baseInfo: {
+      type: Object,
+      default:() => {
+        return {};
+      }
+    },
+    billList: {
+      type: Array,
+      default:() => {
+        return [];
+      }
     }
   }
 }

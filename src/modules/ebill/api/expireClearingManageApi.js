@@ -6,12 +6,6 @@ import download from "@utils/download";
 
 const expireClearingManage = {
     /**
-    *到期清算-复核-获取详情
-    */
-    getReviewDetails(params) {
-        return request.post('/eb-account-bill-clear/get-review-details', params)
-    },
-    /**
     *到期清算-清算详情
     */
     getClearDetails(params) {
@@ -24,28 +18,16 @@ const expireClearingManage = {
         return request.post('/eb-account-bill-clear/submit-clear-apply', params)
     },
     /**
-    *到期清算-复核
-    */
-    clearReview(params) {
-        return request.post('/eb-account-bill-clear/clear-review', params)
-    },
-    /**
     *订单保理清算-订单清算清单-列表导出
     */
     exportOrderBill(params) {
-        return request.get('/eb-account-bill-clear/export-order-bill', { params })
+        return download('/eb-account-bill-clear/export-order-bill' ,params,1,'get')
     },
     /**
     *订单保理清算-提前还款清算清单-列表导出
     */
     exportPrepayBill(params) {
-        return request.get('/eb-account-bill-clear/export-prepay-bill', { params })
-    },
-    /**
-    *到期清算-作废
-    */
-    clearAbort(params) {
-        return request.post('/eb-account-bill-clear/clear-abort', params)
+        return download('/eb-account-bill-clear/export-prepay-bill',params,1,'get')
     },
     /**
     *获取数据字典
@@ -69,7 +51,7 @@ const expireClearingManage = {
     *凭证保理清算-凭证尾款清算清单-列表导出
     */
     exportBalanceAccountBill(params) {
-        return request.get('/eb-account-bill-clear/export-balance-account-bill', { params })
+        return download('/eb-account-bill-clear/export-balance-account-bill' ,params,1,'get')
     },
     /**
     *凭证保理清算-凭证尾款清算清单-列表查询
@@ -87,7 +69,7 @@ const expireClearingManage = {
     *订单保理清算-订单尾款清算清单-列表导出
     */
     exportBalanceOrderBill(params) {
-        return request.get('/eb-account-bill-clear/export-balance-order-bill', { params })
+        return download('/eb-account-bill-clear/export-balance-order-bill',params,1,'get')
     },
     /**
     *凭证保理清算-凭证清算清单-列表导出

@@ -75,7 +75,7 @@ export default {
           this.zjControl.recheckContractRenewal({
             id: this.row.id,
             notes,
-            operResult: OperResult.REJECT
+            operResult: OperResult.BACK
           }).then(res => {
             this.rejectLoading = false;
             //成功，关闭

@@ -75,7 +75,7 @@ export default {
             id: this.row.id,
             notes,
             controlFlag: '1',//风控标识
-            operResult: OperResult.REJECT
+            operResult: OperResult.BACK
           }).then(res => {
             this.rejectLoading = false;
             //成功，关闭
