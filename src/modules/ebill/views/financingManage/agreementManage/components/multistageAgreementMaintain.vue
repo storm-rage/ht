@@ -3,12 +3,17 @@
     <!--  阶段性协议维护  -->
     <zj-content-block>
       <zj-header title="贸易关系"></zj-header>
-      <zj-table ref="searchTable" :dataList="list"  @radio-change="handleRadioChange" :radio-config="{highlight: true}">
+      <zj-table ref="tradeRelationTable" :pager="false"
+                :api="zjControl.getTradeRelationList"
+                @after-load="handleDataChange"
+                @radio-change="handleRadioChange"
+                :radio-config="{highlight: true}"
+      >
         <zj-table-column type="radio" width="60"/>
-        <zj-table-column field="field1" title="买方企业名称"/>
-        <zj-table-column field="field2" title="是否已有订单保理额度" :formatter="money"/>
-        <zj-table-column field="field3" title="额度总额" :formatter="money"/>
-        <zj-table-column field="field4" title="可用额度" :formatter="money"/>
+        <zj-table-column field="buyerName" title="买方企业名称"/>
+        <zj-table-column field="isFactoringCredit" title="是否已有订单保理额度" />
+        <zj-table-column field="totalCreditAmount	" title="额度总额" :formatter="money"/>
+        <zj-table-column field="availableCreditAmount" title="可用额度" :formatter="money"/>
       </zj-table>
       <div class="explain-text">
         <div>注：</div>
@@ -20,14 +25,14 @@
     </zj-content-block>
     <zj-content-block>
       <zj-header title="阶段性协议信息"></zj-header>
-      <zj-table ref="searchTable" :dataList="list" >
-        <zj-table-column field="field1" title="买方企业名称"/>
-        <zj-table-column field="field2" title="阶段性协议编号"/>
-        <zj-table-column field="field2" title="阶段性协议名称"/>
-        <zj-table-column field="field2" title="协议类型"/>
-        <zj-table-column field="field2" title="协议签订日期" :formatter="date"/>
-        <zj-table-column field="field2" title="协议预计到期日" :formatter="date"/>
-        <zj-table-column field="field3" title="状态"/>
+      <zj-table ref="searchTable" :dataList="agreementList" >
+        <zj-table-column field="coreCompanyName" title="买方企业名称"/>
+        <zj-table-column field="agreementNo" title="阶段性协议编号"/>
+        <zj-table-column field="agreementName" title="阶段性协议名称"/>
+        <zj-table-column field="agreementType" title="协议类型"/>
+        <zj-table-column field="agreementStartDate" title="协议签订日期" :formatter="date"/>
+        <zj-table-column field="agreementEstimateEndDate" title="协议预计到期日" :formatter="date"/>
+        <zj-table-column field="agreementStatus" title="状态"/>
       </zj-table>
     </zj-content-block>
     <zj-content-block>
@@ -39,14 +44,26 @@
           <li class="explain-item">直接上传合同附件即可，保理公司会根据上传的合同维护对应的阶段性协议。保理公司维护后，您可使用阶段性协议发起融资。</li>
         </ol>
       </div>
-      <zj-table ref="searchTable" :dataList="list" :pager="false">
-        <zj-table-column field="index" title="序号"/>
-        <zj-table-column field="fileName" title="合同附件"/>
-        <zj-table-column field="remark" title="附件说明"/>
+      <zj-table ref="attaTable" :pager="false"
+                :dataList="contractInfoList" keep-source
+                :edit-config="{trigger: 'manual', mode: 'row', icon:'-', autoClear: false, showStatus: true}"
+      >
+        <zj-table-column type="index" title="序号" width="60"/>
+        <zj-table-column field="fileName" title="合同附件" />
+        <zj-table-column field="fileRemark" title="附件说明" :edit-render="{name: '$input'}"/>
         <zj-table-column title="操作">
           <template v-slot="{row}">
-            <zj-button type="text" @click="attaDownload(row.fileId)">下载</zj-button>
-            <zj-button type="text" @click="attaDelete(row.fileId)">删除</zj-button>
+            <template v-if="$refs.attaTable.isActiveByRow(row)">
+              <zj-upload class="zj-inline" :httpRequest="handleFileUpload" :data="{ row }">
+                <zj-button slot="trigger" type="text">上传</zj-button>
+              </zj-upload>
+              <zj-button type="text" @click="saveRow(row)">保存</zj-button>
+              <zj-button type="text" @click="cancel(row)">取消</zj-button>
+            </template>
+            <template v-if="!$refs.attaTable.isActiveByRow(row)">
+              <zj-button type="text" @click="attaDownload(row)">下载</zj-button>
+              <zj-button type="text" @click="attaDelete(row)">删除</zj-button>
+            </template>
           </template>
         </zj-table-column>
       </zj-table>
@@ -58,8 +75,11 @@
 </template>
 <script>
 export default {
-  components: {
-
+  name:'multistageAgreementMaintain',
+  components: {},
+  props: {
+    zjControl: {},
+    dictionary: {},
   },
   data() {
     return {
@@ -70,63 +90,161 @@ export default {
         lastTimeDateEnd:'',
         entName: '',
       },
-      list: [
-        {
-          field1: 'scm00001',
-          field2: '某某产品一号',
-          field3: '上游',
-          field4: '订单保理',
-          field5: '2022.09.08 11:18:19',
-          field6: '生效',
-          field7: '是'
-        }
-      ],
-      tradeList: []
+      agreementParams: {},//阶段性协议信息查询的参数
+      agreementList: [],//协议列表
+      contractInfoList: [],//合同附件列表
+      attaTableShow: true,
     };
   },
   methods: {
-    toContractDetail(row) {
-      console.error(row);
-      this.$router.push({name: 'businessDetail'});
+    handleDataChange(rows) {
+      //默认勾选第一个贸易关系
+      if (rows&& rows.length) {
+        this.$refs.tradeRelationTable.setRadioRow(rows[0])
+        this.handleRadioChange({row: rows[0]})
+      }
     },
     handleRadioChange({row}) {
-      this.tradeList.push({
-        field1: '佛山市a有限公司',
-        field2: '是',
-        field3: '756756756767',
-        field4: '非保理',
-        field5: '12',
-        field6: '1000',
-        field7: '2000',
-        field8: '正常'
+      console.log(row)
+      this.agreementParams = row
+      this.agreementParams.coreCompanyName = row.buyerName
+      let params = {
+        busTradeId : row.busTradeId,
+        coreCompanyName : row.buyerName,
+        tradeId : row.tradeId,
+      }
+      //获取阶段性协议列表和贸易合同附件列表
+      this.zjControl.queryPhasedAgreePage(params).then(res=>{
+        this.agreementList = res.data.phasedAgreeInfoList
+        if(res.data.contractInfoList) {
+          this.contractInfoList = res.data.contractInfoList
+          let params = {
+            contractInfoList : this.contractInfoList,
+            ...this.agreementParams,
+          }
+          console.log(params)
+          this.$emit('update',params)
+        }
       })
     },
-    maintain () {
-      this.goChild('multistageAgreementMaintain')
+    //下载合同附件
+    attaDownload(row) {
+      this.zjControl.downloadFile(row.fileId)
     },
-    toDetail (row) {
-      this.goChild('multistageAgreementDetail', row)
+    //删除合同附件
+    attaDelete(row) {
+      let params = {
+        attachId : row.attachId,
+        fileId : row.fileId,
+        fileName : row.fileName,
+        fileRemark : row.fileRemark,
+        phasedOperateFlag : 'DEL',
+        recordId : '',
+        tradeId : this.agreementParams.tradeId || '',
+      }
+      this.zjControl.delContract(params).then(res => {
+        //刷新当前贸易关系下的合同附件列表
+        this.zjControl.queryPhasedAgreePage(this.agreementParams).then(res=>{
+          this.agreementList = res.data.phasedAgreeInfoList
+          if(res.data.contractInfoList) {
+            this.contractInfoList = res.data.contractInfoList
+            this.$refs.attaTable.iRefresh(true)
+            let params = {
+              contractInfoList : this.contractInfoList,
+              ...this.agreementParams,
+            }
+            console.log(params)
+            this.$emit('update',params)
+            this.$message.success('删除附件成功！')
+            this.$refs.attaTable.clearActived()
+          }
+        })
+      })
     },
-    toEdit (row) {
-      this.goChild('productInfoManageEdit', row)
+    //新增合同附件
+    addAtta() {
+      if(!this.tableEditReport(["attaTable"])){return}
+      let item = {attachId:'', fileId:'', fileName:'', fileRemark:'',}
+      this.contractInfoList.push(item)
+      this.$refs.attaTable.setActiveRow(item)
     },
-    toEditQuota (row) {},
-    attaDownload (row) {},
-    attaDelete (row) {},
-    addAtta() {},
-  }
+    //上传附件
+    handleFileUpload({file,data}){
+      let formData = new FormData()
+      formData.append('file',file)
+      this.zjControl.uploadFile(formData).then(res => {
+        data.row.fileId = res.data.fileId
+        data.row.fileName = res.data.fileName
+        this.$message.success('附件上传成功!')
+      })
+    },
+    saveRow(row) {
+      if(!row.fileName){ return this.$messageBox({type:'info',content:'请上传附件!'}) }
+      if(!row.fileRemark){ return this.$messageBox({type:'info',content:'请输入附件说明!'}) }
+      //合同附件信息
+      let params = {
+        attachId : '',
+        fileId : row.fileId,
+        fileName : row.fileName,
+        fileRemark : row.fileRemark,
+        phasedOperateFlag : 'SAVE',
+        recordId : '',
+        tradeId : this.agreementParams.tradeId || '',
+      }
+      this.zjControl.delContract(params).then(res => {
+        //刷新当前贸易关系下的合同附件列表
+        this.zjControl.queryPhasedAgreePage(this.agreementParams).then(res=>{
+          this.agreementList = res.data.phasedAgreeInfoList
+          if(res.data.contractInfoList) {
+            this.contractInfoList = res.data.contractInfoList
+            this.$refs.attaTable.iRefresh(true)
+            let params = {
+              contractInfoList : this.contractInfoList,
+              ...this.agreementParams,
+            }
+            console.log(params)
+            this.$emit('update',params)
+            this.$message.success('保存成功！')
+            this.$refs.attaTable.clearActived()
+          }
+        })
+      })
+    },
+    cancel(row) {
+      this.contractInfoList.splice(row.index,1)
+      this.$refs.attaTable.clearActived()
+    },
+    submit() {
+      let params = {
+        ...this.contractInfoList
+      }
+      this.zjControl.submitPhasedAgree(params).then(res => {
+
+      })
+    },
+    back() {},
+    //检测是否正在编辑     tableRefList需要检测的table数组
+    tableEditReport(tableRefList){
+      let key = true
+      tableRefList.forEach(item => {
+        if(this.$refs[item] && this.$refs[item].getActiveRecord()){
+          key = false
+        }
+      })
+      if(!key){
+        this.$log.alert('请保存当前正在编辑的数据')
+        return false
+      }else{
+        return true
+      }
+    },
+  },
+  created() {
+    console.log(this.dictionary)
+
+  },
 };
 </script>
 <style lang="less" scoped>
-.explain-text {
-  display: flex;
-  padding-bottom: 20px;
-  background-color: rgba(2, 167, 240, 0);
-  .explain-item {
-    color: #555;
-    font-size: 14px;
-    margin-left: 20px;
-  }
-}
 
 </style>
