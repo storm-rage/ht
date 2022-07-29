@@ -40,7 +40,7 @@
         <zj-table-column field="operResult" title="申请状态"/>
         <zj-table-column field="notes" title="操作">
           <template v-slot="{row}">
-            <zj-button type="text" @click="toDetail(row)">详情</zj-button>
+            <zj-button type="text" @click="toDetail(row)" :api="zjBtn.getTradeRelationRecordDetail">详情</zj-button>
           </template>
         </zj-table-column>
       </zj-table>
@@ -61,6 +61,7 @@ export default {
       zjControl:{
         getPhasedAgreeDirectory:this.$api.agreementManage.getPhasedAgreeDirectory,//企业端-字典
         getMyTradeRelationRecord:this.$api.agreementManage.getMyTradeRelationRecord,//企业端-我的阶段性协议-贸易关系-维护记录列表查询
+        getTradeRelationRecordDetail:this.$api.agreementManage.getTradeRelationRecordDetail,//企业端-我的阶段性协议-贸易关系-维护记录-详情
       },
       searchForm: {
         serialNo:'',

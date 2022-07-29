@@ -80,7 +80,7 @@
           <zj-table-column field="agreementStatus" title="状态" />
           <zj-table-column title="操作" fixed="right" width="160">
             <template v-slot="{ row }">
-              <zj-button type="text" @click="attaDownload(row.fileId)">下载</zj-button>
+              <zj-button type="text" @click="attaDownload(row)">下载</zj-button>
             </template>
           </zj-table-column>
         </zj-table>
@@ -116,7 +116,9 @@ export default {
       let coreComName = row.buyerName
       this.queryMyPhasedAgreePage({'coreCompanyName': coreComName})
     },
-    attaDownload(row) {},
+    attaDownload(row) {
+      this.zjControl.downloadFile(row.fileId)
+    },
     //贸易关系列表
     getMyTradeRelationList() {
       this.zjControl.getMyTradeRelationList().then(res => {
