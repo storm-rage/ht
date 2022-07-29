@@ -33,6 +33,7 @@ const agreementManageRouter = [
       keepAlive:true,
       parent: 'frontPhasedMaintainLog',
       refreshIndex:0,
+      notRequireAuth: true,
     }
   },
 ]
