@@ -94,42 +94,42 @@
           </el-col>
           <el-col :span="8">
             <el-form-item label="已还款本金：">
-              {{money('1000000000')}}
+              {{money(financingInfo.payAmt)}}
             </el-form-item>
           </el-col>
           <el-col :span="8">
             <el-form-item label="往期未偿还利息：">
-              {{money('1000000000')}}
+              {{money(financingInfo.beforeNoPayInterest)}}
             </el-form-item>
           </el-col>
           <el-col :span="8">
             <el-form-item label="利息起算日：">
-              2023-09-08
+              {{financingInfo.interestStartDate}}
             </el-form-item>
           </el-col>
           <el-col :span="8">
             <el-form-item label="本次还款日期：">
-              2023-09-08
+              {{financingInfo.thisPayDate}}
             </el-form-item>
           </el-col>
           <el-col :span="8">
             <el-form-item label="本次计息天数：">
-              30
+              {{financingInfo.thisPayDays}}
             </el-form-item>
           </el-col>
           <el-col :span="8">
             <el-form-item label="本次还款金额：">
-              {{money('122222')}}
+              {{money(financingInfo.thisPaySum)}}
             </el-form-item>
           </el-col>
           <el-col :span="8">
             <el-form-item label="本次还款本金：">
-              {{money('122222')}}
+              {{money(financingInfo.thisPayAmt)}}
             </el-form-item>
           </el-col>
           <el-col :span="8">
             <el-form-item label="本次还款利息：">
-              {{money('122222')}}
+              {{money(financingInfo.thisPayInterest)}}
             </el-form-item>
           </el-col>
           <el-col :span="8">

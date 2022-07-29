@@ -1,5 +1,4 @@
 import LoginEditPassword from "../../editPassword/LoginEditPassword";
-// import FaceRecognition from "../../faceRecognition/FaceRecognition"
 import sw_cookie from "@utils/cookie";
 import frozenDialog from "../../components/frozenDialog";
 import {getMenuPower} from '@utils/menuTree';
@@ -106,7 +105,6 @@ export default {
         userName: loginRes.userName,
         loginName: loginRes.loginName,
         lastLoginTime: loginRes.lastLoginTime,
-        // password:this.userData.password,
         entName: loginRes.entName,
         entType: loginRes.entType,
         entId: loginRes.entId,
