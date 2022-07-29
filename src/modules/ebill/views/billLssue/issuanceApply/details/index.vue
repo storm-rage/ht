@@ -16,7 +16,7 @@
         <zj-table
           ref="searchTable"
           :params="searchForm"
-          :api="zjControl.tableApi"
+          :api="zjControl.onlineDetail"
         >
           <zj-table-column prop="id" title="对账单编号" />
           <zj-table-column field="" title="买方名称" />
@@ -39,7 +39,7 @@
         <zj-table
           ref="searchTable"
           :params="searchForm"
-          :api="zjControl.tableApi"
+          :api="zjControl.onlineDetail"
         >
           <zj-table-column prop="id" title="DN合并号" />
           <zj-table-column field="" title="客户编号" />
@@ -61,7 +61,7 @@
       <el-row slot="right">
         <zj-button
           class="back"
-          @click="$router.push('/issuanceApply')"
+          @click="$router.push('/openBillApply')"
           :api="zjBtn.passBillSignBatch"
           >返回</zj-button
         >
@@ -70,7 +70,7 @@
       <ZjContentFooter
         ><zj-button
           class="back"
-          @click="$router.push('/issuanceApply')"
+          @click="$router.push('/openBillApply')"
           :api="zjBtn.passBillSignBatch"
           >返回</zj-button
         ></ZjContentFooter
@@ -81,7 +81,9 @@
 export default {
   data() {
     return {
-      zjControl: {},
+      zjControl: {
+        onlineDetail: this.$api.openBillApply.onlineDetail, //线上对账单-详情
+      },
       searchForm: {},
       collActive: ["orderInfo"],
       checked: false,

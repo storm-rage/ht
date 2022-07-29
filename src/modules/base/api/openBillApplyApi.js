@@ -3,7 +3,7 @@
  */
 import request from '@common/axios/request'
 
-const issuanceApply = {
+const openBillApply = {
     //线下对账单-删除
     accountOffline: (params) => {
         return request.post('/open-bill-apply/delete-statement-account-offline', params)
@@ -68,7 +68,5 @@ const issuanceApply = {
     billExcel: (params) => {
         return request.post('/open-bill-apply/upload-batch-open-bill-excel', params)
     },
-
 }
-
-export default issuanceApply
+export default openBillApply

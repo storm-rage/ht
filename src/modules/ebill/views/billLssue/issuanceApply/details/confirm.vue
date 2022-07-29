@@ -3,7 +3,7 @@
     <div class="confirmTitle">
       <ZjTopHeader>请确认电子债权凭证签发申请</ZjTopHeader>
     </div>
-    <zj-table ref="searchTable" :params="searchForm" :api="zjControl.tableApi">
+    <zj-table ref="searchTable" :params="searchForm" :api="zjControl.billApply">
       <zj-table-column prop="id" title="债权凭证编号" />
       <zj-table-column field="" title="对账单编号" />
       <zj-table-column field="" title="买方名称" />
@@ -33,7 +33,7 @@
 
     <div class="btns">
       <zj-button type="primary" @click="confirmSubmit">确认提交</zj-button>
-      <zj-button>取消</zj-button>
+      <zj-button @click="goChild">取消</zj-button>
     </div>
 
     <!-- 工作流 -->
@@ -47,6 +47,7 @@ export default {
       zjControl: {},
       searchForm: {},
       tableData: [{ id: 1 }],
+      agreeCheck: false,
     };
   },
 
@@ -60,8 +61,18 @@ export default {
           cancelButtonText: "取消",
         }
       ).then(() => {
-        console.log(111);
+        if (this.agreeCheck !== true) {
+          this.$message.warning("请检查我已阅读并同意相关协议是否勾选");
+          return;
+        } else {
+          this.$message.success("提交成功!");
+        }
       });
+    },
+    //取消
+    goChild() {
+      this.agreeCheck = false;
+      this.$router.push("/openBillApply");
     },
   },
 };
@@ -75,7 +86,7 @@ export default {
   }
 
   .confirmTitle {
-      padding: 10px 0 20px;
+    padding: 10px 0 20px;
   }
 
   .ageree {
