@@ -15,12 +15,10 @@ const expireClearingManageRouter = [
     name: 'billClearingApply',
     component: () => import('../views/clearingManage/expireClearingManage/billClearing/billApply/index.vue'),
     meta: {
-      isMock: true,
       title: '凭证清算申请',
-      root: '到期清算',
+      parent: 'expireClear',
       keepAlive: true,
-      refreshIndex: 0,
-      notRequireAuth: true
+      refreshIndex: 0
     },
   },
   {
@@ -28,12 +26,10 @@ const expireClearingManageRouter = [
     name: 'billBalanceClearingApply',
     component: () => import('../views/clearingManage/expireClearingManage/billClearing/billBalanceApply/index.vue'),
     meta: {
-      isMock: true,
       title: '凭证尾款清算申请',
-      root: '到期清算',
+      parent: 'expireClear',
       keepAlive: true,
-      refreshIndex: 0,
-      notRequireAuth: true
+      refreshIndex: 0
     },
   },
   {
@@ -41,12 +37,10 @@ const expireClearingManageRouter = [
     name: 'orderClearingApply',
     component: () => import('../views/clearingManage/expireClearingManage/orderClearing/orderApply/index.vue'),
     meta: {
-      isMock: true,
       title: '订单清算申请',
-      root: '到期清算',
+      parent: 'expireClear',
       keepAlive: true,
-      refreshIndex: 0,
-      notRequireAuth: true
+      refreshIndex: 0
     },
   },
   {
@@ -54,12 +48,10 @@ const expireClearingManageRouter = [
     name: 'orderBalanceClearingApply',
     component: () => import('../views/clearingManage/expireClearingManage/orderClearing/orderBalanceApply/index.vue'),
     meta: {
-      isMock: true,
       title: '订单尾款清算申请',
-      root: '到期清算',
+      parent: 'expireClear',
       keepAlive: true,
-      refreshIndex: 0,
-      notRequireAuth: true
+      refreshIndex: 0
     },
   },
   {
@@ -67,12 +59,10 @@ const expireClearingManageRouter = [
     name: 'orderAdvanceClearingApply',
     component: () => import('../views/clearingManage/expireClearingManage/orderClearing/orderAdvanceApply/index.vue'),
     meta: {
-      isMock: true,
       title: '提前还款清算申请',
-      root: '到期清算',
+      parent: 'expireClear',
       keepAlive: true,
-      refreshIndex: 0,
-      notRequireAuth: true
+      refreshIndex: 0
     },
   }
 ];

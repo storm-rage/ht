@@ -3,32 +3,6 @@ import { toDateString, toTimeString, formatNumberRgx,formatNumberRgxNoSymbol, fo
 } from './index.js'
 export default {
   install (Vue) {
-    //初始化不规则字典
-    Vue.prototype.dicInit = function (list,allArr,desc = '全部') {
-      let newDic = {}
-      for(let i in list) {
-        newDic[i] = []
-        for(let j=0; j<list[i].length ; j++){
-          for(var k in list[i][j]){
-            newDic[i].push({
-              code:k,desc:list[i][j][k]
-            })
-          }
-        }
-      }
-      //是否添加全部选项
-      if(allArr && Array.isArray(allArr) && allArr.length > 0){
-        for(let l=0; l<allArr.length; l++){
-          for(let m in newDic){
-            if(m === allArr[l] ){
-              newDic[m].unshift({code:'',desc})
-            }
-          }
-        }
-      }
-      return newDic
-    },
-    // 格式化显示内容 Function({cellValue, row, column})
     //sw天眼查-毫秒转日期
     Vue.prototype.tycDates = function (str) {
       return tycDate(str)
@@ -86,39 +60,6 @@ export default {
         return isHasValue(obj) ? `${obj}%` : ''
       }
     }
-    Vue.prototype.datalistToTree = function (data, parentId) {
-      let itemArr = [],
-        self = this;
-      data.forEach(node => {
-        if (node.parentId == parentId) {
-          let newNode = node;
-          if (newNode.typeName) {
-            newNode.orgName = newNode.typeName;
-          }
-          if (newNode.subject && newNode.typeName) {
-            newNode.orgName = newNode.subject;
-          }
-          if (newNode.catKey = "DIC" && newNode.name) {
-            newNode.orgName = newNode.name;
-          }
-          if (newNode.typeId) {
-            newNode.orgId = newNode.typeId;
-          }
-          if (newNode.typeId && newNode.defId) {
-            newNode.orgId = newNode.defId;
-          }
-
-          newNode.clickNode = false;
-          newNode.isFolder = true;
-          newNode.isExpand = false;
-          newNode.loadNode = 0;
-
-          newNode.children =  self.datalistToTree(data, newNode.typeId);
-          itemArr.push(newNode);
-        }
-      })
-      return itemArr;
-    }
     // 数据匹配
     Vue.prototype.value = function (obj, data) {
       return obj[data] ? obj[data] : data
@@ -139,40 +80,23 @@ export default {
       })
       return renderObj[data] ? renderObj[data] : data
     }
-
-	// 类型匹配
+	// 字典转换
     Vue.prototype.typeMap = function (list, data) {
       let typeName = '—'
-      if ( list ){
-        for(var i = 0; i < list.length; i++){
-          if (typeof(data) === "number" && list[i].code === data + '') {
-            typeName = list[i].desc
-          }
-          if(list[i].code === data){
-            typeName = list[i].desc
-          }
-          if (list[i].id === data) {
-            typeName = list[i].name
-          }
-          if (list[i].value === data) {
-            typeName = list[i].label
-          }
-          if(list[i].clearState === data){
-            typeName = list[i].clearStateZh
-          }
-          if(list[i].channelNo === data){
-            typeName = list[i].channelNoName
-          }
-          if(list[i].projectId === data){
-            typeName = list[i].projectName
-          }
-        }
-        //当上面循环娶不到值时，则为不正规字典，进行下方循环
-        if(typeName === '—'){
-          for(var j=0; j<list.length; j++){
-            for(var k in list[j]){
-              if(k === data){
-                typeName = list[j][k]
+      if (list){
+        if (Array.isArray(list)) {
+          const row = list.find((item) => {
+            return String(item.code)===String(data);
+          });
+          typeName = row.desc
+        }else {
+          //当上面循环娶不到值时，则为不正规字典，进行下方循环
+          if(typeName === '—'){
+            for(var j=0; j<list.length; j++){
+              for(var k in list[j]){
+                if(k === data){
+                  typeName = list[j][k]
+                }
               }
             }
           }
@@ -180,8 +104,12 @@ export default {
       }
       return typeName
     }
-    //只过滤
-    Vue.prototype.filter = function(obj){
+    /**
+     * 用于格式化表格值，如果为空则显示——
+     * @param obj
+     * @returns {string}
+     */
+    Vue.prototype.formatterCellVal = function(obj){
       if(obj){
         if(typeof(obj)==='object'){
           return obj.cellValue || '—'
@@ -225,14 +153,6 @@ export default {
       //保证只有一位小数点
       obj[name] = obj[name].replace(/\.{2,}/g,'.')
       obj[name] = obj[name].replace('.','$#$').replace(/\./g,'').replace('$#$','.')
-      // //判断最大值
-      // if(Number(obj[name]) > max){
-      //   //切割
-      //   console.error( max)
-      //   let maxStr = String(max).split('.').join('.')
-      //   obj[name] = maxStr
-      //   return
-      // }
       //按小数点切割
       if(obj[name].split('.').length > 1){
         //当小数存在

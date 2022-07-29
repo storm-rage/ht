@@ -1,5 +1,11 @@
 <template>
-    <el-dialog  :visible.sync="dialogVisible"  ref="determinePassword" :show-close="false" :close-on-click-modal="false" class="determinePassword" width="450px">
+    <el-dialog
+      :visible.sync="dialogVisible"
+      ref="determinePassword"
+      :show-close="false"
+      :close-on-click-modal="false"
+      class="determinePassword"
+      width="450px">
         <!--   头部title     -->
         <div class="editHeader">
             修改密码

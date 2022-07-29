@@ -2,12 +2,12 @@
   <zj-content-container>
     <zj-top-header title="供应商业务申请审核"></zj-top-header>
     <!--  业务申请信息  -->
-    <biz-apply-info></biz-apply-info>
+    <biz-apply-info :biz-info="applyModel"></biz-apply-info>
     <!--  具体业务信息  -->
-    <business-first-audit biz-id="1" ref="bizInfoRef"></business-first-audit>
+    <business-first-audit :biz-id="row.id" ref="bizInfoRef"></business-first-audit>
     <!--  操作记录  -->
-    <operate-log></operate-log>
-     <!--  审批意见  -->
+    <operate-log :log-list="operateLogList"></operate-log>
+    <!--  审批意见  -->
     <audit-remark ref="auditRemark"></audit-remark>
     <zj-content-footer>
       <zj-button type="primary"
@@ -30,10 +30,12 @@ import BizApplyInfo from '../../../components/bizApplyInfo';
 import OperateLog from '../../../components/operateLog';
 import AuditRemark from '../../../components/auditRemark';
 import BusinessFirstAudit from '@modules/ebill/views/productManage/businessManage/workflow/biz/apply/audit.vue';
+import workflowMixin from '@modules/workflow/views/businessManage/mixins/workflowMixin';
 /**
  * 初审和业务维护驳回操作
  */
 export default {
+  mixins: [workflowMixin],
   components: {
     BizApplyInfo,
     OperateLog,

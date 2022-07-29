@@ -9,13 +9,6 @@ import {Message} from 'element-ui'
 Vue.use(Router)
 
 
-// router集中注入
-/*const routerFiles = require.context('../', true, /\/(.*)Router\.js$/)
-const routes = routerFiles.keys().reduce((routes, routerPath) => {
-  const value = routerFiles(routerPath).default
-  return routes.concat(value)
-}, [])*/
-
 const originalPush = Router.prototype.push
 Router.prototype.push = function push(location) {
   return originalPush.call(this, location).catch(err => err)

@@ -6,7 +6,6 @@ export default {
   mixins: [loginMixin, piMixin],
   data() {
     return {
-      headerList: [{label: '首页', path: '/login'}/*,{label:'联系我们',path:''}*/],
       remember: false, //是否记住用户名
       // 0是1否
       // 首次登录

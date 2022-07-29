@@ -113,7 +113,7 @@
         <zj-table-column
           field="applyDatetime"
           title="申请时间"
-          :formatter="filter"
+          :formatter="formatterCellVal"
         />
         <zj-table-column
           field="registerState"

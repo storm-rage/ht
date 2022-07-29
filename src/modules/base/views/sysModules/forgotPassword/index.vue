@@ -52,8 +52,8 @@
                       :show-password="true" clearable
             /><i class="el-icon-success some-pwd" v-show="form.newPassword && form.againNewPassword && form.newPassword == form.againNewPassword""></i>
           </el-form-item>
-          <el-row class="ta-c w100" >
-            <zj-button :status="form.saveFlag ? 'info' : 'primary'" @click="saveNewPassword"
+          <el-row class="zj-center">
+            <zj-button style="width: 100px" :type="form.saveFlag ? 'info' : 'primary'" @click="saveNewPassword"
                        :disabled="form.saveFlag" :title="form.saveFlag ? '请确认您的新密码' : ''"
                        :show-password="true"
             >

@@ -1,123 +1,113 @@
 @import "~@assets/less/variables";
 .login{
   min-width: 970px;
-  // min-height: 720px;
-}
-.LoginHeader{
-  height: 8.982826948480845%;
-  box-shadow: none;
-}
-.sw_footer{
-  height: 19.17437252311757%;
-  box-shadow: none;
-}
-.loginBody{
-  height: 100%;
-  position: relative;
-  box-sizing: content-box;
-  min-height: 500px;
-  background: url("~@assets/img/login/bg1.png") no-repeat;
-  background-size: 70% 100%;
-  .right-content{
-    background: url("~@assets/img/login/bg2.png") no-repeat;
-    background-size: 100% 100%;
-    width: 30%;
+  .loginBody{
     height: 100%;
-    float: right;
-    margin: 0;
-    min-width: 370px;
-    .main-content {
-      height: calc(100% - 105px);
-      padding: 35px;
-      .form-item-title {
-        font-weight: Bold;
+    position: relative;
+    box-sizing: content-box;
+    min-height: 620px;
+    background: url("~@assets/img/login/bg1.png") no-repeat;
+    background-size: 70% 100%;
+    .right-content{
+      background: url("~@assets/img/login/bg2.png") no-repeat;
+      background-size: 100% 100%;
+      width: 30%;
+      height: 100%;
+      float: right;
+      margin: 0;
+      min-width: 370px;
+      .main-content {
+        height: calc(100% - 105px);
+        padding: 35px;
+        .form-item-title {
+          font-weight: Bold;
+          font-size: 16px;
+          color: #303133;
+          margin-bottom: 12px;
+          margin-left: 3px;
+        }
+        .login-form {
+          margin-top: 50px;
+        }
+      }
+      .el-form-item,.el-input,.loginBtn{
+        width: 100%;
+      }
+      .smsCode{
+        color:#165DFF;
+        float:right;
+        margin-left:5px;
+        border:none;
+        background: #fff;
+        border: 1px #165DFF solid;
+        &.jinyong{
+          background: #909399!important;
+        }
+        &:active{
+          border: none;
+          outline: none;
+          transform: translateY(2px);
+        }
+        &:focus{
+          box-shadow: none;
+        }
+      }
+      .loginBtn{
+        margin-top: 15px;
+        padding: 14px 0;
+        font-size: 18px;
+        letter-spacing: 4px;
+      }
+      .verification{
+        width: 63%;
+        float: left;
+      }
+      /*小屏适配问题*/
+      @media only screen and (max-width: 1400px) {
+        .verification {
+          width: 53%;;
+        }
+      }
+      .code{
+        float: right;
+        height: 30px;
+        transform: translateY(-2px);
+        .code-img{
+          width: auto;
+          height: 40px;
+        }
+        .refreshIcon{
+          font-size: 22px;
+          line-height: 40px;
+          margin-left: 5px;
+          color: #434343;
+          opacity: 0.6;
+          cursor: pointer;
+        }
+        label{
+          display: block;
+          font-size: 10px;
+          -webkit-transform: scale(0.8);
+          color: #434343;
+          opacity: 0.6;
+          transform: translate(-5px,-5px);
+        }
+      }
+      .login_pass{
+        margin-top: 15px;
+      }
+      .right-text {
+        cursor: pointer;
+        font-weight: 400;
         font-size: 16px;
         color: #303133;
-        margin-bottom: 12px;
-        margin-left: 3px;
-      }
-      .login-form {
-        margin-top: 50px;
-      }
-    }
-    .el-form-item,.el-input,.loginBtn{
-      width: 100%;
-    }
-    .smsCode{
-      color:#165DFF;
-      float:right;
-      margin-left:5px;
-      border:none;
-      background: #fff;
-      border: 1px #165DFF solid;
-      &.jinyong{
-        background: #909399!important;
-      }
-      &:active{
-        border: none;
-        outline: none;
-        transform: translateY(2px);
-      }
-      &:focus{
-        box-shadow: none;
-      }
-    }
-    .loginBtn{
-      margin-top: 15px;
-      padding: 14px 0;
-      font-size: 18px;
-      letter-spacing: 4px;
-    }
-    .verification{
-      width: 63%;
-      float: left;
-    }
-    /*小屏适配问题*/
-    @media only screen and (max-width: 1400px) {
-      .verification {
-        width: 53%;;
-      }
-    }
-    .code{
-      float: right;
-      height: 30px;
-      transform: translateY(-2px);
-      .code-img{
-        width: auto;
-        height: 40px;
-      }
-      .refreshIcon{
-        font-size: 22px;
-        line-height: 40px;
-        margin-left: 5px;
-        color: #434343;
-        opacity: 0.6;
-        cursor: pointer;
-      }
-      label{
-        display: block;
-        font-size: 10px;
-        -webkit-transform: scale(0.8);
-        color: #434343;
-        opacity: 0.6;
-        transform: translate(-5px,-5px);
-      }
-    }
-    .login_pass{
-      margin-top: 15px;
-    }
-    .right-text {
-      cursor: pointer;
-      font-weight: 400;
-      font-size: 16px;
-      color: #303133;
-      &.primary {
-        color:  @primary-main-color;
-      }
-      &:hover {
-        color: @primary-main-color!important;;
+        &.primary {
+          color:  @primary-main-color;
+        }
+        &:hover {
+          color: @primary-main-color!important;;
+        }
       }
     }
   }
-
 }

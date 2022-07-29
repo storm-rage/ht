@@ -2,14 +2,14 @@
   <zj-content-container>
     <zj-top-header title="供应商业务申请驳回维护"></zj-top-header>
     <!--  业务申请信息  -->
-    <biz-apply-info></biz-apply-info>
+    <biz-apply-info :biz-info="applyModel"></biz-apply-info>
     <!--  具体业务信息  -->
     <trade-change-back-audit
       ref="tradeInfo"
       :is-edit="true"
-      biz-id="1"></trade-change-back-audit>
+      :biz-id="row.id"></trade-change-back-audit>
     <!--  操作记录  -->
-    <operate-log></operate-log>
+    <operate-log :log-list="operateLogList"></operate-log>
     <!--  审批意见  -->
     <audit-remark ref="auditRemark"></audit-remark>
     <zj-content-footer>
@@ -25,11 +25,12 @@ import BizApplyInfo from '../../../components/bizApplyInfo';
 import OperateLog from '../../../components/operateLog';
 import AuditRemark from '../../../components/auditRemark';
 import TradeChangeBackAudit from '@modules/ebill/views/productManage/businessManage/workflow/tradeChange/back/audit.vue';
-
+import workflowMixin from '@modules/workflow/views/businessManage/mixins/workflowMixin';
 /**
  * 单个维护贸易背景复核驳回再处理
  */
 export default {
+  mixins: [workflowMixin],
   components: {
     BizApplyInfo,
     OperateLog,

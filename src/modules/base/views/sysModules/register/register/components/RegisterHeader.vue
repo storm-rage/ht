@@ -1,6 +1,6 @@
 <template>
     <header class="LoginHeader">
-      <div class="logo" @click="toLogin"><a href="#"><img src="@assets/img/login/company-logo.png"/></a></div>
+      <div class="logo" @click="toLogin"><a href="#"><img src="@assets/img/layout/Logo.png"/></a></div>
       <ul class="nav" :class="close ? 'zj-m-r-20' : 'zj-m-r-010'"> <!-- :style="{marginRight: close ? '20px' : '10%'}" -->
         <li v-for="(item,index) in routerList" :key="index">
           <router-link :to="item.path">{{item.label}}</router-link>
@@ -79,9 +79,9 @@
         width: 119px;
         height: 52px;
         img{
-            border-top: 5px solid rgba(0,0,0,0);
-            width: 100%;
-            height: 100%;
+            //border-top: 5px solid rgba(0,0,0,0);
+            width: 120px;
+            height: 70px;
         }
     }
     .nav{

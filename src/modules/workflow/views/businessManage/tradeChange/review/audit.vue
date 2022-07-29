@@ -2,13 +2,13 @@
   <zj-content-container>
     <zj-top-header title="供应商业务申请维护复核"></zj-top-header>
     <!--  业务申请信息  -->
-    <biz-apply-info></biz-apply-info>
+    <biz-apply-info :biz-info="applyModel"></biz-apply-info>
     <!--  具体业务信息  -->
     <trade-change-review-audit
       :is-edit="false"
-      biz-id="1"></trade-change-review-audit>
+      :biz-id="row.id"></trade-change-review-audit>
     <!--  操作记录  -->
-    <operate-log></operate-log>
+    <operate-log :log-list="operateLogList"></operate-log>
     <!--  审批意见  -->
     <audit-remark ref="auditRemark"></audit-remark>
     <zj-ht-approval></zj-ht-approval>
@@ -25,11 +25,12 @@ import BizApplyInfo from '../../../components/bizApplyInfo';
 import OperateLog from '../../../components/operateLog';
 import AuditRemark from '../../../components/auditRemark';
 import TradeChangeReviewAudit from '@modules/ebill/views/productManage/businessManage/workflow/tradeChange/review/audit.vue';
-
+import workflowMixin from '@modules/workflow/views/businessManage/mixins/workflowMixin';
 /**
  * 单个维护贸易背景复核
  */
 export default {
+  mixins: [workflowMixin],
   components: {
     BizApplyInfo,
     OperateLog,
@@ -75,7 +76,7 @@ export default {
             id: this.row.id,
             notes,
             controlFlag: '1',//风控标识
-            operResult: OperResult.REJECT
+            operResult: OperResult.BACK
           }).then(res => {
             this.rejectLoading = false;
             //成功，关闭

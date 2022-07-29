@@ -6,11 +6,11 @@
                         :dic="dictionary"></supplier-base-info>
     <!-- 贸易关系   -->
     <trade-list
-    ref="tradeInfo"
-    :tradeList="tradeRelationModelList"
-    :is-edit-cactoringLogo="true"
-    :bizId="bizId"
-    :dic="dictionary"></trade-list>
+      ref="tradeInfo"
+      :tradeList="tradeRelationModelList"
+      :is-edit-cactoringLogo="true"
+      :bizId="bizId"
+      :dic="dictionary"></trade-list>
   </div>
 </template>
 <script>
@@ -60,7 +60,7 @@ export default {
       });
     },
     getList() {
-     return this.$refs.tradeInfo.getList();
+      return this.$refs.tradeInfo.getList();
     }
   }
 };
