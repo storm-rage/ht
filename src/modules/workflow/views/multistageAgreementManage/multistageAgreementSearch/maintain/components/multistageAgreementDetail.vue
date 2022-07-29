@@ -4,7 +4,7 @@
     <zj-content>
 
       <zj-list-layout>
-        <tempalte slot="searchForm">
+        <template slot="searchForm">
           <el-form ref="searchForm" :model="searchForm">
             <el-form-item label="状态：">
               <el-select v-model="searchForm.state">
@@ -26,7 +26,7 @@
               </el-select>
             </el-form-item>
           </el-form>
-        </tempalte>
+        </template>
         <zj-table ref="logTable" :dataList="agreementList">
           <zj-table-column field="field1" title="阶段性协议编号"/>
           <zj-table-column field="field2" title="阶段性协议名称"/>

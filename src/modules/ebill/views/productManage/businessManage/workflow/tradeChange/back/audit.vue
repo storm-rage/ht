@@ -24,17 +24,13 @@
  * 复核和驳回
  * 驳回处理 isEdit=true
  */
-import SupplierBaseInfo from '../components/supplierBaseInfo';
-import OtherFileSetting from '../components/otherFileSetting';
-import TradeMaintenanceForm from '../tradeManage/tradeMaintenanceForm';
+import SupplierBaseInfo from '../../../components/supplierBaseInfo';
+import OtherFileSetting from '../../../components/otherFileSetting';
+import TradeMaintenanceForm from '../../../tradeManage/tradeMaintenanceForm';
 export default {
   props: {
     //业务参数ID
     bizId: String,
-    //业务参数与贸易关系关联ID
-    busTradeId : String,
-    // 贸易关系ID
-    tradeId  : String,
     isEdit: {
       type: Boolean,
       default: false
@@ -59,7 +55,7 @@ export default {
     return {
       zjControl: {
         getDataDirectory: this.$api.businessManage.getDataDirectory,
-        getTradeRecheckDetail: this.$api.businessManageWorkflow.getTradeRecheckDetail
+        getDetail: this.$api.businessManageWorkflow.getTradeRebutDetail
       },
       // 字典
       dictionary: {},
@@ -79,7 +75,7 @@ export default {
   },
   methods: {
     getDetail() {
-      this.zjControl.getTradeRecheckDetail({id: this.bizId,busTradeId: this.busTradeId,tradeId: this.tradeId}).then(res => {
+      this.zjControl.getDetail({id: this.bizId}).then(res => {
         this.businessParamModel = res.data.businessParamModel;
         this.tradeRelationModel = res.data.tradeRelationModel;
         const productTypes = this.businessParamModel.productType.split(',');

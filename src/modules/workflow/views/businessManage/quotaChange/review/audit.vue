@@ -1,60 +1,59 @@
 <template>
   <zj-content-container>
-    <zj-top-header title="供应商业务申请复核"></zj-top-header>
+    <zj-top-header title="供应商额度申请复核"></zj-top-header>
     <!--  业务申请信息  -->
     <biz-apply-info></biz-apply-info>
     <!--  具体业务信息  -->
-    <business-review-detail biz-id="1"></business-review-detail>
+    <quota-change-audit
+      :is-edit="false"
+      biz-id="1"></quota-change-audit>
     <!--  操作记录  -->
     <operate-log></operate-log>
     <!--  审批意见  -->
     <audit-remark ref="auditRemark"></audit-remark>
     <zj-ht-approval></zj-ht-approval>
     <zj-content-footer>
-      <zj-button type="primary" :disabled="rejectLoading" :loading="passLoading" :api="zjBtn.submitRecheck" @click="toPass">审核通过</zj-button>
-      <zj-button type="primary" :disabled="passLoading" :loading="rejectLoading" :api="zjBtn.submitRecheck" @click="toReject">拒绝</zj-button>
+      <zj-button type="primary" :disabled="rejectLoading" :loading="passLoading" :api="zjBtn.submitTradeRecheck" @click="toPass">审核通过</zj-button>
+      <zj-button type="primary" :disabled="passLoading" :loading="rejectLoading" :api="zjBtn.submitTradeRecheck" @click="toReject">驳回</zj-button>
       <zj-button @click="goParent">返回</zj-button>
     </zj-content-footer>
   </zj-content-container>
 </template>
 <script>
-import {OperResult} from '@modules/constant.js';
-import BizApplyInfo from '../components/bizApplyInfo';
-import OperateLog from '../components/operateLog';
-import AuditRemark from '../components/auditRemark';
-import businessReviewDetail from '@modules/ebill/views/productManage/businessManage/workflow/businessReviewDetail.vue';
+import {OperResult} from "@modules/constant";
+import BizApplyInfo from '../../../components/bizApplyInfo';
+import OperateLog from '../../../components/operateLog';
+import AuditRemark from '../../../components/auditRemark';
+import QuotaChangeAudit from '@modules/ebill/views/productManage/businessManage/workflow/quotaChange/review/audit.vue';
 
 /**
- * 业务申请复核操作
+ * 额度管理复核
  */
 export default {
   components: {
     BizApplyInfo,
     OperateLog,
     AuditRemark,
-    businessReviewDetail
+    QuotaChangeAudit
   },
   data () {
     return {
       zjControl: {
-        submitRecheck: this.$api.businessManageWorkflow.submitRecheck
+        recheckLimit: this.$api.businessManageWorkflow.recheckLimit
       },
       rejectLoading: false,
       passLoading: false
     }
-  },
-  created() {
-    this.getApi();
-    this.getRow();
   },
   methods: {
     toPass() {
       this.$refs.auditRemark.getForm().clearValidate();
       const {notes} = this.$refs.auditRemark.getData()
       this.passLoading = true;
-      this.zjControl.submitRecheck({
+      this.zjControl.recheckLimit({
         id: this.row.id,
         notes,
+        busTradeId: '1',
         operResult: OperResult.PASS
       }).then(res => {
         this.passLoading = false;
@@ -72,9 +71,10 @@ export default {
         if (valid) {
           const {notes} = this.$refs.auditRemark.getData()
           this.rejectLoading = true;
-          this.zjControl.submitRecheck({
+          this.zjControl.recheckLimit({
             id: this.row.id,
             notes,
+            busTradeId: '1',
             operResult: OperResult.REJECT
           }).then(res => {
             this.rejectLoading = false;

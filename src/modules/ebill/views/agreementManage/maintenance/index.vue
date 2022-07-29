@@ -76,13 +76,13 @@
     <zj-workflow>
       <el-row slot="right">
         <zj-button
-          @click="$router.push('/issuanceApply')"
+          @click="$router.push('/openBillApply')"
           :api="zjBtn.passBillSignBatch"
           >提交</zj-button
         >
         <zj-button
           class="back"
-          @click="$router.push('/issuanceApply')"
+          @click="$router.push('/openBillApply')"
           :api="zjBtn.passBillSignBatch"
           >返回</zj-button
         >

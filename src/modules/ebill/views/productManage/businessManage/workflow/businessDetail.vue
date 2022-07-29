@@ -15,7 +15,15 @@ import SupplierBaseInfo from '../components/supplierBaseInfo';
 import TradeDetail from '../detailPage/tradeDetail';
 export default {
   props: {
-    bizId: String
+    bizId: {
+      type: String,
+      required: true
+    },
+    // 请求API
+    detailApi: {
+      type: Function,
+      required: true
+    }
   },
   components: {
     SupplierBaseInfo,
@@ -25,7 +33,6 @@ export default {
     return {
       zjControl: {
         getDataDirectory: this.$api.businessManage.getDataDirectory,
-        getFirstAuditDetail: this.$api.businessManageWorkflow.getFirstAuditDetail
       },
       // 字典
       dictionary: {},
@@ -45,7 +52,7 @@ export default {
   },
   methods: {
     getDetail() {
-      this.zjControl.getRecheckDetail({id: this.bizId}).then(res => {
+      this.zjControl.detailApi({id: this.bizId}).then(res => {
         this.businessParamModel = res.data.businessParamModel;
         this.tradeRelationModelList = res.data.tradeRelationModelList;
         this.prodInfo = {

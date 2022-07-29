@@ -11,11 +11,8 @@
   </div>
 </template>
 <script>
-/**
- * 业务申请复核详情
- */
-import SupplierBaseInfo from '../components/supplierBaseInfo';
-import TradeDetail from '../detailPage/tradeDetail';
+import SupplierBaseInfo from '../../../components/supplierBaseInfo';
+import TradeDetail from '../../../detailPage/tradeDetail';
 export default {
   props: {
     bizId: String
@@ -28,7 +25,7 @@ export default {
     return {
       zjControl: {
         getDataDirectory: this.$api.businessManage.getDataDirectory,
-        getRecheckDetail: this.$api.businessManageWorkflow.getRecheckDetail
+        getContractRenewalRecheckDetail: this.$api.businessManageWorkflow.getContractRenewalRecheckDetail
       },
       // 字典
       dictionary: {},
@@ -48,7 +45,7 @@ export default {
   },
   methods: {
     getDetail() {
-      this.zjControl.getRecheckDetail({id: this.bizId}).then(res => {
+      this.zjControl.getContractRenewalRecheckDetail({id: this.bizId}).then(res => {
         this.businessParamModel = res.data.businessParamModel;
         this.tradeRelationModelList = res.data.tradeRelationModelList;
         this.prodInfo = {

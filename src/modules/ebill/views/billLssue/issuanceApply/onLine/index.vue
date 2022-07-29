@@ -1,7 +1,6 @@
 <template>
   <div>
-    <div class="zj-search-condition">
-    </div>
+    <div class="zj-search-condition"></div>
     <zj-list-layout>
       <template slot="searchForm">
         <el-form ref="searchForm" :model="searchForm">
@@ -47,31 +46,51 @@
       </template>
       <div class="zj-search-response">
         <zj-table
-          ref="searchTable"
-          :params="searchForm"
-          :api="zjControl.onlineList"
-          :data="tableData"
+          ref="openBillApply"
+          :dataList="dataList"
+          keep-source
+          :edit-config="{
+            trigger: 'manual',
+            mode: 'row',
+            icon: '-',
+            autoClear: false,
+            showStatus: true,
+          }"
         >
           <zj-table-column type="selection" title="对账单编号" />
-          <zj-table-column prop="date" title="买方名称" />
-          <zj-table-column prop="name" title="供应商业务系统编码" />
-          <zj-table-column prop="address" title="供应商名称" />
-          <zj-table-column field="" title="对账日期" :formatter="date" />
-          <zj-table-column field="" title="入库日期/放行日期" />
-          <zj-table-column field="" title="预计付款日期" :formatter="date" />
-          <zj-table-column field="" title="对账单金额" />
-          <zj-table-column field="" title="是否开立凭证" />
-          <zj-table-column field="" title="对账单来源" />
-          <zj-table-column field="" title="开立凭证说明" />
+          <zj-table-column field="date" title="买方名称" />
+          <zj-table-column field="name" title="供应商业务系统编码" />
+          <zj-table-column field="address" title="供应商名称" />
+          <zj-table-column field="date1" title="对账日期" :formatter="date" />
+          <zj-table-column field="date2" title="入库日期/放行日期" />
+          <zj-table-column
+            field="date3"
+            title="预计付款日期"
+            :formatter="date"
+          />
+          <zj-table-column field="date4" title="对账单金额" />
+          <zj-table-column field="date5" title="是否开立凭证" />
+          <zj-table-column field="date6" title="对账单来源" />
+          <zj-table-column field="date1" title="开立凭证说明" />
           <zj-table-column title="操作" fixed="right">
             <template v-slot="{ row }">
-              <zj-button
-                type="text"
-                @click="$router.push('/issuanceApplyDetails')"
-                :api="zjBtn.getEnterprise"
-                >详情</zj-button
-              >
-              <zj-button type="text" @click="edit(row)">修改</zj-button>
+              <template v-if="!$refs.openBillApply.isActiveByRow(row)">
+                <zj-button
+                  type="text"
+                  :api="zjControl.onlineDetail"
+                  @click="minute(row)"
+                  >详情</zj-button
+                >
+                <zj-button type="text" @click="edit(row)">修改</zj-button>
+              </template>
+              <template v-if="$refs.openBillApply.isActiveByRow(row)">
+                <zj-button type="text" @click="save(row, rowIndex)"
+                  >保存</zj-button
+                >
+                <zj-button type="text" @click="cancel(row, rowIndex)"
+                  >取消</zj-button
+                >
+              </template>
             </template>
           </zj-table-column>
         </zj-table>
@@ -87,7 +106,7 @@
       <!-- 工作流 -->
       <zj-workflow v-model="workflow">
         <el-row slot="right">
-          <zj-button @click="&quot;&quot;;" :api="zjBtn.passBillSignBatch"
+          <zj-button @click="goChild" :api="zjBtn.passBillSignBatch"
             >签发凭证</zj-button
           >
         </el-row>
@@ -96,56 +115,188 @@
   </div>
 </template>
 <script>
+import { OperateFlag } from "@modules/constant.js";
 export default {
   data() {
     return {
       workflow: "",
-      tableData:[{
-          date: '2016-05-03',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1518 弄'
-        }, {
-          date: '2016-05-02',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1518 弄'
-        }, {
-          date: '2016-05-04',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1518 弄'
-        }, {
-          date: '2016-05-01',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1518 弄'
-        }, {
-          date: '2016-05-08',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1518 弄'
-        }, {
-          date: '2016-05-06',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1518 弄'
-        }, {
-          date: '2016-05-07',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1518 弄'
-        }],
       zjControl: {
-        onlineList: this.$api.issuanceApply.onlineList, //线上对账单-查询
+        onlineList: this.$api.openBillApply.onlineList, //线上对账单-查询
+        onlineDetail: this.$api.openBillApply.onlineDetail, //线上对账单-详情
       },
       searchForm: {},
-      // tableData: [{ id: 1 }],
+      dataList: [
+        {
+          date: "11111",
+          name: "22222",
+          address: "3333333",
+          date1: "11111",
+          date2: "11111",
+          date3: "11111",
+          date4: "11111",
+          date5: "11111",
+          date6: "11111",
+        },
+        {
+          date: "11111",
+          name: "22222",
+          address: "3333333",
+          date1: "11111",
+          date2: "11111",
+          date3: "11111",
+          date4: "11111",
+          date5: "11111",
+          date6: "11111",
+        },
+        {
+          date: "11111",
+          name: "22222",
+          address: "3333333",
+          date1: "11111",
+          date2: "11111",
+          date3: "11111",
+          date4: "11111",
+          date5: "11111",
+          date6: "11111",
+        },
+        {
+          date: "11111",
+          name: "22222",
+          address: "3333333",
+          date1: "11111",
+          date2: "11111",
+          date3: "11111",
+          date4: "11111",
+          date5: "11111",
+          date6: "11111",
+        },
+        {
+          date: "11111",
+          name: "22222",
+          address: "3333333",
+          date1: "11111",
+          date2: "11111",
+          date3: "11111",
+          date4: "11111",
+          date5: "11111",
+          date6: "11111",
+        },
+        {
+          date: "11111",
+          name: "22222",
+          address: "3333333",
+          date1: "11111",
+          date2: "11111",
+          date3: "11111",
+          date4: "11111",
+          date5: "11111",
+          date6: "11111",
+        },
+        {
+          date: "11111",
+          name: "22222",
+          address: "3333333",
+          date1: "11111",
+          date2: "11111",
+          date3: "11111",
+          date4: "11111",
+          date5: "11111",
+          date6: "11111",
+        },
+        {
+          date: "11111",
+          name: "22222",
+          address: "3333333",
+          date1: "11111",
+          date2: "11111",
+          date3: "11111",
+          date4: "11111",
+          date5: "11111",
+          date6: "11111",
+        },
+        {
+          date: "11111",
+          name: "22222",
+          address: "3333333",
+          date1: "11111",
+          date2: "11111",
+          date3: "11111",
+          date4: "11111",
+          date5: "11111",
+          date6: "11111",
+        },
+        {
+          date: "11111",
+          name: "22222",
+          address: "3333333",
+          date1: "11111",
+          date2: "11111",
+          date3: "11111",
+          date4: "11111",
+          date5: "11111",
+          date6: "11111",
+        },
+        {
+          date: "11111",
+          name: "22222",
+          address: "3333333",
+          date1: "11111",
+          date2: "11111",
+          date3: "11111",
+          date4: "11111",
+          date5: "11111",
+          date6: "11111",
+        },
+      ],
+      openBillApplyRow: {}, //编辑当前行
     };
   },
   created() {
     this.getApi();
   },
   methods: {
-    //修改
+    //详情
+    minute(row){
+      console.log(row,'详情')
+      // return
+      this.$router.push('/openBillApplyDetails',row)
+    },
+    //修改单元格
     edit(row) {
-      if (!this.tableEditReport(["searchTable"])) {
+      console.log(row, "修改");
+      if (!this.isTableEdit()) {
         return;
       }
-      this.$refs.searchTable.setActiveRow(row);
+      this.openBillApplyRow = Object.assign({}, row);
+      this.$refs.openBillApply.setActiveRow(row);
+    },
+    isTableEdit() {
+      let key = true;
+      if (
+        this.$refs.openBillApply &&
+        this.$refs.openBillApply.getActiveRecord()
+      ) {
+        key = false;
+      }
+      if (!key) {
+        this.$log.alert("请保存当前正在编辑的数据");
+      }
+      return key;
+    },
+    //保存单元格
+    save(row) {
+      this.form = { ...this.form, ...row };
+      this.$refs.openBillApply.clearActived();
+      this.$message.success("保存成功");
+    },
+    //取消单元格
+    cancel() {
+      this.$refs.openBillApply.clearActived();
+    },
+    //签发凭证
+    goChild(row) {
+      // console.log(row, "=======");
+      this.$router.push("/openBillApplyConfirm");
     },
   },
 };

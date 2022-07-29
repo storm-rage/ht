@@ -29,6 +29,7 @@ export default {
   methods: {
     toApply () {
       this.$confirm('是否确认提交申请？','温馨提示',{
+        type: 'warning',
         confirmButtonText: '确定',
         cancelButtonText: '取消'
       }).then(() => {

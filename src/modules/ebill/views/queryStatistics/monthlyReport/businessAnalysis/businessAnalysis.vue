@@ -5,13 +5,13 @@
       <template slot="leftBtns">
         <vxe-button class="export" icon="el-icon-download" @click="toExport">导出</vxe-button>
       </template>
-      <tempalte slot="searchForm">
+      <template slot="searchForm">
         <el-form ref="searchForm" :model="searchForm">
           <el-form-item label="统计月份：">
             <zj-date-picker v-model="searchForm.statisticsMonth" @keyup.enter.native="enterSearch"/>
           </el-form-item>
         </el-form>
-      </tempalte>
+      </template>
       <zj-table ref="searchTable" :dataList="list">
         <zj-table-column type="seq" title="序号" width="60"/>
         <zj-table-column field="field1" title="供应商名称"/>

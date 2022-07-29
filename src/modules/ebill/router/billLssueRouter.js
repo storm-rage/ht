@@ -3,8 +3,8 @@
  */
 const billLssueRouter = [
   {
-    path: '/issuanceApply',
-    name: 'issuanceApply',
+    path: '/openBillApply',
+    name: 'openBillApply',
     component: () => import('../views/billLssue/issuanceApply/index.vue'),
     meta: {
       isMock: true,
@@ -16,8 +16,8 @@ const billLssueRouter = [
     }
   },
   {
-    path: '/issuanceApplyDetails',
-    name: 'issuanceApplyDetails',
+    path: '/openBillApplyDetails',
+    name: 'openBillApplyDetails',
     component: () => import('../views/billLssue/issuanceApply/details/index.vue'),
     meta:{
       isMock:false,
@@ -40,8 +40,8 @@ const billLssueRouter = [
     }
   },
   {
-    path: '/issuanceApplyConfirm',
-    name: 'issuanceApplyConfirm',
+    path: '/openBillApplyConfirm',
+    name: 'openBillApplyConfirm',
     component: () => import('../views/billLssue/issuanceApply/details/confirm.vue'),
     meta:{
       isMock:false,

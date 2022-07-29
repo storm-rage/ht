@@ -198,7 +198,7 @@ export default {
           return true
         }
       }
-      return false;
+      return true;
     },
     /**
      * 上传文件
