@@ -1,7 +1,7 @@
 const multistageAgreementManageRouter = [
   {
-    path: '/multistageAgreementManage',
-    name: 'multistageAgreementManage',
+    path: '/frontBackAgreeManage',
+    name: 'frontBackAgreeManage',
     component: () => import('../views/multistageAgreementManage/index'),
     meta: {
       isMock: true,

@@ -2,94 +2,87 @@
   <zj-content-container>
     <!--  阶段性协议管理  -->
     <el-tabs v-model="tabs" type="card" class="zj-tabs-card">
-      <el-tab-pane label="阶段性协议查询" name="multistageAgreementMaintain" >
-        <multistage-agreement-maintain :zjControl="zjControl" :uDictionary="uDictionary" :uBtn="zjBtn"/>
+      <el-tab-pane label="阶段性协议维护" name="multistageAgreementMaintain" >
+        <multistage-agreement-maintain :zjControl="zjControl" :dictionary="dictionary" @update="handleContractInfo"/>
       </el-tab-pane>
-      <el-tab-pane label="待办" name="myAgreement" >
-        <my-agreement :zjControl="zjControl" :mDictionary="mDictionary" :mBtn="zjBtn"/>
+      <el-tab-pane label="我的阶段性协议" name="myMultistageAgreement" >
+        <my-multistage-agreement :zjControl="zjControl" :dictionary="dictionary" :mBtn="zjBtn"/>
       </el-tab-pane>
     </el-tabs>
+    <zj-content-footer>
+      <zj-button type="primary" @click="submit" v-if="tabs === 'multistageAgreementMaintain'" :api="zjBtn.submitPhasedAgree">提交</zj-button>
+      <zj-button status="back" @click="back">返回</zj-button>
+    </zj-content-footer>
 
   </zj-content-container>
 </template>
 <script>
 import multistageAgreementMaintain from "./components/multistageAgreementMaintain";
-import myAgreement from "./components/myAgreement";
+import myMultistageAgreement from "./components/myMultistageAgreement";
+import agreementManage from "../../../api/agreementManageApi";
+import baseCommon from "../../../../base/api/baseCommonApi";
 export default {
   name: "agreementManage",
   components: {
-    multistageAgreementMaintain,myAgreement,
+    multistageAgreementMaintain,
+    myMultistageAgreement,
   },
   data() {
     return {
-      searchForm: {
-        productName: '',
-        businessType: '',
-        productType: '',
-        productNo: '',
-        productState: '',
-      },
-      list: [
-        {
-          field1: 'scm00001',
-          field2: '某某产品一号',
-          field3: '上游',
-          field4: '订单保理',
-          field5: '2022.09.08 11:18:19',
-          field6: '生效',
-          field7: '是'
-        }
-      ],
-      tradeList: [],
       tabs:'multistageAgreementMaintain',
-      tabAtive:'',
-      zjControl: {},
-      uDictionary:{},
-      mDictionary:{}
-
+      contractInfo: {},
+      zjControl: {
+        //企业端
+        getPhasedAgreeDirectory:this.$api.agreementManage.getPhasedAgreeDirectory,//企业端-阶段性协议管理-数据字典
+        delContract:this.$api.agreementManage.delContract,//企业端-阶段性协议维护-合同删除
+        getMyTradeRelationList:this.$api.agreementManage.getMyTradeRelationList,//企业端-我的阶段性协议-贸易关系列表查询
+        getMyTradeRelationRecord:this.$api.agreementManage.getMyTradeRelationRecord,//企业端-我的阶段性协议-贸易关系-维护记录列表查询
+        getTradeRelationList:this.$api.agreementManage.getTradeRelationList,//企业端-阶段性协议维护-贸易关系列表查询
+        getTradeRelationRecordDetail:this.$api.agreementManage.getTradeRelationRecordDetail,//企业端-我的阶段性协议-贸易关系-维护记录-详情
+        queryMyPhasedAgreePage:this.$api.agreementManage.queryMyPhasedAgreePage,//企业端-我的阶段性协议-阶段性协议信息列表查询
+        queryPhasedAgreePage:this.$api.agreementManage.queryPhasedAgreePage,//企业端-阶段性协议维护-阶段性协议列表查询
+        submitPhasedAgree:this.$api.agreementManage.submitPhasedAgree,//企业端-阶段性协议维护-阶段性协议提交
+        uploadFile:this.$api.baseCommon.uploadFile,//文件上传
+        downloadFile:this.$api.baseCommon.downloadFile,//文件下载
+      },
+      dictionary:{},
     };
   },
   methods: {
-    /**
-     *
-     * @param row
-     */
-    toContractDetail(row) {
-      console.error(row);
-      this.$router.push({name: 'businessDetail'});
-    },
-    /**
-     *
-     * @param row
-     */
-    toContractSign(row) {
-      console.log(row);
-    },
-    handleRadioChange({row}) {
-      this.tradeList.push({
-        field1: '佛山市a有限公司',
-        field2: '是',
-        field3: '756756756767',
-        field4: '非保理',
-        field5: '12',
-        field6: '1000',
-        field7: '2000',
-        field8: '正常'
+    submit() {
+      let params = {
+        busTradeId : this.contractInfo.busTradeId,
+        buyerId : this.contractInfo.buyerId,
+        buyerName : this.contractInfo.buyerName,
+        contractInfoList : this.contractInfo.contractInfoList,
+        tradeId : this.contractInfo.tradeId,
+      }
+      console.log(this.contractInfo)
+      this.zjControl.submitPhasedAgree(params).then(res => {
+        this.$message.success('提交成功！')
+        console.log(res.data)
       })
     },
-    getApiAfter(){
-      this.zjBtn.userInfo ? this.tabAtive = 'orderFinancing' : this.tabAtive = 'voucherFinancing'
+    handleContractInfo(val) {
+      this.contractInfo = {...val}
+      console.log(`~~~`+val)
     },
-    toDetail (row) {
-      this.goChild('productInfoManageDetail', row)
-    },
-    toEdit (row) {
-      this.goChild('productInfoManageEdit', row)
-    },
-    toEditQuota (row) {},
+    back() {},
   },
   created() {
     this.getApi()
   }
 };
 </script>
+<style lang="less" >
+.explain-text {
+  display: flex;
+  padding-bottom: 20px;
+  background-color: rgba(2, 167, 240, 0);
+  .explain-item {
+    color: #555;
+    font-size: 14px;
+    margin-left: 20px;
+  }
+}
+</style>
