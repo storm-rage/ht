@@ -63,7 +63,7 @@ export default {
     return {
       zjControl:{
         getPhasedAgreeDirectory:this.$api.agreementManage.getPhasedAgreeDirectory,//企业端-阶段性协议管理-数据字典
-        getTradeRelationRecordDetail:this.$api.agreementManage.getTradeRelationRecordDetail,//企业端-我的阶段性协议-贸易关系-维护记录列表查询
+        getTradeRelationRecordDetail:this.$api.agreementManage.getTradeRelationRecordDetail,//企业端-我的阶段性协议-贸易关系-维护记录-详情
         downloadFile:this.$api.baseCommon.downloadFile,//文件下载
       },
       form: {},

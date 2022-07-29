@@ -55,14 +55,14 @@
           <template v-slot="{row}">
             <template v-if="$refs.attaTable.isActiveByRow(row)">
               <zj-upload class="zj-inline" :httpRequest="handleFileUpload" :data="{ row }">
-                <zj-button slot="trigger" type="text">上传</zj-button>
+                <zj-button slot="trigger" type="text" :api="zjBtn.uploadFile">上传</zj-button>
               </zj-upload>
-              <zj-button type="text" @click="saveRow(row)">保存</zj-button>
+              <zj-button type="text" @click="saveRow(row)" :api="zjBtn.delContract">保存</zj-button>
               <zj-button type="text" @click="cancel(row)">取消</zj-button>
             </template>
             <template v-if="!$refs.attaTable.isActiveByRow(row)">
-              <zj-button type="text" @click="attaDownload(row)">下载</zj-button>
-              <zj-button type="text" @click="attaDelete(row)">删除</zj-button>
+              <zj-button type="text" @click="attaDownload(row)" :api="zjBtn.downloadFile">下载</zj-button>
+              <zj-button type="text" @click="attaDelete(row)" :api="zjBtn.delContract">删除</zj-button>
             </template>
           </template>
         </zj-table-column>
@@ -80,6 +80,7 @@ export default {
   props: {
     zjControl: {},
     dictionary: {},
+    mBtn: {},
   },
   data() {
     return {
@@ -214,15 +215,6 @@ export default {
       this.contractInfoList.splice(row.index,1)
       this.$refs.attaTable.clearActived()
     },
-    submit() {
-      let params = {
-        ...this.contractInfoList
-      }
-      this.zjControl.submitPhasedAgree(params).then(res => {
-
-      })
-    },
-    back() {},
     //检测是否正在编辑     tableRefList需要检测的table数组
     tableEditReport(tableRefList){
       let key = true
@@ -239,10 +231,7 @@ export default {
       }
     },
   },
-  created() {
-    console.log(this.dictionary)
-
-  },
+  created() {},
 };
 </script>
 <style lang="less" scoped>
