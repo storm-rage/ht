@@ -63,12 +63,14 @@
         :params="searchForm"
         :api="zjControl.tableApi"
       > -->
-      <zj-table ref="searchTable" :dataList="[{}]">
+      <zj-table ref="searchTable" :api="zjControl.tableApi">
         <zj-table-column field="serialNo" title="申请流水号">
           <template v-slot="{ row }">
-            <span class="table-elbill-code" @click="toApplyAudit(row)">{{
-              row.serialNo
-            }}</span>
+            <span
+              class="table-elbill-code"
+              @click="goChild('registerAuditApplyAudit', row)"
+              >{{ row.serialNo }}</span
+            >
           </template>
         </zj-table-column>
         <zj-table-column field="name" title="企业名称" />
@@ -119,32 +121,25 @@
           field="registerState"
           title="企业注册状态"
           :formatter="
-            (obj) => typeMap(directory.registerStateList, obj.registerState)
+            (obj) => typeMap(directory.registerStateList, obj.cellValue)
           "
         />
         <zj-table-column title="操作" fixed="right">
           <template v-slot="{ row }">
-            <zj-button type="text" @click="toApplyAudit(row)">审核</zj-button>
             <zj-button
               type="text"
-              :api="zjBtn.getCertUserInfo"
-              @click="certificate(row)"
-              >发证</zj-button
-            >
-            <!-- <zj-button
-              type="text"
-              @click="toApplyAudit(row)"
-              v-if="row.registerState === '3'"
+              @click="goChild('registerAuditApplyAudit', row)"
+              v-if="row.registerState === '2' || row.registerState === '3'"
               >审核</zj-button
             >
             <zj-button
               type="text"
               :api="zjBtn.getCertUserInfo"
               @click="certificate(row)"
-              v-else-if="row.registerState === '5'"
+              v-else-if="row.registerState === '4'"
               >发证</zj-button
-            > -->
-            <!-- <span v-else>——</span> -->
+            >
+            <span v-else>——</span>
           </template>
         </zj-table-column>
       </zj-table>
@@ -224,9 +219,6 @@ export default {
       } else if (typeof row === "boolean") {
         this.search(false);
       }
-    },
-    toApplyAudit(row) {
-      this.$router.push("/registerAuditApplyAudit");
     },
   },
   created() {

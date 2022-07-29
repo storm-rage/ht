@@ -17,7 +17,7 @@
           <bank-account ref="bankAccount" />
 
           <!-- 控制人信息 -->
-          <controller ref="controller" :detailData="detailData" />
+          <controller ref="controller" :detailData="detailData" v-if="$route.name !== 'registerAuditApplyAudit'"/>
 
           <!-- <zj-collapse title="天眼查信息">
             <zj-button
@@ -41,27 +41,31 @@
 
       <zj-content-block>
         <zj-header title="操作用户信息" />
-        <zj-table :pager="false" :dataList="detailData.sysEntRegLogList">
-          <zj-table-column
-            field="roleId"
-            title="操作员类型"
-            :formatter="(obj) => typeMap(dictionary.roleIdList, obj.cellValue)"
-          />
-          <zj-table-column field="userName" title="姓名" />
-          <zj-table-column field="certNo" title="身份证号" />
-          <zj-table-column title="证件有效期">
-            <template v-slot="{ row }">
-              {{ date(row.certStartDate)
-              }}{{ row.certStartDate && row.certEndDate ? "~" : "" }}
-              {{ date(row.certEndDate) }}
-            </template>
-          </zj-table-column>
-          <zj-table-column field="mobileNo" title="手机号码" />
-          <zj-table-column field="email" title="邮箱" />
-          <zj-table-column field="bankAcctNo" title="银行卡号" />
-          <zj-table-column field="htSysCode" title="海天业务系统账号" />
-          <zj-table-column field="idCheckState" title="核查方式" />
-        </zj-table>
+        <zj-content>
+          <zj-table :pager="false" :dataList="detailData.sysEntRegLogList">
+            <zj-table-column
+              field="roleId"
+              title="操作员类型"
+              :formatter="
+                (obj) => typeMap(dictionary.roleIdList, obj.cellValue)
+              "
+            />
+            <zj-table-column field="userName" title="姓名" />
+            <zj-table-column field="certNo" title="身份证号" />
+            <zj-table-column title="证件有效期">
+              <template v-slot="{ row }">
+                {{ date(row.certStartDate)
+                }}{{ row.certStartDate && row.certEndDate ? "~" : "" }}
+                {{ date(row.certEndDate) }}
+              </template>
+            </zj-table-column>
+            <zj-table-column field="mobileNo" title="手机号码" />
+            <zj-table-column field="email" title="邮箱" />
+            <zj-table-column field="bankAcctNo" title="银行卡号" />
+            <zj-table-column field="htSysCode" title="海天业务系统账号" />
+            <zj-table-column field="idCheckState" title="核查方式" />
+          </zj-table>
+        </zj-content>
       </zj-content-block>
 
       <zj-content-block>

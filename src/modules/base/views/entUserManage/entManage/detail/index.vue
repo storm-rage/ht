@@ -124,7 +124,7 @@ export default {
       let entInfoDom = this.$refs.entInfo;
       entInfoDom.detailData = data;
       // 银行账户
-      entInfoDom.$refs.bankAccount.dataList[0] = data;
+      entInfoDom.$refs.bankAccount.dataList = data.entBanksList;
     },
   },
 };
