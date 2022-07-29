@@ -29,12 +29,12 @@
               </el-col>
               <el-col :span="8">
                 <el-form-item label="是否海天集团：">
-                 <span>{{ detailData.isHtEnterprise | value }}</span>
+                  <span>{{ detailData.isHtEnterprise | value }}</span>
                 </el-form-item>
               </el-col>
               <el-col :span="8">
                 <el-form-item label="客户业务系统编码：">
-                 <span>{{ detailData.customCode | value }}</span>
+                  <span>{{ detailData.customCode | value }}</span>
                 </el-form-item>
               </el-col>
               <el-col :span="8">
@@ -45,12 +45,12 @@
 
               <el-col :span="8">
                 <el-form-item label="成立日期：">
-                  <span>{{ detailData.registerStartDate | value  }}</span>
+                  <span>{{ detailData.registerStartDate | value }}</span>
                 </el-form-item>
               </el-col>
               <el-col :span="8">
                 <el-form-item label="注册资本：">
-                  <span>{{ detailData.registerCapital | value  }}</span>
+                  <span>{{ detailData.registerCapital | value }}</span>
                 </el-form-item>
               </el-col>
               <el-col :span="8">
@@ -65,7 +65,7 @@
               </el-col>
               <el-col :span="8">
                 <el-form-item label="企业经营类型：">
-                 <span>{{ detailData.custType | value  }}</span>
+                  <span>{{ detailData.custType | value }}</span>
                 </el-form-item>
               </el-col>
             </el-row>
@@ -86,15 +86,18 @@ export default {
     return {
       zjControl: {
         queryEntDictionary: this.$api.entInfoManage.queryEntDictionary,
-        getEnterprise: this.$api.entInfoManage.getEnterprise
+        getEnterprise: this.$api.entInfoManage.getEnterprise,
+        getEbBusinessParamLog: this.$api.entInfoManage.getEbBusinessParamLog,
       },
       detailData: {},
+      dictionary: {}
     };
   },
   created() {
-    this.getRow()
-    this.queryEntDictionary()
-    this.getEnterprise()
+    this.getRow();
+    this.queryEntDictionary();
+    this.getEnterprise();
+    this.getEbBusinessParamLog();
   },
   methods: {
     // 获取字典
@@ -105,16 +108,24 @@ export default {
     },
     // 获取详情
     getEnterprise() {
-      this.zjControl.getEnterprise({id: this.row.id}).then(res => {
-        this.detailData = res.data
-        this.handleProps(res.data)
-      })
+      this.zjControl.getEnterprise({ id: this.row.id }).then((res) => {
+        this.detailData = res.data;
+        this.handleProps(res.data);
+      });
+    },
+    //获取操作记录
+    getEbBusinessParamLog() {
+      this.zjControl.getEbBusinessParamLog({ id: this.row.id }).then((res) => {
+        this.$refs.entInfo.sysEntRegLogList = res.data.sysEntRegLogList;
+      });
     },
     // 传递值给子组件
     handleProps(data) {
-      let entInfoDom = this.$refs.entInfo
-      entInfoDom.$data.detailData = data
-    }
+      let entInfoDom = this.$refs.entInfo;
+      entInfoDom.detailData = data;
+      // 银行账户
+      entInfoDom.$refs.bankAccount.dataList[0] = data;
+    },
   },
 };
 </script>

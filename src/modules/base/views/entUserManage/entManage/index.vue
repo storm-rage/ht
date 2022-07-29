@@ -103,7 +103,9 @@ export default {
     return {
       zjControl: {
         tableApi: this.$api.entInfoManage.queryEnterprise,
-        queryEntDictionary: this.$api.entInfoManage.queryEntDictionary
+        queryEntDictionary: this.$api.entInfoManage.queryEntDictionary,
+        exportEnterpriseList: this.$api.entInfoManage.exportEnterpriseList,
+        updateEnterprise: this.$api.entInfoManage.updateEnterprise
       },
       dictionary: {},
       searchListFlag: false,
