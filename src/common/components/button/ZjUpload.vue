@@ -65,7 +65,7 @@ export default {
     acceptType: String,
     // 支持上传的文件大小，默认5M
     uploadSize: {
-      type: String,
+      type: Number,
       default: 5
     }
   },
