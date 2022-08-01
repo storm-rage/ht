@@ -183,7 +183,6 @@ export default {
         .billExcel(formData)
         .then((ret) => {
           if (ret.code == 200) {
-            // console.log(ret, "============");
             this.excelList = ret.data;
             this.$message.success("上传成功!");
           }
@@ -192,7 +191,6 @@ export default {
     },
     //签发凭证
     goChild(row) {
-      // console.log(row, "=======");
       this.$router.push("/openBillApplyConfirm");
     },
     //维护附件
@@ -201,25 +199,26 @@ export default {
     },
     //勾选
     checkChange(row) {
-      // console.log(row.row,"====row====")
-      // this.$nextTick(() => {
-      //   console.log(this.$refs.selectionCheckbox, "==勾选1===");
-      // });
-      // return;
       let checkArr = this.$refs.selectionCheckbox.getCheckboxRecords();
       console.log(checkArr, "===勾选===");
-      this.selection = checkArr
+      this.selection = checkArr;
       console.log(this.selection, "===储存勾选===");
     },
     //勾选删除
     remove() {
       this.$refs.selectionCheckbox.removeCheckboxRow();
+      let params = {
+        req: this.selection,
+      };
+      this.zjControl
+        .accountOffline(params)
+        .then((ret) => {
+          if (ret.code == 200) {
+            this.$message.success("删除成功!");
+          }
+        })
+        .catch(() => {});
     },
-    // handleChange(val){
-    //   this.selection = val
-    //   alert(val)
-    //   console.log(val,"======删除=====")
-    // },
   },
 };
 </script>
