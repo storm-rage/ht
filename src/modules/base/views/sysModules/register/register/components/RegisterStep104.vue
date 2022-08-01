@@ -710,22 +710,34 @@ export default {
       //下载前需要校验操作用户信息是否完整
       if(!this.entInfoObj.form.registerUserList) {
         for(let i of this.registerUserList){
-          for(let obj in i){
-            if(obj !== 'htSysCode' && obj !== 'idCheckState' && obj !== 'email' && obj !== 'bankAcctNo' && obj !== 'checkType' && i[obj] == '' || null){
-              console.log(`请补全${i}的${obj}的信息！`)
-              this.$message.error(`请补全操作用户的信息！`)
-              return
-            }
+          let resCheck = (i.certEndDate===''||null) ||
+            (i.certNo===''||null) ||
+            (i.certStartDate===''||null) ||
+            (i.certType===''||null) ||
+            (i.idCheckState===''||null) ||
+            (i.mobileNo===''||null) ||
+            (i.roleId===''||null) ||
+            (i.userId===''||null) ||
+            (i.userName===''||null)
+          if(resCheck){
+            this.$message.error(`请补全操作用户的信息！`)
+            return
           }
         }
       }else{
         for(let i of this.entInfoObj.form.registerUserList){
-          for(let obj in i){
-            if(obj !== 'htSysCode' && obj !== 'idCheckState' && obj !== 'email' && obj !== 'bankAcctNo' && obj !== 'checkType' && i[obj] == '' || null){
-              console.log(`请补全${i}的${obj}的信息！`)
-              this.$message.error(`请补全操作用户的信息！`)
-              return
-            }
+          let resCheck = (i.certEndDate===''||null) ||
+            (i.certNo===''||null) ||
+            (i.certStartDate===''||null) ||
+            (i.certType===''||null) ||
+            (i.idCheckState===''||null) ||
+            (i.mobileNo===''||null) ||
+            (i.roleId===''||null) ||
+            (i.userId===''||null) ||
+            (i.userName===''||null)
+          if(resCheck){
+            this.$message.error(`请补全操作用户的信息！`)
+            return
           }
         }
       }

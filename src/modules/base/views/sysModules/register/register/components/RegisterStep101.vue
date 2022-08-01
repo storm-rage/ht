@@ -264,7 +264,7 @@ export default {
     },
     //获取授权协议
     getLicensorAgreement(){
-      this.previewFile()
+      // this.previewFile()
       this.zjControl.getLicensorAgreement()
     },
     //阅读并同意
