@@ -142,7 +142,7 @@
         <el-form-item label="姓名：" prop="name" >
           <el-input v-model="formModel.userName"></el-input>
         </el-form-item>
-        <el-form-item label="证件类型：" prop="certType" >
+        <el-form-item label="证件类型：" prop="certType" class="entType">
           <el-select v-model="formModel.certType" placeholder="请选择"
                      :popper-append-to-body="false" :disabled="true"
           >
@@ -157,7 +157,7 @@
         <el-form-item label="证件号码：" prop="certNo" >
           <el-input v-model="formModel.certNo"/>
         </el-form-item>
-        <el-form-item label="证件有效期：" class="required" >
+        <el-form-item label="证件有效期：" class="card-validity required" >
           <el-form-item prop="certStartDate" class="zj-inline">
             <zj-date-picker placeholder="年/月/日" :date.sync="formModel.certStartDate" :pickerOptions="{ disabledDate:certStartDateDisabledDate }" ></zj-date-picker>
           </el-form-item>
@@ -288,7 +288,6 @@ export default {
       },
       addressForm: {
       },
-      certTypeList:[],//证件类型列表
       //维护经办员/复核员/风险信息接收人 信息维护
       formModel: {
         userName: '',//姓名
@@ -525,6 +524,7 @@ export default {
       this.formModel.userId = row.userId ? row.userId:''
       this.formModel.userName = row.userName
       this.formModel.certNo = row.certNo
+      this.formModel.certType = row.certType
       this.formModel.certStartDate = row.certStartDate
       this.formModel.certEndDate = row.certEndDate
       this.formModel.mobileNo = row.mobileNo
@@ -785,7 +785,6 @@ export default {
         name: this.entInfoObj.form.name,
       }).then(res=>{
         this.registerAttachList = res.data.registerAttachList
-        this.registerUserList = res.data.registerUserList
         this.setInvoiceInfo()
 
       })
@@ -796,9 +795,6 @@ export default {
     this.form.isHtEnterprise = this.entInfoObj.form.isHtEnterprise
     this.form.legalCertType = this.entInfoObj.form.legalCertType
     this.getUserInfo()
-
-
-
 
   },
 }
@@ -895,6 +891,26 @@ export default {
   }
   /deep/.zj-buttons.zj-buttons-text span {
     margin: 0!important;
+  }
+}
+.el-input {
+  width: 260px;
+}
+.entType {
+  /deep/.el-select{
+    width: 260px;
+    .el-input {
+      width: 260px;
+    }
+  }
+}
+.card-validity {
+  /deep/.el-date-editor.el-input {
+    width: 120px;
+  }
+  /deep/.zj-date-picker .el-input__inner {
+    min-width: auto;
+    padding: 0 30px 0 15px !important;
   }
 }
 
