@@ -80,6 +80,7 @@ export default {
         saveRegisterEntUser:this.$api.register.saveRegisterEntUser,//单个维护注册企业的用户信息
         downloadTemplate:this.$api.register.downloadTemplate,//下载委托授权书模板/个人信息授权书模板
         completeRegister:this.$api.register.completeRegister,//保存/完成注册
+        getOpenBankInfo:this.$api.register.getOpenBankInfo,//企业注册-获取开户行信息
         getUserInfo:this.$api.register.getUserInfo,//获取用户信息
         saveUserInfo:this.$api.register.saveUserInfo,//保存企业用户信息
         uploadAttach:this.$api.register.uploadAttach, //上传
