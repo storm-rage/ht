@@ -77,15 +77,14 @@ const billLssueRouter = [
     }
   },
   {
-    path: '/issuanceVoucher',
-    name: 'issuanceVoucher',
+    path: '/myOpenBill',
+    name: 'myOpenBill',
     component: () => import('../views/billLssue/issuanceVoucher/index.vue'),
     meta: {
-      isMock: true,
       title: `我签发的凭证`,
       root: '电子债权凭证',
       keepAlive: true,
-      refreshIndex: 0
+      refreshIndex: 0,
     }
   },
   {
