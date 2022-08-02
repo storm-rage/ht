@@ -1,7 +1,7 @@
 const billLssueMyBillRouter = [
   {
-    path: '/billLssueMyBill',
-    name: 'billLssueMyBill',
+    path: '/myEbBill',
+    name: 'myEbBill',
     component: () => import('../views/billLssue/myBill'),
     meta: {
       isMock: true,
@@ -22,7 +22,7 @@ const billLssueMyBillRouter = [
       root: '凭证管理',
       keepAlive: true,
       refreshIndex: 0,
-      parent:'billLssueMyBill',
+      parent:'myEbBill',
       notRequireAuth: true
     }
   },

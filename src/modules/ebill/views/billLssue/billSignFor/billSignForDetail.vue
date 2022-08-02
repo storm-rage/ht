@@ -3,7 +3,7 @@
     <zj-top-header title="电子债权凭证签收"/>
     <zj-content>
       <!--凭证详情-->
-      <zj-collapse title="融单编号">
+      <zj-collapse title="">
         <div>
           <span>融单编号：{{}}</span>
           <span>业务方：{{}}</span>

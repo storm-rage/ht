@@ -139,7 +139,7 @@
                width="800px" :title="`维护${dialogTitle}`" custom-class="mbi-editDialog" top="6vh"
     >
       <el-form ref="formModel" class="mbi-form" :model="formModel" :rules="formRules" :class="editFlag ? '' :'nmb0'" label-width="180px">
-        <el-form-item label="姓名：" prop="name" >
+        <el-form-item label="姓名：" prop="userName" >
           <el-input v-model="formModel.userName"></el-input>
         </el-form-item>
         <el-form-item label="证件类型：" prop="certType" class="entType">
@@ -571,13 +571,25 @@ export default {
               this.$nextTick(()=>{
                 this.operatorTable = true
               })
-
-              let activeRoleId = this.typeMap(this.dictionary.roleIdList,res.data.roleId)
-              this.$message.success(`维护${activeRoleId}成功！`)
               let params = Object.assign({},this.entInfoObj)
               params.form.registerUserList = this.registerUserList
               this.$emit('update:entInfoObj',params)
-              this.maintainInfo = false
+              if(res.data.idCheckState == '否') {
+                this.$messageBox({
+                  type:'warning',
+                  title:`温馨提示`,
+                  content:`手机核验身份失败，是否继续使用手机号核验？您亦也可录入银行卡号进行核验，谢谢！`,
+                  showCancelButton:false,
+                  messageResolve:()=>{
+
+                  },
+                })
+              }
+              if(res.data.idCheckState == '是') {
+                let activeRoleId = this.typeMap(this.dictionary.roleIdList,res.data.roleId)
+                this.$message.success(`维护${activeRoleId}成功！`)
+                this.maintainInfo = false
+              }
             })
           }
         })
@@ -669,7 +681,28 @@ export default {
       })
     },
     cancel() {
-      this.maintainInfo = false
+      this.formModel.userOperateFlag = 'CANCEL'
+      this.formModel.id = this.entInfoObj.form.id
+      this.formModel.userId = this.formModel.userId ? this.formModel.userId : ''
+      this.formModel.isHtEnterprise  = this.entInfoObj.form.isHtEnterprise
+      this.formModel.certStartDate = this.formModel.certStartDate.replace(/-/g,'')
+      this.formModel.certEndDate = this.formModel.certEndDate.replace(/-/g,'')
+      this.zjControl.saveRegisterEntUser(this.formModel).then( res => {
+        //更新列表数据
+        this.operatorTable = false
+        for(let i of this.registerUserList) {
+          if(res.data.roleId === i.roleId) {
+            this.registerUserList[this.registerUserList.indexOf(i)] = res.data
+          }
+        }
+        this.$nextTick(()=>{
+          this.operatorTable = true
+        })
+        let params = Object.assign({},this.entInfoObj)
+        params.form.registerUserList = this.registerUserList
+        this.$emit('update:entInfoObj',params)
+        this.maintainInfo = false
+      })
     },
     certStartDateDisabledDate (date) {
       if (this.formModel.certEndDate) {
