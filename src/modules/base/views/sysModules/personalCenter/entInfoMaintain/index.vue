@@ -390,15 +390,19 @@ export default {
     },
     updateUserInfo() {
       if (this.agreeCheck || !this.isAgreeCheck) {
-        // 营业执照
-        this.form.qyyzFileId = this.attachInfo[0].fileId;
-        this.form.qyyzAttachName = this.attachInfo[0].fileName;
-        // 法定代表人证件
-        this.form.qyfrzjFileId = this.attachInfo[1].fileId;
-        this.form.qyfrzjAttachName = this.attachInfo[1].fileName;
-        this.zjControl.updateUserInfo(this.form).then((res) => {
-          this.getEntInfo();
-          this.$message.success("修改成功!");
+        this.$refs.form.validate((valid) => {
+          if (valid) {
+            // 营业执照
+            this.form.qyyzFileId = this.attachInfo[0].fileId;
+            this.form.qyyzAttachName = this.attachInfo[0].fileName;
+            // 法定代表人证件
+            this.form.qyfrzjFileId = this.attachInfo[1].fileId;
+            this.form.qyfrzjAttachName = this.attachInfo[1].fileName;
+            this.zjControl.updateUserInfo(this.form).then((res) => {
+              this.getEntInfo();
+              this.$message.success("修改成功!");
+            });
+          }
         });
       } else {
         this.$alert("请阅读并同意《银行账户变更通知》", "提示", {

@@ -92,10 +92,12 @@ const confirmPaymentRouter = [
     name: 'advancePaymentAudit',
     component: () => import('../views/clearingManage/confirmPayment/advancePaymentAudit'),
     meta: {
-      title: '确认提前还款复核',
+      title: '确认提前还款审核',
       parent: 'myTodo',
       keepAlive: true,
-      refreshIndex: 0
+      refreshIndex: 0,
+      notRequireAuth: true
+
     }
   },
   {

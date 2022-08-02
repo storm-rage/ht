@@ -308,22 +308,30 @@ export default {
     },
     // 维护本人信息
     updatePersonalInfo() {
-      // 身份证附件
-      this.form.identitycardFileId = this.attachInfo[0].fileId;
-      this.form.identitycardFileName = this.attachInfo[0].fileName;
-      this.zjControl.updatePersonalInfo(this.form).then((res) => {
-        this.getPersonalInfo();
-        this.$message.success("修改成功!");
+      this.$refs.form.validate((valid) => {
+        if (valid) {
+          // 身份证附件
+          this.form.identitycardFileId = this.attachInfo[0].fileId;
+          this.form.identitycardFileName = this.attachInfo[0].fileName;
+          this.zjControl.updatePersonalInfo(this.form).then((res) => {
+            this.getPersonalInfo();
+            this.$message.success("修改成功!");
+          });
+        }
       });
     },
     // 更换操作人员
     updateOperator() {
-      // 身份证附件
-      this.form.identitycardFileId = this.attachInfo[0].fileId;
-      this.form.identitycardFileName = this.attachInfo[0].fileName;
-      this.zjControl.updateOperator(this.form).then((res) => {
-        this.getPersonalInfo();
-        this.$message.success("修改成功!");
+      this.$refs.form.validate((valid) => {
+        if (valid) {
+          // 身份证附件
+          this.form.identitycardFileId = this.attachInfo[0].fileId;
+          this.form.identitycardFileName = this.attachInfo[0].fileName;
+          this.zjControl.updateOperator(this.form).then((res) => {
+            this.getPersonalInfo();
+            this.$message.success("修改成功!");
+          });
+        }
       });
     },
     //上传附件
