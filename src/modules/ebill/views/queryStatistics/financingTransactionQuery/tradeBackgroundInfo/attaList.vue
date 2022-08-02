@@ -1,8 +1,8 @@
 <template>
   <div>
     <zj-table ref="searchTable" :dataList="list" >
-      <zj-table-column field="field2" title="序号"/>
-      <zj-table-column field="field3" title="文件名称"/>
+      <zj-table-column type="seq" title="序号"/>
+      <zj-table-column field="fileName" title="文件名称"/>
       <zj-table-column title="操作" fixed="right">
         <template v-slot="{row}">
           <zj-button type="text" @click="downs(row)">下载</zj-button>
@@ -18,6 +18,9 @@ export default {
   name: "attaList",
   data() {
     return {
+      zjControl: {
+        downloadFile:this.$api.baseCommon.downloadFile,//文件下载
+      },
       form: {},
       list: [
         {
@@ -34,7 +37,7 @@ export default {
   },
   methods: {
     downs(row){
-
+      this.zjControl.downloadFile(row.fileId)
     },
   },
 }
