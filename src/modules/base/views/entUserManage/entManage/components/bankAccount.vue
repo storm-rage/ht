@@ -7,7 +7,7 @@
         <zj-table-column field="bankName" title="银行账户开户行" />
         <zj-table-column field="bankNo" title="银行联行号" />
         <zj-table-column field="bankType" title="银行类型" />
-        <zj-table-column field="changeItem" title="核查方式" v-if="isShowInspect" />
+        <zj-table-column field="checkState" title="核查方式" v-if="isShowInspect" />
       </zj-table>
     </zj-collapse>
   </zj-content-block>

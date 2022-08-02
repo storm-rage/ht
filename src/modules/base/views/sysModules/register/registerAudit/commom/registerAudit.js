@@ -88,7 +88,7 @@ export default {
     },
   },
   mounted() {
-      // this.getApi()
+      this.getApi()
       // this.eyeSkyId = this.row.id
       // this.getDirectory()
       // this.getAuditDetail()

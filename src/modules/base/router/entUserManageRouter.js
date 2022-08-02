@@ -27,7 +27,6 @@ const entUserManage = [
       pageType: 'add',
       keepAlive: true,
       refreshIndex: 0,
-      notRequireAuth: true
     }
   },
   {

@@ -1,6 +1,5 @@
 <template>
   <zj-content-container>
-    <div></div>
     <zj-top-header title="企业注册审核"></zj-top-header>
     <el-form label-width="160px">
       <!-- 业务申请信息 -->
@@ -18,14 +17,21 @@
                 <el-form-item label="申请类型：">
                   <span>
                     {{
-                      typeMap(dictionary.applyType, detailData.applyType)
+                      typeMap(dictionary.applyTypeList, detailData.applyType)
                     }}</span
                   >
                 </el-form-item>
               </el-col>
               <el-col :span="8">
                 <el-form-item label="申请状态：">
-                  <span> {{ detailData.applyStatus }}</span>
+                  <span>
+                    {{
+                      typeMap(
+                        dictionary.applyStatusList,
+                        detailData.applyStatus
+                      )
+                    }}</span
+                  >
                 </el-form-item>
               </el-col>
               <el-col :span="8">
@@ -54,7 +60,12 @@
                   </el-col>
                   <el-col :span="8">
                     <el-form-item label="平台客户类型：">
-                      <span>{{ detailData.aaaaaa | value }}</span>
+                      <span>{{
+                        typeMap(
+                          dictionary.entTypeList,
+                          this.form.entType
+                        )
+                      }}</span>
                     </el-form-item>
                   </el-col>
                   <el-col :span="8">
@@ -62,24 +73,28 @@
                       <span>{{ detailData.address }}</span>
                     </el-form-item>
                   </el-col>
-                   <el-col :span="8">
+                  <el-col :span="8">
                     <el-form-item label="成立日期：">
                       <span>{{ detailData.registerStartDate }}</span>
                     </el-form-item>
                   </el-col>
-                   <el-col :span="8">
+                  <el-col :span="8">
                     <el-form-item label="注册资本：">
                       <span>{{ detailData.registerCapital }}</span>
                     </el-form-item>
                   </el-col>
                   <el-col :span="8">
                     <el-form-item label="企业规模：">
-                      <span>{{ detailData.scale }}</span>
+                      <span>{{
+                        typeMap(dictionary.scaleList, detailData.scale)
+                      }}</span>
                     </el-form-item>
                   </el-col>
                   <el-col :span="8">
                     <el-form-item label="企业经营类型：">
-                      <span>{{ typeMap(dictionary.custTypeList,detailData.custType) }}</span>
+                      <span>{{
+                        typeMap(dictionary.custTypeList, detailData.custType)
+                      }}</span>
                     </el-form-item>
                   </el-col>
                 </el-row>
@@ -92,13 +107,19 @@
       <!-- 审批信息 -->
       <zj-content-block v-show="workflow === 'spxx'">
         <!--操作记录 -->
-        <operate-log></operate-log>
+        <operate-log :logList="logList"></operate-log>
         <!--审核信息 -->
-        <el-form label-width="170px" :model="form" :rules="rules" ref="form">
+        <el-form
+          label-width="170px"
+          :model="form"
+          :rules="rules"
+          ref="form"
+          :disabled="detailData.applyStatus === 'E002'"
+        >
           <zj-content>
             <zj-collapse title="审核信息">
               <el-form-item label="平台客户类型：" prop="entType">
-                <el-radio-group v-model="form.entType" @change="entTypeChange">
+                <el-radio-group v-model="form.entType">
                   <el-radio
                     v-for="item in dictionary.platFormAuditEntTypeList"
                     :key="item.code"
@@ -107,14 +128,39 @@
                   >
                 </el-radio-group>
               </el-form-item>
-              <el-form-item label="是否海天集团：" prop="entType">
-                <el-radio-group v-model="form.entType" @change="entTypeChange">
-                  <el-radio :label="form.a">是</el-radio>
-                  <el-radio :label="form.b">否</el-radio>
+              <el-form-item label="是否海天集团：" prop="isHtEnterprise">
+                <el-radio-group v-model="form.isHtEnterprise">
+                  <el-radio
+                    v-for="item in [
+                      { code: '1', desc: '是' },
+                      { code: '0', desc: '否' },
+                    ]"
+                    :key="item.code"
+                    :label="item.code"
+                    >{{ item.desc }}</el-radio
+                  >
+                </el-radio-group>
+              </el-form-item>
+
+              <el-form-item
+                label="供应商类型："
+                prop="isDoublePost"
+                v-if="form.entType === 'S'"
+              >
+                <el-radio-group v-model="form.supplierType">
+                  <el-radio
+                    v-for="item in [
+                      { code: '1', desc: '直接供应商' },
+                      { code: '0', desc: '间接供应商' },
+                    ]"
+                    :key="item.code"
+                    :label="item.code"
+                    >{{ item.desc }}</el-radio
+                  >
                 </el-radio-group>
               </el-form-item>
               <el-form-item label="注册企业名称：" prop="name">
-                {{ form.name }}
+                {{ detailData.name }}
               </el-form-item>
 
               <el-form-item label="注册企业简称：" prop="shortName">
@@ -132,8 +178,7 @@
                 />
               </el-form-item>
               <el-form-item label="买方企业名称：" prop="myBuyers">
-                {{ form.myBuyers }}
-                <div class="red zj-f-s-12">{{ myBuyersMessage }}</div>
+                {{ detailData.myBuyers }}
               </el-form-item>
               <el-form-item label="客户业务系统编码：" prop="customCode">
                 <el-input
@@ -146,215 +191,26 @@
                   text="注：供应商在核心企业业务系统的编码，选填。"
                 ></zj-content-tip>
               </el-form-item>
-              <!-- <el-form-item
-                v-for="(item, index) in form.projectInfoList"
-                :key="index"
-                :prop="'projectInfoList.' + index + '.projectId'"
-                :rules="{
-                  required: true,
-                  index,
-                  item,
-                  validator: projectValidator,
-                  trigger: 'change',
-                }"
-                label="所属项目："
-                class="no-required pil-sc"
-                :class="item.operationFlag === 'D' ? 'none' : ''"
-              >
-                <template v-if="projectFlag">
-                  <div slot="label" class="inline">
-                    <i
-                      class="el-icon-delete project-i"
-                      @click="projectDel(item, index)"
-                    />
-                    所属项目：
-                  </div>
-                </template>
-                <el-select
-                  v-model="item.projectId"
-                  :popper-append-to-body="false"
-                  @change="projectEdit(item)"
-                >
-                  <el-option
-                    v-for="(citem, cindex) in projectInfoListCHECKBOX"
-                    :disabled="citem.disabled"
-                    :key="cindex"
-                    :value="citem.projectId"
-                    :label="citem.projectName"
-                  ></el-option>
-                </el-select>
-                <zj-checkbox
-                  v-if="item.projectId"
-                  :checkAll="false"
-                  :list="
-                    projectInfoListCHECKBOX.find(
-                      (pitem) => pitem.projectId === item.projectId
-                    ).productTypeList
-                  "
-                  :value.sync="item.selectProductList"
-                />
-              </el-form-item> -->
-              <!-- <el-row class="projectAdd">
-                <i
-                  class="el-icon-circle-plus-outline project-i"
-                  @click="projectAdd"
-                />
-              </el-row> -->
-              <!-- <el-row class="projectText">
-                说明：产品非必填，如果不选择产品，后续供应商可在登录后的页面发起开通申请
-              </el-row> -->
-              <!-- 核心企业 -->
-              <!-- <template v-if="form.entType === 'B'">
-                <el-form-item
-                  label="隶属企业："
-                  ref="parentEntId"
-                  prop="parentEntId"
-                >
-                  <el-select
-                    v-model="form.parentEntId"
-                    clearable
-                    filterable
-                    placeholder="请选择隶属企业"
-                    @change="parentChange"
-                    @clear="parentClear"
-                    :popper-append-to-body="false"
-                  >
-                    <el-option
-                      v-for="item in parentList"
-                      :key="item.index"
-                      :label="item.name"
-                      :value="item.id"
-                    />
-                  </el-select>
-                </el-form-item>
-                <el-form-item label="签章企业：" prop="sealEntId">
-                  <el-select
-                    v-model="form.sealEntId"
-                    filterable
-                    placeholder="请选择签章企业"
-                    :popper-append-to-body="false"
-                  >
-                    <el-option
-                      v-for="item in sealList"
-                      :key="item.name"
-                      :label="item.name"
-                      :value="item.id"
-                    />
-                  </el-select>
-                </el-form-item>
-              </template> -->
-              <!-- 供应商 -->
-              <!-- <template v-else-if="form.entType === 'S'">
-                <el-form-item
-                  prop="supplierType"
-                  ref="supplierType"
-                  label-width="40px"
-                  class="supplierType-item"
-                >
-                  <el-radio-group
-                    v-model="form.supplierType"
-                    @change="supplierChange"
-                  >
-                    <el-radio
-                      v-for="item in dictionary.supplierTypeList"
-                      :key="item.code"
-                      :label="item.code"
-                      >{{ item.desc }}</el-radio
-                    >
-                  </el-radio-group>
-                  <template v-if="form.supplierType === '02'">
-                    <span
-                      class="success zj-m-l-10"
-                      v-if="
-                        form.supplierTradeList && form.supplierTradeList.length
-                      "
-                      >√ 该供应商有贸易关系推荐函</span
-                    >
-                    <span class="error zj-m-l-10" v-else
-                      >× 该供应商尚无贸易关系推荐函</span
-                    >
-                  </template>
-                  <zj-table
-                    ref="searchTable"
-                    class="zj-search-table mw400px zj-m-b-0"
-                    v-show="form.entType === 'S' && form.supplierType === '02'"
-                    :dataList="form.supplierTradeList"
-                  >
-                    <zj-table-column
-                      field="buyerEntName"
-                      title="推荐企业名称"
-                    />
-                    <zj-table-column title="上传证明材料">
-                      <template v-slot="{ row }">
-                        <zj-upload
-                          :httpRequest="uploadSupLier"
-                          :data="{ row }"
-                          class="zj-inline"
-                          v-if="zjBtn.uploadAttach"
-                        >
-                          <zj-button type="text">{{
-                            row.fileId ? "重新上传" : "上传"
-                          }}</zj-button>
-                        </zj-upload>
-                        <zj-button
-                          type="text"
-                          @click="downSupLier(row)"
-                          class="zj-m-l-10"
-                          style="text-decoration: underline"
-                          v-show="row.fileId"
-                        >
-                          {{ row.attachName }}
-                        </zj-button>
-                      </template>
-                    </zj-table-column>
-                  </zj-table>
-                </el-form-item>
-              </template> -->
             </zj-collapse>
           </zj-content>
-
-          <!-- <zj-content-block>
-            <zj-header>审核意见</zj-header>
-            <el-row class="zj-p-l-30">
-              <span class="inline zj-p-l-15">{{ detailData.notes }}</span>
-            </el-row>
-            <el-form-item label-width="40px" prop="notes">
-              <el-input
-                type="textarea"
-                placeholder="请输入审核意见"
-                v-model="form.notes"
-                :rows="5"
-                :show-word-limit="true"
-                :maxlength="1000"
-                style="width: 50%; min-height: 60px"
-              />
-            </el-form-item>
-          </zj-content-block> -->
         </el-form>
         <!--  审核意见  -->
-        <audit-remark></audit-remark>
+        <audit-remark ref="auditRemark"></audit-remark>
       </zj-content-block>
 
       <!-- 底部工作流状态 -->
       <zj-workflow v-model="workflow" :list="workflowList">
         <!-- 审核时 -->
         <el-row slot="right" v-if="$route.name === 'registerAuditApplyAudit'">
-          <el-row v-show="workflow === 'spxx'" class="btn-w85">
-            <zj-button status="primary" @click="holdSave">暂存</zj-button>
-            <zj-button class="pass" @click="auditPass">审核通过</zj-button>
-            <zj-button class="retort" @click="auditReject">审核驳回</zj-button>
-            <zj-button class="reject" @click="registerRefuse">注册拒绝</zj-button>
-          </el-row>
-            <zj-button v-show="workflow === 'sqxx'" class="back" @click="goParent">返回</zj-button>
+          <span v-show="workflow === 'spxx'">
+            <zj-button type="primary" @click="submitAudit">暂存</zj-button>
+            <zj-button type="primary" @click="submitAudit">审核通过</zj-button>
+            <zj-button @click="submitAudit">审核驳回</zj-button>
+            <zj-button @click="submitAudit">注册拒绝</zj-button>
+          </span>
+          <zj-button class="back zj-m-l-15" @click="goParent">返回</zj-button>
         </el-row>
       </zj-workflow>
-      <!-- 协议时 -->
-      <!-- <zj-content-footer v-if="$route.name === 'registerAuditProtocolAudit'">
-      <zj-button class="back" @click="goParent">返回</zj-button>
-      <zj-button class="pass" @click="confirm" :api="zjBtn.submitConfirm"
-        >确认提交</zj-button
-      >
-    </zj-content-footer> -->
 
       <!--   查看器 -->
       <zj-preview
@@ -369,8 +225,208 @@
 </template>
 
 <script>
-import registerAudit from "./commom/registerAudit";
-export default registerAudit;
+// import applyAudit from "./commom/applyAudit.js";
+import protocolAudit from "./commom/protocolAudit.js";
+// import registerAuditAttach from "./registerAuditAttach.js";
+// import project from "../../../../project.js";
+import view from "@pubComponent/preview/view.js";
+import OperateLog from "@modules/workflow/views/components/operateLog";
+import AuditRemark from "@modules/workflow/views/components/auditRemark";
+import entInfo from "@modules/base/views/entUserManage/entManage/detail/entInfo.vue";
+export default {
+  components: {
+    OperateLog,
+    AuditRemark,
+    entInfo,
+  },
+  mixins: [
+    // applyAudit,
+    protocolAudit,
+    // registerAuditAttach,
+    // project,
+    view,
+  ],
+  data() {
+    return {
+      detailData: {}, //详情数据
+      dictionary: {}, //字典
+      zjControl: {
+        ...this.$api.registerAudit,
+        getEbBusinessParamLog: this.$api.entInfoManage.getEbBusinessParamLog,
+      }, //api
+
+      workflow: "sqxx",
+      workflowList: [
+        { label: "申请信息", value: "sqxx" },
+        { label: "审批信息", value: "spxx" },
+      ],
+      logList: [],
+      form: {},
+      rules: {
+        shortName: [
+          { required: true, message: "请填写企业简称", trigger: "change" },
+          { max: 100, message: "企业简称不可超过100字符", trigger: "change" },
+        ],
+        entType: [
+          { required: true, message: "请选择平台客户类型", trigger: "change" },
+        ],
+        sealEntId: [
+          { required: true, message: "请选择签章企业", trigger: "change" },
+        ],
+        supplierType: [
+          { required: true, message: "请选择供应商类型", trigger: "change" },
+        ],
+        notes: [
+          { required: false, message: "请输入审核意见", trigger: "change" },
+        ],
+      },
+    };
+  },
+  methods: {
+    //返回查询页
+    beforeGoParent() {
+      sessionStorage.setItem("registerAuditAudit", "1");
+    },
+    //获取字典
+    getDirectory() {
+      this.zjControl.queryEntDataDirectory().then((res) => {
+        res.data.enterpriseStateCheList = JSON.parse(
+          JSON.stringify(res.data.enterpriseStateList)
+            .replace(/code/g, "value")
+            .replace(/desc/g, "label")
+        );
+        this.dictionary = res.data;
+      });
+    },
+    //获取详情
+    getAuditDetail() {
+      this.zjControl.getAuditDetail({ id: this.row.id }).then((res) => {
+        this.detailData = res.data;
+        //企业基础信息
+        let entInfoDom = this.$refs.entInfo;
+        entInfoDom.detailData = res.data;
+        // 银行账户
+        entInfoDom.$refs.bankAccount.dataList = res.data.entBanksList;
+
+        // //审核时
+        // if (this.$route.name === 'registerAuditApplyAudit') {
+        //   //审批信息表单
+        //   if (res.data.entType) {
+        //     this.entTypeChange(res.data.entType)
+        //   }
+        //   for (let key in this.form) {
+        //     this.form[key] = res.data[key]
+        //   }
+        //   if (this.form.projectInfoList.length <= 0) {
+        //     this.form.projectInfoList.push({
+        //       id: '',
+        //       projectId: '',
+        //       projectName: '',
+        //       operationFlag: 'A',
+        //       selectProductList: []
+        //     })
+        //   }
+        // }
+      });
+    },
+    // 提交表单 1-暂存 2-审核通过 3-审核驳回 4-审核拒绝
+    submitAudit(type) {
+      if (type === "3" || type === "4") {
+        this.$refs.auditRemark.getForm().validate((valid) => {
+          if (!valid) {
+            return;
+          }
+        });
+      }
+      let message = "";
+      if (type === "1") {
+        message = "暂存成功";
+      }
+      if (type === "2") {
+        message = "审核通过成功";
+      }
+      if (type === "3") {
+        message = "审核驳回成功";
+      }
+      if (type === "4") {
+        message = "审核拒绝成功";
+      }
+
+      let autoApi = "";
+      this.$refs.auditRemark.getForm().clearValidate();
+      const { notes } = this.$refs.auditRemark.getData();
+
+      let params = {
+        ...this.form,
+        submitAuditFlag: "2",
+        notes,
+      };
+
+      if (this.detailData.applyStatus === "E001") {
+        autoApi = this.zjControl.submitPlatformAudit; // 初审
+      } else {
+        autoApi = this.zjControl.submitAuditConfirm; // 复审
+      }
+
+      autoApi(params).then(() => {
+        this.$Message.success(message);
+        this.goParent();
+      });
+    },
+    // auditPass() {
+    //   autoApi(params).then(() => {
+    //     this.$Message.success("审核成功！");
+    //     this.goParent();
+    //   });
+    // },
+    // //暂存
+    // holdSave() {
+    //   let params = this.form;
+    //   this.zjControl.submitPlatformAudit(params).then(() => {
+    //     this.$Message.success("暂存成功！");
+    //     this.goParent();
+    //   });
+    // },
+    // //驳回
+    // auditReject() {
+    //   this.$refs.auditRemark.getForm().validate((valid) => {
+    //     if (valid) {
+    //       let params = {};
+    //       this.zjControl.submitPlatformAudit(params).then(() => {
+    //         this.$message.success("驳回成功！");
+    //         this.goParent();
+    //       });
+    //     }
+    //   });
+    // },
+    // //拒绝
+    // registerRefuse() {
+    //   this.$refs.auditRemark.getForm().validate((valid) => {
+    //     if (valid) {
+    //       let params = {};
+    //       this.zjControl.submitPlatformAudit(params).then(() => {
+    //         this.$message.success("拒绝成功！");
+    //         this.goParent();
+    //       });
+    //     }
+    //   });
+    // },
+    //获取操作记录
+    getEbBusinessParamLog() {
+      this.zjControl.getEbBusinessParamLog({ id: this.row.id }).then((res) => {
+        this.logList = res.data.sysEntRegLogList;
+      });
+    },
+  },
+  mounted() {
+    this.getApi();
+    this.getRow();
+    this.form.id = this.row.id;
+    this.getDirectory();
+    // this.getEbBusinessParamLog()
+    this.getAuditDetail();
+  },
+};
 </script>
 
 <style scoped lang="less">
