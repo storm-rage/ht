@@ -19,7 +19,7 @@
                     <zj-amount-range :startAmt.sync="searchForm.ebillAmt" :endAmt.sync="searchForm.ebillAmt"></zj-amount-range>
                   </el-form-item>
                   <el-form-item label="签收类型：">
-                    <el-select v-model="searchForm.operType">
+                    <el-select v-model="searchForm.operType" v-if="dictionary">
                       <el-option label="全部" value=""></el-option>
                       <el-option
                         v-for="item in dictionary.openType"
@@ -31,8 +31,8 @@
                   </el-form-item>
                 </el-form>
               </template>
-<!--              <zj-table ref="searchTable" :api="zjControl.queryBillSignPage" :params="{searchForm}" :dataList="list">-->
-              <zj-table ref="searchTable"  :dataList="list">
+              <zj-table ref="searchTable" :api="zjControl.queryBillSignPage" :params="searchForm">
+<!--              <zj-table ref="searchTable"  :dataList="list">-->
                 <zj-table-column field="ebillCode" title="凭证编号"/>
                 <zj-table-column field="fromEntName" title="签发人/转让方"/>
                 <zj-table-column field="operType" title="签收类型" :formatter="obj=>typeMap(dictionary.openType,obj.cellValue)"/>
@@ -49,7 +49,7 @@
             </zj-list-layout>
           </div>
     </zj-content-container>
-    <reject-dialog ref="rejectDialog"/>
+    <reject-dialog ref="rejectDialog" :zjControl="zjControl" :id="rowId" :state="rowState"/>
   </div>
 </template>
 <script>
@@ -85,11 +85,14 @@ export default {
           field4: '订单保理',
           field5: '2022.09.08 11:18:19',
           field6: '生效',
-          field7: '是'
+          field7: '是',
+          id: '1',
+          state: 'B002',
         }
       ],
-
       dictionary: {},
+      rowId: '',
+      rowState: '',
     };
   },
   methods: {
@@ -105,10 +108,12 @@ export default {
       this.goChild('productInfoManageDetail', row)
     },
     signFor (row) {
-      this.goChild('voucherSignForDetail', row)
+      this.goChild('billSignForDetail', row)
     },
     refuseSignFor(row) {
-      this.$refs.rejectDialog.open({form: this.form}, true)
+      this.rowId = row.id
+      this.rowState = row.state
+      this.$refs.rejectDialog.open({form: this.form}, true, row)
     },
   },
   created() {

@@ -1,15 +1,14 @@
+
 const billSignForRouter = [
   {
     path: '/ebBillSign',
     name: 'ebBillSign',
     component: () => import('../views/billLssue/billSignFor'),
     meta: {
-      isMock: true,
       title: '凭证签收',
       root: '凭证管理',
       keepAlive: true,
       refreshIndex: 0,
-      notRequireAuth: true
     }
   },
   {
@@ -22,7 +21,7 @@ const billSignForRouter = [
       keepAlive: true,
       refreshIndex: 0,
       parent:'ebBillSign',
-      notRequireAuth: true,
+      // notRequireAuth: true,
     }
   },
 ]

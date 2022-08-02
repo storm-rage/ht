@@ -45,5 +45,13 @@ const billLssueMyBill = {
   getHoldBillDetailTrade: (params) => {
     return request.post('/my-eb-bill/get-hold-bill-detail-trade',params)
   },
+  /**
+   * 获取数据字典
+   * @param params
+   * @returns {Promise<AxiosResponse<any>>}
+   */
+  getMyEbBillDictionary: (params) => {
+    return request.get('/my-eb-bill/get-my-eb-bill-dictionary', {params})
+  },
 }
 export default billLssueMyBill

@@ -1,6 +1,6 @@
 <template>
   <div>
-    <zj-table ref="searchTable" :dataList="list" >
+    <zj-table ref="searchTable" :dataList="invoiceList" >
       <zj-table-column field="invoiceType" title="发票类型"/>
       <zj-table-column field="invoiceNumber" title="发票号码"/>
       <zj-table-column field="invoiceCode" title="发票代码"/>
@@ -22,23 +22,14 @@
 <script>
 export default {
   name: "invoice",
+  props: {
+    invoiceList:Array,
+  },
   data() {
     return {
       zjControl: {
         downloadFile:this.$api.baseCommon.downloadFile,//文件下载
       },
-      form: {},
-      list: [
-        {
-          field1: 'scm00001',
-          field2: '某某产品一号',
-          field3: '上游',
-          field4: '订单保理',
-          field5: '2022.09.08 11:18:19',
-          field6: '生效',
-          field7: '是'
-        }
-      ],
     }
   },
   methods: {

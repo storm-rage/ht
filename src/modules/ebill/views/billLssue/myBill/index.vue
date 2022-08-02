@@ -12,6 +12,10 @@
               <template slot="leftBtns">
                 <vxe-button class="export" icon="el-icon-download" @click="toExport" :api="zjControl.exportHoldBillList">导出</vxe-button>
               </template>
+              <template slot="rightBtns">
+                <vxe-button class="reset" icon="el-icon-refresh" @click="resetSearch()">重置</vxe-button>
+                <vxe-button class="search" icon="el-icon-search" @click="search(true,'searchTable')">查询</vxe-button>
+              </template>
               <template slot="searchForm">
                 <el-form ref="searchForm" :model="searchForm">
                   <el-form-item label="签发人：">
@@ -51,7 +55,7 @@
                 <zj-table-column field="payableIssuanceDate" title="签发日期" :formatter="date"/>
                 <zj-table-column field="holderDate" title="签收日期" :formatter="date"/>
                 <zj-table-column field="expireDate" title="债权凭证到期日" :formatter="date"/>
-                <zj-table-column field="state" title="凭证状态" :formatter="obj=>typeMap(dictionary,obj.cellValue)"/>
+                <zj-table-column field="state" title="凭证状态" :formatter="obj=>typeMap(dictionary.state,obj.cellValue)"/>
               </zj-table>
             </zj-list-layout>
           </div>
@@ -69,9 +73,7 @@ export default {
       zjControl: {
         queryHoldBillList:this.$api.billLssueMyBill.queryHoldBillList,//我的凭证-查询
         exportHoldBillList:this.$api.billLssueMyBill.exportHoldBillList,//我的凭证-导出
-        getHoldBillDetail:this.$api.billLssueMyBill.getHoldBillDetail,//我的凭证-详情
-        getHoldBillDetailTrace:this.$api.billLssueMyBill.getHoldBillDetailTrace,//凭证详情-凭证轨迹
-        getHoldBillDetailTrade:this.$api.billLssueMyBill.getHoldBillDetailTrade,//凭证详情-贸易背景
+        getMyEbBillDictionary:this.$api.billLssueMyBill.getMyEbBillDictionary,//获取数据字典
       },
       searchForm: {
         writerNameLike: '',
@@ -83,23 +85,14 @@ export default {
         holderDateStart: '',
         holderDateEnd: '',
       },
-      list: [
-        {
-          field1: 'scm00001',
-          field2: '某某产品一号',
-          field3: '上游',
-          field4: '订单保理',
-          field5: '2022.09.08 11:18:19',
-          field6: '生效',
-          field7: '是'
-        }
-      ],
     };
   },
   methods: {
-    //凭证签发人/转让企业改变事件
-    entChange(){
-
+    //获取数据字典
+    getMyEbBillDictionary(){
+      this.zjControl.getMyEbBillDictionary().then(res=>{
+        this.dictionary = res.data
+      })
     },
     toDetail(row) {
       this.goChild('billLssueMyBillDetail',row)
@@ -108,6 +101,10 @@ export default {
       this.zjControl.exportHoldBillList(this.searchForm)
     },
 
+  },
+  created() {
+    this.getApi()
+    this.getMyEbBillDictionary()
   }
 };
 </script>
