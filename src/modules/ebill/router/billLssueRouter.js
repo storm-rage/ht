@@ -52,12 +52,12 @@ const billLssueRouter = [
     }
   },
   {
-    path: '/issuanceReview',
-    name: 'issuanceReview',
+    path: '/issuanceReviewList',
+    name: 'issuanceReviewList',
     component: () => import('../views/billLssue/issuanceReview/index.vue'),
     meta: {
       isMock: true,
-      title: `凭证签发复核`,
+      title: `凭证签发复核-列表`,
       root: '电子债权凭证',
       keepAlive: true,
       refreshIndex: 0,
@@ -65,12 +65,12 @@ const billLssueRouter = [
     }
   },
   {
-    path: '/orderReview',
-    name: 'orderReview',
+    path: '/issuanceReview',
+    name: 'issuanceReview',
     component: () => import('../views/billLssue/issuanceReview/review/index.vue'),
     meta:{
       isMock:false,
-      title:`开单确认`,
+      title:`债权凭证签发复核`,
       keepAlive:true,
       refreshIndex:0,
       notRequireAuth: true
