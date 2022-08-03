@@ -167,7 +167,7 @@
     </zj-content-block>
     <zj-content-footer>
       <zj-button type="primary" @click="submit">提交申请</zj-button>
-      <zj-button class="back" @click="back">返回</zj-button>
+      <zj-button class="back" @click="goParent">返回</zj-button>
     </zj-content-footer>
   </zj-content-container>
 </template>
@@ -194,7 +194,6 @@ export default {
     };
   },
   methods: {
-    back() {},
   },
 };
 </script>
