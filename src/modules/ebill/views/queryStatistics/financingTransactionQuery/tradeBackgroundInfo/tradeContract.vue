@@ -25,10 +25,19 @@
       </el-row>
       <el-row>
         <el-col :span="8">
-          <el-form-item label="货物名称：">{{form.goodsName}}</el-form-item>
+          <el-form-item label="货物名称：">
+            {{form.goodsName}}
+          </el-form-item>
         </el-col>
         <el-col :span="8">
-          <el-form-item label="合同附件：">{{form.fileName}}</el-form-item>
+          <el-form-item label="合同附件：">
+            <div class="atta-name-box">
+              <span class="atta-name">
+              {{form.fileName}}
+            </span>
+              <zj-button type="text" @click="attaDownload(form.fileId)">下载</zj-button>
+            </div>
+          </el-form-item>
         </el-col>
       </el-row>
       <el-row>
@@ -48,18 +57,33 @@
 export default {
   name: "tradeContract",
   props: {
-
+    form:Object,
   },
   data() {
     return {
-      form: {
-        tradeContractNo:'131313131'
+      zjControl: {
+        downloadFile:this.$api.baseCommon.downloadFile,//文件下载
       },
     }
-  }
+  },
+  methods: {
+    attaDownload(fileId) {
+      this.zjControl.downloadFile(fileId)
+    }
+  },
 }
 </script>
 
-<style scoped>
+<style scoped lang="less">
+.atta-name-box {
+  display: flex;
+  .atta-name {
+    width: 100px;
+    height: 30px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space:nowrap;
+  }
+}
 
 </style>

@@ -17,7 +17,7 @@
             <td colspan="2">{{ dataForm.payEntName }}</td>
             <td rowspan="5" class="right">收单企业</td>
             <td>企业名称</td>
-            <td colspan="2">{{ dataForm.payEntName }}</td>
+            <td colspan="2">{{ dataForm.receiptEntName }}</td>
           </tr>
           <tr>
             <td colspan="1">统一社会信用代码</td>
@@ -45,7 +45,7 @@
           </tr>
           <tr>
             <td colspan="2">金额</td>
-            <td colspan="6">（大写）元 （小写）</td>
+            <td colspan="6">（大写）{{ dataForm.ebillAmtUpper }}元 （小写）{{ dataForm.ebillAmt }}</td>
           </tr>
           <tr>
             <td colspan="2">开单说明</td>
@@ -74,11 +74,11 @@
 export default {
   name: 'billDetail',
   props: {
-    dataForm: {},
+    dataForm: Object,
   },
   data() {
     return {
-      detailData: {},
+
     };
   },
   methods: {
