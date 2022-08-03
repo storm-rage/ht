@@ -1,12 +1,15 @@
 <template>
   <zj-content-container>
     <zj-top-header title="提前还款清算申请"></zj-top-header>
-    <biz-info></biz-info>
+    <biz-info :base-info="basicInfo" :bill-list="billList"></biz-info>
     <!-- 附件信息   -->
-    <clearing-file-info is-edit></clearing-file-info>
+    <clearing-file-info ref="fileInfo"
+                        is-edit
+                        :attach-list="attachList"
+                        :bus-desc="basicInfo.bizDesc"></clearing-file-info>
     <zj-content-footer>
-      <zj-button type="primary" @click="toApply">提交申请</zj-button>
-      <zj-button  @click="back">返回</zj-button>
+      <zj-button type="primary" :disabled="loading" @click="toApply">提交申请</zj-button>
+      <zj-button @click="back">返回</zj-button>
     </zj-content-footer>
   </zj-content-container>
 </template>
@@ -17,7 +20,9 @@
  */
 import BizInfo from './bizInfo';
 import ClearingFileInfo from '../../../components/clearingFileInfo';
+import detailClearingMixin from '../../mixins/detailClearingMixin';
 export default {
+  mixins: [detailClearingMixin],
   components: {
     BizInfo,
     ClearingFileInfo
@@ -25,18 +30,6 @@ export default {
   data () {
     return {
     };
-  },
-  methods: {
-    toApply () {
-      this.$confirm('是否确认提交申请？','温馨提示',{
-        type: 'warning',
-        confirmButtonText: '确定',
-        cancelButtonText: '取消'
-      }).then(() => {
-        // todo:请求
-      })
-    },
-    back () {}
   }
 }
 </script>

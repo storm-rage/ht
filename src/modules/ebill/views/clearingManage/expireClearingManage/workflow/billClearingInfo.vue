@@ -1,9 +1,12 @@
 <template>
   <div>
      <!--  业务信息  -->
-    <biz-info></biz-info>
+    <biz-info :base-info="bizInfo.basicInfo" :bill-list="bizInfo.waitClearInfoList"></biz-info>
     <!-- 附件信息   -->
-    <clearing-file-info :is-edit="false"></clearing-file-info>
+    <clearing-file-info ref="fileInfo"
+                        :is-edit="isEdit"
+                        :attach-list="bizInfo.attachInfoList"
+                        :bus-desc="bizInfo.basicInfo.bizDesc"></clearing-file-info>
   </div>
 </template>
 <script>
@@ -13,12 +16,32 @@
 import BizInfo from '../billClearing/billApply/bizInfo';
 import ClearingFileInfo from '../../components/clearingFileInfo';
 export default {
+  props: {
+    // 是否可以编辑（驳回待处理可以）
+    isEdit: {
+      type: Boolean,
+      default: false
+    },
+    bizInfo: {
+      type: Object,
+      default: () => {
+        return {
+          attachInfoList:[],
+          basicInfo: {},
+          financeInfo: {},
+          waitClearInfoList: [],
+        }
+      },
+    }
+  },
   components: {
     BizInfo,
     ClearingFileInfo
   },
-  data () {
-    return {};
+  methods: {
+    getData() {
+      return this.$refs.fileInfo.getData();
+    },
   }
 }
 </script>

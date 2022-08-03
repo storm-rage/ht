@@ -1,17 +1,9 @@
 @import "~@assets/less/variables";
-.el-input-group__append,
-.el-input-group__prepend {
-  border: none !important;
-  background: none !important;
-  padding-left: 0!important;
-}
-
 /*覆写样式*/
 .loginBody {
   .el-input--prefix {
     .el-input__inner {
       padding-left: 22px;
-      // background-color: rgba(155,155,155,0.1);
       background-color: #fff!important;
       &:focus {
         border-color: @primary-main-color;
@@ -30,16 +22,19 @@
       top: 35px;
     }
   }
-}
-//验证码
-.login-code{
-  .el-input-group__append{
-    width: 37%;
-  }
-  /*小屏适配问题*/
-  @media only screen and (max-width: 1400px) {
+  //验证码
+  .login-code{
     .el-input-group__append{
-      width: 47%;
+      border: none;
+      background: none ;
+      padding-left: 0;
+      width: 37%;
+    }
+    /*小屏适配问题*/
+    @media only screen and (max-width: 1400px) {
+      .el-input-group__append{
+        width: 47%;
+      }
     }
   }
 }

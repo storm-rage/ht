@@ -2,68 +2,74 @@
     <zj-content-container>
       <!--  电子债权凭证资详情  -->
       <zj-top-header :title="titleInfo"></zj-top-header>
-      <h3 class="zj-center" v-if="workflow === 'pzxx'">融单编号：{{}}</h3>
       <zj-content-block v-if="workflow === 'pzxx'">
-        <bill-detail/>
+        <bill-detail :dataForm="form" :ebillCode="row.ebillCode"/>
       </zj-content-block>
 
       <zj-content-block v-if="workflow === 'mybj'">
         <zj-content-block>
           <zj-header title="凭证信息"/>
-          <zj-table ref="searchTable" class="zj-search-table" :dataList="list" :radio-config="{highlight: true}"
+          <zj-table ref="searchTable" class="zj-search-table" :dataList="form.billInfo" :pager="false"
           >
-            <zj-table-column field="voucherNo" title="凭证编号" />
-            <zj-table-column field="voucherNo" title="原始凭证编号" />
-            <zj-table-column field="voucherSigner" title="凭证签发人" />
-            <zj-table-column field="entName" title="转让企业" />
-            <zj-table-column field="voucherAcc" title="签发日期" :formatter="date"/>
-            <zj-table-column field="voucherAcc" title="凭证金额" :formatter="money"/>
-            <zj-table-column field="voucherAcc" title="凭证到期日" :formatter="date"/>
+            <zj-table-column field="ebillCode" title="凭证编号" />
+            <zj-table-column field="writerName" title="凭证签发人" />
+            <zj-table-column field="holderName" title="原始持有人" />
+            <zj-table-column field="holderDate" title="签发日期" :formatter="date"/>
+            <zj-table-column field="ebillAmt" title="凭证金额" :formatter="money"/>
+            <zj-table-column field="availableAmt" title="剩余可用金额" :formatter="money"/>
+            <zj-table-column field="expireDate" title="到期日期" :formatter="date"/>
+            <zj-table-column field="state" title="凭证状态" :formatter="obj=>typeMap(dictionary.state,obj.cellValue)"/>
           </zj-table>
         </zj-content-block>
         <zj-content-block>
-          <zj-header title="对账单信息-${}"/>
-          <zj-table ref="searchTable" :dataList="list"  :radio-config="{highlight: true}">
-            <zj-table-column field="field2" title="对账单名称"/>
-            <zj-table-column field="field3" title="买方名称"/>
-            <zj-table-column field="field5" title="供应商业务系统编码"/>
-            <zj-table-column field="field5" title="供应商名称"/>
-            <zj-table-column field="field5" title="对账日期" :formatter="date"/>
-            <zj-table-column field="field5" title="入库日期" :formatter="date"/>
-            <zj-table-column field="field5" title="预计付款日期" :formatter="date"/>
-            <zj-table-column field="field5" title="对账单金额" :formatter="money"/>
-            <zj-table-column field="field5" title="是否申请开立债权凭证" :formatter="(obj)=>typeMap(dictionary,obj.cellValue)"/>
-            <zj-table-column field="field5" title="对账人" />
-            <zj-table-column field="field5" title="对账单来源" />
+          <zj-header :title="`对账单信息-${row.ebillCode}`"/>
+          <zj-table ref="searchTable" :dataList="form.accountBillInner" :pager="false"
+          >
+            <zj-table-column field="acctBillCode" title="对账单编号"/>
+            <zj-table-column field="companyName" title="买方名称"/>
+            <zj-table-column field="supplierCode" title="供应商编码"/>
+            <zj-table-column field="supplierName" title="供应商名称"/>
+            <zj-table-column field="isApplyVoucher" title="是否申请开立债权凭证" :formatter="date"/>
+            <zj-table-column field="checkBillDate" title="对账日期" :formatter="date"/>
+            <zj-table-column field="inputDate" title="入库日期/放行日期" :formatter="date"/>
+            <zj-table-column field="estimatedPaymentDate" title="预计付款日期" :formatter="date"/>
+            <zj-table-column field="checkBillAmt" title="对账单金额" :formatter="money"/>
+            <zj-table-column field="billSource" title="对账单来源" />
           </zj-table>
         </zj-content-block>
         <zj-content-block>
-          <zj-header title="对账单明细-${}"/>
-          <zj-table ref="searchTable" :dataList="list"  :radio-config="{highlight: true}">
-            <zj-table-column field="field2" title="对账单名称"/>
-            <zj-table-column field="field3" title="买方名称"/>
-            <zj-table-column field="field5" title="供应商业务系统编码"/>
-            <zj-table-column field="field5" title="供应商名称"/>
-            <zj-table-column field="field5" title="对账日期" :formatter="date"/>
-            <zj-table-column field="field5" title="入库日期" :formatter="date"/>
-            <zj-table-column field="field5" title="预计付款日期" :formatter="date"/>
-            <zj-table-column field="field5" title="对账单金额" :formatter="money"/>
-            <zj-table-column field="field5" title="是否申请开立债权凭证" :formatter="(obj)=>typeMap(dictionary,obj.cellValue)"/>
-            <zj-table-column field="field5" title="对账人" />
-            <zj-table-column field="field5" title="对账单来源" />
+          <zj-header :title="`对账单明细-${form.accountBillDetailInner[0].acctBillCode}`"/>
+          <zj-table ref="searchTable" :dataList="form.accountBillDetailInner">
+            <zj-table-column field="poNo" title="po单号"/>
+            <zj-table-column field="dnNo" title="dn单号"/>
+            <zj-table-column field="matterCode" title="物料编码"/>
+            <zj-table-column field="matterName" title="物料名称"/>
+            <zj-table-column field="unit" title="单位"/>
+            <zj-table-column field="inputDate" title="入库日期" :formatter="date"/>
+            <zj-table-column field="storeHouse" title="仓库"/>
+            <zj-table-column field="inputNumber" title="入库数量"/>
+            <zj-table-column field="returnDate" title="退货数量"/>
+            <zj-table-column field="level" title="等级"/>
+            <zj-table-column field="orderPrice" title="订单单价" :formatter="money"/>
+            <zj-table-column field="convertPrice" title="折价" :formatter="money"/>
+            <zj-table-column field="settleAccountPrice" title="结算单价" :formatter="money"/>
+            <zj-table-column field="taxRate" title="税率%" :formatter="rate"/>
+            <zj-table-column field="netAmount" title="净额" :formatter="money"/>
+            <zj-table-column field="taxAmount" title="税额" :formatter="money"/>
+            <zj-table-column field="totalAmount" title="总计金额" :formatter="money"/>
           </zj-table>
         </zj-content-block>
         <zj-content-block>
-          <zj-header title="贸易背景资料（资产编号：12345）"/>
+          <zj-header :title="`贸易背景资料（对账单编号：${form.accountBillDetailInner[0].acctBillCode}）`"/>
           <el-tabs v-model="tabs" type="card" class="zj-tabs-card">
             <el-tab-pane label="贸易合同信息" name="tradeContract" >
-              <trade-contract :zjControl="zjControl" :uDictionary="uDictionary" :uBtn="zjBtn" />
+              <trade-contract :zjControl="zjControl" :form="form.contractInfo"/>
             </el-tab-pane>
             <el-tab-pane label="发票信息" name="invoice" >
-              <invoice />
+              <invoice :invoiceList="form.invoices"/>
             </el-tab-pane>
             <el-tab-pane label="其他附件" name="attaList" >
-              <attaList />
+              <attaList :attaList="form.otherAttachs"/>
             </el-tab-pane>
           </el-tabs>
         </zj-content-block>
@@ -71,7 +77,7 @@
 
       <zj-content-block v-if="workflow === 'lzgj'">
         <!--    流转轨迹    -->
-        <locus/>
+        <locus :dataTraceTree="form"/>
       </zj-content-block>
 
       <!-- 底部工作流状态 -->
@@ -108,78 +114,72 @@ export default {
       return this.workflow === 'lzgj'?'电子凭证流转轨迹':this.workflow === 'pzxx'||'mybj'?'电子债权凭证详情':''
     }
   },
+  watch: {
+    workflow() {
+      this.getHoldBillDetail()
+    }
+  },
   data() {
     return {
       form:{},
-      detail:{},
       tabs:'tradeContract',
-      zjControl: {},
-      uDictionary:{},
-      mDictionary:{},
+      zjControl: {
+        getHoldBillDetail:this.$api.billLssueMyBill.getHoldBillDetail,//我的凭证-详情
+        getHoldBillDetailTrace:this.$api.billLssueMyBill.getHoldBillDetailTrace,//凭证详情-凭证轨迹
+        getHoldBillDetailTrade:this.$api.billLssueMyBill.getHoldBillDetailTrade,//凭证详情-贸易背景
+        getMyEbBillDictionary:this.$api.billLssueMyBill.getMyEbBillDictionary,//获取数据字典
+      },
       workflow: 'pzxx',
       workflowList: [
         { label: '凭证详情', value: 'pzxx' }, { label: '贸易背景', value: 'mybj' }, { label: '流转轨迹', value: 'lzgj' },
       ],
-      list: [
-        {
-          field1: 'scm00001',
-          field2: '某某产品一号',
-          field3: '上游',
-          field4: '订单保理',
-          field5: '2022.09.08 11:18:19',
-          field6: '生效',
-          field7: '是'
-        }
-      ],
-
+      dictionary: {},
     }
   },
   methods: {
-    agreementDownLoad() {
-
+    //获取凭证详情
+    getHoldBillDetail() {
+      let params = {
+        ebillCode : this.row.ebillCode || '',
+      }
+      if(this.workflow === 'pzxx') {
+        this.zjControl.getHoldBillDetail(params).then(res => {
+          this.form = res.data.billInfo
+        })
+      }
+      if(this.workflow === 'mybj') {
+        this.zjControl.getHoldBillDetailTrade(params).then(res => {
+          this.form = res.data
+          this.form.billInfo = [{...res.data.billInfo}]
+          this.form.accountBillInner = [{...res.data.accountBillInner}]
+          this.form.accountBillDetailInner = [{...res.data.accountBillDetailInner}]
+        })
+      }
+      if(this.workflow === 'lzgj') {
+        this.zjControl.getHoldBillDetailTrace(params).then(res => {
+          this.form = res.data.traces
+        })
+      }
     },
-    attaDownLoad() {},
+    //获取数据字典
+    getMyEbBillDictionary(){
+      this.zjControl.getMyEbBillDictionary().then(res=>{
+        this.dictionary = res.data
+      })
+    },
     submit(){
       this.$refs.submitDialog.open({form: this.form}, true)
     },
+  },
+  created() {
+    this.getApi()
+    this.getRow()
+    this.getMyEbBillDictionary()
+    this.getHoldBillDetail()
   }
 }
 </script>
 
 <style scoped lang="less">
-.quota-manage {
-  height: 40px;
-  line-height:40px;
-  text-align: right;
-  margin-bottom: 20px;
-  color: #e6a23c;
-  background-color: #fdf6ec;
-}
-.financingForm {
-  margin-top: 20px;
-}
-.explain-text {
-  display: flex;
-  padding-bottom: 20px;
-  background-color: rgba(2, 167, 240, 0);
-  .explain-item {
-    color: #555;
-    font-size: 14px;
-    margin-left: 20px;
-  }
-}
-.hd-row {
-  position: relative;
-  &:after {
-    position: absolute;
-    top: 36px;
-    left: 0;
-    content: '';
-    display: block;
-    width: 100%;
-    height: 1px;
-    border-bottom: 1px dashed #cbcbcb;
-  }
-}
 
 </style>

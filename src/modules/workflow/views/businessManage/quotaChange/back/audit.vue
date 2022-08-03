@@ -2,14 +2,14 @@
   <zj-content-container>
     <zj-top-header title="供应商额度申请驳回维护"></zj-top-header>
     <!--  业务申请信息  -->
-    <biz-apply-info></biz-apply-info>
+    <biz-apply-info :biz-info="applyModel"></biz-apply-info>
     <!--  具体业务信息  -->
     <quota-change-audit
       ref="tradeInfo"
       :is-edit="true"
-      biz-id="1"></quota-change-audit>
+      :biz-id="row.id"></quota-change-audit>
     <!--  操作记录  -->
-    <operate-log></operate-log>
+    <operate-log :log-list="operateLogList"></operate-log>
     <!--  审批意见  -->
     <audit-remark ref="auditRemark"></audit-remark>
     <zj-content-footer>
@@ -25,11 +25,12 @@ import BizApplyInfo from '../../../components/bizApplyInfo';
 import OperateLog from '../../../components/operateLog';
 import AuditRemark from '../../../components/auditRemark';
 import QuotaChangeAudit from '@modules/ebill/views/productManage/businessManage/workflow/quotaChange/back/audit.vue';
-
+import workflowMixin from '@modules/workflow/views/businessManage/mixins/workflowMixin';
 /**
  * 额度管理复核驳回再处理
  */
 export default {
+  mixins: [workflowMixin],
   components: {
     BizApplyInfo,
     OperateLog,

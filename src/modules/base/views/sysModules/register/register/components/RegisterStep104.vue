@@ -36,20 +36,20 @@
       <div class="border-underline"></div>
       <el-row>
         <el-row class="agreement">点此下载
-          <zj-button type="text" @click="downloadTemplate('WTSQS')">《委托授权书模板》</zj-button>、
-          <zj-button type="text" @click="downloadTemplate('GRXXSQS')">《个人信息授权书模板》</zj-button>
+          <zj-button type="text" @click="downloadTemplate('WTSQS')">《授权确认书模板》</zj-button>、
+          <zj-button type="text" @click="downloadTemplate('GRXXSQS')">《风险信息接收人-个人信息授权书模板》</zj-button>
         </el-row>
         <zj-table ref="attaTable" class="zj-search-table" :dataList="registerAttachList" :pager="false"
                   keep-source
         >
-          <zj-table-column field="attachId" title="序号" width="60"/>
+          <zj-table-column type="seq" title="序号" width="60"/>
           <zj-table-column title="附件类型">
             <template v-slot="{row}">
               <span style="color: red">{{ row.fileType? '*' : '' }}</span>
-              {{ row.fileType ? typeMap(dictionary.attachTypeList,row.fileType) : '' }}
+              {{ row.fileType ? row.fileType : '' }}
             </template>
           </zj-table-column>
-          <zj-table-column field="isSign" title="是否需要加盖企业公章" v-if="form.isHtEnterprise == '1'"/>
+          <zj-table-column field="needSeal" title="是否需要加盖企业公章" v-if="form.isHtEnterprise == '1'"/>
           <zj-table-column field="fileName" title="附件名称"/>
           <zj-table-column title="操作" fixed="right" width="120">
             <template v-slot="{row}">
@@ -74,16 +74,16 @@
         <el-row>请将以上已盖章影像资料对应的纸质版邮递至以下地址：</el-row>
         <el-form :model="addressForm" ref="addressForm" label-width="160px">
           <el-row>
-            <el-col :span="8">
-              <el-form-item label="收件人：">天小海</el-form-item>
+            <el-col :span="12">
+              <el-form-item label="收件人：">{{entInfoObj.form.platFastMailUserName}}</el-form-item>
             </el-col>
-            <el-col :span="8">
-              <el-form-item label="收件人电话：">123 3334 1111</el-form-item>
+            <el-col :span="12">
+              <el-form-item label="收件人电话：">{{entInfoObj.form.platFastMailTel}}</el-form-item>
             </el-col>
           </el-row>
           <el-row>
-            <el-col :span="8">
-              <el-form-item label="收件地址：">广东省佛山市xxxxxxxx</el-form-item>
+            <el-col :span="12">
+              <el-form-item label="收件地址：">{{entInfoObj.form.platFastMailAddress}}</el-form-item>
             </el-col>
           </el-row>
         </el-form>
@@ -135,14 +135,14 @@
     </div>
     <RegisterFooter/>
     <!-- 维护经办员/复核员/风险信息接收人 信息维护弹窗 -->
-    <el-dialog :visible.sync="maintainInfo" :close-on-click-modal="false" center
-               width="800px" title="维护经办员/复核员/风险信息接收人" custom-class="mbi-editDialog" top="6vh"
+    <el-dialog :visible.sync="maintainInfo" :close-on-click-modal="false" left
+               width="800px" :title="`维护${dialogTitle}`" custom-class="mbi-editDialog" top="6vh"
     >
       <el-form ref="formModel" class="mbi-form" :model="formModel" :rules="formRules" :class="editFlag ? '' :'nmb0'" label-width="180px">
-        <el-form-item label="姓名：" prop="name" >
+        <el-form-item label="姓名：" prop="userName" >
           <el-input v-model="formModel.userName"></el-input>
         </el-form-item>
-        <el-form-item label="证件类型：" prop="certType" >
+        <el-form-item label="证件类型：" prop="certType" class="entType">
           <el-select v-model="formModel.certType" placeholder="请选择"
                      :popper-append-to-body="false" :disabled="true"
           >
@@ -157,7 +157,7 @@
         <el-form-item label="证件号码：" prop="certNo" >
           <el-input v-model="formModel.certNo"/>
         </el-form-item>
-        <el-form-item label="证件有效期：" class="required" >
+        <el-form-item label="证件有效期：" class="card-validity required" >
           <el-form-item prop="certStartDate" class="zj-inline">
             <zj-date-picker placeholder="年/月/日" :date.sync="formModel.certStartDate" :pickerOptions="{ disabledDate:certStartDateDisabledDate }" ></zj-date-picker>
           </el-form-item>
@@ -165,6 +165,9 @@
           <el-form-item prop="certEndDate" class="zj-inline">
             <zj-date-picker placeholder="年/月/日" :date.sync="formModel.certEndDate" :pickerOptions="{ disabledDate: certEndDateDisabledDate }" ></zj-date-picker>
           </el-form-item>
+          <el-row>
+            <el-checkbox v-model="formModel.term" @change="isChecked">长期有效</el-checkbox>
+          </el-row>
         </el-form-item>
         <el-form-item label="手机号码：" prop="mobileNo" >
           <el-input v-model="formModel.mobileNo"/>
@@ -182,8 +185,8 @@
         </el-form-item>
       </el-form>
       <el-row slot="footer" class="dialog-footer">
-        <zj-button status="primary" @click="saveOperator">确认</zj-button>
-        <zj-button class="back" @click="cancel">取消</zj-button>
+        <vxe-button status="primary" @click="saveOperator">确认</vxe-button>
+        <vxe-button class="back" @click="cancel">取消</vxe-button>
       </el-row>
     </el-dialog>
     <!-- 注册成功弹窗 -->
@@ -233,6 +236,9 @@ export default {
         detailAddress: '',
         entBankInfo: {},
         entBankInfoList: [],
+        confirmBankId:'',//获取银行信息
+        confirmBankName:'',//获取银行信息
+        isSelectEntBankInfo: null,//判断一级供应商是否选择银行账户
         entContactAddressCity: '',
         entType: '',
         fastMailAddress: '',
@@ -265,15 +271,7 @@ export default {
         smallPaymentCertAmt: '',
       },
       //影像资料
-      registerAttachList:[
-        {attachId:'1', fileType:'YYZC', isSign:'', fileName:'', fileId:''},
-        {attachId:'2', fileType:'FRSFZ', isSign:'', fileName:'', fileId:''},
-        {attachId:'3', fileType:'JBYSFZ', isSign:'', fileName:'', fileId:''},
-        {attachId:'4', fileType:'FHYSFZ', isSign:'', fileName:'', fileId:''},
-        {attachId:'5', fileType:'FXRSFZ', isSign:'', fileName:'', fileId:''},
-        {attachId:'6', fileType:'WTSQS', isSign:'', fileName:'', fileId:''},
-        {attachId:'7', fileType:'FXRSQS', isSign:'', fileName:'', fileId:''},
-      ],
+      registerAttachList:[],
       //贸易信息
       tradeInfoForm: {
         supplier:'1',
@@ -290,7 +288,6 @@ export default {
       },
       addressForm: {
       },
-      certTypeList:[],//证件类型列表
       //维护经办员/复核员/风险信息接收人 信息维护
       formModel: {
         userName: '',//姓名
@@ -300,6 +297,7 @@ export default {
         certNo: '',//证件号码
         certStartDate:'',//证件号码起始日
         certEndDate:'',//证件号码截止日
+        term: false,//长期有效
         mobileNo: '',//手机号码
         email: '',//邮箱
         bankAcctNo: '',//银行卡号
@@ -365,7 +363,15 @@ export default {
           { required: true, message: '请选择证件有效期起始日', trigger: ['blur'] }
         ],
         certEndDate: [
-          { required: true, message: '请选择证件有效期截止日', trigger: ['blur'] }
+          { message: '请选择证件有效期截止日', trigger: ['blur'] },
+          { validator:(rule, value, callback) => {
+              let reqHandle = this.formModel.term ? false : true
+              if (!value && reqHandle) {
+                callback(new Error('请选择证件有效期截止日'))
+              } else {
+                callback()
+              }
+            }, trigger: 'blur'},
         ],
         mobileNo: [
           {required: true, message: '请输入手机号码', trigger: 'blur'},
@@ -404,6 +410,7 @@ export default {
       dialogVisible: false,//注册成功弹窗
       editFlag: false,
       maintainInfo: false,//维护操纵员弹窗
+      dialogTitle: '',//维护操纵员弹窗标题
       operatorTable:true,
       registerUserList: [
         {
@@ -426,71 +433,61 @@ export default {
       //校验操作用户数据是否完整
       if(!this.entInfoObj.form.registerUserList) {
         for(let i of this.registerUserList){
-          for(let obj in i){
-            if(obj !== 'htSysCode' && obj !== 'idCheckState' && obj !== 'email' && obj !== 'bankAcctNo' && obj !== 'checkType' && i[obj] == '' || null){
-              console.log(`请补全${i}的${obj}的信息！`)
-              this.$message.error(`请补全操作用户的信息！`)
-              return
-            }
+          let resCheck = (i.certEndDate===''||null) ||
+            (i.certNo===''||null) ||
+            (i.certStartDate===''||null) ||
+            (i.certType===''||null) ||
+            (i.idCheckState===''||null) ||
+            (i.mobileNo===''||null) ||
+            (i.roleId===''||null) ||
+            (i.userId===''||null) ||
+            (i.userName===''||null)
+          if(resCheck){
+            this.$message.error(`请补全操作用户的信息！`)
+            return
           }
         }
       }else{
         for(let i of this.entInfoObj.form.registerUserList){
-          for(let obj in i){
-            if(obj !== 'htSysCode' && obj !== 'idCheckState' && obj !== 'email' && obj !== 'bankAcctNo' && obj !== 'checkType' && i[obj] == '' || null){
-              console.log(`请补全${i}的${obj}的信息！`)
-              this.$message.error(`请补全操作用户的信息！`)
-              return
-            }
+          let resCheck = (i.certEndDate===''||null) ||
+            (i.certNo===''||null) ||
+            (i.certStartDate===''||null) ||
+            (i.certType===''||null) ||
+            (i.idCheckState===''||null) ||
+            (i.mobileNo===''||null) ||
+            (i.roleId===''||null) ||
+            (i.userId===''||null) ||
+            (i.userName===''||null)
+          if(resCheck){
+            this.$message.error(`请补全操作用户的信息！`)
+            return
           }
         }
       }
       //校验影像资料是否完整
       if(!this.entInfoObj.form.registerAttachList){
         for(let i of this.registerAttachList){
-          for(let obj in i){
-            if(this.entInfoObj.form.isHtEnterprise == '0') {
-              if(obj !== 'isSign' && i[obj] == '' || null ){
-                console.log(`请补全${i}的${obj}的信息！`)
-                this.$message.error(`请补全影像资料信息！`)
-                return
-              }
-            }else if(this.entInfoObj.form.isHtEnterprise == '1'){
-              if(i[obj] == '' || null ){
-                console.log(`请补全${i}的${obj}的信息！`)
-                this.$message.error(`请补全影像资料信息！`)
-                return
-              }
-            }
+          if(i.fileName ===  null || '') {
+            this.$message.error(`请补全影像资料信息！`)
+            return
           }
         }
       }else {
         for(let i of this.entInfoObj.form.registerAttachList){
-          for(let obj in i){
-            if(this.entInfoObj.form.isHtEnterprise == '0') {
-              if(obj !== 'isSign' && i[obj] == '' || null ){
-                console.log(`请补全${i}的${obj}的信息！`)
-                this.$message.error(`请补全影像资料信息！`)
-                return
-              }
-            }else if(this.entInfoObj.form.isHtEnterprise == '1'){
-              if(i[obj] == '' || null ){
-                console.log(`请补全${i}的${obj}的信息！`)
-                this.$message.error(`请补全影像资料信息！`)
-                return
-              }
-            }
+          if(i.fileName ===  null || '') {
+            this.$message.error(`请补全影像资料信息！`)
+            return
           }
         }
       }
-      console.log('影像资料success')
+      console.log('影像资料success~~~')
       //校验发票信息
       this.$refs.form.validate(boo=>{
         if (!boo){
           return
         }else{
           //校验贸易信息
-          if(this.tradeInfoForm.supplier !== '1'){
+          if(this.entInfoObj.form.isHtEnterprise === '0' && this.tradeInfoForm.supplier !== '1'){
             this.$message.error(`请勾选"我是供应商"！`)
             return
           }
@@ -527,6 +524,7 @@ export default {
       this.formModel.userId = row.userId ? row.userId:''
       this.formModel.userName = row.userName
       this.formModel.certNo = row.certNo
+      this.formModel.certType = row.certType
       this.formModel.certStartDate = row.certStartDate
       this.formModel.certEndDate = row.certEndDate
       this.formModel.mobileNo = row.mobileNo
@@ -536,8 +534,14 @@ export default {
         this.formModel.htSysCode = row.htSysCode
         this.formModel.idCheckState = row.idCheckState
       }
+      this.dialogTitle = this.typeMap(this.dictionary.roleIdList,row.roleId)
       this.maintainInfo = true
       console.log(this.formModel)
+    },
+    isChecked() {
+      if(this.formModel.term === true) {
+        this.formModel.certEndDate = ''
+      }
     },
     //维护维护经办员/复核员/风险信息接收人 数据
     saveOperator() {
@@ -554,28 +558,38 @@ export default {
             this.formModel.id = this.entInfoObj.form.id
             this.formModel.userId = this.formModel.userId ? this.formModel.userId : ''
             this.formModel.isHtEnterprise  = this.entInfoObj.form.isHtEnterprise
-            this.formModel.certStartDate = this.formModel.certStartDate.replace(/\./g,'')
-            this.formModel.certEndDate = this.formModel.certEndDate.replace(/\./g,'')
+            this.formModel.certStartDate = this.formModel.certStartDate.replace(/-/g,'')
+            this.formModel.certEndDate = this.formModel.certEndDate.replace(/-/g,'')
             this.zjControl.saveRegisterEntUser(this.formModel).then( res => {
               //更新列表数据
               this.operatorTable = false
-              if(res.data.roleId == '2'){
-                this.registerUserList[0] = res.data
-              }else if(res.data.roleId == '3'){
-                this.registerUserList[1] = res.data
-              }else if(res.data.roleId == '4'){
-                this.registerUserList[2] = res.data
+              for(let i of this.registerUserList) {
+                if(res.data.roleId === i.roleId) {
+                  this.registerUserList[this.registerUserList.indexOf(i)] = res.data
+                }
               }
               this.$nextTick(()=>{
                 this.operatorTable = true
               })
-
-              let activeRoleId = this.typeMap(this.dictionary.roleIdList,res.data.roleId)
-              this.$message.success(`维护${activeRoleId}成功！`)
               let params = Object.assign({},this.entInfoObj)
               params.form.registerUserList = this.registerUserList
               this.$emit('update:entInfoObj',params)
-              this.maintainInfo = false
+              if(res.data.idCheckState == '否') {
+                this.$messageBox({
+                  type:'warning',
+                  title:`温馨提示`,
+                  content:`手机核验身份失败，是否继续使用手机号核验？您亦也可录入银行卡号进行核验，谢谢！`,
+                  showCancelButton:false,
+                  messageResolve:()=>{
+
+                  },
+                })
+              }
+              if(res.data.idCheckState == '是') {
+                let activeRoleId = this.typeMap(this.dictionary.roleIdList,res.data.roleId)
+                this.$message.success(`维护${activeRoleId}成功！`)
+                this.maintainInfo = false
+              }
             })
           }
         })
@@ -586,60 +600,50 @@ export default {
       //校验操作用户数据是否完整
       if(!this.entInfoObj.form.registerUserList) {
         for(let i of this.registerUserList){
-          for(let obj in i){
-            if(obj !== 'htSysCode' && obj !== 'idCheckState' && obj !== 'email' && obj !== 'bankAcctNo' && obj !== 'checkType' && i[obj] == '' || null){
-              console.log(`请补全${i}的${obj}的信息！`)
-              this.$message.error(`请补全操作用户的信息！`)
-              return
-            }
+          let resCheck = (i.certEndDate===''||null) ||
+            (i.certNo===''||null) ||
+            (i.certStartDate===''||null) ||
+            (i.certType===''||null) ||
+            (i.idCheckState===''||null) ||
+            (i.mobileNo===''||null) ||
+            (i.roleId===''||null) ||
+            (i.userId===''||null) ||
+            (i.userName===''||null)
+          if(resCheck){
+            this.$message.error(`请补全操作用户的信息！`)
+            return
           }
         }
       }else{
         for(let i of this.entInfoObj.form.registerUserList){
-          for(let obj in i){
-            if(obj !== 'htSysCode' && obj !== 'idCheckState' && obj !== 'email' && obj !== 'bankAcctNo' && obj !== 'checkType' && i[obj] == '' || null){
-              console.log(`请补全${i}的${obj}的信息！`)
-              this.$message.error(`请补全操作用户的信息！`)
-              return
-            }
+          let resCheck = (i.certEndDate===''||null) ||
+            (i.certNo===''||null) ||
+            (i.certStartDate===''||null) ||
+            (i.certType===''||null) ||
+            (i.idCheckState===''||null) ||
+            (i.mobileNo===''||null) ||
+            (i.roleId===''||null) ||
+            (i.userId===''||null) ||
+            (i.userName===''||null)
+          if(resCheck){
+            this.$message.error(`请补全操作用户的信息！`)
+            return
           }
         }
       }
       //校验影像资料是否完整
       if(!this.entInfoObj.form.registerAttachList){
         for(let i of this.registerAttachList){
-          for(let obj in i){
-            if(this.entInfoObj.form.isHtEnterprise == '0') {
-              if(obj !== 'isSign' && i[obj] == '' || null ){
-                console.log(`请补全${i}的${obj}的信息！`)
-                this.$message.error(`请补全影像资料信息！`)
-                return
-              }
-            }else if(this.entInfoObj.form.isHtEnterprise == '1'){
-              if(i[obj] == '' || null ){
-                console.log(`请补全${i}的${obj}的信息！`)
-                this.$message.error(`请补全影像资料信息！`)
-                return
-              }
-            }
+          if(i.fileName === null || '') {
+            this.$message.error(`请补全影像资料信息！`)
+            return
           }
         }
       }else {
         for(let i of this.entInfoObj.form.registerAttachList){
-          for(let obj in i){
-            if(this.entInfoObj.form.isHtEnterprise == '0') {
-              if(obj !== 'isSign' && i[obj] == '' || null ){
-                console.log(`请补全${i}的${obj}的信息！`)
-                this.$message.error(`请补全影像资料信息！`)
-                return
-              }
-            }else if(this.entInfoObj.form.isHtEnterprise == '1'){
-              if(i[obj] == '' || null ){
-                console.log(`请补全${i}的${obj}的信息！`)
-                this.$message.error(`请补全影像资料信息！`)
-                return
-              }
-            }
+          if(i.fileName ===  null || '') {
+            this.$message.error(`请补全影像资料信息！`)
+            return
           }
         }
       }
@@ -651,7 +655,7 @@ export default {
           return
         }else{
           //校验贸易信息
-          if(this.tradeInfoForm.supplier !== '1'){
+          if(this.entInfoObj.form.isHtEnterprise === '0' && this.tradeInfoForm.supplier !== '1'){
             this.$message.error(`请勾选"我是供应商"！`)
             return
           }
@@ -677,7 +681,28 @@ export default {
       })
     },
     cancel() {
-      this.maintainInfo = false
+      this.formModel.userOperateFlag = 'CANCEL'
+      this.formModel.id = this.entInfoObj.form.id
+      this.formModel.userId = this.formModel.userId ? this.formModel.userId : ''
+      this.formModel.isHtEnterprise  = this.entInfoObj.form.isHtEnterprise
+      this.formModel.certStartDate = this.formModel.certStartDate.replace(/-/g,'')
+      this.formModel.certEndDate = this.formModel.certEndDate.replace(/-/g,'')
+      this.zjControl.saveRegisterEntUser(this.formModel).then( res => {
+        //更新列表数据
+        this.operatorTable = false
+        for(let i of this.registerUserList) {
+          if(res.data.roleId === i.roleId) {
+            this.registerUserList[this.registerUserList.indexOf(i)] = res.data
+          }
+        }
+        this.$nextTick(()=>{
+          this.operatorTable = true
+        })
+        let params = Object.assign({},this.entInfoObj)
+        params.form.registerUserList = this.registerUserList
+        this.$emit('update:entInfoObj',params)
+        this.maintainInfo = false
+      })
     },
     certStartDateDisabledDate (date) {
       if (this.formModel.certEndDate) {
@@ -700,7 +725,9 @@ export default {
         params.form.registerAttachList = this.registerAttachList
         this.$emit('update:entInfoObj',params)
         this.$message.success('附件上传成功!')
+        console.log(this.registerAttachList)
         console.log(data.row)
+        console.log(this.entInfoObj)
       })
     },
     //下载影像资料附件
@@ -712,10 +739,44 @@ export default {
       this.zjControl.downloadFile(params)
     },
     //下载授权书模板
-    downloadTemplate(data){
+    downloadTemplate(type){
+      //下载前需要校验操作用户信息是否完整
+      if(!this.entInfoObj.form.registerUserList) {
+        for(let i of this.registerUserList){
+          let resCheck = (i.certEndDate===''||null) ||
+            (i.certNo===''||null) ||
+            (i.certStartDate===''||null) ||
+            (i.certType===''||null) ||
+            (i.idCheckState===''||null) ||
+            (i.mobileNo===''||null) ||
+            (i.roleId===''||null) ||
+            (i.userId===''||null) ||
+            (i.userName===''||null)
+          if(resCheck){
+            this.$message.error(`请补全操作用户的信息！`)
+            return
+          }
+        }
+      }else{
+        for(let i of this.entInfoObj.form.registerUserList){
+          let resCheck = (i.certEndDate===''||null) ||
+            (i.certNo===''||null) ||
+            (i.certStartDate===''||null) ||
+            (i.certType===''||null) ||
+            (i.idCheckState===''||null) ||
+            (i.mobileNo===''||null) ||
+            (i.roleId===''||null) ||
+            (i.userId===''||null) ||
+            (i.userName===''||null)
+          if(resCheck){
+            this.$message.error(`请补全操作用户的信息！`)
+            return
+          }
+        }
+      }
       let params = {
         id: this.entInfoObj.form.id,
-        templateType: data,
+        templateType: type,
         registerUserList: this.entInfoObj.form.registerUserList
       }
       this.zjControl.downloadTemplate(params)
@@ -737,22 +798,36 @@ export default {
       if(this.entInfoObj.form.invoicePhone){
         this.form.invoicePhone = this.entInfoObj.form.invoicePhone
       }
+      //回显操作用户信息
+      if(this.entInfoObj.form.registerUserList) {
+        this.registerUserList = this.entInfoObj.form.registerUserList
+      }
+      //回显影像资料信息
+      if(this.entInfoObj.form.registerAttachList) {
+        this.registerAttachList = this.entInfoObj.form.registerAttachList
+      }
+      //回显贸易信息
+      if(this.entInfoObj.form.tradeInfoForm) {
+        this.tradeInfoForm = this.entInfoObj.form.tradeInfoForm
+      }
+    },
+    //获取用户信息
+    getUserInfo() {
+      this.zjControl.getUserInfo({
+        id: this.entInfoObj.form.id,
+        name: this.entInfoObj.form.name,
+      }).then(res=>{
+        this.registerAttachList = res.data.registerAttachList
+        this.setInvoiceInfo()
+
+      })
     }
   },
   created() {
     console.log(this.entInfoObj)
     this.form.isHtEnterprise = this.entInfoObj.form.isHtEnterprise
     this.form.legalCertType = this.entInfoObj.form.legalCertType
-    if(this.entInfoObj.form.registerUserList) {
-      this.registerUserList = this.entInfoObj.form.registerUserList
-    }
-    if(this.entInfoObj.form.registerAttachList) {
-      this.registerAttachList = this.entInfoObj.form.registerAttachList
-    }
-    if(this.entInfoObj.form.tradeInfoForm) {
-      this.tradeInfoForm = this.entInfoObj.form.tradeInfoForm
-    }
-    this.setInvoiceInfo()
+    this.getUserInfo()
 
   },
 }
@@ -849,6 +924,26 @@ export default {
   }
   /deep/.zj-buttons.zj-buttons-text span {
     margin: 0!important;
+  }
+}
+.el-input {
+  width: 260px;
+}
+.entType {
+  /deep/.el-select{
+    width: 260px;
+    .el-input {
+      width: 260px;
+    }
+  }
+}
+.card-validity {
+  /deep/.el-date-editor.el-input {
+    width: 120px;
+  }
+  /deep/.zj-date-picker .el-input__inner {
+    min-width: auto;
+    padding: 0 30px 0 15px !important;
   }
 }
 

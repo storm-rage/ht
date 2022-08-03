@@ -7,17 +7,17 @@
         <el-row :gutter="10">
           <el-col :span="8">
             <el-form-item label="供应商名称：">
-              方法士大夫士大夫
+              {{baseInfo.holderName}}
             </el-form-item>
           </el-col>
           <el-col :span="8">
             <el-form-item label="核心企业名称：">
-              哥哥豆腐干豆腐干更广泛广泛大概
+              {{baseInfo.payEntName}}
             </el-form-item>
           </el-col>
           <el-col :span="8">
             <el-form-item label="待清算退款金额总计：">
-              {{money('122222')}}
+              {{money(baseInfo.totaloddAmt)}}
             </el-form-item>
           </el-col>
         </el-row>
@@ -25,22 +25,22 @@
           <el-row :gutter="10">
             <el-col :span="8">
               <el-form-item label="收款账户名称：">
-                感豆腐干豆腐干梵蒂冈的灌灌灌灌郭德纲
+                {{baseInfo.bankAccname}}
               </el-form-item>
             </el-col>
             <el-col :span="8">
               <el-form-item label="收款账号：">
-                623423324324324324
+                {{baseInfo.bankAccno}}
               </el-form-item>
             </el-col>
             <el-col :span="8">
               <el-form-item label="收款账户开户行：">
-                广泛大锅饭大概公分的个古风格梵蒂冈地方官
+                {{baseInfo.bankName}}
               </el-form-item>
             </el-col>
             <el-col :span="8">
               <el-form-item label="银行联行号：">
-                12123232
+                {{baseInfo.bankNo}}
               </el-form-item>
             </el-col>
           </el-row>
@@ -57,112 +57,112 @@
                   :radio-config="{highlight: true}"
                   :dataList="billList" >
           <zj-table-column type="radio" width="40px" fixed="left"></zj-table-column>
-          <zj-table-column field="field1" title="核心企业代码"/>
-          <zj-table-column field="field2" title="核心企业名称"/>
+          <zj-table-column field="payEntCode" title="核心企业代码"/>
+          <zj-table-column field="payEntName" title="核心企业名称"/>
           <zj-table-column
-            field="field3"
+            field="holderCode"
             title="供应商编码"
           />
           <zj-table-column
-            field="field4"
+            field="holderName"
             title="供应商名称"
           >
           </zj-table-column>
-          <zj-table-column field="field5" title="收款单号"/>
-          <zj-table-column field="field5" title="凭证编号"/>
-          <zj-table-column field="field6" title="融资流水号" />
-          <zj-table-column field="field6" title="还款日期" :formatter="date"/>
-          <zj-table-column field="field9" title="尾款金额" :formatter="money"/>
+          <zj-table-column field="repaymentOrderNo" title="收款单号"/>
+          <zj-table-column field="ebillCode" title="凭证编号"/>
+          <zj-table-column field="financingSerialno" title="融资流水号" />
+          <zj-table-column field="repayDate" title="还款日期" :formatter="date"/>
+          <zj-table-column field="oddAmt" title="尾款金额" :formatter="money"/>
         </zj-table>
       </zj-content>
     </zj-content-block>
-    <zj-content-block>
-      <zj-header title="融资详情-xxxxx（此处为凭证编号）"></zj-header>
+    <zj-content-block v-if="currentSelectBill.clearId">
+      <zj-header :title="`融资详情-${currentSelectBill.ebillCode}`"></zj-header>
       <zj-content>
         <el-row :gutter="10">
           <el-col :span="8">
             <el-form-item label="融资流水号：">
-              方法士大夫士大夫
+              {{financingInfo.financingSerialno}}
             </el-form-item>
           </el-col>
           <el-col :span="8">
             <el-form-item label="放款单号：">
-              哥哥豆腐干豆腐干更广泛广泛大概
+              {{financingInfo.paymentOrderNo}}
             </el-form-item>
           </el-col>
           <el-col :span="8">
             <el-form-item label="融资金额：">
-              {{money('122222')}}
+              {{money(financingInfo.ebillAmt)}}
             </el-form-item>
           </el-col>
           <el-col :span="8">
             <el-form-item label="融资类型：">
-              方法士大夫士大夫
+              {{typeMap(dictionary.financingProductTypeList,financingInfo.financingType)}}
             </el-form-item>
           </el-col>
           <el-col :span="8">
             <el-form-item label="融资开始日：">
-              哥哥豆腐干豆腐干更广泛广泛大概
+              {{financingInfo.applyDatetime}}
             </el-form-item>
           </el-col>
           <el-col :span="8">
             <el-form-item label="融资到期日：">
-              2022-01-01
+              {{financingInfo.expireDate}}
             </el-form-item>
           </el-col>
           <el-col :span="8">
             <el-form-item label="融资月利率：">
-              7%
+              {{financingInfo.interestRate}}%
             </el-form-item>
           </el-col>
           <el-col :span="8">
             <el-form-item label="已还款本金：">
-              {{money('2222222')}}
+              {{money(financingInfo.payAmt)}}
             </el-form-item>
           </el-col>
           <el-col :span="8">
             <el-form-item label="往期未偿还利息：">
-              {{money('2222222')}}
+              {{money(financingInfo.beforeNoPayInterest)}}
             </el-form-item>
           </el-col>
           <el-col :span="8">
             <el-form-item label="利息起算日：">
-              2023-09-08
+              {{financingInfo.interestStartDate}}
             </el-form-item>
           </el-col>
           <el-col :span="8">
             <el-form-item label="本次还款日期：">
-              2023-09-08
+              {{financingInfo.thisPayDate}}
             </el-form-item>
           </el-col>
           <el-col :span="8">
             <el-form-item label="本次计息天数：">
-              30
+              {{financingInfo.thisPayDays}}
             </el-form-item>
           </el-col>
           <el-col :span="8">
             <el-form-item label="本次还款金额：">
-              {{money('1312321321')}}
+              {{money(financingInfo.thisPaySum)}}
             </el-form-item>
           </el-col>
           <el-col :span="8">
             <el-form-item label="本次还款本金：">
-              {{money('1312321321')}}
+              {{money(financingInfo.thisPayAmt)}}
             </el-form-item>
           </el-col>
           <el-col :span="8">
             <el-form-item label="本次还款利息：">
-              {{money('1312321321')}}
+              {{money(financingInfo.thisPayInterest)}}
             </el-form-item>
           </el-col>
           <el-col :span="8">
             <el-form-item label="未偿还本金：">
-              {{money('1312321321')}}
+              {{money(financingInfo.noPayAmt)}}
             </el-form-item>
           </el-col>
           <el-col :span="8">
             <el-form-item label="还款状态：">
-              已还款
+              {{typeMap(dictionary.payStatusList,financingInfo.payStatus)}}
             </el-form-item>
           </el-col>
         </el-row>
@@ -175,20 +175,70 @@
  * 业务信息，工作流共享
  */
 export default {
+  props: {
+    baseInfo: {
+      type: Object,
+      default:() => {
+        return {};
+      }
+    },
+    billList: {
+      type: Array,
+      default:() => {
+        return [];
+      }
+    }
+  },
+  watch: {
+    billList: {
+      deep: true,
+      handler() {
+        if (this.billList && this.billList.length) {
+          this.setFirstRow(this.billList[0]);
+        }
+      }
+    }
+  },
   data () {
     return {
-      billList: [
-        {
-
-        }
-      ],
+      zjControl: {
+        getFinanceDetails: this.$api.expireClearingManage.getFinanceDetails,
+        getDictionary: this.$api.expireClearingManage.getBillClearDictionary
+      },
       // 当前选中的行
-      currentSelectBill:{}
+      currentSelectBill: {},
+      // 凭证关联的融资信息
+      financingInfo: {},
+      dictionary: {}
     }
   },
   methods: {
+    getDic() {
+      this.zjControl.getDictionary().then(res => {
+        this.dictionary = res.data
+      });
+    },
+    /**
+     * 默认选中第一行
+     * @param row
+     */
+    setFirstRow(row) {
+      this.$refs.billTable.setRadioRow(row);
+      this.handleRadioChange({row});
+    },
     handleRadioChange({row}) {
       this.currentSelectBill = row;
+      this.getFinancingInfo();
+    },
+    /**
+     * 根据选择的清算记录获取融资详情
+     */
+    getFinancingInfo() {
+      this.zjControl.getFinanceDetails({
+        clearId: this.currentSelectBill.clearId
+      }).then(res => {
+        this.financingInfo = res.data;
+      });
     },
     toViewDetail (row) {}
   }

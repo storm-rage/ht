@@ -144,5 +144,13 @@ export default {
    */
   submitTradeRebut(params){
     return request.post('/business-manage/submit-trade-rebut',params)
+  },
+  /**
+   * 业务管理-操作记录
+   * @param params
+   * @returns {Promise<AxiosResponse<any>>}
+   */
+  getOperateList(params) {
+    return request.get('/business-manage/get-trade-rebut-detail',{params})
   }
 }

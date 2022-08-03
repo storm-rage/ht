@@ -3,46 +3,59 @@
     <zj-content-container>
       <!--  我的凭证  -->
           <div class="zj-search-condition zj-m-b-20" style="border-bottom: none;">
+            <zj-money-block
+              img-name="hold-img"
+              text="正常持有的电子债权凭证金额"
+              tipsText="统计的是所有正常持有的电子债权凭证金额合计"
+            />
             <zj-list-layout>
+              <template slot="leftBtns">
+                <vxe-button class="export" icon="el-icon-download" @click="toExport" :api="zjControl.exportHoldBillList">导出</vxe-button>
+              </template>
+              <template slot="rightBtns">
+                <vxe-button class="reset" icon="el-icon-refresh" @click="resetSearch()">重置</vxe-button>
+                <vxe-button class="search" icon="el-icon-search" @click="search(true,'searchTable')">查询</vxe-button>
+              </template>
               <template slot="searchForm">
                 <el-form ref="searchForm" :model="searchForm">
                   <el-form-item label="签发人：">
-                    <el-input v-model="searchForm.voucherCode" @keyup.enter.native="search"></el-input>
+                    <el-input v-model="searchForm.writerNameLike" @keyup.enter.native="search"></el-input>
                   </el-form-item>
                   <el-form-item label="到期日期：">
                     <zj-date-range-picker
-                      :startDate.sync="searchForm.voucherDateStart"
-                      :endDate.sync="searchForm.voucherDateEnd"
+                      :startDate.sync="searchForm.expireDateStart"
+                      :endDate.sync="searchForm.expireDateEnd"
                     ></zj-date-range-picker>
                   </el-form-item>
                   <el-form-item label="凭证金额：">
                     <zj-amount-range :startAmt.sync="searchForm.ebillAmtStart" :endAmt.sync="searchForm.ebillAmtEnd"></zj-amount-range>
                   </el-form-item>
                   <el-form-item label="凭证编号：">
-                    <el-input v-model="searchForm.voucherCode" @keyup.enter.native="search"></el-input>
+                    <el-input v-model="searchForm.ebillCode" @keyup.enter.native="search"></el-input>
                   </el-form-item>
                   <el-form-item label="签收日期：">
                     <zj-date-range-picker
-                      :startDate.sync="searchForm.voucherDateStart"
-                      :endDate.sync="searchForm.voucherDateEnd"
+                      :startDate.sync="searchForm.holderDateStart"
+                      :endDate.sync="searchForm.holderDateEnd"
                     ></zj-date-range-picker>
                   </el-form-item>
                 </el-form>
               </template>
-              <zj-table ref="searchTable" :dataList="list" :radio-config="{highlight: true}">
-                <zj-table-column title="凭证编号">
+              <zj-table ref="searchTable" :api="zjControl.queryHoldBillList" :params="searchForm">
+                <zj-table-column title="债权凭证编号">
                   <template v-slot="{row}">
-                    <zj-button type="text" @click="goChild('billLssueMyBillDetail',row)">{{row.field1}}</zj-button>
+                    <zj-button type="text" @click="toDetail(row)">{{row.ebillCode}}</zj-button>
                   </template>
                 </zj-table-column>
-                <zj-table-column field="field3" title="签发人"/>
-                <zj-table-column field="field3" title="凭证金额" :formatter="money"/>
-                <zj-table-column field="field4" title="已转让金额" :formatter="money"/>
-                <zj-table-column field="field5" title="剩余可用金额" :formatter="money"/>
-                <zj-table-column field="field5" title="签发日期" :formatter="date"/>
-                <zj-table-column field="field5" title="签收日期" :formatter="date"/>
-                <zj-table-column field="field5" title="到期日期" :formatter="date"/>
-                <zj-table-column field="field6" title="凭证状态" :formatter="obj=>typeMap(dictionary,obj.cellValue)"/>
+                <zj-table-column field="sourceCode" title="原始债权凭证编号"/>
+                <zj-table-column field="writerName" title="签发人" />
+                <zj-table-column field="holderName" title="当前持有人" />
+                <zj-table-column field="ebillAmt" title="债权凭证金额" :formatter="money"/>
+                <zj-table-column field="availableAmt" title="剩余可用金额" :formatter="money"/>
+                <zj-table-column field="payableIssuanceDate" title="签发日期" :formatter="date"/>
+                <zj-table-column field="holderDate" title="签收日期" :formatter="date"/>
+                <zj-table-column field="expireDate" title="债权凭证到期日" :formatter="date"/>
+                <zj-table-column field="state" title="凭证状态" :formatter="obj=>typeMap(dictionary.state,obj.cellValue)"/>
               </zj-table>
             </zj-list-layout>
           </div>
@@ -50,71 +63,48 @@
   </div>
 </template>
 <script>
+import billLssueMyBill from "../../../api/billLssueMyBillApi";
+
 export default {
+  name:'billLssueMyBill',
   components: {},
   data() {
     return {
-      searchEntForm: {
-        entState: '',
+      zjControl: {
+        queryHoldBillList:this.$api.billLssueMyBill.queryHoldBillList,//我的凭证-查询
+        exportHoldBillList:this.$api.billLssueMyBill.exportHoldBillList,//我的凭证-导出
+        getMyEbBillDictionary:this.$api.billLssueMyBill.getMyEbBillDictionary,//获取数据字典
       },
       searchForm: {
-        supplierName: '',
-        businessType: '',
-        productType: '',
-        productNo: '',
-        productState: '',
+        writerNameLike: '',
+        expireDateStart: '',
+        expireDateEnd: '',
+        ebillAmtStart: '',
+        ebillAmtEnd: '',
+        ebillCode: '',
+        holderDateStart: '',
+        holderDateEnd: '',
       },
-      list: [
-        {
-          field1: 'scm00001',
-          field2: '某某产品一号',
-          field3: '上游',
-          field4: '订单保理',
-          field5: '2022.09.08 11:18:19',
-          field6: '生效',
-          field7: '是'
-        }
-      ],
-      tradeList: []
     };
   },
   methods: {
-    /**
-     *
-     * @param row
-     */
-    toContractDetail(row) {
-      console.error(row);
-      this.$router.push({name: 'businessDetail'});
-    },
-    //凭证签发人/转让企业改变事件
-    entChange(){
-
-    },
-    toContractSign(row) {
-      console.log(row);
-    },
-    handleRadioChange({row}) {
-      this.tradeList.push({
-        field1: '佛山市a有限公司',
-        field2: '是',
-        field3: '756756756767',
-        field4: '非保理',
-        field5: '12',
-        field6: '1000',
-        field7: '2000',
-        field8: '正常'
+    //获取数据字典
+    getMyEbBillDictionary(){
+      this.zjControl.getMyEbBillDictionary().then(res=>{
+        this.dictionary = res.data
       })
     },
-    toDetail (row) {
-      this.goChild('productInfoManageDetail', row)
+    toDetail(row) {
+      this.goChild('billLssueMyBillDetail',row)
     },
-    toEdit (row) {
-      this.goChild('productInfoManageEdit', row)
+    toExport() {
+      this.zjControl.exportHoldBillList(this.searchForm)
     },
-    review(row) {
-      this.goChild('orderFinancingReview', row)
-    },
+
+  },
+  created() {
+    this.getApi()
+    this.getMyEbBillDictionary()
   }
 };
 </script>

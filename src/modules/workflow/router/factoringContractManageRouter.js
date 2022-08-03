@@ -2,7 +2,7 @@ const factoringContractManageRouter = [
   {
     path: '/factoringContractAudit',
     name: 'factoringContractAudit',
-    component: () => import('../views/factoringContractManage/contract/audit.vue'),
+    component: () => import('../views/factoringContractManage/contract/review/audit.vue'),
     meta: {
       isMock: true,
       title: '国内商业保理合同确认',
@@ -15,7 +15,7 @@ const factoringContractManageRouter = [
   {
     path: '/factoringContractApplyDetail',
     name: 'factoringContractApplyDetail',
-    component: () => import('../views/factoringContractManage/contract/detail.vue'),
+    component: () => import('../views/factoringContractManage/contract/detail/detail.vue'),
     meta: {
       isMock: true,
       title: '国内商业保理合同确认交易详情',
@@ -28,7 +28,7 @@ const factoringContractManageRouter = [
   {
     path: '/factoringQuotaChangeAudit',
     name: 'factoringQuotaChangeAudit',
-    component: () => import('../views/factoringContractManage/quota/audit.vue'),
+    component: () => import('../views/factoringContractManage/quota/review/audit.vue'),
     meta: {
       isMock: true,
       title: '额度变更审核',
@@ -41,7 +41,7 @@ const factoringContractManageRouter = [
   {
     path: '/factoringQuotaChangeDetail',
     name: 'factoringQuotaChangeDetail',
-    component: () => import('../views/factoringContractManage/quota/detail.vue'),
+    component: () => import('../views/factoringContractManage/quota/detail/detail.vue'),
     meta: {
       isMock: true,
       title: '额度变更审核详情',

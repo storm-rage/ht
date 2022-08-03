@@ -2,11 +2,11 @@
   <zj-content-container>
     <zj-top-header title="续签合同申请复核"></zj-top-header>
     <!--  业务申请信息  -->
-    <biz-apply-info></biz-apply-info>
+    <biz-apply-info :biz-info="applyModel"></biz-apply-info>
     <!--  具体业务信息  -->
-    <contract-re-sign-review-audit biz-id="1"></contract-re-sign-review-audit>
+    <contract-re-sign-review-audit :biz-id="row.id"></contract-re-sign-review-audit>
     <!--  操作记录  -->
-    <operate-log></operate-log>
+    <operate-log :log-list="operateLogList"></operate-log>
     <!--  审批意见  -->
     <audit-remark ref="auditRemark"></audit-remark>
     <zj-ht-approval></zj-ht-approval>
@@ -23,11 +23,12 @@ import BizApplyInfo from '../../../components/bizApplyInfo';
 import OperateLog from '../../../components/operateLog';
 import AuditRemark from '../../../components/auditRemark';
 import contractReSignReviewAudit from '@modules/ebill/views/productManage/businessManage/workflow/contractReSign/review/audit.vue';
-
+import workflowMixin from '@modules/workflow/views/businessManage/mixins/workflowMixin';
 /**
  * 续签合同申请复核操作
  */
 export default {
+  mixins: [workflowMixin],
   components: {
     BizApplyInfo,
     OperateLog,
@@ -75,7 +76,7 @@ export default {
           this.zjControl.recheckContractRenewal({
             id: this.row.id,
             notes,
-            operResult: OperResult.REJECT
+            operResult: OperResult.BACK
           }).then(res => {
             this.rejectLoading = false;
             //成功，关闭
