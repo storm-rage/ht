@@ -22,13 +22,13 @@
               :popper-append-to-body="false"
             >
               <el-option value="" label="全部"></el-option>
-              <!-- <el-option
-              v-for="item in dictionary.isGenerateVouchers"
-              :key="item.code"
-              :label="item.desc"
-              :value="item.code"
-            >
-            </el-option> -->
+              <el-option
+                v-for="item in dictionary.stateList"
+                :key="item.code"
+                :label="item.desc"
+                :value="item.code"
+              >
+              </el-option>
             </el-select>
           </el-form-item>
           <el-form-item label="签发日期：" class="col-right">
@@ -75,7 +75,7 @@
       >
         <zj-table-column field="ebillCode" title="凭证编号">
           <template v-slot="{ row }">
-            <span class="table-elbill-code" @click="toBillDetails(row)">{{
+            <span class="table-elbill-code" @click="goChild('billLssueMyBillDetail',row)">{{
               row.ebillCode
             }}</span>
           </template>
@@ -114,13 +114,13 @@
           <template v-slot="{ row }">
             <zj-button
               type="text"
-              @click="toCancellation"
+              @click="toCancellation(row.id)"
               :api="zjBtn.invalidApply"
               >作废申请</zj-button
             >
             <zj-button
               type="text"
-              @click="toRevocation"
+              @click="toRevocation(row.id)"
               :api="zjBtn.cancelSubmit"
               >撤销</zj-button
             >
@@ -138,7 +138,7 @@ import revocationDialog from "./dialog/revocation";
 export default {
   components: {
     cancellationDialog,
-    revocationDialog
+    revocationDialog,
   },
   data() {
     return {
@@ -162,17 +162,15 @@ export default {
     exportData() {
       this.$api.exportBill(this.searchForm);
     },
-    //作废
-    toCancellation() {
-      this.$refs.cancellationDialog.open({ form: this.form }, true);
+
+    //作废弹框
+    toCancellation(id) {
+      this.$refs.cancellationDialog.open({ id }, true);
     },
-    //撤销
-    toRevocation() {
-      this.$refs.revocationDialog.open({ form: this.form }, true);
-    },
-    toBillDetails(row) {
-      console.log(row);
-    },
+    //撤销弹框
+    toRevocation(id) {
+      this.$refs.revocationDialog.open({ id }, true);
+    }
   },
 };
 </script>

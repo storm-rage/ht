@@ -4,12 +4,12 @@
       <template slot="searchForm">
         <el-form ref="searchForm" :model="searchForm">
           <el-form-item label="凭证持有人：">
-            <el-input v-model="searchForm.issueEntName" />
+            <el-input v-model="searchForm.receiptEntNameLike" />
           </el-form-item>
           <el-form-item label="申请日期：" class="col-right">
             <zj-date-range-picker
-              :startDate.sync="searchForm.expireDateStart"
-              :endDate.sync="searchForm.expireDateEnd"
+              :startDate.sync="searchForm.createDatetimeStart"
+              :endDate.sync="searchForm.createDatetimeEnd"
             />
           </el-form-item>
           <el-form-item label="凭证编号：" class="col-center">
@@ -25,38 +25,33 @@
         :params="searchForm"
         :api="zjControl.tableApi"
       >
-        <zj-table-column field="ebillCode" title="凭证编号">
-          <template v-slot="{ row }">
-            <span class="table-elbill-code" @click="toBillDetails(row)">{{
-              row.ebillCode
-            }}</span>
-          </template>
-        </zj-table-column>
-        <zj-table-column field="issueEntName" title="凭证签发人" />
-        <zj-table-column field="issueEntName" title="凭证签发人" />
-        <zj-table-column field="ebillAmt" title="凭证金额" :formatter="date" />
+        <zj-table-column field="ebillCode" title="凭证编号" />
+        <zj-table-column field="payEntName" title="凭证签发人" />
+        <zj-table-column field="receiptEntName" title="凭证持有人" />
+        <zj-table-column field="ebillAmt" title="凭证金额" :formatter="money" />
         <zj-table-column
-          field="issueDate"
+          field="openDate"
           title="凭证签发日期"
           :formatter="date"
         />
         <zj-table-column
-          field="issueDate"
-          title="凭证到期日期"
+          field="expireDate"
+          title="凭证到期日"
           :formatter="date"
         />
-        <zj-table-column field="transferAmt" title="开立凭证说明" />
+        <zj-table-column field="payableNotes" title="开立凭证说明" />
+        <zj-table-column field="acctBillCode" title="对账单编号" />
         <zj-table-column
-          field="receiveDate"
-          title="申请日期"
+          field="createDatetime"
+          title="申请时间"
           :formatter="date"
         />
-        <zj-table-column field="expireDate" title="作废原因" />
+        <zj-table-column field="rejectNotes" title="作废原因" />
         <zj-table-column title="操作" fixed="right">
           <template>
             <zj-button
               type="text"
-              @click="&quot;&quot;;"
+              @click="goChild('', row)"
               :api="zjBtn.getEnterprise"
               >复核</zj-button
             >
@@ -70,18 +65,14 @@
 export default {
   data() {
     return {
-      zjControl: {},
+      zjControl: this.$api.billRejectAudit,
       searchForm: {},
-      XYchecked: false,
     };
   },
   created() {
     this.getApi();
   },
   methods: {
-    toBillDetails(row) {
-      console.log(row);
-    },
   },
 };
 </script>

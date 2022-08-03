@@ -27,6 +27,9 @@ export default {
   },
   data() {
     return {
+      zjControl: {
+        cancelSubmit: this.$api.myOpenBill.cancelSubmit,
+      },
       dialogShow: false,
       dialogForm: {},
       rules: {
@@ -38,8 +41,14 @@ export default {
   },
   methods: {
     onConfirm() {
-      // this.zjControl.xxx(this.form)
-      this.dialogShow = false;
+      this.$refs.dialogForm.validate((valid) => {
+        if (valid) {
+          this.zjControl.cancelSubmit(this.dialogForm).then((res) => {
+            this.$message.success("已作废");
+          });
+          this.dialogShow = false;
+        }
+      });
     },
     cancel() {
       this.dialogShow = false;
