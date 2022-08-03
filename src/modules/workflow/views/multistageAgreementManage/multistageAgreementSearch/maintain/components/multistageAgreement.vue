@@ -4,23 +4,26 @@
 
     <zj-content>
       <el-row class="button-row">
-        <zj-button type="primary" icon="el-icon-circle-plus-outline" @click="addEditAgreement('','新增')">新增</zj-button>
+        <zj-button type="primary" icon="el-icon-circle-plus-outline" @click="addEditAgreement({},'新增')">新增</zj-button>
       </el-row>
-      <zj-table ref="logTable" :dataList="agreementList">
+      <zj-table ref="agreementTable"
+                :dataList="tableData"
+      >
         <zj-table-column type="checkbox" width="40px" fixed="left"></zj-table-column>
-        <zj-table-column field="field1" title="阶段性协议编号"/>
-        <zj-table-column field="field2" title="阶段性协议名称"/>
-        <zj-table-column field="field2" title="协议类型"/>
-        <zj-table-column field="field2" title="协议签订日期" :formatter="date"/>
-        <zj-table-column field="field2" title="协议预计到期日" :formatter="date"/>
-        <zj-table-column field="field2" title="协议数量"/>
-        <zj-table-column field="field2" title="单价"/>
-        <zj-table-column field="field2" title="协议预估总价" :formatter="money"/>
-        <zj-table-column field="field2" title="协议附件"/>
-        <zj-table-column field="field2" title="是否已开始执行"/>
-        <zj-table-column field="field2" title="已开始执行数量"/>
-        <zj-table-column field="field2" title="状态"/>
-        <zj-table-column field="field5" title="数据来源"/>
+        <zj-table-column field="agreementNo" title="SRM阶段性协议编号"/>
+        <zj-table-column field="agreementNo" title="阶段性协议编号"/>
+        <zj-table-column field="agreementName" title="阶段性协议名称"/>
+        <zj-table-column field="agreementType" title="协议类型"/>
+        <zj-table-column field="agreementStartDate" title="协议签订日期" :formatter="date"/>
+        <zj-table-column field="agreementEstimateEndDate" title="协议预计到期日" :formatter="date"/>
+        <zj-table-column field="agreementNumber" title="协议数量"/>
+        <zj-table-column field="price" title="单价"/>
+        <zj-table-column field="agreementEstimatedPrice" title="协议预估总价" :formatter="money"/>
+        <zj-table-column field="fileName" title="协议附件"/>
+        <zj-table-column field="isStartExecute" title="是否已开始执行"/>
+        <zj-table-column field="executeNumber" title="已开始执行数量"/>
+        <zj-table-column field="agreementStatus" title="状态"/>
+        <zj-table-column field="isAgreementOnline" title="数据来源"/>
         <zj-table-column title="操作" fixed="right">
           <template v-slot="{row}">
             <zj-button type="text" @click="addEditAgreement(row,'维护')">维护</zj-button>
@@ -29,7 +32,7 @@
         </zj-table-column>
       </zj-table>
     </zj-content>
-    <add-or-edit ref="addOrEdit"/>
+    <add-or-edit ref="addOrEdit" :zjControl="zjControl"/>
   </zj-content-block>
 </template>
 <script>
@@ -38,20 +41,38 @@ import ZjButton from "@pubComponent/button/ZjButtons";
 import addOrEdit from '../dialog/addOrEdit';
 
 export default {
-  components: {ZjButton,addOrEdit},
+  props: {
+    tableData: Array,
+    dictionary: Object,
+    zjControl: Object,
+  },
+  components: {
+    ZjButton,
+    addOrEdit
+  },
   data () {
     return {
-      agreementList: [
-        {}
-      ],
+
     };
   },
   methods: {
     addEditAgreement(row,flag){
       this.$refs.addOrEdit.show(row,flag)
     },
-    attaDelete(row) {},
+    //删除协议附件
+    attaDelete(row) {
+      let params = {
+        phasedId: row.phasedId,
+      }
+      this.zjControl.deletePhasedAgree(params).then(res => {
+        this.$message.success(res.data.msg)
+        console.log(row.fileId)
+      })
+    },
 
+  },
+  created() {
+    this.getRow()
   }
 }
 </script>
