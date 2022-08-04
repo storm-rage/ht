@@ -171,9 +171,9 @@
             <zj-table-column field="bankAccname" title="银行账户名称" :edit-render="{name: '$input'}"/>
             <zj-table-column field="bankAccno" title="银行账号" :edit-render="{name: '$input'}"/>
             <zj-table-column field="bankName" title="开户行" :edit-render="{name: '$input'}">
-              <tempalte v-slot="{row}">
-                {{row.bankName}}
-              </tempalte>
+<!--              <tempalte v-slot="{row}">-->
+<!--                {{row.bankName}}-->
+<!--              </tempalte>-->
               <template v-slot="{row}">
                 <el-select v-model="row.bankName"
                            filterable
