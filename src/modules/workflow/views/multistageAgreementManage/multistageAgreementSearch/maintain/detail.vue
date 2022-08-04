@@ -26,12 +26,12 @@ export default {
     return {
       zjControl: {
         getBackPhasedAgreeInfo:this.$api.multistageAgreementManageWorkflow.getBackPhasedAgreeInfo,//运营端-阶段性协议维护-详情
-
       },
       detailData: {},
     }
   },
   methods: {
+    //获取详情
     getDetail() {
       let params = {
         busTradeId: this.row.busTradeId,

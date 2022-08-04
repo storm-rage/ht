@@ -58,28 +58,20 @@
             <el-col :span="8">
               <el-form-item label="协议数量：">
                 <el-input v-model="form.agreementNumber">
-                  <template slot="append">单位</template>
-                </el-input>
-              </el-form-item>
-            </el-col>
-            <el-col :span="8">
-              <el-form-item label="已执行数量：">
-                <el-input v-model="form.executeNumber">
-                  <template slot="append">单位</template>
                 </el-input>
               </el-form-item>
             </el-col>
             <el-col :span="8">
               <el-form-item label="单位：">
                 <el-input v-model="form.unit">
-                  <template slot="append">元</template>
+<!--                  <template slot="append">元</template>-->
                 </el-input>
               </el-form-item>
             </el-col>
             <el-col :span="8">
               <el-form-item label="单价：">
                 <el-input v-model="form.price">
-                  <template slot="append">元</template>
+<!--                  <template slot="append">元</template>-->
                 </el-input>
               </el-form-item>
             </el-col>
@@ -88,14 +80,17 @@
             <el-col :span="8">
               <el-form-item label="计价单位：">
                 <el-input v-model="form.price">
-                  <template slot="append">元</template>
+<!--                  <template slot="append">元</template>-->
                 </el-input>
               </el-form-item>
             </el-col>
             <el-col :span="8">
               <el-form-item label="协议预估总价：">
-                <el-input v-model="form.agreementEstimatedPrice"></el-input>
-                <div>{{digitUp(1000)}}</div>
+                <zj-number-input :precision="0"
+                                 v-model="form.agreementEstimatedPrice"
+                                 placeholder="请输入协议预估总价"
+                />
+                <div>{{digitUp(form.agreementEstimatedPrice)}}</div>
               </el-form-item>
             </el-col>
             <el-col :span="8">
@@ -129,13 +124,14 @@
       <!--  产品业务设置    -->
     </el-form>
     <div slot="footer" class="zj-center" style="display: block;width: 100%">
-      <el-button style="width: 100px" size="small" type="primary" @click="submit">确认</el-button>
-      <el-button style="width: 100px" size="small" @click="close">取消</el-button>
+      <el-button style="width: 100px" size="small" type="primary" @click="submit" :api="zjControl.savePhasedAgree || zjControl.getAddDetail">确认</el-button>
+      <el-button style="width: 100px" size="small" @click="cancel">取消</el-button>
     </div>
   </el-dialog>
 </template>
 <script>
 export default {
+  name: 'addOrEdit',
   props: {
     zjControl: Object,
   },
@@ -188,23 +184,20 @@ export default {
     };
   },
   methods: {
-    show(row,title) {
+    show(row, title) {
       if(row) {
         this.rows = [{...row}]
+        this.form = {...row}
       }
-      this.dialogVisible = true;
+      this.dialogVisible = true
       this.title = title
     },
-    toAdd () {
-      this.form.list.push({
-        startDay: '',
-        endDay: '',
-        discountAmt: '',
-        financeRate: ''
-      })
+    clearForm() {
+      this.form = {}
     },
-    close () {
-      this.dialogVisible = false;
+    cancel() {
+      this.clearForm()
+      this.dialogVisible = false
     },
     attaUpload({file}) {
       let formData = new FormData()
@@ -215,7 +208,7 @@ export default {
       })
     },
     //新增或维护协议
-    submit () {
+    submit() {
       console.log(this.title)
       this.$refs.form.validate((valid) => {
         if (valid) {
@@ -227,13 +220,18 @@ export default {
           if(this.title === '新增') {
             this.zjControl.getAddDetail(params).then(res=>{
               //...
+              this.$message.success(res.msg)
+              this.clearForm()
+              this.dialogVisible = false
             })
           }
           //维护保存
           if(this.title === '维护') {
             this.zjControl.savePhasedAgree(params).then(res=>{
               //...
-
+              this.$message.success(res.msg)
+              this.clearForm()
+              this.dialogVisible = false
             })
           }
         }
@@ -241,7 +239,6 @@ export default {
     }
   },
   created() {
-    this.getApi()
   }
 };
 </script>

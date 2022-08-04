@@ -69,7 +69,7 @@
             </el-form-item>
           </el-form>
         </template>
-        <zj-table ref="searchTable" :dataList="myPhasedAgreePageList" :params="searchForm" >
+        <zj-table ref="searchTable" :dataList="myPhasedAgreePageList" :params="searchForm" :api="zjControl.queryMyPhasedAgreePage">
           <zj-table-column field="coreCompanyName" title="买方企业名称"/>
           <zj-table-column field="agreementNo" title="阶段性协议编号"/>
           <zj-table-column field="agreementName" title="阶段性协议名称"/>
@@ -148,7 +148,6 @@ export default {
   created() {
     this.getMyTradeRelationList()
     this.getPhasedAgreeDirectory()
-    // this.queryMyPhasedAgreePage()
   },
   mounted() {
     console.log(this.dictionary)

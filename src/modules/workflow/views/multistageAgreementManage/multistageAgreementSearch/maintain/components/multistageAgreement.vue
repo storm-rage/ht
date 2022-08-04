@@ -3,8 +3,9 @@
     <zj-header title="阶段性协议信息"></zj-header>
 
     <zj-content>
+      <!--   代办和已办结没有新增按钮   -->
       <el-row class="button-row">
-        <zj-button type="primary" icon="el-icon-circle-plus-outline" @click="addEditAgreement({},'新增')">新增</zj-button>
+        <zj-button type="primary" icon="el-icon-circle-plus-outline" @click="addEditAgreement({},'新增')" :api="zjControl.getAddDetail">新增</zj-button>
       </el-row>
       <zj-table ref="agreementTable"
                 :dataList="tableData"
@@ -26,8 +27,8 @@
         <zj-table-column field="isAgreementOnline" title="数据来源"/>
         <zj-table-column title="操作" fixed="right">
           <template v-slot="{row}">
-            <zj-button type="text" @click="addEditAgreement(row,'维护')">维护</zj-button>
-            <zj-button type="text" @click="attaDelete(row)">删除</zj-button>
+            <zj-button type="text" @click="addEditAgreement(row,'维护')" :api="zjControl.savePhasedAgree">维护</zj-button>
+            <zj-button type="text" @click="attaDelete(row)" :api="zjControl.deletePhasedAgree">删除</zj-button>
           </template>
         </zj-table-column>
       </zj-table>

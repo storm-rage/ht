@@ -4,6 +4,7 @@
     <zj-content>
 
       <zj-list-layout>
+        <!--   代办和已办结没有按钮和查询条件   -->
         <template slot="rightBtns">
           <vxe-button class="reset" icon="el-icon-refresh" @click="resetSearch()">重置</vxe-button>
           <vxe-button class="search" icon="el-icon-search" @click="search(true,'searchTable')">查询</vxe-button>
