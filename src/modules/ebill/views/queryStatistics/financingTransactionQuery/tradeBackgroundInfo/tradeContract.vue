@@ -1,6 +1,6 @@
 <template>
   <div>
-    <el-form :model="form"  label-width="200px">
+    <el-form :model="form"  label-width="200px" v-if="form">
       <el-row>
         <el-col :span="8">
           <el-form-item label="贸易合同编号：">{{form.contractNo}}</el-form-item>
@@ -35,7 +35,7 @@
               <span class="atta-name">
               {{form.fileName}}
             </span>
-              <zj-button type="text" @click="attaDownload(form.fileId)">下载</zj-button>
+              <zj-button type="text" @click="attaDownload">下载</zj-button>
             </div>
           </el-form-item>
         </el-col>
@@ -67,8 +67,12 @@ export default {
     }
   },
   methods: {
-    attaDownload(fileId) {
-      this.zjControl.downloadFile(fileId)
+    attaDownload() {
+      let params = {
+        fileId : this.form.fileId,
+        fileName : this.form.fileName,
+      }
+      this.zjControl.downloadFile(params)
     }
   },
 }

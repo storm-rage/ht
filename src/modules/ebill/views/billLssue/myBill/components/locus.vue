@@ -1,6 +1,12 @@
 <template>
   <zj-content-block>
     <zj-content>
+<!--      <trace-tree-->
+<!--        :data="dataTraceTree"-->
+<!--        collapsable-->
+<!--      >-->
+
+<!--      </trace-tree>-->
 
     </zj-content>
   </zj-content-block>
@@ -8,6 +14,10 @@
 
 <script>
 export default {
+  name: 'locus',
+  props: {
+    dataTraceTree:{},
+  },
   data() {
     return {};
   },
