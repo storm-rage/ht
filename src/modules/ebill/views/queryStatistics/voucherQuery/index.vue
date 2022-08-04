@@ -5,65 +5,73 @@
           <div class="zj-search-condition zj-m-b-20" style="border-bottom: none;">
             <zj-list-layout>
               <template slot="leftBtns">
-                <vxe-button class="export" icon="el-icon-download" @click="toExport">导出</vxe-button>
+                <vxe-button class="export" icon="el-icon-download" @click="toExport" :api="zjControl.exportElectronicClaimsBill">导出</vxe-button>
               </template>
               <template slot="searchForm">
                 <el-form ref="searchForm" :model="searchForm">
                   <el-form-item label="签发人：">
-                    <el-input v-model="searchForm.voucherCode" @keyup.enter.native="search"></el-input>
+                    <el-input v-model="searchForm.payEntNameLike" @keyup.enter.native="search"></el-input>
                   </el-form-item>
                   <el-form-item label="原始持有人：">
-                    <el-input v-model="searchForm.voucherCode" @keyup.enter.native="search"></el-input>
+                    <el-input v-model="searchForm.receiptEntNameLike" @keyup.enter.native="search"></el-input>
                   </el-form-item>
                   <el-form-item label="债权凭证状态：">
-                    <el-select v-model="searchForm.voucherCode">
-                      <el-option label="全部"></el-option>
+                    <el-select v-model="searchForm.state">
+                      <el-option label="全部" value=""/>
+                      <el-option v-for="item in dictionary.stateList"
+                                 :label="item.desc"
+                                 :value="item.code"
+                                 :key="item.code"
+                      />
                     </el-select>
                   </el-form-item>
                   <el-form-item label="当前持有人：">
-                    <el-input v-model="searchForm.voucherCode" @keyup.enter.native="search"></el-input>
+                    <el-input v-model="searchForm.holderNameLike" @keyup.enter.native="search"></el-input>
                   </el-form-item>
                   <el-form-item label="债权凭证编号：">
-                    <el-input v-model="searchForm.voucherCode" @keyup.enter.native="search"></el-input>
+                    <el-input v-model="searchForm.ebillCode" @keyup.enter.native="search"></el-input>
                   </el-form-item>
                   <el-form-item label="原始债权凭证编号：">
-                    <el-input v-model="searchForm.voucherCode" @keyup.enter.native="search"></el-input>
+                    <el-input v-model="searchForm.rootCode" @keyup.enter.native="search"></el-input>
                   </el-form-item>
                   <el-form-item label="债权凭证签发日期：">
                     <zj-date-range-picker
-                      :startDate.sync="searchForm.voucherDateStart"
-                      :endDate.sync="searchForm.voucherDateEnd"
-                    ></zj-date-range-picker>
+                      :startDate.sync="searchForm.payableIssuanceDateStart"
+                      :endDate.sync="searchForm.payableIssuanceDateEnd"
+                    />
                   </el-form-item>
                   <el-form-item label="债权凭证到期日：">
                     <zj-date-range-picker
-                      :startDate.sync="searchForm.voucherDateStart"
-                      :endDate.sync="searchForm.voucherDateEnd"
-                    ></zj-date-range-picker>
+                      :startDate.sync="searchForm.payableExpireDateStart"
+                      :endDate.sync="searchForm.payableExpireDateEnd"
+                    />
                   </el-form-item>
                   <el-form-item label="债权凭证金额：">
-                    <zj-amount-range :startAmt.sync="searchForm.ebillAmtStart" :endAmt.sync="searchForm.ebillAmtEnd"></zj-amount-range>
+                    <zj-amount-range :startAmt.sync="searchForm.payableAmtStart" :endAmt.sync="searchForm.payableAmtEnd"></zj-amount-range>
                   </el-form-item>
                 </el-form>
               </template>
-              <zj-table ref="searchTable" :dataList="list" :radio-config="{highlight: true}">
+              <zj-table ref="searchTable"
+                        :api="zjControl.queryElectronicClaimsBillPage"
+                        :params="searchForm"
+              >
                 <zj-table-column title="债权凭证编号">
                   <template v-slot="{row}">
-                    <zj-button type="text" @click="goChild('voucherQueryDetail',row)">{{row.field1}}</zj-button>
+                    <zj-button type="text" @click="toDetail(row)">{{row.ebillCode}}</zj-button>
                   </template>
                 </zj-table-column>
                 <zj-table-column title="原始债权凭证编号">
                   <template v-slot="{row}">
-                    <zj-button type="text" @click="goChild('voucherQueryDetail',row)">{{row.field1}}</zj-button>
+                    <zj-button type="text" @click="toDetail(row)">{{row.rootCode}}</zj-button>
                   </template>
                 </zj-table-column>
-                <zj-table-column field="field3" title="签发人"/>
-                <zj-table-column field="field3" title="原始持有人" />
-                <zj-table-column field="field4" title="当前持有人" />
-                <zj-table-column field="field5" title="债权凭证金额" :formatter="money"/>
-                <zj-table-column field="field5" title="债权凭证签发日期" :formatter="date"/>
-                <zj-table-column field="field5" title="债权凭证到期日" :formatter="date"/>
-                <zj-table-column field="field6" title="债权凭证状态" :formatter="obj=>typeMap(dictionary,obj.cellValue)"/>
+                <zj-table-column field="payEntName" title="签发人"/>
+                <zj-table-column field="receiptEntName" title="原始持有人" />
+                <zj-table-column field="holderName" title="当前持有人" />
+                <zj-table-column field="payableAmt" title="债权凭证金额" :formatter="money"/>
+                <zj-table-column field="payableIssuanceDate" title="债权凭证签发日期" :formatter="date"/>
+                <zj-table-column field="payableExpireDate" title="债权凭证到期日" :formatter="date"/>
+                <zj-table-column field="state" title="债权凭证状态" :formatter="obj=>typeMap(dictionary.stateList,obj.cellValue)"/>
               </zj-table>
             </zj-list-layout>
           </div>
@@ -72,70 +80,48 @@
 </template>
 <script>
 export default {
-  components: {},
+  name: 'voucherQuery',
   data() {
     return {
-      searchEntForm: {
-        entState: '',
+      zjControl: {
+        exportElectronicClaimsBill:this.$api.voucherQuery.exportElectronicClaimsBill,//电子债权凭证查询-导出
+        queryElectronicClaimsBillPage:this.$api.voucherQuery.queryElectronicClaimsBillPage,//电子债权凭证查询-列表
+        getElectronicClaimsBillDirectory:this.$api.voucherQuery.getElectronicClaimsBillDirectory,//电子债权凭证查询-数据字典
       },
       searchForm: {
-        supplierName: '',
-        businessType: '',
-        productType: '',
-        productNo: '',
-        productState: '',
+        payEntNameLike: '',
+        receiptEntNameLike: '',
+        state: '',
+        holderNameLike: '',
+        ebillCode: '',
+        rootCode: '',
+        payableIssuanceDateStart: '',
+        payableIssuanceDateEnd: '',
+        payableExpireDateStart: '',
+        payableExpireDateEnd: '',
+        payableAmtStart: '',
+        payableAmtEnd: '',
       },
-      list: [
-        {
-          field1: 'scm00001',
-          field2: '某某产品一号',
-          field3: '上游',
-          field4: '订单保理',
-          field5: '2022.09.08 11:18:19',
-          field6: '生效',
-          field7: '是'
-        }
-      ],
-      tradeList: []
+      dictionary: {},
     };
   },
   methods: {
-    /**
-     *
-     * @param row
-     */
-    toContractDetail(row) {
-      console.error(row);
-      this.$router.push({name: 'businessDetail'});
+    toExport() {
+      this.zjControl.exportElectronicClaimsBill(this.searchForm)
     },
-    //凭证签发人/转让企业改变事件
-    entChange(){
-
+    toDetail(row) {
+      this.goChild('voucherQueryDetail', row)
     },
-    toContractSign(row) {
-      console.log(row);
-    },
-    handleRadioChange({row}) {
-      this.tradeList.push({
-        field1: '佛山市a有限公司',
-        field2: '是',
-        field3: '756756756767',
-        field4: '非保理',
-        field5: '12',
-        field6: '1000',
-        field7: '2000',
-        field8: '正常'
+    //获取数据字典
+    getMyEbBillDictionary(){
+      this.zjControl.getElectronicClaimsBillDirectory().then(res=>{
+        this.dictionary = res.data
       })
     },
-    toDetail (row) {
-      this.goChild('productInfoManageDetail', row)
-    },
-    toEdit (row) {
-      this.goChild('productInfoManageEdit', row)
-    },
-    review(row) {
-      this.goChild('orderFinancingReview', row)
-    },
-  }
+  },
+  created() {
+    this.getApi()
+    this.getMyEbBillDictionary()
+  },
 };
 </script>

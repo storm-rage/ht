@@ -1,6 +1,6 @@
 <template>
     <zj-content-container>
-      <!--  电子债权凭证资详情  -->
+      <!--  电子债权凭证详情  -->
       <zj-top-header :title="titleInfo"></zj-top-header>
       <zj-content-block v-if="workflow === 'pzxx'">
         <bill-detail :dataForm="form"/>
