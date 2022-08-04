@@ -107,9 +107,9 @@ export default {
   },
   methods: {
     toExport() {
-      this.zjControl.exportElectronicClaimsBill('searchTable')
+      this.zjControl.exportElectronicClaimsBill(this.searchForm)
     },
-    toDetail (row) {
+    toDetail(row) {
       this.goChild('voucherQueryDetail', row)
     },
     //获取数据字典
