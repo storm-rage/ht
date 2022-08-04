@@ -19,11 +19,11 @@ const billLssueRouter = [
     path: '/openBillApplyDetails',
     name: 'openBillApplyDetails',
     component: () => import('../views/billLssue/issuanceApply/details/index.vue'),
-    meta:{
-      isMock:false,
-      title:`凭证签发申请详情`,
-      keepAlive:true,
-      refreshIndex:0,
+    meta: {
+      isMock: false,
+      title: `凭证签发申请详情`,
+      keepAlive: true,
+      refreshIndex: 0,
       notRequireAuth: true
     }
   },
@@ -31,11 +31,11 @@ const billLssueRouter = [
     path: '/offlineDatails',
     name: 'offlineDatails',
     component: () => import('../views/billLssue/issuanceApply/details/offlineDatails.vue'),
-    meta:{
-      isMock:false,
-      title:`债权凭证签发申请`,
-      keepAlive:true,
-      refreshIndex:0,
+    meta: {
+      isMock: false,
+      title: `债权凭证签发申请`,
+      keepAlive: true,
+      refreshIndex: 0,
       notRequireAuth: true
     }
   },
@@ -43,11 +43,11 @@ const billLssueRouter = [
     path: '/openBillApplyConfirm',
     name: 'openBillApplyConfirm',
     component: () => import('../views/billLssue/issuanceApply/details/confirm.vue'),
-    meta:{
-      isMock:false,
-      title:`请确认电子债权凭证签发申请`,
-      keepAlive:true,
-      refreshIndex:0,
+    meta: {
+      isMock: false,
+      title: `请确认电子债权凭证签发申请`,
+      keepAlive: true,
+      refreshIndex: 0,
       notRequireAuth: true
     }
   },
@@ -68,11 +68,11 @@ const billLssueRouter = [
     path: '/issuanceReview',
     name: 'issuanceReview',
     component: () => import('../views/billLssue/issuanceReview/review/index.vue'),
-    meta:{
-      isMock:false,
-      title:`债权凭证签发复核`,
-      keepAlive:true,
-      refreshIndex:0,
+    meta: {
+      isMock: false,
+      title: `债权凭证签发复核`,
+      keepAlive: true,
+      refreshIndex: 0,
       notRequireAuth: true
     }
   },
@@ -114,9 +114,9 @@ const billLssueRouter = [
     },
   },
   {
-    path: '/voucherTransferApplication',
-    name: 'voucherTransferApplication',
-    component: () => import('../views/billLssue/transferApplication/voucherTransferApplication.vue'),
+    path: '/billAssignApply',
+    name: 'billAssignApply',
+    component: () => import('../views/billLssue/transferApplication/billAssignApply.vue'),
     meta: {
       isMock: false,
       title: `凭证转让申请`,
@@ -124,17 +124,30 @@ const billLssueRouter = [
       keepAlive: true,
       refreshIndex: 0,
       notRequireAuth: true
-    },
+    }
+  },
+  {
+    path: '/billAssignApplyS',
+    name: 'billAssignApplyS',
+    component: () => import('../views/billLssue/transferApplication/billAssignApplyS.vue'),
+    meta: {
+      isMock: false,
+      title: `凭证转让申请-批量`,
+      root: '电子债权凭证',
+      keepAlive: true,
+      refreshIndex: 0,
+      notRequireAuth: true
+    }
   },
   {
     path: '/transferCheck',
     name: 'transferCheck',
     component: () => import('../views/billLssue/transferCheck/index.vue'),
-    meta:{
-      isMock:false,
-      title:`转让复核`,
-      keepAlive:true,
-      refreshIndex:0,
+    meta: {
+      isMock: false,
+      title: `转让复核`,
+      keepAlive: true,
+      refreshIndex: 0,
       notRequireAuth: true
     }
   },
