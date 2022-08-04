@@ -1,12 +1,12 @@
-const transferTransactionSearchRouter = [
+const transferTransactionQueryRouter = [
   {
     path: '/transferTransactionSearch',
     name: 'transferTransactionSearch',
-    component: () => import('../views/billLssue/transferTransactionSearch'),
+    component: () => import('../views/billLssue/transferTransactionQuery'),
     meta: {
       isMock: true,
       title: '转让交易查询',
-      root: '凭证管理',
+      root: '电子债权凭证',
       keepAlive: true,
       refreshIndex: 0,
       notRequireAuth: true
@@ -15,11 +15,11 @@ const transferTransactionSearchRouter = [
   {
     path: '/transferTransactionSearchDetail',
     name: 'transferTransactionSearchDetail',
-    component: () => import('../views/billLssue/transferTransactionSearch/detail'),
+    component: () => import('../views/billLssue/transferTransactionQuery/detail'),
     meta: {
       isMock: true,
       title: '转让交易详情',
-      root: '凭证管理',
+      root: '电子债权凭证',
       keepAlive: true,
       refreshIndex: 0,
       parent:'transferTransactionSearch',
@@ -27,4 +27,4 @@ const transferTransactionSearchRouter = [
     }
   },
 ]
-export default transferTransactionSearchRouter
+export default transferTransactionQueryRouter
