@@ -54,17 +54,14 @@
         <zj-table-column field="acctBillCode" title="对账单编号" />
         <zj-table-column title="操作" fixed="right">
           <template>
-            <zj-button
-              type="text"
-              @click="goChild('issuanceReview', row)"
-              :api="zjBtn.cancelSubmit"
+            <zj-button type="text" @click="nbsp;" :api="zjBtn.cancelSubmit"
               >开单确认书</zj-button
             >
           </template>
           <template>
             <zj-button
               type="text"
-              @click="toReview([row.id])"
+              @click="goChild('issuanceReview', row)"
               :api="zjBtn.cancelSubmit"
               >复核</zj-button
             >
@@ -78,7 +75,7 @@
           >&nbsp;
         </span>
         <zj-button type="primary" @click="toReview(ids)">复核通过</zj-button>
-        <zj-button type="primary" @click="toReject">拒绝</zj-button>
+        <zj-button @click="toReject">拒绝</zj-button>
       </zj-content-footer>
       <!--  拒绝弹框  -->
       <zj-reject-dialog
@@ -101,6 +98,8 @@ export default {
       // 是否阅读协议
       agreeCheck: false,
       ids: [],
+      total: '',
+      totalAmount: ''
     };
   },
   created() {
@@ -111,7 +110,8 @@ export default {
       if (this.agreeCheck) {
         let num, money;
         this.$confirm(
-          `您本次复核同意签发<b style="font-size: 18px;">${num}</b>笔电子债权凭证，共计<b style="font-size: 18px;">${money}</b>元，请确认。`,
+          `您本次复核同意签发<b style="font-size: 18px;">${this.total}</b>笔电子债权凭证，<br/>
+          共计：<b style="font-size: 18px;">${this.totalAmount}</b>元请确认<br>注：确认后进入盖章环节，如有需要，请及时联系签章人员！`,
           "凭证签发复核确认",
           {
             dangerouslyUseHTMLString: true,
@@ -126,7 +126,7 @@ export default {
           });
         });
       } else {
-        this.$alert("请阅读并同意《额度调整申请书》", "提示", {
+        this.$alert("请阅读并同意《开单确认书》", "提示", {
           type: "warning",
         });
       }
