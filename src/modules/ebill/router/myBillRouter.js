@@ -19,7 +19,7 @@ const myBillRouter = [
     component: () => import('../views/myBill/billDetail/index.vue'),
     meta:{
       isMock:false,
-      title:`凭证详情`,
+      title:`电子债权凭证详情`,
       keepAlive:true,
       refreshIndex:0,
       notRequireAuth: true

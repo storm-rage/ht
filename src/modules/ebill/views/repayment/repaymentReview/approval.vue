@@ -255,7 +255,7 @@ export default {
         submitFlag: "0",
       };
       this.zjControl.repaymentSubmit(params).then(() => {
-        this.$message.success("复核通过！");
+        this.$message.success("拒绝成功！");
         this.goParent();
       });
       this.$refs.rejectDialog.close();

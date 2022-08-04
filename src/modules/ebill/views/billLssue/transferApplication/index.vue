@@ -1,24 +1,12 @@
 <template>
-  <div class="transferApplication">
+  <zj-content-container>
+    <zj-money-block
+      img-name="hold-img"
+      text="可转让电子债券凭证金额："
+      tipsText="说明：可转让债权凭证金额：当前状态为“正常持有”的，折扣范围内的可用金额。"
+    />
     <zj-list-layout>
       <template slot="searchForm">
-        <!-- <div class="zj-search-condition">
-      <div class="explain">
-        <p>可转让电子债券凭证金额： <b>1,233,100.00元</b></p>
-        <p>
-          说明：可转让债权凭证金额：当前状态为“正常持有”的，折扣范围内的可用金额。
-        </p>
-      </div>
-      <el-row class="button-row">
-        <vxe-button class="reset" icon="el-icon-refresh" @click="resetSearch"
-          >重置</vxe-button
-        >
-        <vxe-button class="search" icon="el-icon-search" @click="search"
-          >查询</vxe-button
-        >
-      </el-row>
-    </div> -->
-
         <el-form ref="searchForm" :model="searchForm">
           <el-form-item label="合同编号：">
             <el-input
@@ -27,15 +15,7 @@
             />
           </el-form-item>
 
-          <!-- <el-form-item label="合同签署类型：">
-          <el-select v-model="contractType">
-            <el-option value="1" />
-            <el-option value="2" />
-            <el-option value="3" />
-          </el-select>
-        </el-form-item> -->
-
-          <el-form-item label="申请日期：" class="col-right">
+          <el-form-item label="凭证到期日：" class="col-right">
             <zj-date-range-picker
               :startDate.sync="searchForm.expireDateStart"
               :endDate.sync="searchForm.expireDateEnd"
@@ -49,13 +29,6 @@
               @keyupEnterNative="enterSearch"
             />
           </el-form-item>
-
-          <!-- <el-form-item label="申请状态：">
-          <el-select v-model="applicationStatus">
-            <el-option value="全部" />
-            <el-option value="待复核" />
-          </el-select>
-        </el-form-item> -->
 
           <el-form-item label="转让企业：">
             <el-input
@@ -77,21 +50,20 @@
               :endDate.sync="searchForm.expireDateEnd"
             />
           </el-form-item>
-
-          <!-- <el-form-item label="合同签署类型：">
-          <el-select v-model="applicationStatus">
-            <el-option value="全部" />
-            <el-option value="待复核" />
-          </el-select>
-        </el-form-item> -->
         </el-form>
       </template>
-      <!-- <div class="zj-search-response"> -->
       <zj-table
         ref="searchTable"
         :params="searchForm"
         :api="zjControl.tableApi"
+        @checkbox-change="tableCheckChange"
+        @checkbox-all="tableCheckChange"
       >
+        <zj-table-column
+          type="checkbox"
+          width="40px"
+          fixed="left"
+        ></zj-table-column>
         <zj-table-column field="ebillCode" title="债权凭证编号">
           <template v-slot="{ row }">
             <span class="table-elbill-code" @click="toBillDetails(row)">{{
@@ -145,39 +117,21 @@
           </template>
         </zj-table-column>
       </zj-table>
-      <!-- </div> -->
-
-      <!-- 工作流 -->
-
-      <zj-workflow v-model="workflow">
-        <el-row slot="right">
-          <zj-button @click="goChild" :api="zjBtn.passBillSignBatch"
-            >发起转让申请</zj-button
-          >
-        </el-row>
-      </zj-workflow>
     </zj-list-layout>
-  </div>
+    <zj-content-footer>
+      <zj-button type="primary" @click="toApply" :api="zjBtn.passBillSignBatch"
+        >发起转让申请</zj-button
+      >
+    </zj-content-footer>
+  </zj-content-container>
 </template>
 <script>
 export default {
   data() {
     return {
       zjControl: {},
-      searchForm: {
-        issueEntName: "",
-        expireDateStart: "",
-        expireDateEnd: "",
-        ebillAmtStart: "",
-        ebillAmtEnd: "",
-        ebillCode: "",
-        issueDateStart: "",
-        issueDateEnd: "",
-      },
-      contractType: "", // 合同签署类型
-      applicationStatus: "", // 申请状态
-      signingResults: "", // 签约结果
-      workflow: "",
+      searchForm: {},
+      ids: [],
     };
   },
   created() {
@@ -187,7 +141,14 @@ export default {
     toBillDetails(row) {
       console.log(row);
     },
-    goChild() {
+    tableCheckChange({ records }) {
+      console.log(records);
+      this.ids = [];
+      records.forEach((item) => {
+        this.ids.push(item.id);
+      });
+    },
+    toApply() {
       this.$router.push("/voucherTransferApplication");
     },
   },
@@ -195,18 +156,4 @@ export default {
 </script>
 
 <style lang="less" scoped>
-/deep/#ZjWorkflow {
-  .workflow-top {
-    .el-row {
-      padding: 5px 0 0;
-      text-align: center;
-    }
-  }
-  .workflow-bottom {
-    .right {
-      width: 100%;
-      text-align: center;
-    }
-  }
-}
 </style>

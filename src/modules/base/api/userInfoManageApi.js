@@ -9,6 +9,10 @@ const userInfoManage = {
   queryUserPage:(params) => {
     return request.get('/sys-user/query-enterprise-users-page',{params})
   },
+  //企业用户维护记录列表查询
+  queryLogsPage:(params) => {
+    return request.get('/sys-user/query-enterprise-users-logs-page',{params})
+  },
   //企业用户数据字典
   getUserDictionary:()=>{
     return request.get('/sys-user/get-sys-user-dictionary')

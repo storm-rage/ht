@@ -142,20 +142,25 @@
       </div>
     </zj-content>
     <zj-content-footer>
-      <zj-button
-        type="primary"
-        @click="$router.push(`/entInfoMaintain/${userBaseInfo.entInfo.id}`)"
-        v-show="tabAtive === 'myBasicInformation'"
-        >维护企业信息</zj-button
-      >
-      <zj-button
-        type="primary"
-        @click="
-          $router.push(`/userInfoMaintain/${userBaseInfo.userInfo.roleIds[0]}`)
-        "
-        v-show="tabAtive === 'myBasicInformation'"
-        >维护个人信息</zj-button
-      >
+      <!-- <template v-if="userBaseInfo.entInfo.isHtEnterprise"> -->
+      <template>
+        <zj-button
+          type="primary"
+          @click="$router.push(`/entInfoMaintain/${userBaseInfo.entInfo.id}`)"
+          v-show="tabAtive === 'myBasicInformation'"
+          >维护企业信息</zj-button
+        >
+        <zj-button
+          type="primary"
+          @click="
+            $router.push(
+              `/userInfoMaintain/${userBaseInfo.userInfo.roleIds[0]}`
+            )
+          "
+          v-show="tabAtive === 'myBasicInformation'"
+          >维护个人信息</zj-button
+        >
+      </template>
       <zj-button
         type="primary"
         @click="handleUpdate"
