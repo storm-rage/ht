@@ -66,7 +66,7 @@
         ></zj-table-column>
         <zj-table-column field="ebillCode" title="债权凭证编号">
           <template v-slot="{ row }">
-            <span class="table-elbill-code" @click="toBillDetails(row)">{{
+            <span class="table-elbill-code" @click="goChild('', row)">{{
               row.ebillCode
             }}</span>
           </template>
@@ -119,7 +119,10 @@
       </zj-table>
     </zj-list-layout>
     <zj-content-footer>
-      <zj-button type="primary" @click="toApply" :api="zjBtn.passBillSignBatch"
+      <zj-button
+        type="primary"
+        @click="goChild('billAssignApply', ids)"
+        :api="zjBtn.passBillSignBatch"
         >发起转让申请</zj-button
       >
     </zj-content-footer>
@@ -132,14 +135,18 @@ export default {
       zjControl: {},
       searchForm: {},
       ids: [],
+      dictionary: {},
     };
   },
   created() {
     this.getApi();
   },
   methods: {
-    toBillDetails(row) {
-      console.log(row);
+    // 获取字典
+    queryDictionary() {
+      this.zjControl.queryEntDictionary().then((res) => {
+        this.dictionary = res.data;
+      });
     },
     tableCheckChange({ records }) {
       console.log(records);
@@ -147,9 +154,6 @@ export default {
       records.forEach((item) => {
         this.ids.push(item.id);
       });
-    },
-    toApply() {
-      this.$router.push("/voucherTransferApplication");
     },
   },
 };
