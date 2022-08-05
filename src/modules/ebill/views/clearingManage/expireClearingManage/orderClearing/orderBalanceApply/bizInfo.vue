@@ -76,7 +76,7 @@
         </zj-table>
       </zj-content>
     </zj-content-block>
-    <zj-content-block v-if="currentSelectBill.clearId">
+    <zj-content-block v-if="currentSelectBill.id">
       <zj-header :title="`融资详情-${currentSelectBill.ebillCode}`"></zj-header>
       <zj-content>
         <el-row :gutter="10">
@@ -199,6 +199,9 @@ export default {
       }
     }
   },
+  beforeCreate() {
+    this.getDic();
+  },
   data () {
     return {
       zjControl: {
@@ -235,7 +238,7 @@ export default {
      */
     getFinancingInfo() {
       this.zjControl.getFinanceDetails({
-        clearId: this.currentSelectBill.clearId
+        clearId: this.currentSelectBill.id
       }).then(res => {
         this.financingInfo = res.data;
       });

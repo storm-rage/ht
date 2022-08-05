@@ -27,6 +27,7 @@ import {
   RegisterStepReject
 } from "./components/Register.js"
 import router from "@/router";
+import {windowSSStorage} from '@utils/storageUtils';
 export default {
   components: {
     // 线上注册申请 注册首页
@@ -90,7 +91,7 @@ export default {
         //清除缓存
         toLogin:(boo = true) => {
           let ssionArr = ['registerStep','registerEntInfoObj']
-          ssionArr.forEach(item=> sessionStorage.removeItem(item))
+          ssionArr.forEach(item=> windowSSStorage.removeItem(item))
           if(boo){
             router.replace({
               path: '/login'
@@ -116,17 +117,17 @@ export default {
   },
   created(){
     //reject
-    this.step = sessionStorage.getItem('registerStep') || '101'
+    this.step = windowSSStorage.getItem('registerStep') || '101'
     let oldEntInfo = Object.assign({},this.entInfoObj)
-    this.entInfoObj = JSON.parse(sessionStorage.getItem('registerEntInfoObj')) || oldEntInfo
+    this.entInfoObj = JSON.parse(windowSSStorage.getItem('registerEntInfoObj')) || oldEntInfo
     this.getDictionary()
   },
   watch:{
     step(newStep){
-      sessionStorage.setItem('registerStep',newStep)
+      windowSSStorage.setItem('registerStep',newStep)
     },
     entInfoObj(newEntInfoObj){
-      sessionStorage.setItem('registerEntInfoObj',JSON.stringify(newEntInfoObj))
+      windowSSStorage.setItem('registerEntInfoObj',JSON.stringify(newEntInfoObj))
     }
   }
 }

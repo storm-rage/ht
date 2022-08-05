@@ -5,7 +5,7 @@ import store from '../store'
 import RouterConfig from '../modules/router.config';
 import CommonRouters from './commonRouter';
 import {Message} from 'element-ui'
-
+import {windowSSStorage} from '@utils/storageUtils';
 Vue.use(Router)
 
 
@@ -73,7 +73,7 @@ router.beforeEach((to, from, next) => {
 router.afterEach( ( to,form ) => {
   if( to.name !== 'register' ){
     let localArr = ['registerStep','registerEntInfoObj']
-    localArr.forEach(item => sessionStorage.removeItem(item) )
+    localArr.forEach(item => windowSSStorage.removeItem(item) )
   }
 })
 

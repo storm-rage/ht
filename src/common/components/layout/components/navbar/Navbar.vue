@@ -45,7 +45,7 @@ export default {
     return {};
   },
   watch: {
-    $route(val) {
+    $route() {
       let tooltip = document.getElementsByClassName('vxe-table--tooltip-wrapper')[0]
       if (tooltip) {
         document.body.removeChild(tooltip)

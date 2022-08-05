@@ -112,16 +112,13 @@ export default {
               }
             }
             // 需要签 协议
-            else if (loginRes.userServiceAgreementFlag === '1') {
+            else if (loginRes.faceCheck || loginRes.userServiceAgreementFlag === '1') {
               const loginResMix = Object.assign({}, loginRes, this.userData);
               this.loginSuccess = JSON.parse(JSON.stringify({
                 loginRes: loginResMix
               }))
-              //跳人脸识别
-              // this.$refs.FaceRecognition.dialogVisible = true
               loginRes.password = this.userData.password
-              sessionStorage.setItem('frLoginRes', JSON.stringify(loginResMix))
-              this.goChild('faceRecognition', this.loginSuccess)
+              this.goChild('signAgreement', this.loginSuccess)
               this.oneLoginFlag = false
             } else {
               loginRes.loginName = this.userData.loginName;

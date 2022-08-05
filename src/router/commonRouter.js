@@ -10,11 +10,11 @@ const commonRouter = [
       title:'登录'
     }
   },
-  // 人脸识别页
+  // 协议签署
   {
-    path: '/faceRecognition',
-    name: 'faceRecognition',
-    component: () => import('@baseModules/views/sysModules/login/faceRecognition/newFaceRecognition.vue'),
+    path: '/signAgreement',
+    name: 'signAgreement',
+    component: () => import('@baseModules/views/sysModules/login/agreementSign/index.vue'),
     meta: {
       notRequireAuth: true,
       title:'账户激活',
