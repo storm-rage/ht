@@ -32,7 +32,7 @@ Vue.use(ElementUI);
 Vue.use(VxeTable);
 Vue.use(ZjDirectives)
 Vue.use(ZjComponents)
-Vue.use(ZjCommonMixins.routerMixins)
+Vue.use(ZjCommonMixins.globalMixins)
 Vue.use(format)
 Vue.use(Viewer)
 Vue.use(api)

@@ -1,8 +1,9 @@
 import printMixins from './printMixins';
-import routerMixins from './routerMixins';
+import globalMixins from './globalMixins';
 import tableMixins from './tableMixins';
+
 export default {
-    printMixins,
-    routerMixins,
-    tableMixins,
+  printMixins,
+  globalMixins,
+  tableMixins,
 }
