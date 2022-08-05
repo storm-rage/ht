@@ -85,6 +85,10 @@ const userInfoManage = {
   updateUser:(params) => {
     return request.post('/sys-user/update-user',params)
   },
+   //获取企业信息-确认
+   getEnterpriseConfirm:(params) => {
+    return request.post('/sys-user/get-sys-enterprise-confirm', params )
+  },
   //获取维护记录字典
   getUserLogsDictionary:() => {
     return request.get('/sys-user/get-sys-user-logs-dictionary')

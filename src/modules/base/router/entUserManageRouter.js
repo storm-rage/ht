@@ -77,7 +77,7 @@ const entUserManage = [
     name: 'userVindicate',
     component: () => import('../views/entUserManage/userManage/vindicate'),
     meta: {
-      title: '企业用户信息管理-维护',
+      title: '维护用户信息',
       parent: 'sysUser',
       isManage: true,
       keepAlive: true,
@@ -86,9 +86,23 @@ const entUserManage = [
     }
   },
   {
+    path: '/userDetail',
+    name: 'userVindicate',
+    component: () => import('../views/entUserManage/userManage/vindicate'),
+    meta: {
+      title: '用户详情',
+      parent: 'sysUser',
+      isManage: false,
+      keepAlive: true,
+      refreshIndex: 0,
+      notRequireAuth: true,
+      pageType: 'detail'
+    }
+  },
+  {
     path: '/userAdd',
     name: 'userAdd',
-    component: () => import('../views/entUserManage/userManage/userForm'),
+    component: () => import('../views/entUserManage/userManage/userAdd'),
     meta: {
       title: '企业用户信息管理-新增',
       parent: 'sysUser',
@@ -101,7 +115,7 @@ const entUserManage = [
   {
     path: '/userUpdate',
     name: 'userUpdate',
-    component: () => import('../views/entUserManage/userManage/userForm'),
+    component: () => import('../views/entUserManage/userManage/userUpdate'),
     meta: {
       title: '企业用户信息管理-修改',
       parent: 'sysUser',
@@ -110,34 +124,7 @@ const entUserManage = [
       refreshIndex: 0,
       notRequireAuth: true
     }
-  },
-  // {
-  //   path: '/userManageMag',
-  //   name: 'userManageMag',
-  //   component: () => import('../views/entUserManage/userManage/userInfo/manage/ManageUser.vue'),
-  //   meta: {
-  //     title: '企业用户信息管理-管理',
-  //     parent: 'sysUser',
-  //     isManage: true,
-  //     keepAlive: true,
-  //     refreshIndex: 0,
-  //     notRequireAuth: true
-  //   }
-  // },
-  {
-    path: '/userVindicate',
-    name: 'userVindicate',
-    component: () => import('../views/entUserManage/userManage/vindicate'),
-    meta: {
-      title: '维护用户信息',
-      parent: 'sysUser',
-      isManage: false,
-      keepAlive: true,
-      refreshIndex: 0,
-      notRequireAuth: true,
-      pageType: 'detail'
-    }
-  },
+  }
 ]
 
 export default entUserManage

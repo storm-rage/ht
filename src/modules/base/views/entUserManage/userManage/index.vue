@@ -16,7 +16,7 @@
             />
           </el-form-item>
           <el-form-item label="用户状态：">
-            <el-select v-model="state">
+            <el-select v-model="searchForm.state">
               <el-option
                 v-for="(item, index) in dictionary.entTypeList"
                 :key="index"
@@ -47,7 +47,13 @@
         :params="searchForm"
         :api="zjControl.queryUserPage"
       >
-        <zj-table-column field="userCode" title="用户编码" />
+        <zj-table-column field="userCode" title="用户编码">
+          <template v-slot="{ row }">
+            <zj-button type="text" @click="goChild('userDetail', row)">{{
+              row.userCode
+            }}</zj-button>
+          </template>
+        </zj-table-column>
         <zj-table-column field="userName" title="用户姓名" />
         <zj-table-column field="mobileNo" title="手机号码" />
         <zj-table-column field="createDate" title="创建日期" />
@@ -75,8 +81,8 @@ export default {
   data() {
     return {
       zjControl: {
-        queryUserPage:this.$api.userInfoManage.queryUserPage,
-        getUserInformation: this.$api.userInfoManage.getUserInformation
+        queryUserPage: this.$api.userInfoManage.queryUserPage,
+        getUserInformation: this.$api.userInfoManage.getUserInformation,
       },
       searchForm: {},
       dictionary: {},
