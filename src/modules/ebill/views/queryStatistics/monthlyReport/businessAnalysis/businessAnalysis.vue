@@ -3,18 +3,31 @@
     <!--  业绩集中度分析  -->
     <zj-list-layout>
       <template slot="leftBtns">
-        <vxe-button class="export" icon="el-icon-download" @click="toExport">导出</vxe-button>
+        <vxe-button class="export" icon="el-icon-download" @click="toExport"
+          >导出</vxe-button
+        >
       </template>
       <template slot="searchForm">
         <el-form ref="searchForm" :model="searchForm">
           <el-form-item label="统计月份：">
-            <zj-date-picker v-model="searchForm.statisticsMonth" @keyup.enter.native="enterSearch"/>
+            <zj-date-picker
+              :date.sync="searchForm.statisticsMonth"
+              type="month"
+              format="yyyy-MM"
+            />
           </el-form-item>
         </el-form>
       </template>
       <zj-table ref="searchTable" :dataList="list">
-        <zj-table-column type="seq" title="序号" width="60"/>
-        <zj-table-column v-for="(item,index) in tableProps" :key="index" :field="item.field" :title="item.title" :formatter="item.formatter"/>
+        <zj-table-column type="seq" title="序号" width="60" />
+        <zj-table-column
+          v-for="(item, index) in tableProps"
+          :key="index"
+          :field="item.field"
+          :title="item.title"
+          :width="item.width"
+          :formatter="item.formatter"
+        />
       </zj-table>
     </zj-list-layout>
   </zj-content-container>
@@ -22,10 +35,10 @@
 <script>
 export default {
   components: {},
-  data() {
+  data () {
     return {
       searchForm: {
-        statisticsMonth: '',
+        statisticsMonth: ''
       },
       list: [
         {
@@ -39,39 +52,73 @@ export default {
         }
       ],
       tableProps: [
-        {title: "核心企业名称", field: "field1"},
-        {title: "本期末对其债权金额", field: "field2"},
-        {title: "上期末对其债权金额", field: "field3"},
-        {title: "本期末债权占比", field: "field4"},  
-        {title: "供应商名称", field: "field5"},
-        {title: "本期末融资余额", field: "field6"},
-        {title: "上期末融资余额", field: "field7"},
-        {title: "本期末融资余额占比", field: "field8"},
-        {title: "供应商授信额度", field: "field9"},
+        { title: '核心企业名称', field: 'field1', width: '140px' },
+        {
+          title: '本期末对其债权金额',
+          field: 'field2',
+          width: '100px',
+          formatter: this.money
+        },
+        {
+          title: '上期末对其债权金额',
+          field: 'field3',
+          width: '100px',
+          formatter: this.money
+        },
+        {
+          title: '本期末债权占比',
+          field: 'field4',
+          width: '100px'
+        },
+        {
+          title: '供应商名称',
+          field: 'field5',
+          width: '140px'
+        },
+        {
+          title: '本期末融资余额',
+          field: 'field6',
+          width: '100px',
+          formatter: this.money
+        },
+        {
+          title: '上期末融资余额',
+          field: 'field7',
+          width: '100px',
+          formatter: this.money
+        },
+        {
+          title: '本期末融资余额占比',
+          field: 'field8',
+          width: '100px'
+        },
+        {
+          title: '供应商授信额度',
+          field: 'field9',
+          width: '100px'
+        }
       ],
       tradeList: []
-    };
+    }
   },
   methods: {
-    toExport() {
-
+    toExport () {},
+    /**
+     *
+     * @param row
+     */
+    toContractDetail (row) {
+      console.error(row)
+      this.$router.push({ name: 'businessDetail' })
     },
     /**
      *
      * @param row
      */
-    toContractDetail(row) {
-      console.error(row);
-      this.$router.push({name: 'businessDetail'});
+    toContractSign (row) {
+      console.log(row)
     },
-    /**
-     *
-     * @param row
-     */
-    toContractSign(row) {
-      console.log(row);
-    },
-    handleRadioChange({row}) {
+    handleRadioChange ({ row }) {
       this.tradeList.push({
         field1: '佛山市a有限公司',
         field2: '是',
@@ -89,7 +136,7 @@ export default {
     toEdit (row) {
       this.goChild('productInfoManageEdit', row)
     },
-    toEditQuota (row) {},
+    toEditQuota (row) {}
   }
 };
 </script>

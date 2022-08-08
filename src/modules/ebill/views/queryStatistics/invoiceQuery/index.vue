@@ -50,27 +50,28 @@
           <zj-table
             ref="searchTable"
             :params="searchForm"
+            :dataList="list"
             :api="zjControl.queryStatementSrmAccountBillPage"
           >
-            <zj-table-column field="field1" title="发票号码" />
-            <zj-table-column field="field1" title="发票代码" />
-            <zj-table-column field="field1" title="发票发票类型" />
-            <zj-table-column field="field1" title="销售方" />
-            <zj-table-column field="field1" title="购买方" />
-            <zj-table-column field="field1" title="发票金额(含税)" />
-            <zj-table-column field="field1" title="发票金额(不含税)" />
-            <zj-table-column field="field1" title="发票日期" />
-            <zj-table-column field="field1" title="验证码" />
-            <zj-table-column field="field1" title="验真结果" />
-            <zj-table-column field="field1" title="系统审核结果" />
-            <zj-table-column field="field1" title="发票来源" />
-            <zj-table-column field="field1" title="已关联融资流水" />
-            <zj-table-column title="操作" fixed="right">
+            <zj-table-column field="field1" width="64" title="发票号码" />
+            <zj-table-column field="field1" width="87" title="发票代码" />
+            <zj-table-column field="field1" width="81" title="发票发票类型" />
+            <zj-table-column field="field1" width="74" title="销售方" />
+            <zj-table-column field="field1" width="70" title="购买方" />
+            <zj-table-column field="field1" width="98" :formatter="money" title="发票金额(含税)" />
+            <zj-table-column field="field1" width="110" :formatter="money" title="发票金额(不含税)" />
+            <zj-table-column field="field1" width="65" :formatter="date" title="发票日期" />
+            <zj-table-column field="field1" width="81" title="验证码" />
+            <zj-table-column field="field1" width="81" title="验真结果" />
+            <zj-table-column field="field1" width="81" title="系统审核结果" />
+            <zj-table-column field="field1" width="81" title="发票来源" />
+            <zj-table-column field="field1" width="81" title="已关联融资流水" />
+            <zj-table-column title="操作" width="79" fixed="right">
               <template v-slot="{ row }">
                 <zj-button
                   type="text"
                   :api="zjBtn.updateEnterprise"
-                  @click="down(row)"
+                  @click="toDownload(row)"
                   >下载</zj-button
                 >
               </template>
@@ -96,7 +97,9 @@ export default {
         invoiceNo: '',
         invoiceCode: ''
       },
-      list: [],
+      list: [
+        {1: 1}
+      ],
       dictionary: {} // 字典集合
     }
   },
@@ -108,6 +111,9 @@ export default {
     },
     toExport () {
       // this.zjControl.exportStatementAccountBill()
+    },
+    toDownload(row) {
+      window.console.log('row', row);
     }
   },
   created () {

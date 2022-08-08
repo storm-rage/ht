@@ -87,6 +87,17 @@ export default {
             loginRes.resList = [...loginRes.resList, ...[{
               children: null,
               icon: null,
+              id: "1753",
+              isMenu: "1",
+              name: "客户信息查询",
+              parentId: "12",
+              remark: "这个给vue前端路由用的",
+              sequence: "90",
+              type: "ebill",
+              url: "customerInfoQuery"
+            },{
+              children: null,
+              icon: null,
               id: "1754",
               isMenu: "1",
               name: "发票查询",

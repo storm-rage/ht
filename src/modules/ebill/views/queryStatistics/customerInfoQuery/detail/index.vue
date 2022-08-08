@@ -1,20 +1,22 @@
 <template>
-  <zj-content-container>
+  <zj-content-container ref="detailContainer" style="padding-bottom: 0;" >
     <!--  企业信息明细  -->
     <zj-top-header :title="titleInfo"/>
     <el-tabs v-model="tabs" type="card" class="zj-tabs-card">
       <el-tab-pane label="企业信息" name="entInfo" >
-        <ent-info :zjControl="zjControl" :uDictionary="uDictionary" :uBtn="zjBtn"/>
+        <keep-alive>
+          <ent-info v-if="tabs==='entInfo'" :zjControl="zjControl" :uDictionary="uDictionary" :uBtn="zjBtn"/>
+        </keep-alive>
       </el-tab-pane>
       <el-tab-pane label="用户信息" name="userInfo" >
-        <user-info :zjControl="zjControl" :mDictionary="mDictionary" :mBtn="zjBtn"/>
+        <keep-alive>
+          <user-info :detailEl="$refs.detailContainer" v-if="tabs==='userInfo'" :zjControl="zjControl" :mDictionary="mDictionary" :mBtn="zjBtn"/>
+        </keep-alive>
       </el-tab-pane>
     </el-tabs>
-    <el-row style="position: relative;margin-top: 20px;">
-      <zj-content-footer>
+      <zj-content-footer style="margin-top: 20px;">
         <zj-button class="submit-button" @click="goParent">返回</zj-button>
       </zj-content-footer>
-    </el-row>
 
   </zj-content-container>
 </template>
