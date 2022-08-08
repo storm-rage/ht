@@ -1,17 +1,17 @@
 <template>
   <zj-content-block>
-    <zj-header title="阶段性协议信息"></zj-header>
+    <zj-header title="阶段性协议信息"/>
 
     <zj-content>
       <!--   代办和已办结没有新增按钮   -->
       <el-row class="button-row">
-        <zj-button type="primary" icon="el-icon-circle-plus-outline" @click="addEditAgreement({},'新增')" :api="zjControl.getAddDetail">新增</zj-button>
+        <zj-button type="primary" icon="el-icon-circle-plus-outline" @click="addEditAgreement('','新增')" :api="zjControl.getAddDetail">新增</zj-button>
       </el-row>
       <zj-table ref="agreementTable"
-                :dataList="tableData"
+                :dataList="tableData.phasedAgreementList"
       >
         <zj-table-column type="checkbox" width="40px" fixed="left"></zj-table-column>
-        <zj-table-column field="agreementNo" title="SRM阶段性协议编号"/>
+        <zj-table-column field="srmAgreementNo" title="SRM阶段性协议编号"/>
         <zj-table-column field="agreementNo" title="阶段性协议编号"/>
         <zj-table-column field="agreementName" title="阶段性协议名称"/>
         <zj-table-column field="agreementType" title="协议类型"/>
@@ -33,7 +33,7 @@
         </zj-table-column>
       </zj-table>
     </zj-content>
-    <add-or-edit ref="addOrEdit" :zjControl="zjControl"/>
+    <add-or-edit ref="addOrEdit" :zjControl="zjControl" :dictionary="dictionary" @agreementUpdate="agreementUpdate"/>
   </zj-content-block>
 </template>
 <script>
@@ -43,7 +43,7 @@ import addOrEdit from '../dialog/addOrEdit';
 
 export default {
   props: {
-    tableData: Array,
+    tableData: Object,
     dictionary: Object,
     zjControl: Object,
   },
@@ -58,7 +58,10 @@ export default {
   },
   methods: {
     addEditAgreement(row,flag){
-      this.$refs.addOrEdit.show(row,flag)
+      this.$refs.addOrEdit.show(row, flag, this.tableData.tradeRelationModelList)
+    },
+    agreementUpdate() {
+      this.$emit('handleAgreementList')
     },
     //删除协议附件
     attaDelete(row) {
@@ -66,6 +69,7 @@ export default {
         phasedId: row.phasedId,
       }
       this.zjControl.deletePhasedAgree(params).then(res => {
+        this.$emit('handleAgreementList',this.tableData)
         this.$message.success(res.data.msg)
         console.log(row.fileId)
       })
