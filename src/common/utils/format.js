@@ -88,7 +88,8 @@ export default {
           const row = list.find((item) => {
             return String(item.code)===String(data);
           });
-          typeName = row.desc
+          // row有可能为undefined，直接取值会报错
+          typeName = row?.desc
         }else {
           //当上面循环娶不到值时，则为不正规字典，进行下方循环
           if(typeName === '—'){

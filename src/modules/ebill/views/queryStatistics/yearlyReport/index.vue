@@ -25,20 +25,31 @@
           <zj-table ref="searchTable" :dataList="list">
             <zj-table-column type="seq" title="序号" width="60"/>
             <zj-table-column field="field1" title="供应商名称"/>
-            <zj-table-column field="field2" title="是否一级供应商"/>
+            <zj-table-column field="field2" title="供应商名称"/>
             <zj-table-column field="field3" title="核心企业名称"/>
-            <zj-table-column field="field4" title="本年融资金额" :formatter="money"/>
-            <zj-table-column field="field5" title="上年融资金额" :formatter="money"/>
-            <zj-table-column field="field6" title="融资余额同比"/>
-            <zj-table-column field="field7" title="本年签收凭证金额" :formatter="money"/>
-            <zj-table-column field="field7" title="上年签收凭证金额" :formatter="money"/>
-            <zj-table-column field="field7" title="签收凭证金额同比"/>
-            <zj-table-column field="field7" title="本年转让凭证金额" :formatter="money"/>
-            <zj-table-column field="field7" title="上年转让凭证金额" :formatter="money"/>
-            <zj-table-column field="field7" title="转让凭证金额同比"/>
-            <zj-table-column field="field7" title="本年利息费用" :formatter="money"/>
-            <zj-table-column field="field7" title="上年利息费用" :formatter="money"/>
-            <zj-table-column field="field7" title="利息费用同比"/>
+            <zj-table-column field="field4" title="融资金额" :formatter="money">
+              <zj-table-column field="field4" title="本年" :formatter="money"/>
+              <zj-table-column field="field5" title="上年" :formatter="money"/>
+              <zj-table-column field="field6" title="同比"/>
+            </zj-table-column>
+            <zj-table-column field="field7" title="签收凭证金额" :formatter="money">
+              <zj-table-column field="field7" title="本年" :formatter="money"/>
+              <zj-table-column field="field7" title="上年" :formatter="money"/>
+              <zj-table-column field="field7" title="同比"/>
+            </zj-table-column>
+            <zj-table-column field="field7" title="转让凭证金额" :formatter="money">
+              <zj-table-column field="field7" title="本年" :formatter="money"/>
+              <zj-table-column field="field7" title="上年" :formatter="money"/>
+              <zj-table-column field="field7" title="同比"/>
+            </zj-table-column>
+            <zj-table-column field="field7" title="利息费用" :formatter="money">
+              <zj-table-column field="field7" title="本年" :formatter="money"/>
+              <zj-table-column field="field7" title="上年" :formatter="money"/>
+              <zj-table-column field="field7" title="同比"/>
+            </zj-table-column>
+            <zj-table-column field="field7" title="本年融资金额"/>
+            <zj-table-column field="field7" title="本年凭证签收金额"/>
+            <zj-table-column field="field7" title="本年利息费用"/>
           </zj-table>
       </zj-list-layout>
     </zj-content-container>

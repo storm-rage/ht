@@ -16,20 +16,32 @@
           <zj-table ref="searchTable" :dataList="list">
             <zj-table-column type="seq" title="序号" width="60"/>
             <zj-table-column field="field1" title="供应商名称"/>
-            <zj-table-column field="field2" title="是否一级供应商"/>
             <zj-table-column field="field3" title="核心企业名称"/>
-            <zj-table-column field="field4" title="本月融资金额" :formatter="money"/>
-            <zj-table-column field="field5" title="上月融资金额" :formatter="money"/>
-            <zj-table-column field="field6" title="融资余额环比"/>
-            <zj-table-column field="field7" title="本月签收凭证金额" :formatter="money"/>
-            <zj-table-column field="field7" title="上月签收凭证金额" :formatter="money"/>
-            <zj-table-column field="field7" title="签收凭证金额环比"/>
-            <zj-table-column field="field7" title="本月转让凭证金额" :formatter="money"/>
-            <zj-table-column field="field7" title="上月转让凭证金额" :formatter="money"/>
-            <zj-table-column field="field7" title="转让凭证金额环比"/>
-            <zj-table-column field="field7" title="本月利息费用" :formatter="money"/>
-            <zj-table-column field="field7" title="上月利息费用" :formatter="money"/>
-            <zj-table-column field="field7" title="利息费用环比"/>
+            <vxe-table-colgroup title="融资金额">
+              <zj-table-column field="field4" title="本月" :formatter="money"/>
+              <zj-table-column field="field5" title="上月" :formatter="money"/>
+              <zj-table-column field="field6" title="环比"/>
+            </vxe-table-colgroup>
+            <vxe-table-colgroup title="签收凭证金额">
+              <zj-table-column field="field7" title="本月" :formatter="money"/>
+              <zj-table-column field="field7" title="上月" :formatter="money"/>
+              <zj-table-column field="field7" title="环比"/>
+            </vxe-table-colgroup>
+            <vxe-table-colgroup title="签收凭证金额">
+              <zj-table-column field="field7" title="本月" :formatter="money"/>
+              <zj-table-column field="field7" title="上月" :formatter="money"/>
+              <zj-table-column field="field7" title="环比"/>
+            </vxe-table-colgroup>
+            <vxe-table-colgroup title="转让凭证金额">
+              <zj-table-column field="field7" title="本月" :formatter="money"/>
+              <zj-table-column field="field7" title="上月" :formatter="money"/>
+              <zj-table-column field="field7" title="环比"/>
+            </vxe-table-colgroup>
+            <vxe-table-colgroup title="利息费用">
+              <zj-table-column field="field7" title="本月" :formatter="money"/>
+              <zj-table-column field="field7" title="上月" :formatter="money"/>
+              <zj-table-column field="field7" title="环比"/>
+            </vxe-table-colgroup>
             <zj-table-column field="field7" title="融资余额" :formatter="money"/>
             <zj-table-column field="field7" title="截至本月全年融资金额" :formatter="money"/>
             <zj-table-column field="field7" title="截至本月全年凭证签收金额" :formatter="money"/>
