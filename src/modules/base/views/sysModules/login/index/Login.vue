@@ -33,43 +33,40 @@
                       <i slot="suffix" :class="icon" :title="passw === 'password' ? '显示密码' : '隐藏密码'" @click="showPass" style="cursor: pointer"/>
                     </el-input>
                   </el-form-item>
+                  <!--     当为首次登录时      -->
+                  <div class="form-item-title" v-if="isOneLogin||userData.pwdVerifyMode==='2'">手机验证码</div>
+                  <el-form-item prop="smsCode" v-if="isOneLogin||userData.pwdVerifyMode==='2'" class="login-code">
+                    <el-input class="left-el-input" placeholder="请输入手机验证码" v-model="userData.smsCode" size="medium">
+                    </el-input>
+                    <div class="sms-code">
+                      <zj-button
+                        class="sms-code-btn"
+                        size="medium"
+                        style="width: 100%"
+                        :class="[isSmsCode ? '' :'sms-code-btn--disabled']"
+                        @click="isSmsCode?getSmsCode():''">{{smsText}}
+                      </zj-button>
+                    </div>
+                  </el-form-item>
                   <div class="form-item-title">图形验证码</div>
                   <el-form-item prop="captcha">
                     <el-input type="text" v-model="userData.captcha" placeholder="请输入验证码"
                               :maxlength=4
-                              class="verification" size="medium" @focus="inputFocus($event)"
+                              class="left-el-input" size="medium" @focus="inputFocus($event)"
                               @blur="inputBlur($event)" name="captcha">
                     </el-input>
                     <div class="code" >
-                      <img :src="imgCodeString" class="code-img"/>
-                      <label @click="getCaptcha" style="cursor: pointer" class="right-text">
-                        看不清楚？换张图片
-                        <img src="@assets/img/login/refresh-code.png" class="refreshIcon" style="vertical-align: middle;" >
-                      </label>
+                      <img :src="imgCodeString" @click="getCaptcha" class="code-img"/>
                     </div>
                   </el-form-item>
-                  <!--     当为首次登录时      -->
-                  <div class="form-item-title" v-if="isOneLogin||userData.pwdVerifyMode==='2'">手机验证码</div>
-                  <el-form-item prop="smsCode" v-if="isOneLogin||userData.pwdVerifyMode==='2'" class="login-code">
-                    <el-input placeholder="请输入手机验证码" v-model="userData.smsCode" size="medium">
-                      <template slot="append">
-                        <zj-button
-                          class="smsCode"
-                          style="width: 100%"
-                          :class="[isSmsCode ? '' :'jinyong']"
-                          @click="isSmsCode?getSmsCode():''">{{smsText}}
-                        </zj-button>
-                      </template>
-                    </el-input>
-                  </el-form-item>
-                  <el-form-item class="zj-m-t-5" >
+                  <el-form-item style="margin-top: 10%" >
                     <el-button class="loginBtn" type="primary" @click="submitForm">登录</el-button>
                   </el-form-item>
                 </el-form>
                 <!--     注册 与 忘记      -->
                 <el-row class="login_pass">
                   <a @click="$router.push('/register')"  class="zj-f-l right-text primary">立即注册</a>
-                  <a @click="$router.push('/forgotPassword')"  class="zj-f-r right-text">忘记密码</a>
+                  <a @click="$router.push('/forgotPassword')"  class="zj-f-r right-text">忘记密码？</a>
                 </el-row>
               </div>
               <!--      底部信息      -->

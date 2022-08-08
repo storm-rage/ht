@@ -1,10 +1,10 @@
 <template>
   <div class="zj-login-type">
     <div class="flex-item" @click="handleClick('1')">
-      <el-link :type="currentVal==='1'?'primary':''" :underline="false">账号登陆</el-link>
+      <span class="text" :class="{'active': currentVal==='1'}">账号登陆</span>
     </div>
     <div class="flex-item" @click="handleClick('2')">
-      <el-link :type="currentVal==='2'?'primary':''" :underline="false">手机验证码登陆</el-link>
+      <span class="text" :class="{'active': currentVal==='2'}">手机验证码登陆</span>
     </div>
   </div>
 </template>
@@ -32,20 +32,29 @@ export default {
 .zj-login-type {
   display: flex;
   align-items: center;
-  margin-top: 25px;
+  margin-top: 10%;
   .flex-item {
-    margin-right: 20px;
     text-align: center;
-    .el-link {
+    .text {
+      display: inline-block;
       font-weight: Bold;
-      font-size: 16px;
+      font-size: 18px;
       color: #303133;
-      &.el-link--primary {
-        padding: 0!important;
-        border-bottom: 3px solid @primary-main-color;
+      &.active {
         color: @primary-main-color;
+        &::after {
+          content: '';
+          display: block;
+          margin-top: 2%;
+          width: 100%;
+          height: 3px;
+          background-color: @primary-main-color;
+        }
       }
     }
+  }
+  .flex-item+.flex-item {
+    margin-left: 30px;
   }
 }
 </style>
