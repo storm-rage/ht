@@ -46,19 +46,20 @@ export default {
     color: #fff;
     text-align: center;
     padding: 2px 5px;
-    margin-left:5px;
+    margin:5px;
   }
   .new-tip-round {
     border-radius:50px;
     width: 6px;
     height: 6px;
-    margin-left:5px;
+    margin:5px;
     background-color: @danger-color;
   }
   .right-date {
     text-align: right;
     width: 100px;
     flex: auto;
+    white-space: nowrap;
   }
 }
 .list-item-block+.list-item-block {
