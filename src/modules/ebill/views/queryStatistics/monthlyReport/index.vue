@@ -1,16 +1,16 @@
 <template>
-  <zj-content-container>
+  <div>
     <!--  月度统计  -->
-    <el-tabs v-model="tabs" type="card" class="zj-tabs-card">
+    <zj-tabs v-model="tabs" type="card" class="zj-tabs-card">
       <el-tab-pane label="业绩集中度分析" name="businessAnalysis" >
         <business-analysis :zjControl="zjControl" :uDictionary="uDictionary" :uBtn="zjBtn"/>
       </el-tab-pane>
       <el-tab-pane label="业务情况报表" name="businessReport" >
         <business-report :zjControl="zjControl" :mDictionary="mDictionary" :mBtn="zjBtn"/>
       </el-tab-pane>
-    </el-tabs>
+    </zj-tabs>
 
-  </zj-content-container>
+  </div>
 </template>
 <script>
 import businessAnalysis from "./businessAnalysis/businessAnalysis";

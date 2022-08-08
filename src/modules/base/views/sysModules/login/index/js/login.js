@@ -84,7 +84,51 @@ export default {
           // 发送登录请求
           this.zjControl.login(params).then(res => {
             let loginRes = res.data
-
+            loginRes.resList = [...loginRes.resList, ...[{
+              children: null,
+              icon: null,
+              id: "1753",
+              isMenu: "1",
+              name: "客户信息查询",
+              parentId: "12",
+              remark: "这个给vue前端路由用的",
+              sequence: "90",
+              type: "ebill",
+              url: "customerInfoQuery"
+            },{
+              children: null,
+              icon: null,
+              id: "1754",
+              isMenu: "1",
+              name: "发票查询",
+              parentId: "12",
+              remark: "这个给vue前端路由用的",
+              sequence: "90",
+              type: "ebill",
+              url: "invoiceQuery"
+            },{
+              children: null,
+              icon: null,
+              id: "1755",
+              isMenu: "1",
+              name: "月度报表",
+              parentId: "12",
+              remark: "这个给vue前端路由用的",
+              sequence: "100",
+              type: "ebill",
+              url: "monthlyReport"
+            },{
+              children: null,
+              icon: null,
+              id: "1756",
+              isMenu: "1",
+              name: "年度报表",
+              parentId: "12",
+              remark: "这个给vue前端路由用的",
+              sequence: "110",
+              type: "ebill",
+              url: "yearlyReport"
+            }]]
             // 冻结状态
             if (loginRes.frozenState) {
               this.$refs.frozenDialog.open(loginRes.frozenPhone)
