@@ -19,6 +19,7 @@ export default {};
     vertical-align: middle;
     font-size: 12px;
     height: 18px;
+    line-height: 17px;
     width: 35px;
     padding: 0 6px;
     text-align: center;
