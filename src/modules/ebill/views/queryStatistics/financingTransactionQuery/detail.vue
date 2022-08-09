@@ -228,7 +228,8 @@
           <zj-content-block>
             <zj-header title="凭证信息"/>
             <zj-table ref="billInfoTable" class="zj-search-table"
-                      :dataList="form.billInfos"
+                      :api="zjControl.getFinancingBillInfos"
+                      :params="{id : row.id, serialNo: row.serialNo,}"
                       @after-load="handleDataChange"
                       @radio-change="handleRadioChange"
                       :radio-config="{highlight: true}"
@@ -245,12 +246,11 @@
             </zj-table>
           </zj-content-block>
           <zj-content-block>
-            <zj-header :title="`对账单信息${ebillCode?`-`+ebillCode:''}`"/>
+            <zj-header :title="`对账单信息${ebillCode?`-${ebillCode}`:''}`"/>
             <zj-table ref="searchTable"
-                      :dataList="form.accountBillInner"
+                      :dataList="ebillInfo.accountBillInners"
                       :pager="false"
             >
-              <zj-table-column type="radio" width="40"/>
               <zj-table-column field="acctBillCode" title="对账单编号"/>
               <zj-table-column field="companyName" title="买方名称"/>
               <zj-table-column field="supplierCode" title="供应商业务系统编码"/>
@@ -259,22 +259,22 @@
               <zj-table-column field="inputDate" title="入库日期" :formatter="date"/>
               <zj-table-column field="estimatedPaymentDate" title="预计付款日期" :formatter="date"/>
               <zj-table-column field="checkBillAmt" title="对账单金额" :formatter="money"/>
-              <zj-table-column field="isApplyVoucher" title="是否申请开立债权凭证" :formatter="obj=>typeMap(dictionary,obj.cellValue)"/>
+              <zj-table-column field="isApplyVoucher" title="是否申请开立债权凭证"/>
               <zj-table-column field="checkBillPerson" title="对账人" />
               <zj-table-column field="billSource" title="对账单来源" />
             </zj-table>
           </zj-content-block>
           <zj-content-block>
-            <zj-header :title="`贸易背景资料（资产编号：${form.accountBillInner?form.accountBillInner[0].acctBillCode:''}）`"/>
+            <zj-header :title="`贸易背景资料（资产编号：${activeEbillCodeNo}）`"/>
             <el-tabs v-model="tabs" type="card" class="zj-tabs-card">
               <el-tab-pane label="贸易合同信息" name="tradeContract" >
-                <trade-contract :zjControl="zjControl" :form="form.contractInfo"/>
+                <trade-contract :zjControl="zjControl" :form="ebillInfo.contractInfo"/>
               </el-tab-pane>
               <el-tab-pane label="发票信息" name="invoice" >
-                <invoice :invoiceList="form.invoices"/>
+                <invoice :invoiceList="ebillInfo.invoices"/>
               </el-tab-pane>
               <el-tab-pane label="其他附件" name="attaList" >
-                <attaList :attaList="form.otherAttachs"/>
+                <attaList :attaList="ebillInfo.otherAttachs"/>
               </el-tab-pane>
             </el-tabs>
           </zj-content-block>
@@ -320,8 +320,11 @@ export default {
   data() {
     return {
       form:{},
-      detail:{},
+      ebillInfo:{
+        accountBillInners:[],
+      },
       ebillCode: '',//选中的凭证信息的编号
+      activeEbillCodeNo: '',//选中的凭证信息的对账单编号
       dictionary:{},
       tabs:'tradeContract',
       zjControl: {
@@ -356,9 +359,7 @@ export default {
       }
       //凭证信息
       if(this.workflow === 'pzxx') {
-        this.zjControl.getFinancingBillInfos(params).then(res=>{
-          this.form = res.data
-        })
+
       }
     },
     agreementDownLoad() {
@@ -376,13 +377,17 @@ export default {
     handleRadioChange({row}) {
       this.ebillCode = row.ebillCode
       let params = {
-        ebBillCode : row.ebBillCode ,
+        ebBillCode : row.ebillCode ,
       }
       this.zjControl.getOtherInfoByBill(params).then(res=>{
         //对账单列表
-
-        this.form.billList = res.data.phasedAgreeInfoList
-        //背景资料信息列表******
+        this.ebillInfo.accountBillInners = res.data.accountBillInners
+        //对账单编号
+        this.activeEbillCodeNo = this.ebillInfo.accountBillInners[0].acctBillCode
+        //背景资料信息列表
+        this.ebillInfo.contractInfo = res.data.contractInfos[0]
+        this.ebillInfo.invoices = res.data.invoices
+        this.ebillInfo.otherAttachs = res.data.otherAttachs
       })
     },
   },
