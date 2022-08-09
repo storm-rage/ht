@@ -59,7 +59,7 @@
                       <img :src="imgCodeString" @click="getCaptcha" class="code-img"/>
                     </div>
                   </el-form-item>
-                  <el-form-item style="margin-top: 10%" >
+                  <el-form-item style="margin-top: 14%" >
                     <el-button class="loginBtn" type="primary" @click="submitForm">登录</el-button>
                   </el-form-item>
                 </el-form>

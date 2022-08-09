@@ -123,10 +123,7 @@ export default {
       }
     },
     inputBlur(e) {
-      if (e.target.value) {
-        e.currentTarget.style.backgroundColor = ''
-      } else {
-        e.currentTarget.style.backgroundColor = 'rgba(155,155,155,0.1)'
+      if (!e.target.value) {
         window.setTimeout(() => {
           this.$refs.userForm.clearValidate([e.target.name])
         }, 20)
