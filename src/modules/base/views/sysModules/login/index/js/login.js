@@ -84,7 +84,8 @@ export default {
           // 发送登录请求
           this.zjControl.login(params).then(res => {
             let loginRes = res.data
-            loginRes.resList = [...loginRes.resList, ...[{
+            // 手动添加菜单
+            /* loginRes.resList = [...loginRes.resList, ...[{
               children: null,
               icon: null,
               id: "1753",
@@ -128,7 +129,7 @@ export default {
               sequence: "110",
               type: "ebill",
               url: "yearlyReport"
-            }]]
+            }]] */
             // 冻结状态
             if (loginRes.frozenState) {
               this.$refs.frozenDialog.open(loginRes.frozenPhone)
