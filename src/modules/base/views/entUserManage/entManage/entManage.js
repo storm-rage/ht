@@ -178,10 +178,10 @@ export default {
     }
   },
   created() {
+    this.getRow()
+    this.getApi()
     this.queryEntDictionary()
     this.getEbBusinessParamLog()
-    this.getApi()
-    this.getRow()
 
     //详情页判断
     this.isDetail = this.$route.name === 'entManageDetail'
@@ -192,10 +192,8 @@ export default {
   methods: {
     // 获取操作记录
     getEbBusinessParamLog() {
-      this.zjControl.getEbBusinessParamLog({
-        id: this.row.id
-      }).then((res) => {
-        this.logList = res.data;
+      this.zjControl.getEbBusinessParamLog({ id: this.row.id }).then((res) => {
+        this.logList = res.data.sysEntRegLogList;
       });
     },
     queryEntDictionary() {
@@ -208,13 +206,13 @@ export default {
         this.projectInfoList = this.dictionary.projectInfoList
         //   // 新增时
         if (this.$route.name === 'entManageAdd') {  //设置企业附件
-          // this.dictionary.busTypeList.map(item => {
-          //   this.form.pubAttachList.push({
-          //     busType: item.code,
-          //     fileId: '',
-          //     fileName: ''
-          //   })
-          // })
+          this.dictionary.busTypeList.map(item => {
+            this.form.pubAttachList.push({
+              busType: item.code,
+              fileId: '',
+              fileName: ''
+            })
+          })
         }
         //修改-详情 时
         else {
@@ -228,16 +226,6 @@ export default {
     //获取详情处理
     detailsChange(res) {
       this.form = res.data
-      // this.invoiceOneAndAll() //企业开票附件
-
-      //签章初始化
-      // this.sealEntSelect[0].sealEntId = this.form.id || '0'
-      // this.sealEntSelect[0].sealEntName = this.form.name
-      // if (this.form.entType !== 'B') {
-      //   this.form.sealEntId = ''
-      // }
-      //隶属企业
-      // this.parentEntIdChange(this.form.parentEntId, true)
 
       //公司类型
       if (this.form.companyType) {
@@ -505,6 +493,8 @@ export default {
 
     //保存
     save(flag = 'add') {
+      // 其他附件
+      this.form.pubOtherAttachList = this.$refs.ofileSetting.getData()
 
       //1.校验表单
       this.$refs.form.validate(boo => {
@@ -568,6 +558,13 @@ export default {
             }
           })
         }
+      })
+    },
+    // 暂存
+    saveEnterprise() {
+      this.zjControl.saveEnterprise(this.form).then(() => {
+        this.$message.success('暂存成功！')
+        this.goParent()
       })
     },
     cancel() {

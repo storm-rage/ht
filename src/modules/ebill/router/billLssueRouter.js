@@ -52,8 +52,8 @@ const billLssueRouter = [
     }
   },
   {
-    path: '/issuanceReviewList',
-    name: 'issuanceReviewList',
+    path: '/openBillAudit',
+    name: 'openBillAudit',
     component: () => import('../views/billLssue/issuanceReview/index.vue'),
     meta: {
       isMock: true,

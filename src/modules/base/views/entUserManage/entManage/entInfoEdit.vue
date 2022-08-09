@@ -387,7 +387,7 @@
         </zj-content>
       </zj-content-block>
       <!-- 企业附件 -->
-      <!-- <zj-content-block>
+      <zj-content-block>
         <zj-header title="企业附件" />
         <el-row class="zj-p-x-20">
           <zj-table
@@ -433,7 +433,7 @@
             </zj-table-column>
           </zj-table>
         </el-row>
-      </zj-content-block> -->
+      </zj-content-block>
       <!-- 企业开票信息 -->
       <zj-content-block>
         <zj-header title="企业开票信息" />
@@ -495,10 +495,9 @@
         </el-row>
       </zj-content-block>
       <!--  其他附件    -->
-      <!-- <other-file-setting
+      <other-file-setting
         ref="ofileSetting"
-        is-edit="isEdit"
-      ></other-file-setting> -->
+      ></other-file-setting>
       <!--  操作记录  -->
       <operate-log ref="operateLog" :logList="logList"></operate-log>
     </el-form>

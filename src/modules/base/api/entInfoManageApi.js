@@ -29,6 +29,10 @@ const entInfoManage = {
   updateEnterprise: (params) => {
     return request.post('/sys-enterprise/update-sys-enterprise', params)
   },
+   // 企业信息管理--暂存
+   saveEnterprise: (params) => {
+    return request.post('/sys-enterprise/save-sys-enterprise', params)
+  },
   //企业信息管理--获取企业数据字典
   queryEntDictionary: () => {
     return request.get('/sys-enterprise/query-sys-enterprise-data-directory')
