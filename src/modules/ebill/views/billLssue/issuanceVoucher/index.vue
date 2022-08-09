@@ -3,6 +3,7 @@
     <zj-money-block
       img-name="hold-img"
       text="已开出电子债权凭证金额"
+      :amount="this.dataList.totalAmount"
       tipsText="统计的是所有已开出未作废的电子债权凭证金额合计"
     />
     <zj-list-layout>
@@ -72,10 +73,11 @@
         ref="searchTable"
         :params="searchForm"
         :api="zjControl.tableApi"
+        @before-load="getDataList"
       >
         <zj-table-column field="ebillCode" title="凭证编号">
           <template v-slot="{ row }">
-            <span class="table-elbill-code" @click="goChild('billLssueMyBillDetail',row)">{{
+            <span v-if="row.state === 'P001'" class="table-elbill-code" @click="goChild('billLssueMyBillDetail',row)">{{
               row.ebillCode
             }}</span>
           </template>
@@ -146,6 +148,7 @@ export default {
       searchForm: {},
       dictionary: {},
       form: {},
+      dataList: []
     };
   },
   created() {
@@ -153,6 +156,9 @@ export default {
     this.getDirectory();
   },
   methods: {
+     getDataList(data) {
+      this.dataList = data;
+    },
     // 获取字典
     getDirectory() {
       this.zjControl.getDirectory().then((res) => {

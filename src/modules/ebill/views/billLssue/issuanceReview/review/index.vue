@@ -39,73 +39,91 @@
     <!-- 对账单信息 -->
     <zj-content-block>
       <zj-header>对账单信息</zj-header>
-      <zj-table ref="billTable" :pager="false" :api="zjControl.tableApi">
-        <zj-table-column prop="acctBillCode" title="对账单编号" />
-        <zj-table-column field="companyName" title="买方名称" />
-        <zj-table-column field="supplierCode" title="供应商编码" />
-        <zj-table-column field="supplierName" title="供应商名称" />
-        <zj-table-column
-          field="checkBillDate"
-          title="对账日期"
-          :formatter="date"
-        />
-        <zj-table-column
-          field="estimatedPaymentDate"
-          title="预计付款日期"
-          :formatter="date"
-        />
-        <zj-table-column
-          field="checkBillAmt"
-          title="对账单金额"
-          :formatter="money"
-        />
-        <zj-table-column field="isIssueVoucher" title="是否开立凭证" />
-        <zj-table-column field="billSource" title="对账单来源" />
-      </zj-table>
+      <zj-content>
+        <zj-table ref="billTable" :pager="false" :dataList="billTable">
+          <zj-table-column field="acctBillCode" title="对账单编号" />
+          <zj-table-column field="companyName" title="买方名称" />
+          <zj-table-column field="supplierCode" title="供应商编码" />
+          <zj-table-column field="supplierName" title="供应商名称" />
+          <zj-table-column
+            field="checkBillDate"
+            title="对账日期"
+            :formatter="date"
+          />
+          <zj-table-column
+            field="estimatedPaymentDate"
+            title="预计付款日期"
+            :formatter="date"
+          />
+          <zj-table-column
+            field="checkBillAmt"
+            title="对账单金额"
+            :formatter="money"
+          />
+          <zj-table-column
+            field="isIssueVoucher"
+            title="是否开立凭证"
+            :formatter="
+              (obj) => typeMap(dictionary.isApplyVoucher, obj.cellValue)
+            "
+          />
+          <zj-table-column field="billSource" title="对账单来源" />
+        </zj-table>
+      </zj-content>
     </zj-content-block>
 
     <!-- 对账单明细 -->
     <zj-content-block>
       <zj-header>对账单明细-{{ detailData.acctBillCode }}</zj-header>
-      <zj-table ref="searchTable" :api="zjControl.billDetailList">
-        <zj-table-column prop="poNo" title="po单号" />
-        <zj-table-column field="dnNo" title="dn单号" />
-        <zj-table-column field="matterCode" title="物料编码" />
-        <zj-table-column field="matterName" title="物料名称" />
-        <zj-table-column field="unit" title="单位" />
-        <zj-table-column field="inputDate" title="入库日期" :formatter="date" />
-        <zj-table-column field="storeHouse" title="仓库" />
-        <zj-table-column
-          field="inputNumber"
-          title="入库数量"
-          :formatter="money"
-        />
-        <zj-table-column
-          field="returnDate"
-          title="退货数量"
-          :formatter="money"
-        />
-        <zj-table-column field="level" title="等级" />
-        <zj-table-column
-          field="orderPrice"
-          title="订单单价"
-          :formatter="money"
-        />
-        <zj-table-column field="convertPrice" title="折价" />
-        <zj-table-column
-          field="settleAccountPrice"
-          title="结算单价"
-          :formatter="money"
-        />
-        <zj-table-column field="taxRate" title="税率%" :formatter="money" />
-        <zj-table-column field="netAmount" title="净额" />
-        <zj-table-column field="taxAmount" title="税额" />
-        <zj-table-column
-          field="totalAmount"
-          title="总计金额"
-          :formatter="money"
-        />
-      </zj-table>
+      <zj-content>
+        <zj-table
+          ref="searchTable"
+          :params="searchForm"
+          :api="zjControl.billDetailList"
+        >
+          <zj-table-column prop="poNo" title="po单号" />
+          <zj-table-column field="dnNo" title="dn单号" />
+          <zj-table-column field="matterCode" title="物料编码" />
+          <zj-table-column field="matterName" title="物料名称" />
+          <zj-table-column field="unit" title="单位" />
+          <zj-table-column
+            field="inputDate"
+            title="入库日期"
+            :formatter="date"
+          />
+          <zj-table-column field="storeHouse" title="仓库" />
+          <zj-table-column
+            field="inputNumber"
+            title="入库数量"
+            :formatter="money"
+          />
+          <zj-table-column
+            field="returnDate"
+            title="退货数量"
+            :formatter="money"
+          />
+          <zj-table-column field="level" title="等级" />
+          <zj-table-column
+            field="orderPrice"
+            title="订单单价"
+            :formatter="money"
+          />
+          <zj-table-column field="convertPrice" title="折价" />
+          <zj-table-column
+            field="settleAccountPrice"
+            title="结算单价"
+            :formatter="money"
+          />
+          <zj-table-column field="taxRate" title="税率%" :formatter="money" />
+          <zj-table-column field="netAmount" title="净额" />
+          <zj-table-column field="taxAmount" title="税额" />
+          <zj-table-column
+            field="totalAmount"
+            title="总计金额"
+            :formatter="money"
+          />
+        </zj-table>
+      </zj-content>
     </zj-content-block>
     <zj-content-footer>
       <span style="display: inline-block; margin-right: 10px">
@@ -134,12 +152,17 @@ export default {
       zjControl: this.$api.openBillAudit,
       detailData: {},
       agreeCheck: false,
-      billTable: [], //对账单信息
+      billTable: [], // 对账单信息
+      searchForm: {},
+      billDetailList: [], // 对账单明细
     };
   },
   created() {
-    this.getBillDetail();
+    this.getRow();
+    this.searchForm.acctBillCode = this.row.acctBillCode
     this.getDirectory();
+    this.getBillDetail();
+    this.getBillDetailList();
   },
   methods: {
     // 获取字典
@@ -151,24 +174,44 @@ export default {
     // 获取详情
     getBillDetail() {
       this.zjControl
-        .getBillDetail({ acctBillCode: this.row.id })
+        .getBillDetail({ acctBillCode: this.row.acctBillCode })
         .then((res) => {
           this.detailData = res.data;
-          this.billTable = [res.data];
+          this.billTable = [
+            {
+              acctBillCode: res.data.acctBillCode,
+              companyName: res.data.companyName,
+              supplierCode: res.data.supplierCode,
+              supplierName: res.data.supplierName,
+              checkBillDate: res.data.checkBillDate,
+              estimatedPaymentDate: res.data.estimatedPaymentDate,
+              checkBillAmt: res.data.checkBillAmt,
+              isIssueVoucher: res.data.isIssueVoucher,
+              billSource: res.data.billSource,
+            },
+          ];
         });
     },
     toReview() {
       if (this.agreeCheck) {
         this.$confirm(
-          `您本次复核同意签发<b style="font-size: 18px;">${this.detailData.applyAmt}</b>笔电子债权凭证，<br/>
-          共计：<b style="font-size: 18px;">${this.detailData.applyAmt}</b>元请确认<br>注：确认后进入盖章环节，如有需要，请及时联系签章人员！`,
+          `您本次复核同意签发<b style="font-size: 18px;">1</b>笔电子债权凭证，<br/>
+          共计：<b style="font-size: 18px;">${this.detailData.payableAmt}</b>元请确认<br>注：确认后进入盖章环节，如有需要，请及时联系签章人员！`,
           "凭证签发复核确认",
           {
             dangerouslyUseHTMLString: true,
             confirmButtonText: "确定",
             cancelButtonText: "取消",
           }
-        ).then(() => {});
+        ).then(() => {
+          let params = {
+            ebillCodes: [this.row.ebillCode],
+            operateType: "PASS",
+          };
+          this.zjControl.auditBatch(params).then((res) => {
+            this.$message.success("申请成功!");
+          });
+        });
       } else {
         this.$alert("请阅读并同意《开单确认书》", "提示", {
           type: "warning",
@@ -180,10 +223,11 @@ export default {
     },
     reviewReject(text) {
       let params = {
-        id: this.row.id,
-        submitFlag: "0",
+        ebillCodes: [this.row.ebillCode],
+        operateType: "REJECT",
+        rejectNotes: text,
       };
-      this.zjControl.repaymentSubmit(params).then(() => {
+      this.zjControl.auditBatch(params).then(() => {
         this.$message.success("拒绝成功！");
         this.goParent();
       });
