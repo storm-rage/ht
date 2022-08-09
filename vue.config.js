@@ -25,8 +25,9 @@ module.exports = {
         port: 8083,
         proxy: {
             '/api': {
-                // target: 'http://localhost:8080/', // 本地
-                target: 'http://192.168.28.64:8080/', //张占彬
+                target: 'http://localhost:8080/', // 本地
+                // target: 'http://192.168.28.64:8080/', //张占彬
+                // target: 'http://192.168.14.119:8080/', // 严海琳
                 pathRewrite: {
                     '^/api':''
                 }

@@ -3,36 +3,31 @@
     <!--  业绩集中度分析  -->
     <zj-list-layout>
       <template slot="leftBtns">
-        <vxe-button class="export" icon="el-icon-download" @click="toExport">导出</vxe-button>
+        <vxe-button class="export" icon="el-icon-download" @click="toExport"
+          >导出</vxe-button
+        >
       </template>
       <template slot="searchForm">
         <el-form ref="searchForm" :model="searchForm">
           <el-form-item label="统计月份：">
-            <zj-date-picker v-model="searchForm.statisticsMonth" @keyup.enter.native="enterSearch"/>
+            <zj-date-picker
+              :date.sync="searchForm.statisticsMonth"
+              type="month"
+              format="yyyy-MM"
+            />
           </el-form-item>
         </el-form>
       </template>
       <zj-table ref="searchTable" :dataList="list">
-        <zj-table-column type="seq" title="序号" width="60"/>
-        <zj-table-column field="field1" title="供应商名称"/>
-        <zj-table-column field="field2" title="是否一级供应商"/>
-        <zj-table-column field="field3" title="核心企业名称"/>
-        <zj-table-column field="field4" title="本月融资金额"/>
-        <zj-table-column field="field5" title="上月融资金额" :formatter="date"/>
-        <zj-table-column field="field6" title="融资余额环比"/>
-        <zj-table-column field="field6" title="本月签收凭证金额"/>
-        <zj-table-column field="field6" title="上月签收凭证金额"/>
-        <zj-table-column field="field6" title="签收凭证金额环比"/>
-        <zj-table-column field="field6" title="本月转让凭证金额"/>
-        <zj-table-column field="field6" title="上月转让凭证金额"/>
-        <zj-table-column field="field6" title="转让凭证金额环比"/>
-        <zj-table-column field="field6" title="本月利息费用"/>
-        <zj-table-column field="field6" title="上月利息费用"/>
-        <zj-table-column field="field6" title="利息费用环比"/>
-        <zj-table-column field="field6" title="融资余额"/>
-        <zj-table-column field="field6" title="截至本月全年融资金额"/>
-        <zj-table-column field="field7" title="截至本月全年凭证签收金额"/>
-        <zj-table-column field="field7" title="截至本月全年利息费用"/>
+        <zj-table-column type="seq" title="序号" width="60" />
+        <zj-table-column
+          v-for="(item, index) in tableProps"
+          :key="index"
+          :field="item.field"
+          :title="item.title"
+          :width="item.width"
+          :formatter="item.formatter"
+        />
       </zj-table>
     </zj-list-layout>
   </zj-content-container>
@@ -40,10 +35,10 @@
 <script>
 export default {
   components: {},
-  data() {
+  data () {
     return {
       searchForm: {
-        statisticsMonth: '',
+        statisticsMonth: ''
       },
       list: [
         {
@@ -56,26 +51,74 @@ export default {
           field7: '是'
         }
       ],
+      tableProps: [
+        { title: '核心企业名称', field: 'field1', width: '140px' },
+        {
+          title: '本期末对其债权金额',
+          field: 'field2',
+          width: '100px',
+          formatter: this.money
+        },
+        {
+          title: '上期末对其债权金额',
+          field: 'field3',
+          width: '100px',
+          formatter: this.money
+        },
+        {
+          title: '本期末债权占比',
+          field: 'field4',
+          width: '100px'
+        },
+        {
+          title: '供应商名称',
+          field: 'field5',
+          width: '140px'
+        },
+        {
+          title: '本期末融资余额',
+          field: 'field6',
+          width: '100px',
+          formatter: this.money
+        },
+        {
+          title: '上期末融资余额',
+          field: 'field7',
+          width: '100px',
+          formatter: this.money
+        },
+        {
+          title: '本期末融资余额占比',
+          field: 'field8',
+          width: '100px'
+        },
+        {
+          title: '供应商授信额度',
+          field: 'field9',
+          width: '100px'
+        }
+      ],
       tradeList: []
-    };
+    }
   },
   methods: {
+    toExport () {},
     /**
      *
      * @param row
      */
-    toContractDetail(row) {
-      console.error(row);
-      this.$router.push({name: 'businessDetail'});
+    toContractDetail (row) {
+      console.error(row)
+      this.$router.push({ name: 'businessDetail' })
     },
     /**
      *
      * @param row
      */
-    toContractSign(row) {
-      console.log(row);
+    toContractSign (row) {
+      console.log(row)
     },
-    handleRadioChange({row}) {
+    handleRadioChange ({ row }) {
       this.tradeList.push({
         field1: '佛山市a有限公司',
         field2: '是',
@@ -93,7 +136,7 @@ export default {
     toEdit (row) {
       this.goChild('productInfoManageEdit', row)
     },
-    toEditQuota (row) {},
+    toEditQuota (row) {}
   }
 };
 </script>

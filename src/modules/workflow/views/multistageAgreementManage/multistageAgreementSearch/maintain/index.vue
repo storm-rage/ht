@@ -6,9 +6,9 @@
     <!--  具体业务信息  -->
     <business-audit :formData="detailData"/>
     <!--  阶段性协议信息  -->
-    <multistage-agreement :tableData="detailData.phasedAgreementList" :dictionary="dictionary" :zjControl="zjControl"/>
+    <multistage-agreement :tableData="detailData" :dictionary="dictionary" :zjControl="zjControl" @handleAgreementList="agreementChange"/>
      <!--  审批意见  -->
-    <audit-remark/>
+    <audit-remark @reject="reject"/>
     <zj-content-footer>
       <zj-button type="primary" @click="submit('提交')">确认提交</zj-button>
       <zj-button type="primary" @click="submit('拒绝')">拒绝</zj-button>
@@ -34,22 +34,24 @@ export default {
     return {
       zjControl: {
         deletePhasedAgree:this.$api.multistageAgreementManageWorkflow.deletePhasedAgree,//运营端-阶段性协议维护-阶段性协议-删除
-        getAddDetail:this.$api.multistageAgreementManageWorkflow.getAddDetail,//运营端-阶段性协议维护-阶段性协议新增
+        getAddDetail:this.$api.multistageAgreementManageWorkflow.getAddDetail,//运营端-阶段性协议维护-阶段性协议维护详情
         getBackPhasedAgreeInfo:this.$api.multistageAgreementManageWorkflow.getBackPhasedAgreeInfo,//运营端-阶段性协议维护-详情
         queryBackPhasedAgreePage:this.$api.multistageAgreementManageWorkflow.queryBackPhasedAgreePage,//运营端-阶段性协议-列表查询
         savePhasedAgree:this.$api.multistageAgreementManageWorkflow.savePhasedAgree,//运营端-阶段性协议维护-阶段性协议-保存
         submitBackPhasedAgree:this.$api.multistageAgreementManageWorkflow.submitBackPhasedAgree,//运营端-阶段性协议维护-阶段性协议-确认提交
 
-        getPhasedAgreeDirectory:this.$api.multistageAgreementManageWorkflow.getPhasedAgreeDirectory,//阶段性协议管理-数据字典
+        getBackPhasedAgreeDirectory:this.$api.multistageAgreementManageWorkflow.getBackPhasedAgreeDirectory,//阶段性协议管理-数据字典
         uploadFile:this.$api.baseCommon.uploadFile,
       },
       detailData: {},
       dictionary: {},
+      phasedIdList: [],//阶段性协议列表id合集
+      rejectReason: '',//拒绝原因
     }
   },
   methods: {
     getDic() {
-      this.zjControl.getPhasedAgreeDirectory().then(res=>{
+      this.zjControl.getBackPhasedAgreeDirectory().then(res=>{
         this.dictionary = res.data
       })
     },
@@ -67,26 +69,41 @@ export default {
         this.detailData = res.data
       })
     },
+    agreementChange() {
+      this.getDetail()
+    },
+    reject(val) {
+      this.rejectReason = val
+    },
     submit(flag) {
-      // let target = flag == 'agree' ? '提交' : '拒绝'
-      this.$messageBox({
-        type:'info',
-        title:'温馨提示',
-        content:`是否确认${flag}？`,
-        showCancelButton: true,
-        messageResole:()=>{
-          let params = {
-            applyId: '',
-            operateFlag: '',
-            phasedIdList: [],
-            rejectReason: '',
-            serialNo: '',
-          }
-          this.zjControl.submitBackPhasedAgree(params).then(res=>{
-            this.$message.success(res.msg)
-          })
+      let idList = []
+      for(let i of this.detailData.phasedAgreementList) {
+        idList.push(i.phasedId)
+      }
+      //判断是否有一条协议状态为可融资
+      let isHaveFinancingAgreement = this.detailData.phasedAgreementList.some(i=>{return i.agreementStatus === '1'})
+      if(isHaveFinancingAgreement) {
+        let params = {
+          applyId: '',//申请记录id：保理公司直接维护时不需要传
+          operateFlag: flag==='提交'?'1':'0',//1-确认提交 0-拒绝
+          phasedIdList: [...idList],
+          rejectReason: this.rejectReason,
+          serialNo: '',//申请流水号：保理公司直接维护时不需要传
         }
-      })
+        this.$messageBox({
+          type:'info',
+          title:'温馨提示',
+          content:`是否确认${flag}？`,
+          showCancelButton: true,
+          messageResolve:()=>{
+            this.zjControl.submitBackPhasedAgree(params).then(res=>{
+              this.$message.success(res.msg)
+            })
+          }
+        })
+      }else {
+        return this.$message.error('至少维护一条阶段性协议为可融资！')
+      }
     },
     back() {},
   },

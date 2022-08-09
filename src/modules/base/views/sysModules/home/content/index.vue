@@ -5,8 +5,8 @@
         <home-banner></home-banner>
       </el-col>
       <el-col :span="8">
-        <home-notice></home-notice>
-        <home-message style="margin-top: 15px"></home-message>
+        <home-notice class="home-content-notice"></home-notice>
+        <home-message class="home-content-message" style="margin-top: 15px"></home-message>
       </el-col>
     </el-row>
     <el-row class="zj-m-t-15" :gutter="15" type="flex">
@@ -43,5 +43,31 @@ export default {
 <style lang="less" scoped>
 .home-content {
   padding: 15px 20px;
+}
+.home-content-notice,.home-content-message {
+  max-height: 206px;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+@media screen and (max-height: 1080px) {
+    .home-content-notice,.home-content-message {
+        max-height: 206px; // 250 -44
+    }
+}
+@media screen and (max-height: 1050px) {
+    .home-content-notice,.home-content-message {
+        max-height: 190px;  // 234 - 44
+    }
+}
+@media screen and (max-height: 900px) {
+    .home-content-notice,.home-content-message {
+        max-height: 116px; // 160 - 44
+    }
+}
+@media screen and (max-height: 768px) {
+    .home-content-notice,.home-content-message {
+        max-height: 132px;
+    }
 }
 </style>

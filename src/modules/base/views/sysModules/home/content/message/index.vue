@@ -46,7 +46,27 @@ export default {
           title: '广州公司很长司很长司很长司很长司很长司很长司很长司很长司很长司很长司很长司很长司很长司很长司很长司很长司很长',
           date: '2022-08-12',
           isNotRead: false
-        }
+        },
+        {
+          title: '广州公司很长司很长司很长司很长司很长司很长司很长司很长司很长司很长司很长司很长司很长司很长司很长司很长司很长',
+          date: '2022-08-12',
+          isNotRead: false
+        },
+        {
+          title: '广州公司很长司很长司很长司很长司很长司很长司很长司很长司很长司很长司很长司很长司很长司很长司很长司很长司很长',
+          date: '2022-08-12',
+          isNotRead: false
+        },
+        {
+          title: '广州公司很长司很长司很长司很长司很长司很长司很长司很长司很长司很长司很长司很长司很长司很长司很长司很长司很长',
+          date: '2022-08-12',
+          isNotRead: false
+        },
+        {
+          title: '广州公司很长司很长司很长司很长司很长司很长司很长司很长司很长司很长司很长司很长司很长司很长司很长司很长司很长',
+          date: '2022-08-12',
+          isNotRead: false
+        },
       ]
     }
   },
@@ -59,5 +79,10 @@ export default {
 </script>
 <style lang="less" scoped>
 .home-content-message {
+  .message-list-block {
+    overflow: auto;
+    margin: 0 -20px -20px;
+    padding: 0 20px 20px;
+  }
 }
 </style>

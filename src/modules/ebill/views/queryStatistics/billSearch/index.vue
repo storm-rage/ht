@@ -123,6 +123,7 @@
 </template>
 <script>
 export default {
+  name: "queryAccountBill",
   components: {},
   data() {
     return {

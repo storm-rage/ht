@@ -1,7 +1,8 @@
+//融资交易查询-运营端
 const financingTransactionQueryRouter = [
   {
-    path: '/financingTransactionQuery',
-    name: 'financingTransactionQuery',
+    path: '/financingTransQuery',
+    name: 'financingTransQuery',
     component: () => import('../views/queryStatistics/financingTransactionQuery'),
     meta: {
       isMock: true,
@@ -22,7 +23,7 @@ const financingTransactionQueryRouter = [
       root: '查询统计',
       keepAlive: true,
       refreshIndex: 0,
-      parent:'financingTransactionQuery',
+      parent:'financingTransQuery',
       notRequireAuth: true
     }
   },

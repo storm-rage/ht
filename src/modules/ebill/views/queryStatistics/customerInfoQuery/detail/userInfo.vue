@@ -2,15 +2,15 @@
   <zj-content-container>
     <!--  客户信息明细  -->
     <zj-list-layout>
-      <zj-table ref="searchTable" :dataList="list">
-        <zj-table-column field="field1" title="姓名"/>
-        <zj-table-column field="field2" title="证件类型"/>
-        <zj-table-column field="field3" title="证件号码"/>
-        <zj-table-column field="field4" title="手机号"/>
-        <zj-table-column field="field5" title="邮箱"/>
-        <zj-table-column field="field6" title="内部系统账号"/>
-        <zj-table-column field="field6" title="操作员角色"/>
-        <zj-table-column field="field6" title="支持对账单类型"/>
+      <zj-table ref="searchTable" :dataList="list" :maxHeight="maxHeight">
+        <zj-table-column field="field1" title="姓名" />
+        <zj-table-column field="field2" title="证件类型" />
+        <zj-table-column field="field3" title="证件号码" />
+        <zj-table-column field="field4" title="手机号" />
+        <zj-table-column field="field5" title="邮箱" />
+        <zj-table-column field="field6" title="内部系统账号" />
+        <zj-table-column field="field6" title="操作员角色" />
+        <zj-table-column field="field6" title="支持对账单类型" />
       </zj-table>
     </zj-list-layout>
   </zj-content-container>
@@ -18,11 +18,20 @@
 <script>
 export default {
   components: {},
-  data() {
+  props: {
+    detailEl: {
+      type: Object,
+      default: () => {
+        return {}
+      }
+    }
+  },
+  data () {
     return {
       searchForm: {
-        statisticsMonth: '',
+        statisticsMonth: ''
       },
+      maxHeight: '',
       list: [
         {
           field1: 'scm00001',
@@ -35,25 +44,25 @@ export default {
         }
       ],
       tradeList: []
-    };
+    }
   },
   methods: {
     /**
      *
      * @param row
      */
-    toContractDetail(row) {
-      console.error(row);
-      this.$router.push({name: 'businessDetail'});
+    toContractDetail (row) {
+      console.error(row)
+      this.$router.push({ name: 'businessDetail' })
     },
     /**
      *
      * @param row
      */
-    toContractSign(row) {
-      console.log(row);
+    toContractSign (row) {
+      console.log(row)
     },
-    handleRadioChange({row}) {
+    handleRadioChange ({ row }) {
       this.tradeList.push({
         field1: '佛山市a有限公司',
         field2: '是',
@@ -71,7 +80,12 @@ export default {
     toEdit (row) {
       this.goChild('productInfoManageEdit', row)
     },
-    toEditQuota (row) {},
+    toEditQuota (row) {}
+  },
+  mounted () {
+    this.maxHeight = this.detailEl.$el
+      ? this.detailEl.$el.clientHeight - 36 - 56 - 60 - 62 + 'px'
+      : 'auto'
   }
-};
+}
 </script>

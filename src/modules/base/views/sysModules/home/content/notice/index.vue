@@ -46,7 +46,22 @@ export default {
           title: '凭证作废复核审批人规则，必须是部分很长很长很长很长很长很长很长很长很长很长很长很长很长很长很长很长很长很长很长',
           isNew: false,
           date: '2022-05-08'
-        }
+        },
+        {
+          title: '凭证作废复核审批人规则，必须是部分很长很长很长很长很长很长很长很长很长很长很长很长很长很长很长很长很长很长很长',
+          isNew: false,
+          date: '2022-05-08'
+        },
+        {
+          title: '凭证作废复核审批人规则，必须是部分很长很长很长很长很长很长很长很长很长很长很长很长很长很长很长很长很长很长很长',
+          isNew: false,
+          date: '2022-05-08'
+        },
+        {
+          title: '凭证作废复核审批人规则，必须是部分很长很长很长很长很长很长很长很长很长很长很长很长很长很长很长很长很长很长很长',
+          isNew: false,
+          date: '2022-05-08'
+        },
       ]
     }
   },
@@ -60,6 +75,9 @@ export default {
 <style lang="less" scoped>
 .home-content-notice {
   .notice-list-block {
+    overflow: auto;
+    margin: 0 -20px -20px;
+    padding: 0 20px 20px;
   }
 }
 </style>
