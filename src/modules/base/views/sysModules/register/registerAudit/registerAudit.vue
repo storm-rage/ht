@@ -224,14 +224,12 @@
 </template>
 
 <script>
-// import applyAudit from "./commom/applyAudit.js";
 import protocolAudit from "./commom/protocolAudit.js";
-// import registerAuditAttach from "./registerAuditAttach.js";
-// import project from "../../../../project.js";
 import view from "@pubComponent/preview/view.js";
 import OperateLog from "@modules/workflow/views/components/operateLog";
 import AuditRemark from "@modules/workflow/views/components/auditRemark";
 import entInfo from "@modules/base/views/entUserManage/entManage/detail/entInfo.vue";
+import {windowSSStorage} from '@utils/storageUtils';
 export default {
   components: {
     OperateLog,
@@ -292,7 +290,7 @@ export default {
   methods: {
     //返回查询页
     beforeGoParent() {
-      sessionStorage.setItem("registerAuditAudit", "1");
+      windowSSStorage.setItem("registerAuditAudit", "1");
     },
     //获取字典
     getDirectory() {

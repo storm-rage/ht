@@ -22,6 +22,7 @@ export default {};
     font-weight: Bold;
     font-size: 28px;
     color: #303133;
+    margin-top: 5%;
   }
 }
 </style>

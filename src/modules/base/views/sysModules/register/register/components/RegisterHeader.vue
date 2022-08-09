@@ -11,7 +11,6 @@
 
 <script>
     import router from "@/router";
-
     export default {
         name: "LoginHeader",
         data () {
@@ -50,10 +49,6 @@
             },
             //去首页
             toLogin(){
-              if(this.register){
-                let ssionArr = ['registerStep','registerEntInfoObj']
-                ssionArr.forEach(item=> sessionStorage.removeItem(item))
-              }
               router.replace({
                 path: '/login'
               })

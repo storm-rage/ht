@@ -1,3 +1,4 @@
+import {windowLsStorege} from '@utils/storageUtils';
 export default {
   install(Vue){
     Vue.mixin({
@@ -130,21 +131,20 @@ export default {
         getRow(){
           let rowData = this.$route.params.rowData
           if (rowData !== undefined) {
-            localStorage.setItem( `${this.$route.name}Data`,JSON.stringify(rowData))
+            windowLsStorege.setItem( `${this.$route.name}Data`,JSON.stringify(rowData))
           }
-          if (localStorage.getItem(`${this.$route.name}Data`) && rowData === undefined) {
-            rowData = JSON.parse(localStorage.getItem(`${this.$route.name}Data`))
+          if (windowLsStorege.getItem(`${this.$route.name}Data`) && rowData === undefined) {
+            rowData = JSON.parse(windowLsStorege.getItem(`${this.$route.name}Data`))
           }
           this.row = Object.assign({}, rowData)
         },
         removeRow(){
-          localStorage.removeItem(`${this.$route.name}Data`)
+          windowLsStorege.removeItem(`${this.$route.name}Data`)
         },
         goParent(parentName, boo=true){
           if(this.beforeGoParent && typeof(this.beforeGoParent) === 'function'){
             this.beforeGoParent()
           }
-          // localStorage.removeItem( `${this.$route.name}Data`)
           //父
           let rItem = {
             name: typeof(parentName) !== 'object' && parentName ? parentName : this.row.parent ||  this.$route.meta.newParent || this.$route.meta.parent,

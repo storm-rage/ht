@@ -1,6 +1,6 @@
 <template>
   <!-- 个人中心 -->
-  <zj-content-container>
+  <zj-content-container class="personal-center">
     <zj-content>
       <zj-header>我的账户</zj-header>
       <div style="width: 80%; margin: 0 auto">
@@ -228,7 +228,9 @@ export default {
 </script>
 
 <style lang="less">
-.el-tab-pane {
-  margin-left: 40px;
+.personal-center {
+  .el-tab-pane {
+    margin-left: 40px;
+  }
 }
 </style>

@@ -45,11 +45,8 @@ export default {
           const data = ret.data;
           const loginRes = Object.assign({}, this.userInfo, data,{currentEnt: item});
           if (data.faceCheck || data.userServiceAgreementFlag === '1') {
-            const loginSuccess = JSON.parse(JSON.stringify({
-              loginRes
-            }));
-            sessionStorage.setItem('frLoginRes',JSON.stringify(loginRes))
-            this.goChild('faceRecognition',loginSuccess)
+            const loginSuccess = {loginRes};
+            this.goChild('signAgreement',loginSuccess)
           } else {
             this.$store.dispatch('enterprise/changeEnt', {data,entInfo: item}).then(() =>  {
               this.$store.commit('tab/tabClear');

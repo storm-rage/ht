@@ -84,7 +84,52 @@ export default {
           // 发送登录请求
           this.zjControl.login(params).then(res => {
             let loginRes = res.data
-
+            // 手动添加菜单
+            /* loginRes.resList = [...loginRes.resList, ...[{
+              children: null,
+              icon: null,
+              id: "1753",
+              isMenu: "1",
+              name: "客户信息查询",
+              parentId: "12",
+              remark: "这个给vue前端路由用的",
+              sequence: "90",
+              type: "ebill",
+              url: "customerInfoQuery"
+            },{
+              children: null,
+              icon: null,
+              id: "1754",
+              isMenu: "1",
+              name: "发票查询",
+              parentId: "12",
+              remark: "这个给vue前端路由用的",
+              sequence: "90",
+              type: "ebill",
+              url: "invoiceQuery"
+            },{
+              children: null,
+              icon: null,
+              id: "1755",
+              isMenu: "1",
+              name: "月度报表",
+              parentId: "12",
+              remark: "这个给vue前端路由用的",
+              sequence: "100",
+              type: "ebill",
+              url: "monthlyReport"
+            },{
+              children: null,
+              icon: null,
+              id: "1756",
+              isMenu: "1",
+              name: "年度报表",
+              parentId: "12",
+              remark: "这个给vue前端路由用的",
+              sequence: "110",
+              type: "ebill",
+              url: "yearlyReport"
+            }]] */
             // 冻结状态
             if (loginRes.frozenState) {
               this.$refs.frozenDialog.open(loginRes.frozenPhone)
@@ -112,16 +157,13 @@ export default {
               }
             }
             // 需要签 协议
-            else if (loginRes.userServiceAgreementFlag === '1') {
+            else if (loginRes.faceCheck || loginRes.userServiceAgreementFlag === '1') {
               const loginResMix = Object.assign({}, loginRes, this.userData);
               this.loginSuccess = JSON.parse(JSON.stringify({
                 loginRes: loginResMix
               }))
-              //跳人脸识别
-              // this.$refs.FaceRecognition.dialogVisible = true
               loginRes.password = this.userData.password
-              sessionStorage.setItem('frLoginRes', JSON.stringify(loginResMix))
-              this.goChild('faceRecognition', this.loginSuccess)
+              this.goChild('signAgreement', this.loginSuccess)
               this.oneLoginFlag = false
             } else {
               loginRes.loginName = this.userData.loginName;
