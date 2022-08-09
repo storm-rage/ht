@@ -33,7 +33,7 @@
                     >
                       <el-option label="全部" value=""></el-option>
                       <el-option
-                        v-for="item in dictionary.checkBillStatus"
+                        v-for="item in dictionary.financingStateList"
                         :key="item.code"
                         :label="item.desc"
                         :value="item.code"
@@ -50,7 +50,7 @@
                 </zj-table-column>
                 <zj-table-column field="fromEntName" title="融资企业名称"/>
                 <zj-table-column field="financingProductType" title="融资产品名称" :formatter="obj=>typeMap(dictionary.productTypeList, obj.cellValue)"/>
-                <zj-table-column field="loanDate" title="融资开始日"/>
+                <zj-table-column field="loanDate" title="融资开始日" :formatter="date"/>
                 <zj-table-column field="expireDate" title="融资到期日" :formatter="date"/>
                 <zj-table-column field="tranAmt" title="融资申请金额" :formatter="money"/>
                 <zj-table-column field="applyDatetime" title="融资申请时间" :formatter="date"/>
