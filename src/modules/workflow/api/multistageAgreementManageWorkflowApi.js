@@ -45,12 +45,12 @@ const multistageAgreementWorkflow = {
     return request.post('/phased-agreement/submit-back-phased-agree', params)
   },
   /**
-   * 企业端-阶段性协议管理-数据字典
+   * 运营端-阶段性协议管理-数据字典
    * @param params
    * @returns {Promise<AxiosResponse<any>>}
    */
-  getPhasedAgreeDirectory: (params) => {
-    return request.get('/phased-agreement/get-phased-agree-directory',{params})
+  getBackPhasedAgreeDirectory: (params) => {
+    return request.get('/phased-agreement/get-back-phased-agree-directory',{params})
   },
 }
 export default multistageAgreementWorkflow
