@@ -5,7 +5,7 @@
     :close-on-click-modal="false" left
   >
     <el-form :model="dialogForm" ref="dialogForm" :rules="rules">
-      <el-form-item label="请输入拒签原因：" prop="refuseReason">
+      <el-form-item label="请输入拒签原因：" prop="notes">
         <el-input type="textarea" v-model="dialogForm.notes"></el-input>
       </el-form-item>
     </el-form>
@@ -32,7 +32,7 @@ export default {
         notes: '',
       },
       rules: {
-        refuseReason:[
+        notes:[
           {required: true, message:'请输入拒绝原因！', trigger:'blur'}
         ]
       }
@@ -42,14 +42,14 @@ export default {
     onConfirm() {
       this.$refs.dialogForm.validate(boo=>{
         if(!boo){return}
-      })
-      let params = {
-        id: this.id,
-        notes: this.dialogForm.notes,
-        state: this.state,
-      }
-      this.zjControl.rejectBillSign(params).then(res=>{
-        this.dialogShow = false
+        let params = {
+          id: this.id,
+          notes: this.dialogForm.notes,
+          state: this.state,
+        }
+        this.zjControl.rejectBillSign(params).then(res=>{
+          this.dialogShow = false
+        })
       })
     },
     cancel() {

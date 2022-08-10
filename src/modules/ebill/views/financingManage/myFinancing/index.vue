@@ -4,56 +4,66 @@
       <!--  我的融资  -->
           <div class="zj-search-condition zj-m-b-20" style="border-bottom: none;">
             <zj-list-layout>
-<!--              <el-row>-->
-<!--                <template name="rightBtns">-->
-<!--                  <vxe-button class="reset" icon="el-icon-refresh" @click="resetSearch">重置</vxe-button>-->
-<!--                  <vxe-button class="search" icon="el-icon-search" @click="search">查询</vxe-button>-->
-<!--                </template>-->
-<!--              </el-row>-->
+              <template slot="rightBtns">
+                <vxe-button class="reset" icon="el-icon-refresh" @click="resetSearch">重置</vxe-button>
+                <vxe-button class="search" icon="el-icon-search" @click="search">查询</vxe-button>
+              </template>
+              <template slot="leftBtns">
+                <vxe-button class="export" icon="el-icon-download" @click="toExport" :api="zjControl.exportMyFinancingList">导出</vxe-button>
+              </template>
               <template slot="searchForm">
                 <el-form ref="searchForm" :model="searchForm">
                   <el-form-item label="融资流水号：">
-                    <el-input v-model="searchForm.voucherCode" @keyup.enter.native="search"></el-input>
+                    <el-input v-model="searchForm.tranSerialNoLike" @keyup.enter.native="search"></el-input>
                   </el-form-item>
                   <el-form-item label="融资开始日：">
                     <zj-date-range-picker
-                      :startDate.sync="searchForm.voucherDateStart"
-                      :endDate.sync="searchForm.voucherDateEnd"
+                      :startDate.sync="searchForm.applyDatetimeStart"
+                      :endDate.sync="searchForm.applyDatetimeEnd"
                     ></zj-date-range-picker>
                   </el-form-item>
                   <el-form-item label="融资到期日：">
                     <zj-date-range-picker
-                      :startDate.sync="searchForm.voucherDateStart"
-                      :endDate.sync="searchForm.voucherDateEnd"
+                      :startDate.sync="searchForm.expireDateStart"
+                      :endDate.sync="searchForm.expireDateEnd"
                     ></zj-date-range-picker>
                   </el-form-item>
                   <el-form-item label="融资金额：">
-                    <zj-amount-range :startAmt.sync="searchForm.ebillAmtStart" :endAmt.sync="searchForm.ebillAmtEnd"></zj-amount-range>
+                    <zj-amount-range :startAmt.sync="searchForm.applyAmtStart" :endAmt.sync="searchForm.applyAmtEnd"></zj-amount-range>
                   </el-form-item>
                   <el-form-item label="还款状态：">
-                    <el-select v-model="searchForm.voucherCode">
-                      <el-option label="全部"></el-option>
+                    <el-select v-model="searchForm.repaymentFlag">
+                      <el-option label="全部" value=""/>
+                      <el-option
+                        v-for="item in dictionary.workflowState"
+                        :label="item.desc"
+                        :value="item.code"
+                        :key="item.code"
+                      />
                     </el-select>
                   </el-form-item>
                 </el-form>
               </template>
-              <zj-table ref="searchTable" :dataList="list" :radio-config="{highlight: true}">
+              <zj-table ref="searchTable"
+                        :api="zjControl.queryMyFinancingPage"
+                        :params="searchForm"
+                        :radio-config="{highlight: true}">
                 <zj-table-column title="融资流水号">
                   <template v-slot="{row}">
-                    <zj-button type="text" @click="goChild('myFinancingDetail',row)">{{row.field1}}</zj-button>
+                    <zj-button type="text" @click="toDetail(row)">{{row.tranSerialNo}}</zj-button>
                   </template>
                 </zj-table-column>
-                <zj-table-column field="field3" title="融资企业"/>
-                <zj-table-column field="field3" title="融资产品名称"/>
-                <zj-table-column field="field3" title="融资申请日期" :formatter="date"/>
-                <zj-table-column field="field3" title="融资金额" :formatter="money"/>
-                <zj-table-column field="field3" title="融资月利率" :formatter="rate"/>
-                <zj-table-column field="field3" title="融资开始日" :formatter="date"/>
-                <zj-table-column field="field3" title="融资到期日" :formatter="date"/>
-                <zj-table-column field="field3" title="已还款本金" :formatter="money"/>
-                <zj-table-column field="field3" title="已还款利息" :formatter="money"/>
-                <zj-table-column field="field5" title="上次还款日期" :formatter="date"/>
-                <zj-table-column field="field6" title="还款状态" :formatter="obj=>typeMap(dictionary,obj.cellValue)"/>
+                <zj-table-column field="fromEntName" title="融资企业"/>
+              <zj-table-column field="financingProductType" title="融资产品名称"/>
+                <zj-table-column field="createDatetime" title="融资申请日期" :formatter="date"/>
+                <zj-table-column field="tranAmt" title="融资金额" :formatter="money"/>
+                <zj-table-column field="interestRate" title="融资月利率" :formatter="rate"/>
+                <zj-table-column field="applyDatetime" title="融资开始日" :formatter="date"/>
+                <zj-table-column field="expireDate" title="融资到期日" :formatter="date"/>
+                <zj-table-column field="repaymentPrincipalAmt" title="已还款本金" :formatter="money"/>
+                <zj-table-column field="repaymentInterestAmt" title="已还款利息" :formatter="money"/>
+                <zj-table-column field="lastRepayDate" title="上次还款日期" :formatter="date"/>
+                <zj-table-column field="repaymentflag" title="还款状态" :formatter="obj=>typeMap(dictionary.workflowState,obj.cellValue)"/>
               </zj-table>
             </zj-list-layout>
           </div>
@@ -61,12 +71,17 @@
   </div>
 </template>
 <script>
+import myFinancing from "../../../api/myfinancingApi";
+
 export default {
-  components: {},
+  name: 'myFinancing',
   data() {
     return {
-      searchEntForm: {
-        entState: '',
+      zjControl: {
+        exportMyFinancingList:this.$api.myFinancing.exportMyFinancingList,//我的融资-导出
+        getMyFinancingDetail:this.$api.myFinancing.getMyFinancingDetail,//我的融资-详情
+        getMyFinancingDirectory:this.$api.myFinancing.getMyFinancingDirectory,//我的融资-获取数据字典
+        queryMyFinancingPage:this.$api.myFinancing.queryMyFinancingPage,//我的融资-查询
       },
       searchForm: {
         supplierName: '',
@@ -86,46 +101,26 @@ export default {
           field7: '是'
         }
       ],
-      tradeList: []
+      tradeList: [],
+      dictionary: {},
     };
   },
   methods: {
-    /**
-     *
-     * @param row
-     */
-    toContractDetail(row) {
-      console.error(row);
-      this.$router.push({name: 'businessDetail'});
-    },
-    //凭证签发人/转让企业改变事件
-    entChange(){
-
-    },
-    toContractSign(row) {
-      console.log(row);
-    },
-    handleRadioChange({row}) {
-      this.tradeList.push({
-        field1: '佛山市a有限公司',
-        field2: '是',
-        field3: '756756756767',
-        field4: '非保理',
-        field5: '12',
-        field6: '1000',
-        field7: '2000',
-        field8: '正常'
+    getDic() {
+      this.zjControl.getMyFinancingDirectory().then(res=>{
+        this.dictionary = res.data
       })
     },
     toDetail (row) {
       this.goChild('productInfoManageDetail', row)
     },
-    toEdit (row) {
-      this.goChild('productInfoManageEdit', row)
+    toExport() {
+      this.zjControl.exportMyFinancingList(this.searchForm)
     },
-    review(row) {
-      this.goChild('orderFinancingReview', row)
-    },
+  },
+  created() {
+    this.getApi()
+    this.getDic()
   }
 };
 </script>
