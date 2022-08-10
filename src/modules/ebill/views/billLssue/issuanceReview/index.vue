@@ -28,6 +28,7 @@
         ref="searchTable"
         :params="searchForm"
         :api="zjControl.tableApi"
+        @before-load="getDataList"
         @checkbox-change="tableCheckChange"
         @checkbox-all="tableCheckChange"
       >
@@ -36,7 +37,7 @@
         <zj-table-column field="payEntName" title="凭证签发人" />
         <zj-table-column field="receiptEntName" title="供应商" />
         <zj-table-column
-          field="ebillCode"
+          field="payableAmt"
           title="凭证金额"
           :formatter="money"
         />
@@ -52,13 +53,11 @@
           :formatter="date"
         />
         <zj-table-column field="acctBillCode" title="对账单编号" />
-        <zj-table-column title="操作" fixed="right">
-          <template>
+        <zj-table-column title="操作" fixed="right" width="180px">
+          <template v-slot="{ row }">
             <zj-button type="text" @click="nbsp;" :api="zjBtn.cancelSubmit"
               >开单确认书</zj-button
             >
-          </template>
-          <template>
             <zj-button
               type="text"
               @click="goChild('issuanceReview', row)"
@@ -97,18 +96,21 @@ export default {
       searchForm: {},
       // 是否阅读协议
       agreeCheck: false,
+      total: 0,
+      totalAmount: 0,
       ids: [],
-      total: '',
-      totalAmount: ''
+      dataList: [],
     };
   },
   created() {
     this.getApi();
   },
   methods: {
+    getDataList(data) {
+      this.dataList = data;
+    },
     toReview(ids) {
       if (this.agreeCheck) {
-        let num, money;
         this.$confirm(
           `您本次复核同意签发<b style="font-size: 18px;">${this.total}</b>笔电子债权凭证，<br/>
           共计：<b style="font-size: 18px;">${this.totalAmount}</b>元请确认<br>注：确认后进入盖章环节，如有需要，请及时联系签章人员！`,
@@ -119,8 +121,8 @@ export default {
             cancelButtonText: "取消",
           }
         ).then(() => {
-          let params = { ids: ids, operateType: "PASS" };
-          this.zjControl.cancelSubmit(params).then((res) => {
+          let params = { ebillCodes: ids, operateType: "PASS" };
+          this.zjControl.auditBatch(params).then((res) => {
             this.$message.success("申请成功!");
             this.search();
           });
@@ -132,22 +134,25 @@ export default {
       }
     },
     tableCheckChange({ records }) {
+      this.totalAmount = 0
       console.log(records);
       this.ids = [];
       records.forEach((item) => {
-        this.ids.push(item.id);
+        this.ids.push(item.ebillCode);
+        this.totalAmount += parseFloat(item.payableAmt)
       });
+      this.total = records.length
     },
     toReject() {
       this.$refs.rejectDialog.open();
     },
     reviewReject(text) {
       let params = {
-        id: this.row.id,
+        ebillCodes: this.ids,
         operateType: "REJECT",
         rejectNotes: text,
       };
-      this.zjControl.cancelSubmit(params).then(() => {
+      this.zjControl.auditBatch(params).then(() => {
         this.$message.success("拒绝成功！");
         this.search();
         this.$refs.rejectDialog.close();

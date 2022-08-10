@@ -52,8 +52,8 @@ const billLssueRouter = [
     }
   },
   {
-    path: '/issuanceReviewList',
-    name: 'issuanceReviewList',
+    path: '/openBillAudit',
+    name: 'openBillAudit',
     component: () => import('../views/billLssue/issuanceReview/index.vue'),
     meta: {
       isMock: true,
@@ -71,6 +71,7 @@ const billLssueRouter = [
     meta: {
       isMock: false,
       title: `债权凭证签发复核`,
+      parent: 'openBillAudit',
       keepAlive: true,
       refreshIndex: 0,
       notRequireAuth: true
@@ -95,6 +96,19 @@ const billLssueRouter = [
       isMock: true,
       title: `凭证作废复核`,
       root: '电子债权凭证',
+      keepAlive: true,
+      refreshIndex: 0,
+      notRequireAuth: true
+    }
+  },
+  {
+    path: '/billCancellationReview',
+    name: 'billCancellationReview',
+    component: () => import('../views/billLssue/cancellationReview/billCancellationReview'),
+    meta: {
+      isMock: true,
+      title: `债权凭证作废复核`,
+      parent: 'cancellationReview',
       keepAlive: true,
       refreshIndex: 0,
       notRequireAuth: true

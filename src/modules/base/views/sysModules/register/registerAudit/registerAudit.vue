@@ -61,26 +61,23 @@
                   <el-col :span="8">
                     <el-form-item label="平台客户类型：">
                       <span>{{
-                        typeMap(
-                          dictionary.entTypeList,
-                          this.form.entType
-                        )
+                        typeMap(dictionary.entTypeList, this.form.entType)
                       }}</span>
                     </el-form-item>
                   </el-col>
                   <el-col :span="8">
                     <el-form-item label="企业注册地址：">
-                      <span>{{ detailData.address }}</span>
+                      <span>{{ detailData.address | value }}</span>
                     </el-form-item>
                   </el-col>
                   <el-col :span="8">
                     <el-form-item label="成立日期：">
-                      <span>{{ detailData.registerStartDate }}</span>
+                      <span>{{ detailData.registerStartDate | value }}</span>
                     </el-form-item>
                   </el-col>
                   <el-col :span="8">
                     <el-form-item label="注册资本：">
-                      <span>{{ detailData.registerCapital }}</span>
+                      <span>{{ detailData.registerCapital | value }}</span>
                     </el-form-item>
                   </el-col>
                   <el-col :span="8">
@@ -197,30 +194,32 @@
         <!--  审核意见  -->
         <audit-remark ref="auditRemark"></audit-remark>
       </zj-content-block>
-
-      <!-- 底部工作流状态 -->
-      <zj-workflow v-model="workflow" :list="workflowList">
-        <!-- 审核时 -->
-        <el-row slot="right" v-if="$route.name === 'registerAuditApplyAudit'">
-          <span v-show="workflow === 'spxx'">
-            <zj-button type="primary" @click="submitAudit">暂存</zj-button>
-            <zj-button type="primary" @click="submitAudit">审核通过</zj-button>
-            <zj-button @click="submitAudit">审核驳回</zj-button>
-            <zj-button @click="submitAudit">注册拒绝</zj-button>
-          </span>
-          <zj-button class="back zj-m-l-15" @click="goParent">返回</zj-button>
-        </el-row>
-      </zj-workflow>
-
-      <!--   查看器 -->
-      <zj-preview
-        :visible.sync="viewShow"
-        :fileUrl="viewUrl"
-        :showFooter="false"
-        :fileType="viewType"
-        @close="viewShow = false"
-      />
     </el-form>
+
+    <!-- 底部工作流状态 -->
+    <zj-workflow v-model="workflow" :list="workflowList">
+      <!-- 审核时 -->
+      <el-row slot="right" v-if="$route.name === 'registerAuditApplyAudit'">
+        <span v-show="workflow === 'spxx'">
+          <zj-button type="primary" @click="submitAudit">暂存</zj-button>
+          <zj-button type="primary" @click="submitAudit">审核通过</zj-button>
+          <zj-button @click="submitAudit">审核驳回</zj-button>
+          <zj-button @click="submitAudit">注册拒绝</zj-button>
+        </span>
+        <zj-button class="back zj-m-l-15" @click="goParent"
+          >返回</zj-button
+        >
+      </el-row>
+    </zj-workflow>
+
+    <!--   查看器 -->
+    <zj-preview
+      :visible.sync="viewShow"
+      :fileUrl="viewUrl"
+      :showFooter="false"
+      :fileType="viewType"
+      @close="viewShow = false"
+    />
   </zj-content-container>
 </template>
 
@@ -279,6 +278,14 @@ export default {
         ],
       },
     };
+  },
+  created() {
+    this.getApi();
+    this.getRow();
+    this.form.id = this.row.id;
+    this.getDirectory();
+    // this.getEbBusinessParamLog()
+    this.getAuditDetail();
   },
   methods: {
     //返回查询页
@@ -415,14 +422,6 @@ export default {
         this.logList = res.data.sysEntRegLogList;
       });
     },
-  },
-  mounted() {
-    this.getApi();
-    this.getRow();
-    this.form.id = this.row.id;
-    this.getDirectory();
-    // this.getEbBusinessParamLog()
-    this.getAuditDetail();
   },
 };
 </script>

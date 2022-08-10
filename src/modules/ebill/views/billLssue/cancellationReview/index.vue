@@ -51,7 +51,7 @@
           <template>
             <zj-button
               type="text"
-              @click="goChild('', row)"
+              @click="goChild('billCancellationReview', row)"
               :api="zjBtn.getEnterprise"
               >复核</zj-button
             >
