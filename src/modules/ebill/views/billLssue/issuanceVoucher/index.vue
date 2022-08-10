@@ -75,9 +75,9 @@
         :api="zjControl.tableApi"
         @before-load="getDataList"
       >
-        <zj-table-column field="ebillCode" title="凭证编号">
-          <template v-slot="{ row }">
-            <span v-if="row.state === 'P001'" class="table-elbill-code" @click="goChild('billLssueMyBillDetail',row)">{{
+        <zj-table-column field="ebillCode" title="凭证编号"> 
+          <template v-slot="{ row }" v-if="row.state !== 'P001'">
+            <span class="table-elbill-code" @click="goChild('billLssueMyBillDetail',row)">{{
               row.ebillCode
             }}</span>
           </template>
@@ -108,22 +108,24 @@
           field="state"
           title="凭证状态"
           :formatter="
-            (obj) => typeMap(dictionary.enterpriseStateList, obj.cellValue)
+            (obj) => typeMap(dictionary.stateList, obj.cellValue)
           "
         />
-        <zj-table-column field="ebillAmt" title="对账单编号" />
+        <zj-table-column field="acctBillCode" title="对账单编号" />
         <zj-table-column title="操作" fixed="right">
           <template v-slot="{ row }">
             <zj-button
               type="text"
               @click="toCancellation(row.id)"
               :api="zjBtn.invalidApply"
+               v-if="row.state === 'P000'"
               >作废申请</zj-button
             >
             <zj-button
               type="text"
               @click="toRevocation(row.id)"
               :api="zjBtn.cancelSubmit"
+              v-if="row.state === 'P002'"
               >撤销</zj-button
             >
           </template>
