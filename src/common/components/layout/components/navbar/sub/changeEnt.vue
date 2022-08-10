@@ -21,11 +21,14 @@ export default {
       entList: state => state.enterprise.entList,
       isChangeEnt: (state) => {
         return state.enterprise.entList&&state.enterprise.entList.length;
-      }
+      },
+       userInfo: state => state.user.userInfo,
     })
   },
   mounted() {
     this.currentEnt = this.entInfo;
+  },
+  created(){
   },
   data () {
     return {
@@ -33,17 +36,18 @@ export default {
     }
   },
   methods: {
+    
     toChangeEnt (item) {
       if (item.entId==this.currentEnt.entId) {
         return;
       } else {
-        this.$api.baseCommon.changeProject({
-          loginChannel: '0',
+        this.$api.baseCommon.changeEnterprise({
           entId: item.entId
         }).then(ret => {
           this.currentEnt = item;
           const data = ret.data;
           const loginRes = Object.assign({}, this.userInfo, data,{currentEnt: item});
+          console.log(loginRes);
           if (data.faceCheck || data.userServiceAgreementFlag === '1') {
             const loginSuccess = {loginRes};
             this.goChild('signAgreement',loginSuccess)

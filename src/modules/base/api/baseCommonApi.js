@@ -82,6 +82,9 @@ const baseCommon = {
   changeProject: (params) => { // 切换项目
     return request.post('/login/change-project', params)
   },
+  changeEnterprise: (params) => { // 切换企业
+    return request.post('/login/change-enterprise', params)
+  },
   // 根据地址获取产品名
   queryProductNameBySite: (params) => {
     return request.get('/common/query-product-name-by-site', params)

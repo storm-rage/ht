@@ -28,6 +28,8 @@ module.exports = {
                 target: 'http://localhost:8080/', // 本地
                 // target: 'http://192.168.28.64:8080/', //张占彬
                 // target: 'http://192.168.14.119:8080/', // 严海琳
+                // target: 'http://192.168.14.185:8080/', // 赵春龙
+                // target: 'http://192.168.14.180:8080/', // 张嘉诚
                 pathRewrite: {
                     '^/api':''
                 }
