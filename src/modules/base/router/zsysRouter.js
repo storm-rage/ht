@@ -12,11 +12,6 @@ const zsysRouter = [
     }
   },
   {
-    path:'/whith',
-    name:'whith',
-    component:() => import('../views/sysModules/home/whith.vue')
-  },
-  {
     path:'/rolePower',
     name:'rolePower',
     component:()=>import('../views/sysModules/rolePower/RolePower'),

@@ -8,6 +8,13 @@ const login = {
   login: (params) => {
     return request.post('/login/login', params)
   },
+  verifyThirdToken: () => {
+    return request.get('login/verifyThirdToken?token=QTgzQUE4OTM5RjI1NzU5MkREMTI4Q0M2RkYyMDAyRDNEQkMxMTdFQkI0QjBERERB&timestamp=20220810165805')
+  },
+  // 单点登录
+  ssoLogin: (params) => {
+    return request.get('/login/sso',{params})
+  },
   //登出
   logout: (params) => {
     return request.post('/login/logout',params)

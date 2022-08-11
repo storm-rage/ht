@@ -4,7 +4,6 @@
       <el-menu
         ref="zjElMenu"
         :default-active="activeMenu"
-        :default-openeds="defaultOpenedsArray"
         default-expand-all
         style="border-right: 0;height: 100%"
         :class="collapseFlag ? 'w50px' : '' "
@@ -40,74 +39,52 @@ export default {
       // 侧边菜单树状列表
       sideMenuTreeList: [],
       // // 当前激活的菜单id
-      activeMenu:'',
-      //是否关闭左侧树
-      defaultOpenedsArray:[]
+      activeMenu:''
     }
   },
   methods: {
     toHome () {
       this.$router.push({ name: 'home' })
     },
-    toRouter (menu) {
-      this.$router.push(menu.url)
-    },
-    setDefaultOpenedsArray (isExpandAll=true) {// 设置默认展开
-      this.defaultOpenedsArray = [];
-    },
-    //菜单折叠
-    collapseFlagClick(){
-      let idList = this.sideMenuTreeList.map(item => item.id)
-      this.$refs.zjElMenu.openedMenus.length ? this.defaultOpenedsArray = [] : this.defaultOpenedsArray = idList
-    },
     initMenuRouter(router) {
-      let routeName = router.name
-      let editFlag = false
+      let currentRouteName = router.name
+      let isCustomSelectRouteName = false
       //设置选中
       if(this.row.parent){
-        routeName = this.row.parent
-        editFlag = true
+        currentRouteName = this.row.parent
+        isCustomSelectRouteName = true
       }
       // 加载当前菜单树
-      let mentT = JSON.parse(JSON.stringify(this.$store.state.menu.menuTreeList))
-      this.sideMenuTreeList = mentT || []
+      this.sideMenuTreeList = this.menuTreeList || []
       this.activeMenu = this.menuActive
       //设置菜单栏选中
-      if(!editFlag && router.meta.parent){
+      if(!isCustomSelectRouteName && router.meta.parent){
         this.$store.dispatch('menu/SET_MENU_ACTIVE',router.meta.parent)
         this.activeMenu = router.meta.parent
-      }
-      else{
-        if(routeName === 'home'){
+      }else{
+        if(currentRouteName === 'home'){
           this.$store.dispatch('menu/SET_MENU_ACTIVE','')
-          this.setDefaultOpenedsArray();
           this.activeMenu = ''
         }else{
-          this.$store.commit('menu/SET_MENU_ACTIVE',routeName)
+          this.$store.commit('menu/SET_MENU_ACTIVE',currentRouteName)
           this.$nextTick(() => {
             this.activeMenu = this.menuActive
           })
         }
       }
     }
-
   },
   computed: {
     ...mapState({
       collapseFlag: state => state.menu.collapseFlag,
       menuActive: state => state.menu.menuActive, //菜单树选中
-      userInfo: state => state.user.userInfo,
-      menuTreeList: state => state.menu.menuTreeList,//菜单树
-      menuOpen: state => state.menu.menuOpen,
+      menuTreeList: state => state.menu.menuTreeList//菜单树
     })
   },
   watch: {
     menuActive(val){
       this.$store.dispatch('menu/SET_MENU_ACTIVE',val)
       this.activeMenu = val
-    },
-    menuOpen(val){
-      this.$store.dispatch('menu/setMenuOpen', false)
     },
     '$route'(newRou){
       this.initMenuRouter(newRou)
