@@ -16,11 +16,13 @@ const financingTransactionSearchRouter = [
     name: 'financingTransactionSearchDetail',
     component: () => import('../views/financingManage/financingTransactionSearch/detail'),
     meta: {
+      isMock: true,
       title: '融资交易查询详情',
       root: '融资管理',
       keepAlive: true,
       refreshIndex: 0,
       parent:'financingTranQuery',
+      notRequireAuth: true,
     }
   },
 ]
