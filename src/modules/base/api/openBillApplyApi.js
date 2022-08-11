@@ -20,13 +20,13 @@ const openBillApply = {
     onlineDetail: (params) => {
         return request.get('/open-bill-apply/get-statement-account-online-detail', { params })
     },
-    //线下对账单-签发凭证
+    //对账单-签发凭证
     billApply: (params) => {
-        return request.post('/open-bill-apply/offline-open-bill-apply', params)
+        return request.post('/open-bill-apply/open-bill-apply', params)
     },
-    //线下对账单-提交复核
+    //对账单-提交复核
     billCommit: (params) => {
-        return request.post('/open-bill-apply/offline-open-bill-commit', params)
+        return request.post('/open-bill-apply/open-bill-commit', params)
     },
     //贸易合同-合同维护（新增，修改，删除，上传）
     maintainContract: (params) => {
