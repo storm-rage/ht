@@ -1,12 +1,12 @@
 <template>
   <zj-content-block>
-    <zj-top-header title="电子债权凭证签收" />
+    <zj-top-header title="债权凭证作废复核" />
     <zj-content>
       <!--凭证详情-->
       <zj-content>
         <el-row>
-          <el-col :span="12">作废原因：{{ detailData.ebillCode }}</el-col>
-          <el-col :span="12">对账单编号：{{ detailData.ebillCode }}</el-col>
+          <el-col :span="12">作废原因：{{ detailData.rejectNotes }}</el-col>
+          <el-col :span="12">对账单编号：{{ detailData.acctBillCode }}</el-col>
         </el-row>
       </zj-content>
       <div>
@@ -23,13 +23,13 @@
           <td colspan="3" class="right">融单开立方</td>
           <td colspan="3">{{ detailData.payEntName }}</td>
           <td colspan="3" class="right">统一社会信用代码</td>
-          <td colspan="3">{{ detailData.payEntName }}</td>
+          <td colspan="3">{{ detailData.payBizLicence }}</td>
         </tr>
         <tr>
           <td rowspan="4" colspan="3">融单接收方</td>
           <td rowspan="4" colspan="3">{{ detailData.receiptEntName }}</td>
           <td colspan="3">统一社会信用代码</td>
-          <td colspan="3"></td>
+          <td colspan="3">{{ detailData.holderBizLicence }}</td>
         </tr>
         <tr>
           <td colspan="3">开户行</td>
@@ -93,7 +93,7 @@
     <zj-content-footer>
       <zj-button type="primary" @click="toReview">复核通过</zj-button>
       <zj-button @click="toReject">拒绝</zj-button>
-      <zj-button type="back" @click="goParent">取消</zj-button>
+      <zj-button type="back" @click="goParent">返回</zj-button>
     </zj-content-footer>
 
     <!--  拒绝弹框  -->
@@ -113,21 +113,16 @@ export default {
   name: "billSignForDetail",
   data() {
     return {
-      zjControl: {
-        getBillSignBillInfoDetail:
-          this.$api.billLssueBillSignFor.getBillSignBillInfoDetail, //凭证签收-详情
-        passBillSign: this.$api.billLssueBillSignFor.passBillSign, //融单签收-审核通过
-      },
+      zjControl: this.$api.billRejectAudit,
       detailData: {},
-      protocols: {},
     };
   },
   methods: {
     attaDownload() {},
-    toReview(ids) {
+    toReview() {
       this.$confirm(
-        `您本次复核同意作废<b style="font-size: 18px;">${this.detailData.total}</b>笔电子债权凭证，<br/>
-          共计：<b style="font-size: 18px;">${this.detailData.totalAmount}</b>元<br/>请确认`,
+        `您本次复核同意作废<b style="font-size: 18px;">1</b>笔电子债权凭证，<br/>
+          共计：<b style="font-size: 18px;">${this.detailData.ebillAmt}</b>元<br/>请确认`,
         "债权凭证作废复核确认",
         {
           dangerouslyUseHTMLString: true,
@@ -135,20 +130,19 @@ export default {
           cancelButtonText: "取消",
         }
       ).then(() => {
-        let params = { ids: ids, operateType: "PASS" };
-        this.zjControl.cancelSubmit(params).then((res) => {
-          this.$message.success("申请成功!");
-          this.search();
+        let params = { ebillCode: this.row.ebillCode, invalidReviewFlag: "1" };
+        this.zjControl.submitRejectAudit(params).then((res) => {
+          this.$message.success("复核通过!");
+          this.goParent();
         });
       });
     },
-    getBillSignBillInfoDetail() {
+    getRejectAuditDetail() {
       let params = {
-        id: this.row.id,
+        ebillCode: this.row.ebillCode,
       };
-      this.zjControl.getBillSignBillInfoDetail(params).then((res) => {
-        this.detailData = res.data.billInfo;
-        this.protocols = res.data.protocols;
+      this.zjControl.getRejectAuditDetail(params).then((res) => {
+        this.detailData = res.data;
       });
     },
 
@@ -157,10 +151,14 @@ export default {
       this.$refs.rejectDialog.open();
     },
     reviewReject(text) {
-      let params = {};
-      this.zjControl.cancelSubmit(params).then(() => {
+      let params = {
+        ebillCode: this.row.ebillCode,
+        invalidReviewFlag: "2",
+        rejectNotes: text,
+      };
+      this.zjControl.submitRejectAudit(params).then(() => {
         this.$message.success("拒绝成功！");
-        this.search();
+        this.goParent();
         this.$refs.rejectDialog.close();
       });
     },
@@ -168,7 +166,7 @@ export default {
   created() {
     this.getApi();
     this.getRow();
-    // this.getBillSignBillInfoDetail();
+    this.getRejectAuditDetail();
   },
 };
 </script>
