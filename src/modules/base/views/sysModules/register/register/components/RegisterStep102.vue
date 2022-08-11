@@ -147,9 +147,12 @@
         <el-row v-if="form.isHtEnterprise == '1'">
           <!-- 一级供应商 -->
           <el-row style="font-size: 16px;font-weight: bold">请选择贵司的主结算银行账号：</el-row>
-          <zj-table ref="searchTable" class="zj-search-table" :dataList="form.entBankInfoList"
+          <zj-table ref="entBankInfoTable" class="zj-search-table" :pager="false"
+                    :dataList="form.entBankInfoList"
+                    @radio-change="handleRadioChange"
+                    :radio-config="{ highlight: true }"
           >
-            <zj-table-column fixed="left" type="checkbox" width="60"/>
+            <zj-table-column fixed="left" type="radio" width="60"/>
             <zj-table-column field="bankAccname" title="银行账户名称" />
             <zj-table-column field="bankAccno" title="银行账号" />
             <zj-table-column field="bankName" title="开户行" />
@@ -167,7 +170,26 @@
           >
             <zj-table-column field="bankAccname" title="银行账户名称" :edit-render="{name: '$input'}"/>
             <zj-table-column field="bankAccno" title="银行账号" :edit-render="{name: '$input'}"/>
-            <zj-table-column field="bankName" title="开户行" :edit-render="{name: '$input'}"/>
+            <zj-table-column field="bankName" title="开户行" :edit-render="{name: '$input'}">
+<!--              <tempalte v-slot="{row}">-->
+<!--                {{row.bankName}}-->
+<!--              </tempalte>-->
+              <template v-slot="{row}">
+                <el-select v-model="row.bankName"
+                           filterable
+                           placeholder="请选择" class="sw-year-select"
+                           :popper-append-to-body="false"
+                           @change="bankChange"
+                >
+                  <el-option
+                    v-for="item in bankInfoList"
+                    :label="item.confirmBankName"
+                    :value="item.confirmBankId"
+                    :key="item.confirmBankId"
+                  />
+                </el-select>
+              </template>
+            </zj-table-column>
             <zj-table-column field="bankNo" title="銀行联行号" :edit-render="{name: '$input'}"/>
             <zj-table-column title="操作" fixed="right">
               <template v-slot="{row}">
@@ -181,6 +203,23 @@
               </template>
             </zj-table-column>
           </zj-table>
+        </el-row>
+        <el-row class="zj-m-t-20">
+          <el-form-item label="请确认开户行" prop="confirmBankId">
+            <el-select v-model="form.confirmBankId"
+                       filterable
+                       placeholder="请选择" class="sw-year-select"
+                       :popper-append-to-body="false"
+                       @change="bankChange"
+            >
+              <el-option
+                v-for="item in bankInfoList"
+                :label="item.confirmBankName"
+                :value="item.confirmBankId"
+                :key="item.confirmBankId"
+              />
+            </el-select>
+          </el-form-item>
         </el-row>
         <el-row style="color: #7f7f7f">注：主结算银行账号将用于小额打款认证和后续在平台开展的业务。</el-row>
 
@@ -224,9 +263,6 @@ export default {
     step:String,
     entInfoObj:Object,
   },
-  computed: {
-
-  },
   data () {
     return {
       sysControl:{
@@ -239,6 +275,7 @@ export default {
       myBuyersMessage:'',
       oldRowInfo: {},
       entBankInfo: true,
+      bankInfoList: [],
 
       form:{
         address: '',
@@ -250,6 +287,10 @@ export default {
         detailAddress: '',
         entBankInfo: {},
         entBankInfoList: [],
+        confirmBankId:'',//获取银行信息
+        confirmBankName:'',//获取银行信息
+        isSelectEntBankInfo: false,//
+        defaultSelectRowId: '',
         entContactAddressCity: '',
         entType: '',
         fastMailAddress: '',
@@ -335,6 +376,9 @@ export default {
         legalCertExpireDate: [
           { required: true, message: '请选择证件有效期截止日', trigger: ['blur'] }
         ],
+        confirmBankId: [
+          { required: true, message: '请确认开户行', trigger: ['blur'] }
+        ],
         //-----------------  企业
         scale: [
           { required: false, message: '请选择企业规模', trigger: 'blur' }
@@ -342,46 +386,11 @@ export default {
         custType: [
           { required: false, message: '请选择经营类型', trigger: ['blur'] }
         ],
-        //-----------------  开票
-        invoiceTaxpayerId: [
-          { required: false, message: '请输入纳税人识别号', trigger: ['blur'] },
-          { validator:validateInvoiceTaxpayerId,trigger: ['blur']}
-        ],
-        invoiceAddress: [
-          { required: false, message: '请输入开票地址', trigger: ['blur'] },
-          { max:400, message: '开票地址不可超过400字符', trigger: ['blur'] }
-        ],
-        invoicePhone: [
-          { required: false, message: '请输入电话', trigger: ['blur'] },
-          { max:20, message: '固定电话或手机号码不可超过20位', trigger: ['blur'] },
-          { validator:validateFixedPhone,trigger: ['blur']}
-        ],
-        invoiceBankInfo: [
-          { required: false, message: '请输入开户行', trigger: ['blur'] },
-          { max:200, message: '开户行不可超过200字符', trigger: ['blur'] },
-        ],
-        invoiceBankAccno: [
-          { required: false, message: '请输入银行账号', trigger: ['blur'] },
-          { max:50,validator:validateBankAcct,trigger: ['blur']}
-        ],
-        invoiceEmail: [
-          { required: false, message: '请输入电子邮箱', trigger: ['blur'] },
-          { validator:validateEmail,trigger: ['blur']}
-        ],
-        //-----------------  贸易信息
-        entType:[
-          { required: false, message: '请选择企业类型', trigger: ['blur'] }
-        ],
       },
-      formWarning:false, //是否展示错误语句
       viewUrl:{
         qyyzFile:{url:''},
         qyfrzjFile:{url:''}
       },
-      //下一步提示信息
-      qyyzFileIdFlag:false,//影印
-      qyfrzjFileIdFlag:false,//法定
-      nextError:'信息存在未填写部分，请填写完整后再提交！',
 
     }
   },
@@ -393,6 +402,10 @@ export default {
       this.provinceList = res.data.sysDistrictDictList
     })
     this.setFormValue()
+    this.getOpenBankInfo()
+  },
+  mounted(){
+    this.handleDataChange()
   },
   methods: {
     //回显form
@@ -400,6 +413,12 @@ export default {
       this.form = {
         ...this.entInfoObj.form
       }
+    },
+    //企业注册-获取开户行信息
+    getOpenBankInfo() {
+      this.zjControl.getOpenBankInfo().then(res=>{
+        this.bankInfoList = res.data.bankInfoList
+      })
     },
     //获取企业的注册信息
     getEntInfo(){
@@ -536,6 +555,40 @@ export default {
         this.myBuyersMessage = ''
       }
     },
+    handleDataChange() {
+      //回显 勾选之前选中的银行账户
+      let rows = this.form.entBankInfoList
+      console.log(this.entInfoObj.form.entBankInfo)
+      let rowIndex = ''
+      for(let i of rows) {
+        if(this.entInfoObj.form.entBankInfo.bankAccId === i.bankAccId) {
+          rowIndex = rows.indexOf(i)
+          break
+        }
+      }
+      console.log('银行账户index=='+rowIndex)
+      if (rows && rows.length) {
+        setTimeout(()=>{
+          this.$refs.entBankInfoTable.setRadioRow(rows[rowIndex])
+        },0)
+        this.handleRadioChange({row: rows[rowIndex]})
+      }
+    },
+    handleRadioChange({ row }) {
+      this.form.entBankInfo = row
+      this.form.isSelectEntBankInfo = true
+    },
+    bankChange(val) {
+      console.log(val)
+      for(let i of this.bankInfoList) {
+        if(i.confirmBankId === val) {
+          this.form.confirmBankName = i.confirmBankName
+          this.form.entBankInfo.bankName = i.confirmBankName
+          break
+        }
+      }
+      console.log(this.form.confirmBankName)
+    },
     //添加银行账户
     contAdd() {
       if(!this.tableEditReport(["bankAccnameTable"])){return}
@@ -643,15 +696,15 @@ export default {
           return
         }else{
           //银行账户校验
-          if(this.form.entBankInfoList == null){
+          console.log(`----`+this.form.entBankInfoList)
+          if(this.form.entBankInfoList == null || [] && this.form.entBankInfoList.length === 0){
             this.$message.error('银行账户不能为空！')
+            console.log(this.form.entBankInfoList)
             return
           }
-          if(!this.form.entBankInfoList[0].bankNo){
-            this.$message.error('银行账户不能为空！')
-            return
+          if(this.form.isHtEnterprise === '0') {
+            this.form.entBankInfo = this.form.entBankInfoList[0]
           }
-          this.form.entBankInfo = this.form.entBankInfoList[0]
           this.form.registerOperateFlag = flag
           this.form.legalCertType = this.entInfoObj.form.legalCertType
           this.zjControl.saveEntInfo(this.form).then(res => {
@@ -674,7 +727,7 @@ export default {
       for(let i=0; i<valiArr.length; i++){
         if(!key){break}
         //非空且规则为必填
-        if(!this.form[valiArr[i]] && this.rules[valiArr[i]].required == true){
+        if(!this.form[valiArr[i]] && this.rules[valiArr[i]].required === true){
           key = false
           this.$message.error(this.rules[valiArr[i]][0])
         }
@@ -686,12 +739,12 @@ export default {
           return
         }else{
           //银行账户校验
-          if(this.form.entBankInfoList == null){
+          if(this.form.entBankInfoList == null || []  && this.form.entBankInfoList.length === 0){
             this.$message.error('银行账户不能为空！')
             return
           }
-          if(!this.form.entBankInfoList[0].bankNo){
-            this.$message.error('银行账户不能为空！')
+          if(this.form.isHtEnterprise === '1' && !this.form.isSelectEntBankInfo) {
+            this.$message.error('请选择主结算银行账户！')
             return
           }
           let proFormat = ''
@@ -702,13 +755,20 @@ export default {
             }
           }
           this.form.province = proFormat
-
-          this.form.entBankInfo = this.form.entBankInfoList[0]
+          if(this.entInfoObj.form.isHtEnterprise === '0') {
+            this.form.entBankInfo = this.form.entBankInfoList[0]
+          }
           this.form.registerOperateFlag = flag
           this.form.legalCertType = this.entInfoObj.form.legalCertType
           this.zjControl.saveEntInfo(this.form).then(res => {
             this.$message.success('提交企业资料成功！')
             this.entInfoObj.form.id = res.data.id
+            this.entInfoObj.form.entBankInfo = this.form.entBankInfo
+            this.entInfoObj.form.isSelectEntBankInfo = this.form.isSelectEntBankInfo
+            this.entInfoObj.form.defaultSelectRowId = this.form.defaultSelectRowId
+            this.entInfoObj.form.confirmBankId = this.form.confirmBankId
+            this.entInfoObj.form.confirmBankName = this.form.confirmBankName
+            this.entInfoObj.form.token = res.data.token
             let params = Object.assign({},this.entInfoObj)
             params.form = params.form ? params.form : this.form
             this.$emit('update:entInfoObj',params)
@@ -716,7 +776,7 @@ export default {
           })
         }
       })
-    }
+    },
   },
 }
 </script>

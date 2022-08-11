@@ -90,6 +90,10 @@ const register = {
     completeRegister:(params) => {
       return request.post('/sys-ent-register/complete-register',params)
     },
+    //企业注册-获取开户行信息
+    getOpenBankInfo:(params) => {
+      return request.get('/sys-ent-register/get-open-bank-info',{params})
+    },
 
 }
 

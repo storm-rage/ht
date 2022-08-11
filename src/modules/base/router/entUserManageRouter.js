@@ -14,14 +14,12 @@ const entUserManage = [
       root: '客户信息管理',
       keepAlive: true,
       refreshIndex: 0,
-      notRequireAuth: true
     }
   },
   //新增
   {
     path: '/entManageAdd',
     name: 'entManageAdd',
-    // component: () => import('../views/entUserManage/entManage/addEnterPrises/AddEnterPrises.vue'),
     component: () => import('../views/entUserManage/entManage/enterpriseManage.vue'),
     meta: {
       title: '企业信息管理-新增',
@@ -29,21 +27,6 @@ const entUserManage = [
       pageType: 'add',
       keepAlive: true,
       refreshIndex: 0,
-      notRequireAuth: true
-    }
-  },
-  //详情
-  {
-    path: '/entDealDetail',
-    name: 'entDealDetail',
-    component: () => import('../views/entUserManage/entManage/enterpriseManage.vue'),
-    meta: {
-      title: '企业信息申请交易详情',
-      parent: 'sysEnterprise',
-      pageType: 'detail',
-      keepAlive: true,
-      refreshIndex: 0,
-      notRequireAuth: true
     }
   },
   {
@@ -52,7 +35,7 @@ const entUserManage = [
     component: () => import('../views/entUserManage/entManage/detail'),
     meta: {
       title: '企业详情',
-      parent: 'sysUser',
+      parent: 'sysEnterprise',
       isManage: false,
       keepAlive: true,
       refreshIndex: 0,
@@ -94,7 +77,7 @@ const entUserManage = [
     name: 'userVindicate',
     component: () => import('../views/entUserManage/userManage/vindicate'),
     meta: {
-      title: '企业用户信息管理-维护',
+      title: '维护用户信息',
       parent: 'sysUser',
       isManage: true,
       keepAlive: true,
@@ -103,9 +86,23 @@ const entUserManage = [
     }
   },
   {
+    path: '/userDetail',
+    name: 'userVindicate',
+    component: () => import('../views/entUserManage/userManage/vindicate'),
+    meta: {
+      title: '用户详情',
+      parent: 'sysUser',
+      isManage: false,
+      keepAlive: true,
+      refreshIndex: 0,
+      notRequireAuth: true,
+      pageType: 'detail'
+    }
+  },
+  {
     path: '/userAdd',
     name: 'userAdd',
-    component: () => import('../views/entUserManage/userManage/userForm'),
+    component: () => import('../views/entUserManage/userManage/userAdd'),
     meta: {
       title: '企业用户信息管理-新增',
       parent: 'sysUser',
@@ -118,7 +115,7 @@ const entUserManage = [
   {
     path: '/userUpdate',
     name: 'userUpdate',
-    component: () => import('../views/entUserManage/userManage/userForm'),
+    component: () => import('../views/entUserManage/userManage/userUpdate'),
     meta: {
       title: '企业用户信息管理-修改',
       parent: 'sysUser',
@@ -127,34 +124,7 @@ const entUserManage = [
       refreshIndex: 0,
       notRequireAuth: true
     }
-  },
-  // {
-  //   path: '/userManageMag',
-  //   name: 'userManageMag',
-  //   component: () => import('../views/entUserManage/userManage/userInfo/manage/ManageUser.vue'),
-  //   meta: {
-  //     title: '企业用户信息管理-管理',
-  //     parent: 'sysUser',
-  //     isManage: true,
-  //     keepAlive: true,
-  //     refreshIndex: 0,
-  //     notRequireAuth: true
-  //   }
-  // },
-  {
-    path: '/userVindicate',
-    name: 'userVindicate',
-    component: () => import('../views/entUserManage/userManage/vindicate'),
-    meta: {
-      title: '维护用户信息',
-      parent: 'sysUser',
-      isManage: false,
-      keepAlive: true,
-      refreshIndex: 0,
-      notRequireAuth: true,
-      pageType: 'detail'
-    }
-  },
+  }
 ]
 
 export default entUserManage

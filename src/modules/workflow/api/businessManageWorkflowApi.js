@@ -29,6 +29,18 @@ export default {
     return request.get('/business-manage/get-first-audit-detail',{params});
   },
   /**
+   *业务管理-业务申请驳回详情
+   */
+  getApplyRebutDetail(params){
+    return request.get('/business-manage/get-apply-rebut-detail',{params})
+  },
+  /**
+   *业务管理-业务申请驳回提交
+   */
+  submitApplyRebut(params){
+    return request.post('/business-manage/submit-apply-rebut',params)
+  },
+  /**
    * 业务管理-额度管理复核详情
    * @param params
    * @returns {Promise<AxiosResponse<any>>}
@@ -96,5 +108,49 @@ export default {
    */
   recheckLimit (params) {
     return request.post('/business-manage/recheck-limit',params);
+  },
+  /**
+   *业务管理-合同续签驳回提交
+   */
+  submitContractRenewalRebut(params){
+    return request.post('/business-manage/submit-contract-renewal-rebut',params)
+  },
+  /**
+   *业务管理-合同续签驳回详情
+   */
+  getContractRenewalRebutDetail(params){
+    return request.get('/business-manage/get-contract-renewal-rebut-detail',{params})
+  },
+  /**
+   *业务管理-额度管理驳回详情
+   */
+  getLimitRecheckRebutDetail(params){
+    return request.get('/business-manage/get-limit-recheck-rebut-detail',{params})
+  },
+  /**
+   *业务管理-额度管理驳回提交
+   */
+  submitLimitRebut(params){
+    return request.post('/business-manage/submit-limit-rebut',params)
+  },
+  /**
+   *业务管理-业务维护驳回详情
+   */
+  getTradeRebutDetail(params){
+    return request.get('/business-manage/get-trade-rebut-detail',{params})
+  },
+  /**
+   *业务管理-业务维护驳回提交
+   */
+  submitTradeRebut(params){
+    return request.post('/business-manage/submit-trade-rebut',params)
+  },
+  /**
+   * 业务管理-操作记录
+   * @param params
+   * @returns {Promise<AxiosResponse<any>>}
+   */
+  getOperateList(params) {
+    return request.get('/business-manage/get-trade-rebut-detail',{params})
   }
 }

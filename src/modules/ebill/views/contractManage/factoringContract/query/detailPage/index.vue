@@ -4,6 +4,7 @@
                  :stepList="stepList"
                  :stepActive="4"
                  :detail-info="detailInfo"
+                 :dictionary="dictionary"
                  title="合同签约申请"></detail-page>
     <zj-content-footer>
       <zj-button @click="goParent">返回</zj-button>
@@ -18,10 +19,13 @@ export default {
   data() {
     return {
       zjControl: {
+        getEbContractDirectory: this.$api.factoringContract.getEbContractDirectory,
         queryMyEbContractDetail: this.$api.factoringContract.queryMyEbContractDetail
       },
       // 详情信息
       detailInfo: {},
+      // 字典
+      dictionary: {},
       stepList: [
         {
           title: '签约申请',
@@ -48,10 +52,16 @@ export default {
   },
   created() {
     this.getApi();
+    // this.getDic();
     this.getRow();
     this.getDetail();
   },
   methods: {
+    getDic() {
+      this.zjControl.getEbContractDirectory().then((res) => {
+        this.dictionary = res.data
+      });
+    },
     getDetail() {
       this.zjControl.queryMyEbContractDetail({contractId: this.row.contractId}).then(res => {
         this.detailInfo = res.data;

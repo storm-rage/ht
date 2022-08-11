@@ -1,14 +1,25 @@
 <template>
   <div>
-    <detail-page ref="detailPage" :stepList="stepList" :stepActive="1" title="合同签约复核"></detail-page>
+    <detail-page ref="detailPage"  :stepList="stepList"
+                 :detail-info="detailInfo"
+                 :dictionary="dictionary"
+                 :stepActive="1"
+                 title="合同签约复核"></detail-page>
     <zj-content-footer>
       <span style="display: inline-block;margin-right: 5px">
         <el-checkbox v-model="agreeCheck">我已阅读并同意上述协议</el-checkbox>&nbsp;
       </span>
-      <zj-button type="primary" @click="toReview"
-      >复核通过</zj-button>
-      <zj-button type="primary" @click="toReject">拒绝</zj-button>
-      <zj-button @click="back">返回</zj-button>
+      <zj-button type="primary"
+                 :disabled="rejectLoading"
+                 :loading="passLoading"
+                 :api="zjBtn.submitEbContractApplyReview"
+                 @click="toReview">复核通过</zj-button>
+      <zj-button type="primary"
+                 :disabled="passLoading"
+                 :loading="rejectLoading"
+                 :api="zjBtn.submitEbContractApplyReview"
+                 @click="toReject">拒绝</zj-button>
+      <zj-button @click="goParent">返回</zj-button>
     </zj-content-footer>
     <!--  拒绝弹框  -->
     <zj-reject-dialog ref="rejectDialog"
@@ -22,11 +33,21 @@
 
 <script>
 import DetailPage from '../../detail/index';
+import {OperResult} from "@modules/constant";
 export default {
   components: {DetailPage},
   data() {
     return {
+      zjControl: {
+        getDirectory: this.$api.factoringContract.getEbContractReviewDirectory,
+        queryEbContractReviewSignDetail: this.$api.factoringContract.queryEbContractReviewSignDetail,
+        submitEbContractApplyReview: this.$api.factoringContract.submitEbContractApplyReview
+      },
       agreeCheck: false,
+      // 详情信息
+      detailInfo: {},
+      // 字典
+      dictionary: {},
       stepList: [
         {
           title: '签约申请',
@@ -49,26 +70,77 @@ export default {
           title: '保理合同签约完成',
           desc: ''
         }
-      ]
+      ],
+      passLoading: false,
+      rejectLoading: false
     };
   },
+  created() {
+    this.getApi();
+    this.getRow();
+    this.getDetail();
+  },
   methods: {
-    back() {
-      this.$router.push("/quotaChangeApplication");
+    getDic() {
+      this.zjControl.getDirectory().then((res) => {
+        this.dictionary = res.data
+      });
+    },
+    getDetail() {
+      this.zjControl.queryEbContractReviewSignDetail({contractId: this.row.contractId}).then(res => {
+        this.detailInfo = res.data;
+      });
     },
     toReview() {
-      this.$confirm('是否确认复核通过？','温馨提示',{
-        confirmButtonText: '确定',
-        cancelButtonText: '取消'
-      }).then(() => {
-        // todo:请求
-      })
+      if (this.agreeCheck) {
+        this.$confirm('是否确认复核通过？','温馨提示',{
+          type: 'warning',
+          confirmButtonText: '确定',
+          cancelButtonText: '取消'
+        }).then(() => {
+          this.passLoading = true;
+          this.zjControl.submitEbContractApplyReview({
+            contractNo: this.row.contractNo,
+            contractId: this.row.contractId,
+            operResult: OperResult.PASS
+          }).then(res => {
+            this.passLoading = false;
+            //成功，关闭
+            if (res.success) {
+              this.$message.success(res.msg);
+              this.goParent();
+            }
+          }).catch(() => {
+            this.passLoading = false;
+          })
+        })
+      }else {
+        this.$alert('请阅读并同意上述协议','提示', {
+          type: 'warning'
+        })
+      }
     },
     toReject() {
       this.$refs.rejectDialog.open();
     },
     reviewReject(text) {
-      this.$refs.rejectDialog.close();
+      this.rejectLoading = false;
+      this.zjControl.submitEbContractApplyReview({
+        auditOpinion: text,
+        contractNo: this.row.contractNo,
+        contractId: this.row.contractId,
+        operResult: OperResult.REJECT
+      }).then((ret) => {
+        this.rejectLoading = false;
+        this.$refs.rejectDialog.close();
+        //成功，关闭
+        if (ret.success) {
+          this.$message.success(ret.msg);
+          this.goParent();
+        }
+      }).catch(() => {
+        this.rejectLoading = false;
+      })
     }
   },
 };

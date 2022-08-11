@@ -9,7 +9,7 @@
         <el-row>
           <el-col :span="8">
             <el-form-item label="企业名称：" prop="name">
-              <el-input v-model="form.name" />
+              <el-input v-model.trim="form.name" />
             </el-form-item>
           </el-col>
           <el-col :span="16">
@@ -21,17 +21,17 @@
         <el-row>
           <el-col :span="8">
             <el-form-item label="企业简称：" prop="shortName">
-              <el-input v-model="form.shortName" :disabled="isDetail" />
+              <el-input v-model.trim="form.shortName" :disabled="isDetail" />
             </el-form-item>
           </el-col>
           <el-col :span="8">
             <el-form-item label="曾用名：" prop="beforeName">
-              <el-input v-model="form.beforeName" :disabled="isDetail" />
+              <el-input v-model.trim="form.beforeName" :disabled="isDetail" />
             </el-form-item>
           </el-col>
           <el-col :span="8">
             <el-form-item label="客户业务系统编码：" prop="customCode">
-              <el-input v-model="form.customCode" :disabled="isDetail" />
+              <el-input v-model.trim="form.customCode" :disabled="isDetail" />
             </el-form-item>
           </el-col>
           <el-col :span="8">
@@ -54,28 +54,34 @@
             </el-form-item>
           </el-col>
           <el-col :span="8">
-            <el-form-item label="注册资本：" prop="invoiceTaxpayerId">
-              <el-input v-model="form.registerCapital" :disabled="isDetail" />
+            <el-form-item label="注册资本：" prop="registerCapital">
+              <el-input
+                v-model.trim="form.registerCapital"
+                :disabled="isDetail"
+              />
             </el-form-item>
           </el-col>
           <el-col :span="8">
-            <el-form-item label="企业工商有效期：" prop="invoiceTaxpayerId">
-              <el-input v-model="form.registerEndDate" :disabled="isDetail" />
+            <el-form-item label="企业工商有效期：" prop="registerEndDate">
+              <el-input
+                v-model.trim="form.registerEndDate"
+                :disabled="isDetail"
+              />
             </el-form-item>
           </el-col>
           <el-col :span="8">
-            <el-form-item label="企业规模：" prop="invoiceTaxpayerId">
-              <el-input v-model="form.scale" :disabled="isDetail" />
+            <el-form-item label="企业规模：" prop="scale">
+              <el-input v-model.trim="form.scale" :disabled="isDetail" />
             </el-form-item>
           </el-col>
           <el-col :span="8">
-            <el-form-item label="企业经营类型：" prop="invoiceTaxpayerId">
-              <el-input v-model="form.custType" :disabled="isDetail" />
+            <el-form-item label="企业经营类型：" prop="custType">
+              <el-input v-model.trim="form.custType" :disabled="isDetail" />
             </el-form-item>
           </el-col>
           <el-col :span="8">
-            <el-form-item label="营业执照注册地址：" prop="invoiceTaxpayerId">
-              <el-input v-model="form.address" :disabled="isDetail" />
+            <el-form-item label="营业执照注册地址：" prop="address">
+              <el-input v-model.trim="form.address" :disabled="isDetail" />
             </el-form-item>
           </el-col>
         </el-row>
@@ -83,30 +89,42 @@
           <h4 class="bl zj-m-l-20 mb-10">企业联系人</h4>
           <el-col :span="8">
             <el-form-item label="企业联系人姓名：" prop="fastMailName">
-              <el-input v-model="form.fastMailName" :disabled="isDetail" />
+              <el-input v-model.trim="form.fastMailName" :disabled="isDetail" />
             </el-form-item>
           </el-col>
           <el-col :span="8">
             <el-form-item label="企业联系人手机号：" prop="fastMailPhone">
-              <el-input v-model="form.fastMailPhone" :disabled="isDetail" />
+              <el-input
+                v-model.trim="form.fastMailPhone"
+                :disabled="isDetail"
+              />
             </el-form-item>
           </el-col>
         </el-row>
         <el-row>
           <el-form-item label="企业联系地址：" prop="fastMailAddress">
-            <el-input v-model="form.fastMailAddress" :disabled="isDetail" />
+            <el-input
+              v-model.trim="form.fastMailAddress"
+              :disabled="isDetail"
+            />
           </el-form-item>
         </el-row>
         <h4 class="bl zj-m-l-20 mb-10">法人信息</h4>
         <el-row>
           <el-col :span="8">
             <el-form-item label="法定代表人姓名：" prop="legalPersonName">
-              <el-input v-model="form.legalPersonName" :disabled="isDetail" />
+              <el-input
+                v-model.trim="form.legalPersonName"
+                :disabled="isDetail"
+              />
             </el-form-item>
           </el-col>
           <el-col :span="8">
             <el-form-item label="法定代表人手机号码：" prop="legalPersonName">
-              <el-input v-model="form.registerPhone" :disabled="isDetail" />
+              <el-input
+                v-model.trim="form.registerPhone"
+                :disabled="isDetail"
+              />
             </el-form-item>
           </el-col>
           <el-col :span="8">
@@ -118,7 +136,7 @@
         <el-row>
           <el-col :span="8">
             <el-form-item label="法定代表人身份证号：" prop="legalCertNo">
-              <el-input v-model="form.legalCertNo" :disabled="isDetail" />
+              <el-input v-model.trim="form.legalCertNo" :disabled="isDetail" />
             </el-form-item>
           </el-col>
           <el-col :span="8">
@@ -216,7 +234,6 @@
             <zj-table-column field="fileName" title="附件名称" />
             <zj-table-column title="操作">
               <template v-slot="{ row }">
-  
                 <zj-upload
                   :httpRequest="handleFileUpload"
                   :data="{ row }"
@@ -248,7 +265,7 @@
     </el-form>
 
     <zj-content-footer>
-      <el-checkbox v-model="agreeCheck" v-if="isAgreeCheck"
+      <el-checkbox v-model="agreeCheck" :disabled="!isAgreeCheck"
         >我已阅读并同意
         <zj-button type="text">《银行账户变更通知》</zj-button>
       </el-checkbox>
@@ -262,6 +279,8 @@
 
 <script>
 import bankAccount from "./dialog/bankAccount";
+import { newValidateFixedPhone } from "@utils/rules";
+
 export default {
   components: {
     bankAccount,
@@ -274,7 +293,6 @@ export default {
         ...this.$api.myBasicInformation,
       },
       form: {},
-      rules: {},
       dictionary: {},
       agreeCheck: false,
       isAgreeCheck: false, //是否需要勾选协议
@@ -282,7 +300,65 @@ export default {
         { fileId: "", type: "营业执照", fileName: "" },
         { fileId: "", type: "法定代表人身份证", fileName: "" },
       ],
-      oldRow: {},
+      rules: {
+        name: [
+          {
+            required: true,
+            message: "请输入企业名称",
+            trigger: ["blur", "change"],
+          },
+        ],
+        shortName: [
+          {
+            required: true,
+            message: "请输入企业简称",
+            trigger: ["blur", "change"],
+          },
+        ],
+        registerCapital: [
+          {
+            required: true,
+            message: "请输入注册资本",
+            trigger: ["blur", "change"],
+          },
+        ],
+        registerEndDate: [
+          {
+            required: true,
+            message: "请输入企业工商有效期",
+            trigger: ["blur", "change"],
+          },
+        ],
+        address: [
+          {
+            required: true,
+            message: "请输入营业执照注册地址",
+            trigger: ["blur", "change"],
+          },
+        ],
+        fastMailName: [
+          {
+            required: true,
+            message: "请输入企业联系人",
+            trigger: ["blur", "change"],
+          },
+        ],
+        fastMailPhone: [
+          {
+            required: true,
+            message: "请输入企业联系人手机号",
+            trigger: ["blur", "change"],
+          },
+          { validator: newValidateFixedPhone, trigger: ["blur"] },
+        ],
+        fastMailAddress: [
+          {
+            required: true,
+            message: "请输入企业联系地址",
+            trigger: ["blur", "change"],
+          },
+        ],
+      },
     };
   },
   created() {
@@ -313,22 +389,26 @@ export default {
       });
     },
     updateUserInfo() {
-      // 营业执照
-      this.form.qyyzFileId = this.attachInfo[0].fileId;
-      this.form.qyyzAttachName = this.attachInfo[0].fileName;
-      // 法定代表人证件
-      this.form.qyfrzjFileId = this.attachInfo[1].fileId;
-      this.form.qyfrzjAttachName = this.attachInfo[1].fileName;
-      this.zjControl.updateUserInfo(this.form).then((res) => {
-        this.getEntInfo();
-        this.$message.success("修改成功!");
-      });
-      // if (this.agreeCheck) {
-      // } else {
-      //   this.$alert("请阅读并同意《银行账户变更通知》", "提示", {
-      //     type: "warning",
-      //   });
-      // };
+      if (this.agreeCheck || !this.isAgreeCheck) {
+        this.$refs.form.validate((valid) => {
+          if (valid) {
+            // 营业执照
+            this.form.qyyzFileId = this.attachInfo[0].fileId;
+            this.form.qyyzAttachName = this.attachInfo[0].fileName;
+            // 法定代表人证件
+            this.form.qyfrzjFileId = this.attachInfo[1].fileId;
+            this.form.qyfrzjAttachName = this.attachInfo[1].fileName;
+            this.zjControl.updateUserInfo(this.form).then((res) => {
+              this.getEntInfo();
+              this.$message.success("修改成功!");
+            });
+          }
+        });
+      } else {
+        this.$alert("请阅读并同意《银行账户变更通知》", "提示", {
+          type: "warning",
+        });
+      }
     },
     //企业操作员编辑检测
     bankIng() {
@@ -343,7 +423,6 @@ export default {
     },
     //修改银行账户
     bankEdit(row) {
-      this.oldRow = JSON.parse(JSON.stringify(row));
       this.$refs.bank.setActiveRow(row);
     },
     //保存企业操作员
@@ -351,24 +430,8 @@ export default {
       this.form = { ...this.form, ...row };
       this.$refs.bank.clearActived();
     },
-    //删除银行账户
-    sysUserDel(rowIndex) {
-      if (this.bankIng()) {
-        return;
-      }
-      this.form.entBankInfo.splice(rowIndex, 1);
-    },
     //取消银行账户编辑
     bankCancel(row, rowIndex) {
-      // if (!row.save) {
-      //   this.form.entBankInfo.splice(rowIndex, 1);
-      // } else {
-      //   this.form.entBankInfo.splice(
-      //     rowIndex,
-      //     1,
-      //     JSON.parse(JSON.stringify(this.oldRow))
-      //   );
-      // }
       this.$refs.bank.clearActived();
     },
     //上传附件

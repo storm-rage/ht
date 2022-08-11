@@ -24,17 +24,11 @@
   </zj-content-block>
 </template>
 <script>
-// 业务申请信息
-export default {
-  components: {},
 
+export default {
+  props: ['detailData'],
   data() {
     return {
-      detailData: {
-        legalPersonName: "",
-        legalCertNo: "",
-        registerPhone: "",
-      },
     };
   },
 };

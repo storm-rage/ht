@@ -526,7 +526,7 @@
               total:this.tablePagerTotal,
               rows:[...[],...this.tableData]
             }
-            this.$emit('dataChange',dataObj)
+            this.$emit('after-load',dataObj)
           } else {
             // 不分页
             this.tableData = this.dataList || []
@@ -549,7 +549,7 @@
           // 1.用于统计
           let dataObj = Object.assign({},res.data)
           dataObj.current = this.tablePagerCurrentPage
-          this.$emit('dataChange',dataObj)
+          this.$emit('before-load',dataObj)
           // 2.用于查看器
           this.$emit('viewChange')
           //缓存响应参数，用于view组件的分页

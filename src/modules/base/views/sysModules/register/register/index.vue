@@ -27,6 +27,7 @@ import {
   RegisterStepReject
 } from "./components/Register.js"
 import router from "@/router";
+import {windowSSStorage} from '@utils/storageUtils';
 export default {
   components: {
     // 线上注册申请 注册首页
@@ -80,6 +81,7 @@ export default {
         saveRegisterEntUser:this.$api.register.saveRegisterEntUser,//单个维护注册企业的用户信息
         downloadTemplate:this.$api.register.downloadTemplate,//下载委托授权书模板/个人信息授权书模板
         completeRegister:this.$api.register.completeRegister,//保存/完成注册
+        getOpenBankInfo:this.$api.register.getOpenBankInfo,//企业注册-获取开户行信息
         getUserInfo:this.$api.register.getUserInfo,//获取用户信息
         saveUserInfo:this.$api.register.saveUserInfo,//保存企业用户信息
         uploadAttach:this.$api.register.uploadAttach, //上传
@@ -89,7 +91,7 @@ export default {
         //清除缓存
         toLogin:(boo = true) => {
           let ssionArr = ['registerStep','registerEntInfoObj']
-          ssionArr.forEach(item=> sessionStorage.removeItem(item))
+          ssionArr.forEach(item=> windowSSStorage.removeItem(item))
           if(boo){
             router.replace({
               path: '/login'
@@ -115,17 +117,17 @@ export default {
   },
   created(){
     //reject
-    this.step = sessionStorage.getItem('registerStep') || '101'
+    this.step = windowSSStorage.getItem('registerStep') || '101'
     let oldEntInfo = Object.assign({},this.entInfoObj)
-    this.entInfoObj = JSON.parse(sessionStorage.getItem('registerEntInfoObj')) || oldEntInfo
+    this.entInfoObj = JSON.parse(windowSSStorage.getItem('registerEntInfoObj')) || oldEntInfo
     this.getDictionary()
   },
   watch:{
     step(newStep){
-      sessionStorage.setItem('registerStep',newStep)
+      windowSSStorage.setItem('registerStep',newStep)
     },
     entInfoObj(newEntInfoObj){
-      sessionStorage.setItem('registerEntInfoObj',JSON.stringify(newEntInfoObj))
+      windowSSStorage.setItem('registerEntInfoObj',JSON.stringify(newEntInfoObj))
     }
   }
 }

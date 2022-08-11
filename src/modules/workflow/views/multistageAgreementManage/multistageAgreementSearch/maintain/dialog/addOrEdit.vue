@@ -1,113 +1,128 @@
 <template>
   <el-dialog
-    :title="title"
+    :title="`阶段性协议${title}`"
     :visible.sync="dialogVisible"
-    width="70%"
+    width="1300px"
     @close="close">
-    <zj-table ref="searchContractTable"  :dataList="tradeList">
-      <zj-table-column field="field1" title="供应商名称"/>
-      <zj-table-column field="field1" title="核心企业名称"/>
-      <zj-table-column field="field1" title="保理标识"/>
-      <zj-table-column field="field1" title="贸易关系状态"/>
-      <zj-table-column field="field1" title="协议数据来源"/>
+    <zj-table ref="searchContractTable" :dataList="rows" :pager="false">
+      <zj-table-column field="sellerName" title="供应商名称"/>
+      <zj-table-column field="buyerName" title="核心企业名称"/>
+      <zj-table-column field="cactoringLogo" title="保理标识"/>
+      <zj-table-column field="tradeState" title="贸易关系状态"/>
+      <zj-table-column field="isAgreementOnline" title="协议数据来源"/>
     </zj-table>
     <el-form :model="form" ref="form" :rules="rules" label-width="180px">
       <zj-content-block>
         <zj-content>
-          <el-row :gutter="10">
+          <el-row >
             <el-col :span="8">
-              <el-form-item label="阶段性协议编号：" prop="field1">
-                <el-input v-model="form.agreementCode"></el-input>
+              <el-form-item label="SRM阶段性协议编号：" prop="srmAgreementNo">
+                <el-input v-model="form.srmAgreementNo"></el-input>
               </el-form-item>
             </el-col>
             <el-col :span="8">
-              <el-form-item label="阶段性协议名称："  prop="field1">
-                <el-input v-model="form.agreementName"></el-input>
-              </el-form-item>
-            </el-col>
-            <el-col :span="8">
-              <el-form-item label="阶段性协议类型："  prop="field1">
+              <el-form-item label="阶段性协议类型："  prop="agreementType">
                 <el-select v-model="form.agreementType"
                            placeholder="请选择"
                            clearable
+                           :disabled="row.isAgreementOnline === 'SRM'"
                            :popper-append-to-body="false">
-                  <el-option label="时间型"></el-option>
-                  <el-option label="数量型"></el-option>
+                  <el-option
+                    v-for="item in dictionary.agreementTypeList"
+                    :label="item.desc"
+                    :value="item.code"
+                    :key="item.code"
+                  />
                 </el-select>
               </el-form-item>
             </el-col>
-          </el-row>
-          <el-row>
             <el-col :span="8">
-              <el-form-item label="阶段性协议开始日：">
-                <zj-date-picker v-model="form.dateStart"/>
+              <el-form-item label="阶段性协议编号：" prop="agreementNo">
+                <el-input v-model="form.agreementNo" :disabled="row.isAgreementOnline === 'SRM'"/>
               </el-form-item>
-            </el-col>
-            <el-col :span="8">
-              <el-form-item label="阶段性协议预计到期日：">
-                <zj-date-picker v-model="form.dateStart"/>
-              </el-form-item>
-            </el-col>
-            <el-col :span="8">
-              <el-form-item label="是否已开始执行：">
-                <el-select v-model="form.agreementType"
-                           placeholder="请选择"
-                           clearable
-                           :popper-append-to-body="false">
-                  <el-option label="是"></el-option>
-                  <el-option label="否"></el-option>
-                </el-select>              </el-form-item>
             </el-col>
           </el-row>
           <el-row>
             <el-col :span="8">
-              <el-form-item label="已执行数量：">
-                <el-input v-model="form.agreementName">
-                  <template slot="append">单位</template>
-                </el-input>
+              <el-form-item label="阶段性协议名称："  prop="agreementName">
+                <el-input v-model="form.agreementName" :disabled="row.isAgreementOnline === 'SRM'"/>
               </el-form-item>
             </el-col>
+            <el-col :span="8">
+              <el-form-item label="阶段性协议开始日：" prop="agreementStartDate">
+                <zj-date-picker :date.sync="form.agreementStartDate"  :format="'yyyy年MM月dd日'"/>
+              </el-form-item>
+            </el-col>
+            <el-col :span="8">
+              <el-form-item label="阶段性协议预计到期日：" prop="agreementEstimateEndDate">
+                <zj-date-picker :date.sync="form.agreementEstimateEndDate"  :format="'yyyy年MM月dd日'"/>
+              </el-form-item>
+            </el-col>
+          </el-row>
+          <el-row>
             <el-col :span="8">
               <el-form-item label="协议数量：">
-                <el-input v-model="form.agreementName">
-                  <template slot="append">单位</template>
+                <zj-number-input
+                  :precision="0"
+                  v-model="form.agreementNumber"
+                />
+              </el-form-item>
+            </el-col>
+            <el-col :span="8">
+              <el-form-item label="单位：">
+                <el-input v-model="form.unit">
+<!--                  <template slot="append">元</template>-->
                 </el-input>
               </el-form-item>
             </el-col>
             <el-col :span="8">
               <el-form-item label="单价：">
-                <el-input v-model="form.agreementName">
-                  <template slot="append">元</template>
-                </el-input>
+                <zj-number-input
+                  :precision="2"
+                  v-model="form.price"/>
               </el-form-item>
             </el-col>
           </el-row>
           <el-row>
             <el-col :span="8">
-              <el-form-item label="协议预估总价：">
-                <el-input v-model="form.agreementName"></el-input>
-                <div>{{digitUp(1000)}}</div>
+              <el-form-item label="计价单位：">
+                <el-input v-model="form.price">
+<!--                  <template slot="append">元</template>-->
+                </el-input>
               </el-form-item>
             </el-col>
             <el-col :span="8">
-              <el-form-item label="状态：">
-                <el-select v-model="form.agreementType"
+              <el-form-item label="协议预估总价：">
+                <zj-number-input :precision="0"
+                                 v-model="form.agreementEstimatedPrice"
+                                 placeholder="请输入协议预估总价"
+                />
+                <div>{{form.agreementEstimatedPrice?digitUp(form.agreementEstimatedPrice):''}}</div>
+              </el-form-item>
+            </el-col>
+            <el-col :span="8">
+              <el-form-item label="状态：" prop="agreementStatus">
+                <el-select v-model="form.agreementStatus"
                            placeholder="请选择"
                            clearable
                            :popper-append-to-body="false">
-                  <el-option label="待维护"></el-option>
-                  <el-option label="可融资"></el-option>
-                  <el-option label="已冻结"></el-option>
+                  <el-option
+                    v-for="item in dictionary.agreementStateList"
+                    :label="item.desc"
+                    :value="item.code"
+                    :key="item.code"
+                  />
                 </el-select>
               </el-form-item>
             </el-col>
           </el-row>
           <el-row>
             <el-col :span="24">
-              <el-form-item label="请上传合同附件：">
-                <zj-upload class="zj-inline" ref="upload" :httpRequest="dayUpload">
+              <el-form-item label="请上传合同附件：" prop="fileName">
+                <zj-upload class="zj-inline" ref="upload" :httpRequest="attaUpload" >
                   <zj-button slot="trigger">选择文件</zj-button>
                 </zj-upload>
+                <span class="zj-m-l-10">{{ form.fileName?form.fileName:'未选择任何文件' }}</span>
                 <div>
                   <zj-content-tip text="支持的上传的文件格式：PDF、图片、压缩包！"></zj-content-tip>
                 </div>
@@ -119,63 +134,138 @@
       <!--  产品业务设置    -->
     </el-form>
     <div slot="footer" class="zj-center" style="display: block;width: 100%">
-      <el-button style="width: 100px" size="small" type="primary" @click="submit">确认</el-button>
-      <el-button style="width: 100px" size="small" @click="close">取消</el-button>
+      <el-button style="width: 100px" size="small" type="primary" @click="submit" :api="zjControl.savePhasedAgree || zjControl.getAddDetail">确认</el-button>
+      <el-button style="width: 100px" size="small" @click="cancel">取消</el-button>
     </div>
   </el-dialog>
 </template>
 <script>
 export default {
-  components: {
+  name: 'addOrEdit',
+  props: {
+    zjControl: Object,
+    dictionary: Object,
   },
   data () {
     return {
       dialogVisible: false,
-      // todo:????
       title: '',
-      form: {},
-      tradeList: [
-        {
-          field1: '海天高明公司',
-          field2: '是',
-          field3: '655555333544',
-          field4: '非保理',
-          field5: '12',
-          field6: '100000',
-          field7: '20000',
-          field8: '正常'
-        }
-      ]
+      form: {
+        srmAgreementNo: '',
+        agreementType: '',
+        agreementNo: '',
+        agreementName: '',
+        agreementStartDate: '',
+        agreementEstimateEndDate: '',
+        agreementNumber: '',
+        executeNumber: '',
+        unit: '',
+        price: '',
+        agreementEstimatedPrice: '',
+        agreementStatus: '',
+        fileId: '',
+        fileName: '',
+      },
+      rules: {
+        srmAgreementNo: [
+          { required: true, message: '请输入SRM阶段性协议编号', trigger: 'blur'},
+        ],
+        agreementType: [
+          { required: true, message: '请选择协议类型', trigger: 'blur'},
+        ],
+        agreementNo: [
+          { required: true, message: '请输入阶段性协议编号', trigger: 'blur'},
+        ],
+        agreementName: [
+          { required: true, message: '请输入阶段性协议名称', trigger: 'blur'},
+        ],
+        agreementStartDate: [
+          { required: true, message: '请选择阶段性协议开始日', trigger: 'blur'},
+        ],
+        agreementEstimateEndDate: [
+          { required: true, message: '请选择阶段性协议到期日', trigger: 'blur'},
+        ],
+        agreementStatus: [
+          { required: true, message: '请选择状态', trigger: 'blur'},
+        ],
+        fileName: [
+          { required: true, message: '请上传合同附件', trigger: 'blur'},
+        ],
+      },
+      rows: [],
+      row: {},
     };
   },
   methods: {
-    show (obj,title) {
-      this.form = Object.assign({},obj);
-      this.dialogVisible = true;
-      this.title = `阶段性协议${title}`;
+    show(row, title, tradeRelationList) {
+      this.rows = [...tradeRelationList]
+      if(row) {
+        this.row = row
+        this.form = {...row}
+        console.log(this.row)
+        console.log(this.rows)
+      }
+      this.dialogVisible = true
+      this.title = title
     },
-    toAdd () {
-      this.form.list.push({
-        startDay: '',
-        endDay: '',
-        discountAmt: '',
-        financeRate: ''
+    clearForm() {
+      this.rows = []
+      this.form = {}
+    },
+    cancel() {
+      this.clearForm()
+      this.dialogVisible = false
+    },
+    close() {
+      this.clearForm()
+      this.dialogVisible = false
+    },
+    attaUpload({file}) {
+      let formData = new FormData()
+      formData.append('file',file)
+      this.zjControl.uploadFile(formData).then(res => {
+        this.form.fileId = res.data.fileId
+        this.form.fileName = res.data.fileName
+        this.$message.success('附件上传成功!')
       })
     },
-    close () {
-      this.dialogVisible = false;
-    },
-    submit () {
+    //新增或维护协议
+    submit() {
+      console.log(this.title)
       this.$refs.form.validate((valid) => {
         if (valid) {
-          this.$refs.productSetting.getForm().validate((valid) => {
-            if (valid) {
-              // todo:?
-            }
-          });
+          let params = {
+            ...this.form,
+            phasedId: this.row.phasedId,
+            attachId: this.form.fileId,
+          }
+          //新增保存
+          if(this.title === '新增') {
+            console.log(params)
+            this.zjControl.savePhasedAgree(params).then(res=>{
+              //...
+              this.$emit('agreementUpdate')
+              this.$message.success(res.msg)
+              this.clearForm()
+              this.dialogVisible = false
+            })
+          }
+          //维护保存
+          if(this.title === '维护') {
+            this.zjControl.savePhasedAgree(params).then(res=>{
+              //...
+              this.$emit('agreementUpdate')
+              this.$message.success(res.msg)
+              this.clearForm()
+              this.dialogVisible = false
+            })
+          }
         }
       });
     }
+  },
+  created() {
+
   }
 };
 </script>

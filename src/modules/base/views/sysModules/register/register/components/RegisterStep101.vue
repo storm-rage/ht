@@ -73,7 +73,7 @@
                   <el-radio-group v-model="isAgreed" @change="checkIsAgreed">
                     <el-radio label="1">我已阅读并同意</el-radio>
                   </el-radio-group>
-                  <zj-button type="text" @click="getLicensorAgreement">《授权协议》</zj-button>
+                  <zj-button type="text" @click="getLicensorAgreement">《注册须知》</zj-button>
                 </el-form-item>
 
               </el-form>
@@ -264,7 +264,7 @@ export default {
     },
     //获取授权协议
     getLicensorAgreement(){
-      this.previewFile()
+      // this.previewFile()
       this.zjControl.getLicensorAgreement()
     },
     //阅读并同意
@@ -425,7 +425,7 @@ export default {
             // //已注销(????????????)
             // {step:'',state:'8'},
           ]
-          let stepItem = stepArr.find(item => item.state === res.data.state)
+          let stepItem = stepArr.find(item => item.state === res.data.registerState)
 
           this.$emit('update:entInfoObj',res.data)
           this.$emit('update:step',stepItem.step)

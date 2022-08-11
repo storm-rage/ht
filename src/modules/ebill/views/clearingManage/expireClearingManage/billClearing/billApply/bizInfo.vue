@@ -7,17 +7,17 @@
         <el-row :gutter="10">
           <el-col :span="8">
             <el-form-item label="当前持有人名称：">
-              方法士大夫士大夫
+              {{baseInfo.holderName}}
             </el-form-item>
           </el-col>
           <el-col :span="8">
             <el-form-item label="签发人：">
-              哥哥豆腐干豆腐干更广泛广泛大概
+              {{baseInfo.payEntName}}
             </el-form-item>
           </el-col>
           <el-col :span="8">
             <el-form-item label="待清算凭证金额总计：">
-              {{money('122222')}}
+              {{money(baseInfo.totalEbillAmt)}}
             </el-form-item>
           </el-col>
         </el-row>
@@ -25,22 +25,22 @@
           <el-row :gutter="10">
             <el-col :span="8">
               <el-form-item label="收款账户名称：">
-                感豆腐干豆腐干梵蒂冈的灌灌灌灌郭德纲
+                {{baseInfo.bankAccname}}
               </el-form-item>
             </el-col>
             <el-col :span="8">
               <el-form-item label="收款账号：">
-                623423324324324324
+                {{baseInfo.bankAccno}}
               </el-form-item>
             </el-col>
             <el-col :span="8">
               <el-form-item label="收款账户开户行：">
-                广泛大锅饭大概公分的个古风格梵蒂冈地方官
+                {{baseInfo.bankName}}
               </el-form-item>
             </el-col>
             <el-col :span="8">
               <el-form-item label="银行联行号：">
-                12123232
+                {{baseInfo.bankNo}}
               </el-form-item>
             </el-col>
           </el-row>
@@ -54,24 +54,24 @@
         <zj-table ref="billTable"
                   :pager="false"
                   :dataList="billList" >
-          <zj-table-column field="field1" title="原始凭证编号"/>
-          <zj-table-column field="field2" title="收款单号"/>
+          <zj-table-column field="rootCode" title="原始凭证编号"/>
+          <zj-table-column field="repaymentOrderNo" title="收款单号"/>
           <zj-table-column
-            field="field3"
+            field="capitalSerialno"
             title="资金流水号"
           />
           <zj-table-column
-            field="field4"
+            field="ebillCode"
             title="凭证编号"
           />
-          <zj-table-column field="field5" title="签发人"/>
-          <zj-table-column field="field6" title="签发日期" />
-          <zj-table-column field="field7" title="原始持有人"/>
-          <zj-table-column field="field8" title="当前持有人"/>
-          <zj-table-column field="field9" title="凭证金额" :formatter="money"/>
-          <zj-table-column field="field9" title="凭证到期日"/>
-          <zj-table-column field="field9" title="凭证实际到期日"/>
-          <zj-table-column field="field9" title="最终付款金额" :formatter="money"/>
+          <zj-table-column field="payEntName" title="签发人"/>
+          <zj-table-column field="openDate" title="签发日期" />
+          <zj-table-column field="receiptEntName" title="原始持有人"/>
+          <zj-table-column field="holderName" title="当前持有人"/>
+          <zj-table-column field="ebillAmt" title="凭证金额" :formatter="money"/>
+          <zj-table-column field="expireDate" title="凭证到期日"/>
+          <zj-table-column field="actualExpireDate" title="凭证实际到期日"/>
+          <zj-table-column field="payAmt" title="最终付款金额" :formatter="money"/>
         </zj-table>
       </zj-content>
     </zj-content-block>
@@ -82,13 +82,18 @@
  * 业务信息，工作流共享
  */
 export default {
-  data () {
-    return {
-      billList: [
-        {
-
-        }
-      ]
+  props: {
+    baseInfo: {
+      type: Object,
+      default:() => {
+        return {};
+      }
+    },
+    billList: {
+      type: Array,
+      default:() => {
+        return [];
+      }
     }
   }
 }

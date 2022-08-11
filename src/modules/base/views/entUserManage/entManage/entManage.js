@@ -2,74 +2,23 @@
 import {
   validateEmail, newValidateFixedPhone, validateBankAcct
 } from '@utils/rules'
-import eyeDialog from "./eyeDialog";
-import orderDialog from "./orderDialog";
 import OperateLog from '@modules/workflow/views/components/operateLog';
 import OtherFileSetting from './components/otherFileSetting';
 
 export default {
   name: "enterpriseManage",
   // mixins: [project],
-  components: { eyeDialog, orderDialog, OperateLog, OtherFileSetting },
+  components: { OperateLog, OtherFileSetting },
   data() {
     return {
+      isEdit: false,
       zjControl: this.$api.entInfoManage,
       pageType: this.$route.meta.pageType,
       dictionary: {},
-
       old_projectInfoList: [],
-
       form: {
-        // ----------- 企业基本信息  ---------------
-        name: '',//企业名称
-        bizLicence: '',//统一社会信用代码
-        invoiceTaxpayerId: '',//纳税人识别号
-        entType: '',//平台客户类型
-        supplierType: '',//供应商类型
-        isOpenBill: false, //是否需要开单
-        parentEntId: '',//隶属企业
-        sealEntId: '',//签章企业
-        shortName: '',//企业简称
-        beforeName: '',//曾用名
-        customCode: '',//客户编码
-        fastMailName: '',//收件人
-        fastMailPhone: '',//收件电话
-        fastMailAddress: '',//收件地址
-        projectInfoList: [
-          {
-            id: '',
-            projectId: '',
-            projectName: '',
-            operationFlag: 'A',
-            selectProductList: []
-          }
-        ],//所属项目
-        // ----------- 企业开票信息  ---------------
-        //企业名称
-        //纳税人识别号
-        invoiceEmail: '',//电子邮箱
-        invoiceAddress: '',//地址
-        invoicePhone: '',//电话
-        invoiceBankAccno: '',//银行账号
         // ----------- 企业操作员信息  ---------------
         sysUserList: [],
-        // ----------- 法人信息  ---------------
-        legalPersonName: '',//姓名
-        legalMaritalStatues: '',//婚姻状况
-        legalCertType: '',//证件类型
-        legalCertNo: '',//证件号码
-        legalCertRegDate: '',//证件号码起始日
-        legalCertExpireDate: '',//证件号码截止日
-        // ----------- 控制人信息  ---------------
-        actualController: '',//姓名
-        controllerMaritalStatues: '',//婚姻状况
-        controllerCertType: '',//证件类型
-        controllerCertNo: '',//证件号码
-        controllerCertRegDate: '',//证件号码起始日
-        controllerCertExpireDate: '',//证件号码截止日
-        // ----------- 经营信息  ---------------
-        companyType: '',//公司类型
-        companyIndustry: '',//所属行业
         // ----------- 企业附件  ---------------
         pubAttachList: []
       },
@@ -107,6 +56,24 @@ export default {
               }
             }, trigger: 'change'
           }
+        ],
+        isHtEnterprise: [
+          { name: '是否海天集团', required: true, message: "请选择是否海天集团" }
+        ],
+        isDoublePost: [
+          { name: '是否双岗', required: true, message: "请选择是否双岗" }
+        ],
+        registerStartDate: [
+          { name: '成立日期', required: true, message: "请输入成立日期" }
+        ],
+        registerCapital: [
+          { name: '注册资本', required: true, message: "请输入注册资本" }
+        ],
+        registerEndDate: [
+          { name: '企业工商有效期', required: true, message: "请输入企业工商有效期" }
+        ],
+        address: [
+          { name: '营业执照注册地址', required: true, message: "请输入企业工商有效期" }
         ],
         entType: [
           { name: '平台客户类型', required: true, validator: this.radioSelectValidator, trigger: 'change' }
@@ -206,32 +173,15 @@ export default {
       isDetail: false,
       //是否是修改页
       isEdit: false,
+      //操作记录
+      logList: []
     }
   },
-  watch: {
-    'form.name'(val) {
-      if (this.$route.name === 'entManageAdd') {
-        this.sealEntSelect[0].sealEntId = '0'
-      } else {
-        this.sealEntSelect[0].sealEntId = this.form.id
-      }
-      this.sealEntSelect[0].sealEntName = val
-      //当签章企业选择自己时，若企业名为空则删除签章选中
-      if (!val && (this.form.sealEntId === '0' || this.form.sealEntId === this.form.id)) {
-        this.form.sealEntId = ''
-      }
-      if (this.$route.name === 'entManageAdd') {
-        this.form.shortName = val
-      }
-    },
-  },
   created() {
-    this.queryEntDictionary()
-    this.getApi()
     this.getRow()
-
-    //所属项目
-    this.getProjectList()
+    this.getApi()
+    this.queryEntDictionary()
+    this.getEbBusinessParamLog()
 
     //详情页判断
     this.isDetail = this.$route.name === 'entManageDetail'
@@ -240,50 +190,21 @@ export default {
 
   },
   methods: {
-    //查询天眼查信息
-    searchEye() {
-      this.$refs.eyeDialog.open()
+    // 获取操作记录
+    getEbBusinessParamLog() {
+      this.zjControl.getEbBusinessParamLog({ id: this.row.id }).then((res) => {
+        this.logList = res.data.sysEntRegLogList;
+      });
     },
-    //天眼查返回
-    eyeReturn(data) {
-      if (!data || JSON.stringify(data) === '{}') { return }
-      let { creditCode, taxNumber, legalPersonName } = data
-      this.form.bizLicence = creditCode
-      this.form.invoiceTaxpayerId = taxNumber
-      this.form.legalPersonName = legalPersonName
-    },
-
-    //字典
     queryEntDictionary() {
       this.zjControl.queryEntDictionary().then(res => {
         let tableDic = {
-          entTypeCheckList: JSON.parse(
-            JSON.stringify(res.data.entTypeList)
-              .replace(/code/g, 'key')
-              .replace(/desc/g, 'label')
-          ),
-          userCertTypeTableList: JSON.parse(
-            JSON.stringify(res.data.userCertTypeList)
-              .replace(/code/g, 'value')
-              .replace(/desc/g, 'label')
-          ),
-          bankAcctTypeTableList: JSON.parse(
-            JSON.stringify(res.data.bankAcctTypeList)
-              .replace(/code/g, 'value')
-              .replace(/desc/g, 'label')
-          ),
-          sysRoleTableList: JSON.parse(
-            JSON.stringify(res.data.sysRoleList)
-              .replace(/code/g, 'value')
-              .replace(/desc/g, 'label')
-          ),
+          roleIdListTableList: JSON.parse(JSON.stringify(res.data.roleIdList).replace(/code/g, 'value').replace(/desc/g, 'label')),
         }
         this.dictionary = Object.assign(tableDic, res.data)
+        console.log(this.dictionary)
         this.projectInfoList = this.dictionary.projectInfoList
-        this.projectInfoListCHECKBOX = JSON.parse(
-          JSON.stringify(this.dictionary.projectInfoList).replace(/code/g, 'key').replace(/desc/g, 'label')
-        )
-        // 新增时
+        //   // 新增时
         if (this.$route.name === 'entManageAdd') {  //设置企业附件
           this.dictionary.busTypeList.map(item => {
             this.form.pubAttachList.push({
@@ -295,10 +216,7 @@ export default {
         }
         //修改-详情 时
         else {
-          let params = {
-            id: this.row.id
-          }
-          this.zjControl.getEnterprise(params).then(res => {
+          this.zjControl.getEnterprise({ id: this.row.id }).then(res => {
             this.detailsChange(res)
           })
         }
@@ -307,24 +225,7 @@ export default {
 
     //获取详情处理
     detailsChange(res) {
-      res.data.projectInfoList.map(item => { item.operationFlag = '' })
-      res.data.isOpenBill = res.data.isOpenBill === '1' ? true : false //是否需要开单处理
       this.form = res.data
-
-      this.old_projectInfoList = [...[], ...this.form.projectInfoList]
-
-      this.invoiceOneAndAll() //企业开票附件
-
-      // this.projectInit() //所属项目初始化
-
-      //签章初始化
-      this.sealEntSelect[0].sealEntId = this.form.id || '0'
-      this.sealEntSelect[0].sealEntName = this.form.name
-      if (this.form.entType !== 'B') {
-        this.form.sealEntId = ''
-      }
-      //隶属企业
-      this.parentEntIdChange(this.form.parentEntId, true)
 
       //公司类型
       if (this.form.companyType) {
@@ -335,10 +236,7 @@ export default {
             desc: this.form.companyType
           })
         }
-
       }
-
-
       this.$nextTick(() => {
         this.$refs.form.clearValidate()
       })
@@ -411,25 +309,18 @@ export default {
 
     //平台客户类型发生改变
     entTypeChange() {
-      this.form.supplierType = ''
-      this.form.isOpenBill = ''
-      this.ob = false
+      // this.form.supplierType = ''
+      // this.form.isOpenBill = ''
+      // this.ob = false
 
-      this.form.parentEntId = ''
-      this.sealEntId = ''
-      if (this.form.entType === 'B' && this.form.entType === 'S') {
-        this.form.projectInfoList = [...[], ...this.old_projectInfoList]
-        this.projectInit()
-      } else {
-        this.old_projectInfoList = [...[], this.form.projectInfoList]
-      }
-
-    },
-    //需要开单发生变化
-    iobChange(boo) {
-      if (boo) {
-        this.$refs.orderDialog.open()
-      }
+      // this.form.parentEntId = ''
+      // this.sealEntId = ''
+      // if (this.form.entType === 'B' && this.form.entType === 'S') {
+      //   this.form.projectInfoList = [...[], ...this.old_projectInfoList]
+      //   this.projectInit()
+      // } else {
+      //   this.old_projectInfoList = [...[], this.form.projectInfoList]
+      // }
     },
     //隶属企业发生改变
     parentEntIdChange(id, boo) {
@@ -462,51 +353,7 @@ export default {
         callback()
       }
     },
-    //所属项目初始化
-    projectInit() {
-      this.projectInfoListCHECKBOX.map(item => {
-        item.disabled = this.form.projectInfoList.some(citem => citem.projectId === item.projectId)
-      })
-    },
-    //修改所属项目
-    projectEdit(item) {
-      if (item.operationFlag) {
-        if (item.operationFlag === 'A') {
-          item.operationFlag = 'A'
-        } else {
-          item.operationFlag = 'u'
-        }
-      } else {
-        item.operationFlag = 'U'
-      }
-      item.projectName = this.projectInfoListCHECKBOX.find(citem => citem.projectId === item.projectId).projectName
-      //再次调用初始化
-      this.projectInit()
-    },
-    //新增所属项目
-    projectAdd() {
-      this.form.projectInfoList.push({
-        id: '',
-        projectId: '',
-        projectName: '',
-        operationFlag: 'A',
-        selectProductList: []
-      })
-    },
-    //删除所属项目
-    projectDel(item, index) {
-      if (item.operationFlag === 'A') {
-        this.form.projectInfoList.splice(index, 1)
-      } else {
-        item.operationFlag = 'D'
-        item.selectProductList = []
-      }
-      this.projectInfoListCHECKBOX.map(citem => {
-        if (citem.projectId === item.projectId) {
-          citem.disabled = false
-        }
-      })
-    },
+
     //企业开票一填必填
     invoiceOneAndAll() {
       let invoiceList = ['invoiceEmail', 'invoiceAddress', 'invoicePhone', 'invoiceBankAccno']
@@ -538,7 +385,7 @@ export default {
     sysUserAdd() {
       if (this.sysUserIng()) { return }
       let item = {
-        loginName: '',//用户名
+        userName: '',//用户名
         roleId: '',//操作员角色
         userName: '',//姓名
         certType: '',//证件类型
@@ -570,40 +417,38 @@ export default {
         }
       }
       if (flag) {
-        if (!row.loginName) { return this.$Message.warning('请填写用户名') }
-        let loginNameElReg1 = /^_+$/g
-        let loginNameElReg = /^[a-zA-Z0-9_]{4,20}$/i
+        if (!row.userName) { return this.$message.warning('请填写用户名') }
+        let userNameElReg1 = /^_+$/g
+        let userNameElReg = /^[a-zA-Z0-9_]{4,20}$/i
         if (
-          row.loginName && (
-            (row.loginName.length < 6 || row.loginName.length > 20) ||
-            !loginNameElReg.test(row.loginName) ||
-            loginNameElReg1.test(row.loginName)
+          row.userName && (
+            (row.userName.length < 6 || row.userName.length > 20) ||
+            !userNameElReg.test(row.userName) ||
+            userNameElReg1.test(row.userName)
           )
-        ) { return this.$Message.warning('用户名为6-20位英文字母、数字组成，可包含下划线') }
+        ) { return this.$message.warning('用户名为6-20位英文字母、数字组成，可包含下划线') }
 
         let loIndex = this.form.sysUserList.findIndex(item => item._XID === row._XID)
         let loBoo = true
         this.form.sysUserList.map((item, index) => {
-          if (item.loginName === row.loginName && index !== loIndex) {
+          if (item.userName === row.userName && index !== loIndex) {
             loBoo = false
           }
         })
-        if (!loBoo) { return this.$Message.error(`用户名为：${row.loginName} ，在列表中已存在`) }
-
-        if (!row.roleId) { return this.$Message.warning('请选择操作员角色') }
-        if (!row.userName) { return this.$Message.warning('请填写姓名') }
-        if (row.userName && row.userName.length > 50) { return this.$Message.warning('姓名不可超过50字符') }
-        if (!row.certType) { return this.$Message.warning('请选择证件类型') }
-        if (!row.certNo) { return this.$Message.warning('请填写证件号码') }
-        let idReg = /^[1-9]\d{7}((0\d)|(1[0-2]))(([0|1|2]\d)|3[0-1])\d{3}$|^[1-9]\d{5}[1-9]\d{3}((0\d)|(1[0-2]))(([0|1|2]\d)|3[0-1])\d{3}([0-9]|X)$/
-        if (row.certType === '01' && !idReg.test(row.certNo)) { return this.$Message.warning('请填写正确身份证号码') }
-        if (row.certType !== '01' && row.certNo.length > 50) { return this.$Message.warning('证件号码不可超过50字符') }
-        if (!row.mobileNo) { return this.$Message.warning('请填写手机号码') }
-        let phoneReg = /^((\(\d{3}\))|(\d{3}\u002d))?(1[3456789]\d{9})$/i
-        if (row.mobileNo && !phoneReg.test(row.mobileNo)) { return this.$Message.warning('手机号码格式不正确') }
-        if (!row.email) { return this.$Message.warning('请填写电子邮箱') }
-        let emailReg = /^[0-9A-Za-z_-]+[@][0-9A-Za-z]+([.][0-9A-Za-z]+){1,2}$/
-        if (row.email && !emailReg.test(row.email)) { return this.$Message.warning('邮箱号码格式不正确') }
+        // if (!loBoo) { return this.$message.error(`用户名为：${row.userName} ，在列表中已存在`) }
+        // if (!row.roleId) { return this.$message.warning('请选择操作员角色') }
+        // if (!row.userName) { return this.$message.warning('请填写姓名') }
+        // if (row.userName && row.userName.length > 50) { return this.$message.warning('姓名不可超过50字符') }
+        // if (!row.certNo) { return this.$message.warning('请填写证件号码') }
+        // let idReg = /^[1-9]\d{7}((0\d)|(1[0-2]))(([0|1|2]\d)|3[0-1])\d{3}$|^[1-9]\d{5}[1-9]\d{3}((0\d)|(1[0-2]))(([0|1|2]\d)|3[0-1])\d{3}([0-9]|X)$/
+        // if (row.certType === '01' && !idReg.test(row.certNo)) { return this.$message.warning('请填写正确身份证号码') }
+        // if (row.certType !== '01' && row.certNo.length > 50) { return this.$message.warning('证件号码不可超过50字符') }
+        // if (!row.mobileNo) { return this.$message.warning('请填写手机号码') }
+        // let phoneReg = /^((\(\d{3}\))|(\d{3}\u002d))?(1[3456789]\d{9})$/i
+        // if (row.mobileNo && !phoneReg.test(row.mobileNo)) { return this.$message.warning('手机号码格式不正确') }
+        // if (!row.email) { return this.$message.warning('请填写电子邮箱') }
+        // let emailReg = /^[0-9A-Za-z_-]+[@][0-9A-Za-z]+([.][0-9A-Za-z]+){1,2}$/
+        // if (row.email && !emailReg.test(row.email)) { return this.$message.warning('邮箱号码格式不正确') }
         row.save = true
         this.$refs.sysUser.clearActived()
         return
@@ -619,6 +464,11 @@ export default {
         this.form.sysUserList.splice(rowIndex, 1, JSON.parse(JSON.stringify(this.oldRow)))
       }
       this.$refs.sysUser.clearActived()
+    },
+
+    // 选中企业操作员
+    handleRadioChange({ row }) {
+
     },
 
     //企业附件下载
@@ -643,6 +493,8 @@ export default {
 
     //保存
     save(flag = 'add') {
+      // 其他附件
+      this.form.pubOtherAttachList = this.$refs.ofileSetting.getData()
 
       //1.校验表单
       this.$refs.form.validate(boo => {
@@ -687,7 +539,7 @@ export default {
             content: '确认后将新增企业！',
             messageResolve: () => {
               this.zjControl.addEnterprise(params).then(() => {
-                this.$Message.success('企业新增成功！')
+                this.$message.success('企业新增成功！')
                 this.goParent()
               })
             }
@@ -700,7 +552,7 @@ export default {
             content: '确认后将更新企业信息！',
             messageResolve: () => {
               this.zjControl.updateEnterprise(params).then(() => {
-                this.$Message.success('企业信息修改成功！')
+                this.$message.success('企业信息修改成功！')
                 this.goParent()
               })
             }
@@ -708,18 +560,15 @@ export default {
         }
       })
     },
+    // 暂存
+    saveEnterprise() {
+      this.zjControl.saveEnterprise(this.form).then(() => {
+        this.$message.success('暂存成功！')
+        this.goParent()
+      })
+    },
     cancel() {
       this.goParent()
-    }
-  },
-  computed: {
-    projectFlag() {
-      let flag = false
-      if (this.form.projectInfoList && this.form.projectInfoList.length) {
-        let dList = this.form.projectInfoList.filter(item => item.operationFlag === 'D') || []
-        flag = this.form.projectInfoList.length - dList.length > 1
-      }
-      return flag
     }
   }
 }

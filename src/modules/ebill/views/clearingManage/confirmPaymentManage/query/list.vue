@@ -131,7 +131,6 @@ export default {
     handleRadioChange({ row }) {
       this.currentSelectRow = row;
     },
-    batchSubmitApply () {},
     toViewDetail() {
       this.$router.push({name: 'factoringContractDetail'});
     }

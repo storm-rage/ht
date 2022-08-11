@@ -17,16 +17,11 @@
         </el-tabs>
       </div>
     </div>
-    <ul  @mouseleave.prevent="leaveRightNavMenu" v-show="rightNavMenuFlag" :style="{ left: rightNavLeft + 'px',top: rightNavTop + 'px'}" class="tab-context-menu w85px" >
-      <li @click="refreshTab">刷新当前</li>
+    <ul v-show="contextmenuVisible" :style="{ left: contextmenuLeft + 'px',top: contextmenuTop + 'px'}" class="tab-context-menu">
+      <li @click="refreshTab" v-if="$route.name === currentRoute.name">刷新当前</li>
       <li @click="deleteClick(currentRoute, $event)">关闭当前</li>
       <li @click="closeAllTab">全部关闭</li>
-    </ul>
-    <ul v-show="contextmenuVisible" :style="{ left: contextmenuLeft + 'px',top: contextmenuTop + 'px'}" class="tab-context-menu">
-      <li @click="refreshTab" v-if="$route.name === currentRoute.name">刷新</li>
-      <li @click="deleteClick(currentRoute, $event)">关闭</li>
-      <li @click="closeOtherTab" v-if="tabTagList && tabTagList.length > 1">关闭其他</li>
-      <!--      <li @click="closeAllTab">关闭所有</li>-->
+<!--      <li @click="closeOtherTab" v-if="tabTagList && tabTagList.length > 1">关闭其他</li>-->
     </ul>
   </div>
 
@@ -41,10 +36,11 @@ export default {
       contextmenuVisible: false,
       contextmenuLeft: 0,
       contextmenuTop: 0,
-      currentRoute: {},
+      currentRoute: {
+        name: this.$route.name
+      },
       rightNavLeft: 0,
       rightNavTop: 0,
-      rightNavMenuFlag: false,
       activeRouter: this.$route.name
     }
   },
@@ -65,9 +61,6 @@ export default {
     closeAllTab () {
       this.$store.commit('tab/tabClear');
     },
-    leaveRightNavMenu () {
-      this.rightNavMenuFlag = !this.rightNavMenuFlag
-    },
     /**
      * 点击事件
      * @param route
@@ -84,7 +77,6 @@ export default {
       const delRoute = this.tabTagList.find((item) => {
         return item.name === name;
       });
-      console.log(delRoute)
       this.deleteClick(delRoute)
     },
     // 打开标签页右击菜单
@@ -113,8 +105,8 @@ export default {
     },
     //刷新标签
     refreshTab () {
-      if (this.rightNavMenuFlag) {
-        this.rightNavMenuFlag = false;
+      if (this.contextmenuVisible) {
+        this.contextmenuVisible = false;
       }
       this.$store.commit('tab/tabRefresh',this.currentRoute)
     }

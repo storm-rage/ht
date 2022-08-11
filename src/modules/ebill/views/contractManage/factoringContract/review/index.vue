@@ -5,28 +5,34 @@
         <el-form ref="searchForm" :model="searchForm">
           <el-form-item label="合同编号：">
             <el-input
-              v-model="searchForm.issueEntName"
+              v-model.trim="searchForm.contractNo"
               @keyup.enter.native="enterSearch"
             />
           </el-form-item>
 
           <el-form-item label="合同签署类型：">
-            <el-select v-model="applicationStatus">
-              <el-option value="全部" />
-              <el-option value="待复核" />
+            <el-select v-model="searchForm.applyType">
+              <el-option value="" label="全部"></el-option>
+              <el-option
+                v-for="item in dictionary.applyType"
+                :key="`${item.code}applyType`"
+                :label="item.desc"
+                :value="item.code"
+              >
+              </el-option>
             </el-select>
           </el-form-item>
 
           <el-form-item label="申请日期：" class="col-right">
             <zj-date-range-picker
-              :startDate.sync="searchForm.expireDateStart"
-              :endDate.sync="searchForm.expireDateEnd"
+              :startDate.sync="searchForm.applyStartDate"
+              :endDate.sync="searchForm.applyEndDate"
             />
           </el-form-item>
 
           <el-form-item label="申请流水号：">
             <el-input
-              v-model="searchForm.issueEntName"
+              v-model.trim="searchForm.serialNo"
               @keyup.enter.native="enterSearch"
             />
           </el-form-item>
@@ -34,25 +40,24 @@
       </template>
       <zj-table
         ref="searchTable"
-        :dataList="list"
         :params="searchForm"
         :api="zjControl.tableApi"
       >
         <zj-table-column type="seq" width="60" title="序号" />
-        <zj-table-column field="field1" title="申请流水号"/>
-        <zj-table-column field="field2" title="合同签署类型" />
-        <zj-table-column field="field3" title="合同编号" />
+        <zj-table-column field="serialNo" title="申请流水号"/>
+        <zj-table-column field="applyTypeDesc" title="合同签署类型" />
+        <zj-table-column field="contractNo" title="合同编号" />
         <zj-table-column
-          field="field4"
+          field="contractName"
           title="合同名称"/>
-        <zj-table-column field="field5" title="申请状态"/>
-        <zj-table-column field="field6" title="申请时间"/>
+        <zj-table-column field="applyStatusDesc" title="申请状态"/>
+        <zj-table-column field="applyDate" title="申请时间"/>
         <zj-table-column title="操作" fixed="right">
           <template v-slot="{ row }">
             <zj-button
               type="text"
               @click="toReview(row)"
-              :api="zjBtn.getEnterprise"
+              :api="zjBtn.submitEbContractApplyReview"
             >复核</zj-button
             >
           </template>
@@ -65,35 +70,34 @@
 export default {
   data() {
     return {
-      zjControl: {},
-      searchForm: {
-        issueEntName: "",
-        expireDateStart: "",
-        expireDateEnd: "",
-        ebillAmtStart: "",
-        ebillAmtEnd: "",
-        ebillCode: "",
-        issueDateStart: "",
-        issueDateEnd: "",
+      zjControl: {
+        tableApi: this.$api.factoringContract.queryEbContractReviewSignPage,
+        getDirectory: this.$api.factoringContract.getEbContractReviewDirectory,
+        submitEbContractApplyReview: this.$api.factoringContract.submitEbContractApplyReview
       },
-      list: [
-        {
-          field1: '5435455',
-          field2: '首次签约合同',
-          field3: '789797898',
-          field4: '国内商业保理合同',
-          field5: '待复核',
-          field6: '2021.01.01 11:11:22'
-        }
-      ]
+      searchForm: {
+        contractNo: "",
+        applyType: "",
+        applyStartDate: "",
+        applyEndDate: "",
+        serialNo: ""
+      },
+      // 字典
+      dictionary: {}
     };
   },
   created() {
-    // this.getApi();
+    this.getApi();
+    this.getDic();
   },
   methods: {
+    getDic() {
+      this.zjControl.getDirectory().then((res) => {
+        this.dictionary = res.data
+      });
+    },
     toReview(row) {
-      this.$router.push({name: 'contractSignReview'});
+      this.goChild('contractSignReview',{contractId: row.contractId,contractNo: row.contractNo})
     },
   },
 };

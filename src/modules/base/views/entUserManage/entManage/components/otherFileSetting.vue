@@ -3,16 +3,15 @@
     <zj-content-block>
       <zj-header title="其他附件"></zj-header>
       <zj-content>
-        <div class="zj-m-t-10 zj-m-b-10">
-          <el-button
-            style="width: 100px"
-            size="small"
-            type="primary"
-            v-if="isEdit"
-            @click="toAddFile"
-            >新增</el-button
-          >
-        </div>
+        <el-button
+          style="width: 100px"
+          class="zj-m-t-10 zj-m-b-10"
+          size="small"
+          type="primary"
+          v-if="isEdit"
+          @click="toAddFile"
+          >新增</el-button
+        >
         <zj-table
           ref="fileTable"
           :dataList="fileList"
@@ -32,11 +31,7 @@
             title="附件说明"
             :edit-render="{ name: '$input', props: { maxlength: 200 } }"
           />
-          <zj-table-column
-            field="fileName"
-            title="附件名称"
-            :edit-render="{ name: '$input', props: { maxlength: 200 } }"
-          />
+          <zj-table-column field="fileName" title="附件名称" />
           <zj-table-column title="操作" fixed="right">
             <template v-slot="{ row, rowIndex }">
               <template v-if="$refs.fileTable.isActiveByRow(row)">
@@ -108,7 +103,7 @@ export default {
       return this.$refs.form;
     },
     getData() {
-      return { form: this.form, list: this.fileList };
+      return { list: this.fileList };
     },
     // 下载
     toDownload(row) {},

@@ -2,11 +2,57 @@
   <div id="voucherPrint-collect">
     <div class="zj-search-condition">
       <el-row class="checkbox-row">
-        <zj-checkbox
-          :list="dictionary.voucherTypeCheckList"
-          :value.sync="checkList"
-          @handleCheckedChange="handleCheckedChange"
-        />
+        <zj-checkbox :list="dictionary.voucherTypeCheckList" :value.sync="checkList" @handleCheckedChange="handleCheckedChange"/>
+      </el-row>
+      <el-row class="button-row">
+        <vxe-button class="reset" icon="el-icon-refresh" @click="resetSearch">重置</vxe-button>
+        <vxe-button class="search" icon="el-icon-search" @click="search">查询</vxe-button>
+      </el-row>
+      <el-form ref="searchForm" :model="searchForm">
+        <el-form-item label="凭证生成日期：">
+          <zj-date-range-picker :startDate.sync="searchForm.createDatetimeStart" :endDate.sync="searchForm.createDatetimeEnd"/>
+        </el-form-item>
+        <el-form-item :label="$i18n.messages[$i18n.locale].lang.financingName+'到期日期：'">
+          <zj-date-range-picker
+            :startDate.sync="searchForm.dataDateStart"
+            :endDate.sync="searchForm.dataDateEnd"
+          />
+        </el-form-item>
+        <el-form-item label="凭证号：">
+          <el-input v-model="searchForm.voucherNo" @keyup.enter.native="enterSearch"/>
+        </el-form-item>
+        <el-form-item label="开单企业：">
+          <el-input v-model="searchForm.payEndNameLike" @keyup.enter.native="enterSearch"/>
+        </el-form-item>
+      </el-form>
+    </div>
+    <div class="zj-search-response">
+      <zj-table ref="searchTable"
+                :api="zjControl.tableApi" :params="searchForm"
+                v-if="tableFlag" @before-load="tableDataChange"
+                @checkbox-change="tableCheckChange" @checkbox-all="tableCheckChange"
+      >
+        <zj-table-column fixed="left" type="checkbox" width="30"/>
+        <zj-table-column field="voucherNo" title="凭证号"/>
+        <zj-table-column field="voucherType" title="凭证类型" :formatter="(obj) => typeMap(dictionary.morePrintVOucherType,obj.cellValue)"/>
+        <zj-table-column field="payEntName" title="开单企业"/>
+        <zj-table-column field="createEntName" title="业务方"/>
+        <zj-table-column field="fundingEntName" title="资金方"/>
+        <zj-table-column field="dataDate" :title="$i18n.messages[$i18n.locale].lang.financingName+'到期日期'" :formatter="date"/>
+        <zj-table-column field="createDatetime" title="凭证生成日期" :formatter="date"/>
+        <zj-table-column field="printNum" title="打印次数" />
+        <zj-table-column  title="操作" fixed="right" v-if="zjBtn.voucherPrint">
+          <template v-slot="{row}">
+            <zj-button type="text" @click="printVoucher(row)">打印预览</zj-button>
+          </template>
+        </zj-table-column>
+      </zj-table>
+      <el-row class="ta-c w85 zj-p-b-15" v-show="btnFlag">
+        <zj-button :class="printFlag ? 'confirm' : 'back'"
+                   :title="!printFlag ?'请选择需要打印的凭证' : ''"
+                   :disabled="!printFlag"
+                   :api="zjBtn.voucherPrint"
+                   @click="printVoucher">打印</zj-button>
       </el-row>
       <zj-list-layout>
         <template slot="searchForm">

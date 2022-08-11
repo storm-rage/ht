@@ -7,10 +7,16 @@
     <ent-info-edit ref="entInfoInit" />
 
     <zj-content-footer>
-      <zj-button type="primary" @click="submit" v-if="pageType !== 'detail'"
+      <zj-button
+        type="primary"
+        @click="submitForm()"
+        v-if="pageType !== 'detail'"
         >提交申请</zj-button
       >
-      <zj-button class="back" @click="back">返回</zj-button>
+      <zj-button type="primary" @click="saveEnterprise" v-if="pageType === 'add'"
+        >暂存</zj-button
+      >
+      <zj-button class="back" @click="goChild('sysEnterprise')">返回</zj-button>
     </zj-content-footer>
   </zj-content-container>
 </template>
@@ -25,6 +31,15 @@ export default {
     return {
       pageType: this.$route.meta.pageType,
     };
+  },
+  created() {},
+  methods: {
+    submitForm() {
+      this.$refs.entInfoInit.save();
+    },
+    saveEnterprise() {
+      this.$refs.entInfoInit.saveEnterprise();
+    }
   },
 };
 </script>

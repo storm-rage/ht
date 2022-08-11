@@ -23,7 +23,6 @@ export default {
   methods: {
     handleClickDropdown (name) {
       if(name==='center') {
-        // todo: 跳转个人中心
         this.$router.push('/personalCenter')
       }else if (name === 'logout') {
         this.$confirm('您确定要退出吗？','提示',{
@@ -38,10 +37,7 @@ export default {
     // 登出
     logout () {
       this.$api.login.logout().then(()=>{
-        //清除local存储的信息
-        sessionStorage.clear()
-        localStorage.clear()
-        window.clearVuexAlong()
+        this.$store.dispatch('user/logoutToClearUserInfo')
         this.$store.commit('resetState')
         this.$store.dispatch('menu/SET_MENU_ACTIVE','')
         this.defaultOpenedsArray = []

@@ -3,7 +3,7 @@
     <zj-top-header title="阶段性协议详情"></zj-top-header>
     <!--  业务申请信息  -->
 <!--    <biz-apply-info/>-->
-    <business-detail/>
+    <business-detail :formData="detailData" :zjControl="zjControl"/>
     <!--  阶段性协议信息  -->
 <!--    <multistage-agreement/>-->
 
@@ -23,9 +23,29 @@ export default {
     businessDetail
   },
   data () {
-    return {}
+    return {
+      zjControl: {
+        getBackPhasedAgreeInfo:this.$api.multistageAgreementManageWorkflow.getBackPhasedAgreeInfo,//运营端-阶段性协议维护-详情
+      },
+      detailData: {},
+    }
   },
   methods: {
+    //获取详情
+    getDetail() {
+      let params = {
+        busTradeId: this.row.busTradeId,
+        buyerId: this.row.buyerId,
+        buyerName: this.row.buyerName,
+        maintainType: '0',//0-待办维护 1-保理公司直接维护
+        sellerId: this.row.sellerId,
+        sellerName: this.row.sellerName,
+        serialNo: this.row.serialNo,
+      }
+      this.zjControl.getBackPhasedAgreeInfo(params).then(res=>{
+        this.detailData = res.data
+      })
+    },
     submit(flag) {
       // let target = flag == 'agree' ? '提交' : '拒绝'
       this.$messageBox({
@@ -44,6 +64,11 @@ export default {
       })
     },
     back() {},
+  },
+  created() {
+    this.getApi()
+    this.getRow()
+    this.getDetail()
   }
 };
 </script>

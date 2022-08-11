@@ -19,11 +19,11 @@ const billLssueRouter = [
     path: '/openBillApplyDetails',
     name: 'openBillApplyDetails',
     component: () => import('../views/billLssue/issuanceApply/details/index.vue'),
-    meta:{
-      isMock:false,
-      title:`凭证签发申请详情`,
-      keepAlive:true,
-      refreshIndex:0,
+    meta: {
+      isMock: false,
+      title: `凭证签发申请详情`,
+      keepAlive: true,
+      refreshIndex: 0,
       notRequireAuth: true
     }
   },
@@ -31,11 +31,11 @@ const billLssueRouter = [
     path: '/offlineDatails',
     name: 'offlineDatails',
     component: () => import('../views/billLssue/issuanceApply/details/offlineDatails.vue'),
-    meta:{
-      isMock:false,
-      title:`债权凭证签发申请`,
-      keepAlive:true,
-      refreshIndex:0,
+    meta: {
+      isMock: false,
+      title: `债权凭证签发申请`,
+      keepAlive: true,
+      refreshIndex: 0,
       notRequireAuth: true
     }
   },
@@ -43,21 +43,21 @@ const billLssueRouter = [
     path: '/openBillApplyConfirm',
     name: 'openBillApplyConfirm',
     component: () => import('../views/billLssue/issuanceApply/details/confirm.vue'),
-    meta:{
-      isMock:false,
-      title:`请确认电子债权凭证签发申请`,
-      keepAlive:true,
-      refreshIndex:0,
+    meta: {
+      isMock: false,
+      title: `请确认电子债权凭证签发申请`,
+      keepAlive: true,
+      refreshIndex: 0,
       notRequireAuth: true
     }
   },
   {
-    path: '/issuanceReview',
-    name: 'issuanceReview',
+    path: '/openBillAudit',
+    name: 'openBillAudit',
     component: () => import('../views/billLssue/issuanceReview/index.vue'),
     meta: {
       isMock: true,
-      title: `凭证签发复核`,
+      title: `凭证签发复核-列表`,
       root: '电子债权凭证',
       keepAlive: true,
       refreshIndex: 0,
@@ -65,32 +65,32 @@ const billLssueRouter = [
     }
   },
   {
-    path: '/orderReview',
-    name: 'orderReview',
+    path: '/issuanceReview',
+    name: 'issuanceReview',
     component: () => import('../views/billLssue/issuanceReview/review/index.vue'),
-    meta:{
-      isMock:false,
-      title:`开单确认`,
-      keepAlive:true,
-      refreshIndex:0,
+    meta: {
+      isMock: false,
+      title: `债权凭证签发复核`,
+      parent: 'openBillAudit',
+      keepAlive: true,
+      refreshIndex: 0,
       notRequireAuth: true
     }
   },
   {
-    path: '/issuanceVoucher',
-    name: 'issuanceVoucher',
+    path: '/myOpenBill',
+    name: 'myOpenBill',
     component: () => import('../views/billLssue/issuanceVoucher/index.vue'),
     meta: {
-      isMock: true,
       title: `我签发的凭证`,
       root: '电子债权凭证',
       keepAlive: true,
-      refreshIndex: 0
+      refreshIndex: 0,
     }
   },
   {
-    path: '/cancellationReview',
-    name: 'cancellationReview',
+    path: '/ebBillRejectAudit',
+    name: 'ebBillRejectAudit',
     component: () => import('../views/billLssue/cancellationReview/index.vue'),
     meta: {
       isMock: true,
@@ -102,40 +102,64 @@ const billLssueRouter = [
     }
   },
   {
-    path: '/tansferApp',
-    name: 'tansferApp',
-    component: () => import('../views/billLssue/transferApplication/index.vue'),
+    path: '/billCancellationReview',
+    name: 'billCancellationReview',
+    component: () => import('../views/billLssue/cancellationReview/billCancellationReview'),
     meta: {
       isMock: true,
+      title: `债权凭证作废复核`,
+      parent: 'ebBillRejectAudit',
+      keepAlive: true,
+      refreshIndex: 0,
+      notRequireAuth: true
+    }
+  },
+  {
+    path: '/ebBillApply',
+    name: 'ebBillApply',
+    component: () => import('../views/billLssue/transferApplication/index.vue'),
+    meta: {
       title: `转让申请`,
       root: '电子债权凭证',
       keepAlive: true,
       refreshIndex: 0,
-      notRequireAuth: true
     },
   },
   {
-    path: '/voucherTransferApplication',
-    name: 'voucherTransferApplication',
-    component: () => import('../views/billLssue/transferApplication/voucherTransferApplication.vue'),
+    path: '/billAssignApply',
+    name: 'billAssignApply',
+    component: () => import('../views/billLssue/transferApplication/billAssignApply.vue'),
     meta: {
       isMock: false,
       title: `凭证转让申请`,
-      root: '电子债权凭证',
+      parent: 'tansferApp',
       keepAlive: true,
       refreshIndex: 0,
       notRequireAuth: true
-    },
+    }
+  },
+  {
+    path: '/billAssignApplyS',
+    name: 'billAssignApplyS',
+    component: () => import('../views/billLssue/transferApplication/billAssignApplyS.vue'),
+    meta: {
+      isMock: false,
+      title: `凭证转让申请-批量`,
+      parent: 'tansferApp',
+      keepAlive: true,
+      refreshIndex: 0,
+      notRequireAuth: true
+    }
   },
   {
     path: '/transferCheck',
     name: 'transferCheck',
     component: () => import('../views/billLssue/transferCheck/index.vue'),
-    meta:{
-      isMock:false,
-      title:`转让复核`,
-      keepAlive:true,
-      refreshIndex:0,
+    meta: {
+      isMock: false,
+      title: `转让复核`,
+      keepAlive: true,
+      refreshIndex: 0,
       notRequireAuth: true
     }
   },

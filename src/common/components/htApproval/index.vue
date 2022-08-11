@@ -6,6 +6,7 @@
     :custom="params"
     :process-instance-id="processInstanceId"
     :options="options"
+    :snapshot-configs="snapshotConfigs"
     @back="backAction"
   ></ht-approval>
 </template>
@@ -34,13 +35,22 @@ export default {
     /**
      * 撤销前置动作
      */
-    beforeCancelSubmit: Function
+    beforeCancelSubmit: Function,
+    /**
+     * 表单快照配置
+     */
+    snapshotConfigs: {
+      type: Array,
+      default:() => {
+        return []
+      }
+    }
   },
   data () {
     return {
       options: {
         request: {
-          baseUrl: '/',
+          baseUrl: process.env.VUE_APP_BASE_URL,
           timeOut: 120000,
           interceptors: (config) => {
             return config

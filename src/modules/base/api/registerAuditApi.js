@@ -47,12 +47,16 @@ const registerAudit = {
     return request.get('/platform-audit/get-core-ent-audit-info',{params})
   },
   //获取供应商贸易关系推荐函信息
-  getSupTradeInfo:(params)=>{
-    return request.get('/platform-audit/get-supplier-trade-info',{params})
-  },
-  //提交审核
-  submitAudit:(params)=>{
+  // getSupTradeInfo:(params)=>{
+  //   return request.get('/platform-audit/get-supplier-trade-info',{params})
+  // },
+  //提交审核-初审
+  submitPlatformAudit:(params)=>{
     return request.post('/platform-audit/submit-platform-audit',params)
+  },
+  //提交审核-复审
+  submitAuditConfirm:(params)=>{
+    return request.post('/platform-audit/submit-audit-confirm',params)
   },
 
   //资料确认

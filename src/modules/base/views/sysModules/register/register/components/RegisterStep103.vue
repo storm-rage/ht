@@ -15,7 +15,12 @@
       </el-row>
       <el-form ref="form" :model="form" :rules="accountRules" class="register-form" label-width="200px">
         <el-form-item label="收到金额（单位：分）：" prop="smallPaymentCertAmt">
-          <zj-number-input :precision="0" v-model="form.smallPaymentCertAmt" placeholder="请输入收到的金额，示例：若收到0.11，请输入11"/>
+          <zj-number-input :precision="0"
+                           v-model="form.smallPaymentCertAmt"
+                           placeholder="请输入收到的金额，示例：若收到0.11，请输入11"
+                           :max="99"
+                           :min="1"
+          />
         </el-form-item>
       </el-form>
       <el-row class="btn-row">
@@ -82,6 +87,9 @@ export default {
         detailAddress: '',
         entBankInfo: {},
         entBankInfoList: [],
+        confirmBankId:'',//获取银行信息
+        confirmBankName:'',//获取银行信息
+        isSelectEntBankInfo: null,//判断一级供应商是否选择银行账户
         entContactAddressCity: '',
         entType: '',
         fastMailAddress: '',
@@ -228,7 +236,11 @@ export default {
           let params = {
             id: this.entInfoObj.form.id,
             registerOperateFlag: flag,
-            smallPaymentCertAmt: this.form.smallPaymentCertAmt
+            smallPaymentCertAmt: this.form.smallPaymentCertAmt,
+            token: this.entInfoObj.form.token,
+            entBankInfo: this.entInfoObj.form.entBankInfo,
+            confirmBankId: this.entInfoObj.form.confirmBankId,
+            confirmBankName: this.entInfoObj.form.confirmBankName,
           }
           this.zjControl.saveSmallPaymentCertAmt(params).then(res=>{
             let params = Object.assign({},this.entInfoObj)
@@ -250,7 +262,11 @@ export default {
           let params = {
             id: this.entInfoObj.form.id,
             registerOperateFlag: flag,
-            smallPaymentCertAmt: this.form.smallPaymentCertAmt
+            smallPaymentCertAmt: this.form.smallPaymentCertAmt,
+            token: this.entInfoObj.form.token,
+            entBankInfo: this.entInfoObj.form.entBankInfo,
+            confirmBankId: this.entInfoObj.form.confirmBankId,
+            confirmBankName: this.entInfoObj.form.confirmBankName,
           }
           this.zjControl.saveSmallPaymentCertAmt(params).then(res=>{
             let params = Object.assign({},this.entInfoObj)

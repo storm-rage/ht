@@ -1,6 +1,6 @@
 <template>
   <!-- 个人中心 -->
-  <zj-content-container>
+  <zj-content-container class="personal-center">
     <zj-content>
       <zj-header>我的账户</zj-header>
       <div style="width: 80%; margin: 0 auto">
@@ -142,20 +142,24 @@
       </div>
     </zj-content>
     <zj-content-footer>
-      <zj-button
-        type="primary"
-        @click="$router.push(`/entInfoMaintain/${userBaseInfo.entInfo.id}`)"
-        v-show="tabAtive === 'myBasicInformation'"
-        >维护企业信息</zj-button
-      >
-      <zj-button
-        type="primary"
-        @click="
-          $router.push(`/userInfoMaintain/${userBaseInfo.userInfo.roleIds[0]}`)
-        "
-        v-show="tabAtive === 'myBasicInformation'"
-        >维护个人信息</zj-button
-      >
+      <template v-if="userBaseInfo.entInfo.isHtEnterprise === '0'">
+        <zj-button
+          type="primary"
+          @click="$router.push(`/entInfoMaintain/${userBaseInfo.entInfo.id}`)"
+          v-show="tabAtive === 'myBasicInformation'"
+          >维护企业信息</zj-button
+        >
+        <zj-button
+          type="primary"
+          @click="
+            $router.push(
+              `/userInfoMaintain/${userBaseInfo.userInfo.roleIds[0]}`
+            )
+          "
+          v-show="tabAtive === 'myBasicInformation'"
+          >维护个人信息</zj-button
+        >
+      </template>
       <zj-button
         type="primary"
         @click="handleUpdate"
@@ -224,7 +228,9 @@ export default {
 </script>
 
 <style lang="less">
-.el-tab-pane {
-  margin-left: 40px;
+.personal-center {
+  .el-tab-pane {
+    margin-left: 40px;
+  }
 }
 </style>

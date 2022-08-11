@@ -20,7 +20,7 @@ export default {};
   background: #EDF4FB;
   .content {
     width: 100%;
-    padding: 20px 35px;
+    padding: 20px 10%;
     box-sizing: border-box;
     display: flex;
     justify-content: space-between;

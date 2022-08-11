@@ -2,11 +2,11 @@
   <zj-content-container>
     <zj-top-header title="阶段性协议维护交易详情"></zj-top-header>
     <!--  业务申请信息  -->
-    <biz-apply-info/>
-    <business-detail/>
-    <!--  贸易关系  -->
-    <trade-contract-atta/>
-    <operator-log/>
+    <biz-apply-info :formData="detailData.businessApplyInfo" :dictionary="dictionary"/>
+    <business-detail :formData="detailData" :zjControl="zjControl"/>
+    <!--  贸易合同附件  -->
+    <trade-contract-atta :formData="detailData.businessApplyInfo" :dictionary="dictionary"/>
+    <operator-log :formData="detailData.businessApplyInfo" :dictionary="dictionary"/>
 
     <zj-content-footer>
       <zj-button @click="goParent">返回</zj-button>
@@ -27,9 +27,37 @@ export default {
     operatorLog,
   },
   data () {
-    return {}
+    return {
+      zjControl: {
+        getBackPhasedAgreeInfo:this.$api.multistageAgreementManageWorkflow.getBackPhasedAgreeInfo,//运营端-阶段性协议维护-详情
+
+        getPhasedAgreeDirectory:this.$api.multistageAgreementManageWorkflow.getPhasedAgreeDirectory,//阶段性协议管理-数据字典
+        uploadFile:this.$api.baseCommon.uploadFile,
+      },
+      detailData: {},
+      dictionary: {},
+    }
   },
   methods: {
+    getDic() {
+      this.zjControl.getPhasedAgreeDirectory().then(res=>{
+        this.dictionary = res.data
+      })
+    },
+    getDetail() {
+      let params = {
+        busTradeId: this.row.busTradeId,
+        buyerId: this.row.buyerId,
+        buyerName: this.row.buyerName,
+        maintainType: '0',//0-待办维护 1-保理公司直接维护
+        sellerId: this.row.sellerId,
+        sellerName: this.row.sellerName,
+        serialNo: this.row.serialNo,
+      }
+      this.zjControl.getBackPhasedAgreeInfo(params).then(res=>{
+        this.detailData = res.data
+      })
+    },
     submit(flag) {
       // let target = flag == 'agree' ? '提交' : '拒绝'
       this.$messageBox({
@@ -47,7 +75,12 @@ export default {
         }
       })
     },
-    back() {},
+  },
+  created() {
+    this.getApi()
+    this.getRow()
+    this.getDic()
+    this.getDetail()
   }
 };
 </script>

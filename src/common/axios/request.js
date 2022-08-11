@@ -3,8 +3,6 @@ import axios from 'axios'
 import router from '@/router'
 import ZjLog from '../components/log/ZjLog'
 import store from "@/store";
-//引入
-import sw_cookie from "../utils/cookie";
 
 const qs = require('qs');
 const service = axios.create({
@@ -29,6 +27,10 @@ service.interceptors.request.use(config => {
   }else{
     ZjLog.lock()
   }
+  // 不允许同一个浏览器登录多个账号打开
+  // if (!store.getters['user/isCurrentToken']()) {
+  //   throw new Error('会话失效');
+  // }
   if (config.isUpload) { // 上传转换数据格式
     const form = new FormData()
     for (let key in config.data) {
@@ -137,6 +139,17 @@ service.interceptors.response.use(response => {
       // 请求超时
       Vue.prototype.$messageBox({ type: 'error', content: '请求超时，请检查网络是否正常连接' })
       return Promise.reject(new Error())
+    }else if (error.message==='会话失效') {
+      store.commit('resetState')
+      Vue.prototype.$messageBox({
+        type: 'warning',
+        content: '会话失效，请重新登录',
+        messageResolve: () => {
+          router.replace({
+            path: '/login'
+          })
+        }
+      })
     } else {
       // 请求失败
       Vue.prototype.$messageBox({ type: 'error', content: '请求失败，请检查网络是否已连接' })
@@ -147,19 +160,8 @@ service.interceptors.response.use(response => {
 
 // 清除缓存
 function clearToken() {
-  //清除local存储的信息
-  sessionStorage.clear()
-  let localArr = ['regType','vuexAlong']
-  localArr.forEach(item => {
-    localStorage.removeItem(item)
-  })
-  window.clearVuexAlong()
+  store.dispatch('user/logoutToClearUserInfo')
   store.commit('resetState')
-  //清除cookie
-  let cookieArr = ['userName','powerArr','XSRF-TOKEN','SESSION']
-  cookieArr.forEach(item =>{
-    sw_cookie.remove(item)
-  })
 }
 
 

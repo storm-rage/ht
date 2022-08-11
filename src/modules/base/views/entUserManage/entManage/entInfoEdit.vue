@@ -8,29 +8,25 @@
           <h4 class="bl zj-m-l-20 mb-10">企业信息</h4>
           <el-col :span="pageType === 'add' ? 24 : 8">
             <el-form-item label="企业名称：" prop="name">
-              <template v-if="pageType === 'add'">
-                <el-input v-model="form.name" />
-                <zj-button
+              <template>
+                <el-input v-model="form.name" :disabled="isDetail || isEdit" />
+                <!-- <zj-button
                   class="zj-m-l-10"
-                  status="primary"
-                  @click="searchEye"
-                  :disabled="!form.name || (form.name && !form.name.trim())"
-                  :title="
-                    !form.name || (form.name && !form.name.trim())
-                      ? '请您先输入企业名称'
-                      : ''
-                  "
-                  >查询天眼查信息</zj-button
-                >
+                  type="primary"
+                  @click="searchEye">确定</zj-button
+                > -->
               </template>
-              <template v-else>
+              <!-- <template v-else>
                 {{ form.name }}
-              </template>
+              </template> -->
             </el-form-item>
           </el-col>
           <el-col :span="8">
             <el-form-item label="企业简称：" prop="shortName">
-              <el-input v-model="form.shortName" :disabled="isDetail" />
+              <el-input
+                v-model="form.shortName"
+                :disabled="isDetail || isEdit"
+              />
             </el-form-item>
           </el-col>
           <el-col :span="8">
@@ -44,11 +40,49 @@
               <el-input v-model="form.customCode" :disabled="isDetail" />
             </el-form-item>
           </el-col>
-          <el-col span="24">
+          <el-col :span="24">
             <el-form-item label="平台客户类型：" prop="entType">
               <el-radio-group v-model="form.entType" @change="entTypeChange">
                 <el-radio
-                  v-for="item in dictionary.entTypeList"
+                  v-for="item in [
+                    { code: 'B', desc: '核心企业' },
+                    { code: 'BL', desc: '保理公司' },
+                  ]"
+                  :key="item.code"
+                  :label="item.code"
+                  :disabled="isDetail || isEdit"
+                  >{{ item.desc }}</el-radio
+                >
+              </el-radio-group>
+            </el-form-item>
+          </el-col>
+          <el-col :span="24" v-show="form.entType === 'B'">
+            <el-form-item label="是否海天集团：" prop="isHtEnterprise">
+              <el-radio-group v-model="form.isHtEnterprise">
+                <el-radio
+                  v-for="item in [
+                    { code: '1', desc: '是' },
+                    { code: '0', desc: '否' },
+                  ]"
+                  :key="item.code"
+                  :label="item.code"
+                  :disabled="isDetail || isEdit"
+                  >{{ item.desc }}</el-radio
+                >
+              </el-radio-group>
+            </el-form-item>
+          </el-col>
+          <el-col
+            :span="24"
+            v-show="form.isHtEnterprise === '1' && form.entType === 'B'"
+          >
+            <el-form-item label="是否双岗：" prop="isDoublePost">
+              <el-radio-group v-model="form.isDoublePost">
+                <el-radio
+                  v-for="item in [
+                    { code: '1', desc: '是' },
+                    { code: '0', desc: '否' },
+                  ]"
                   :key="item.code"
                   :label="item.code"
                   :disabled="isDetail || isEdit"
@@ -63,47 +97,67 @@
               prop="bizLicence"
               class="bizLicence"
             >
-              <template v-if="pageType === 'add'">
-                <el-input v-model="form.bizLicence" :maxLength="18" />
-              </template>
-              <template v-else>
-                {{ form.bizLicence }}
+              <template>
+                <el-input
+                  v-model="form.bizLicence"
+                  :maxLength="18"
+                  :disabled="isDetail || isEdit"
+                />
               </template>
             </el-form-item>
           </el-col>
           <el-col :span="8">
             <el-form-item label="纳税人识别号：" prop="invoiceTaxpayerId">
-              <el-input v-model="form.invoiceTaxpayerId" :disabled="isDetail" />
+              <el-input
+                v-model="form.invoiceTaxpayerId"
+                :disabled="isDetail || isEdit"
+              />
             </el-form-item>
           </el-col>
           <el-col :span="8">
-            <el-form-item label="成立日期：" prop="invoiceTaxpayerId">
-              <zj-date-picker v-model="form.expireDateStart" />
+            <el-form-item label="成立日期：" prop="registerStartDate">
+              <zj-date-picker
+                :date.sync="form.registerStartDate"
+                :disabled="isDetail || isEdit"
+              />
             </el-form-item>
           </el-col>
           <el-col :span="8">
-            <el-form-item label="注册资本：" prop="invoiceTaxpayerId">
-              <el-input v-model="form.invoiceTaxpayerId" :disabled="isDetail" />
+            <el-form-item label="注册资本：" prop="registerCapital">
+              <el-input
+                v-model="form.registerCapital"
+                :disabled="isDetail || isEdit"
+              />
             </el-form-item>
           </el-col>
           <el-col :span="8">
-            <el-form-item label="企业工商有效期：" prop="invoiceTaxpayerId">
-              <el-input v-model="form.invoiceTaxpayerId" :disabled="isDetail" />
+            <el-form-item label="企业工商有效期：" prop="registerEndDate">
+              <zj-date-picker
+                :date.sync="form.registerEndDate"
+                :disabled="isDetail || isEdit"
+              />
             </el-form-item>
           </el-col>
           <el-col :span="8">
-            <el-form-item label="企业规模：" prop="invoiceTaxpayerId">
-              <el-input v-model="form.invoiceTaxpayerId" :disabled="isDetail" />
+            <el-form-item label="企业规模：" prop="scale">
+              <el-input v-model="form.scale" />
             </el-form-item>
           </el-col>
           <el-col :span="8">
-            <el-form-item label="企业经营类型：" prop="invoiceTaxpayerId">
-              <el-input v-model="form.invoiceTaxpayerId" :disabled="isDetail" />
+            <el-form-item label="企业经营类型：" prop="custType">
+              <el-select v-model="form.entType" :disabled="isDetail">
+                <el-option
+                  v-for="(item, index) in dictionary.entTypeList"
+                  :key="index"
+                  :value="item.code"
+                  :label="item.desc"
+                ></el-option>
+              </el-select>
             </el-form-item>
           </el-col>
           <el-col :span="16">
-            <el-form-item label="营业执照注册地址：" prop="invoiceTaxpayerId">
-              <el-input v-model="form.invoiceTaxpayerId" :disabled="isDetail" />
+            <el-form-item label="营业执照注册地址：" prop="address">
+              <el-input v-model="form.address" :disabled="isDetail || isEdit" />
             </el-form-item>
           </el-col>
         </el-row>
@@ -129,7 +183,10 @@
           <h4 class="bl zj-m-l-20 mb-10">法人信息</h4>
           <el-col :span="8">
             <el-form-item label="法定代表人姓名：" prop="legalPersonName">
-              <el-input v-model="form.legalPersonName" :disabled="isDetail" />
+              <el-input
+                v-model="form.legalPersonName"
+                :disabled="isDetail || isEdit"
+              />
             </el-form-item>
           </el-col>
 
@@ -158,34 +215,34 @@
         <el-row>
           <h4 class="bl zj-m-l-20 mb-10">银行账户信息（选填）</h4>
           <el-col :span="8">
-            <el-form-item label="银行账户名称：" prop="legalPersonName">
-              <el-input v-model="form.legalPersonName" :disabled="isDetail" />
+            <el-form-item label="银行账户名称：" prop="bankAccname">
+              <el-input v-model="form.bankAccname" :disabled="isDetail" />
             </el-form-item>
           </el-col>
           <el-col :span="8">
-            <el-form-item label="银行账号：" prop="legalCertNo">
-              <el-input v-model="form.legalCertNo" :disabled="isDetail" />
+            <el-form-item label="银行账号：" prop="bankAccno">
+              <el-input v-model="form.bankAccno" :disabled="isDetail" />
             </el-form-item>
           </el-col>
           <el-col :span="8">
-            <el-form-item label="银行账户开户行：" prop="legalCertNo">
-              <el-input v-model="form.legalCertNo" :disabled="isDetail" />
+            <el-form-item label="银行账户开户行：" prop="bankName">
+              <el-input v-model="form.bankName" :disabled="isDetail" />
             </el-form-item>
           </el-col>
           <el-col :span="8">
-            <el-form-item label="银行联行号：" prop="legalCertNo">
-              <el-input v-model="form.legalCertNo" :disabled="isDetail" />
+            <el-form-item label="银行联行号：" prop="bankNo">
+              <el-input v-model="form.bankNo" :disabled="isDetail" />
             </el-form-item>
           </el-col>
           <el-col :span="8">
-            <el-form-item label="银行类型：" prop="companyType">
+            <el-form-item label="银行类型：" prop="bankType">
               <el-select
-                v-model="form.companyType"
+                v-model="form.bankType"
                 :popper-append-to-body="false"
                 :disabled="isDetail"
               >
                 <el-option
-                  v-for="(item, index) in dictionary.companyTypeList"
+                  v-for="(item, index) in dictionary.bankTypeList"
                   :key="index"
                   :value="item.code"
                   :label="item.desc"
@@ -197,14 +254,14 @@
         <el-row>
           <h4 class="bl zj-m-l-20 mb-10">控制人信息</h4>
           <el-col :span="8">
-            <el-form-item label="控制人姓名：" prop="legalPersonName">
-              <el-input v-model="form.legalPersonName" :disabled="isDetail" />
+            <el-form-item label="控制人姓名：" prop="actualController">
+              <el-input v-model="form.actualController" :disabled="isDetail" />
             </el-form-item>
           </el-col>
 
           <el-col :span="8">
-            <el-form-item label="控制人身份证号：" prop="legalCertNo">
-              <el-input v-model="form.legalCertNo" :disabled="isDetail" />
+            <el-form-item label="控制人身份证号：" prop="controllerCertNo">
+              <el-input v-model="form.controllerCertNo" :disabled="isDetail" />
             </el-form-item>
           </el-col>
           <el-col :span="8">
@@ -216,9 +273,9 @@
               <zj-date-range-picker
                 class="no-icon legalDates"
                 :clearable="false"
-                :startDate.sync="form.legalCertRegDate"
+                :startDate.sync="form.controllerCertRegDate"
                 @startChange="valueChange('legalCertRegDate')"
-                :endDate.sync="form.legalCertExpireDate"
+                :endDate.sync="form.controllerCertExpireDate"
                 @endChange="valueChange('legalCertExpireDate')"
                 :disabled="isDetail"
               />
@@ -232,7 +289,7 @@
         <zj-header title="企业操作员" />
         <zj-content>
           <zj-button
-            class="append mb-10"
+            class="append zj-m-b-10"
             icon="el-icon-circle-plus-outline"
             @click="sysUserAdd"
             >新增</zj-button
@@ -241,6 +298,7 @@
             ref="sysUser"
             :dataList="form.sysUserList"
             :pager="false"
+            @radio-change="handleRadioChange"
             keep-source
             auto-resize
             :edit-config="{
@@ -252,6 +310,11 @@
             }"
             class="sysUserAdd"
           >
+            <zj-table-column
+              type="radio"
+              width="40px"
+              fixed="left"
+            ></zj-table-column>
             <zj-table-column
               field="userName"
               title="姓名"
@@ -273,7 +336,7 @@
               :edit-render="{ name: '$input' }"
             />
             <zj-table-column
-              field="email"
+              field="htSysCode"
               title="内部系统账号"
               :edit-render="{ name: '$input' }"
             />
@@ -282,7 +345,7 @@
               title="操作员角色"
               :edit-render="{
                 name: '$select',
-                options: dictionary.sysRoleTableList,
+                options: dictionary.roleIdListTableList,
               }"
             />
             <zj-table-column title="操作">
@@ -306,6 +369,21 @@
               </template>
             </zj-table-column>
           </zj-table>
+          <zj-content>
+            <h4>请选择开凭证对账单类型权限</h4>
+            <el-select
+              v-model="form.bankType"
+              :popper-append-to-body="false"
+              :disabled="isDetail"
+            >
+              <el-option
+                v-for="(item, index) in dictionary.bankTypeList"
+                :key="index"
+                :value="item.code"
+                :label="item.desc"
+              />
+            </el-select>
+          </zj-content>
         </zj-content>
       </zj-content-block>
       <!-- 企业附件 -->
@@ -397,9 +475,9 @@
         </el-row>
         <el-row>
           <el-col :span="8">
-            <el-form-item label="开户行：" prop="invoicePhone">
+            <el-form-item label="开户行：" prop="invoiceBankInfo">
               <el-input
-                v-model="form.invoicePhone"
+                v-model="form.invoiceBankInfo"
                 @input="invoiceOneAndAll"
                 :disabled="isDetail"
               />
@@ -419,21 +497,10 @@
       <!--  其他附件    -->
       <other-file-setting
         ref="ofileSetting"
-        is-edit="isEdit"
       ></other-file-setting>
       <!--  操作记录  -->
-      <operate-log></operate-log>
+      <operate-log ref="operateLog" :logList="logList"></operate-log>
     </el-form>
-    <zj-content-footer>
-      <zj-button type="primary" @click="submit" v-if="pageType !== 'detail'"
-        >提交申请</zj-button
-      >
-      <zj-button class="back" @click="back">返回</zj-button>
-    </zj-content-footer>
-
-    <!-- 天眼查 -->
-    <eyeDialog ref="eyeDialog" :entName="form.name" @eyeReturn="eyeReturn" />
-    <orderDialog ref="orderDialog" />
   </zj-content-block>
 </template>
 
@@ -443,4 +510,15 @@ export default entManage;
 </script>
 
 <style scoped lang="less">
+/deep/ .zj-date-range-picker {
+  width: 100px;
+  .el-input__inner {
+    padding-left: 3px;
+  }
+  & ~ span {
+    display: inline-block;
+    width: 20px;
+    text-align: center;
+  }
+}
 </style>

@@ -60,7 +60,14 @@ export default {
     // 最大允许上传个数
     limit: Number,
     // 文件超出个数限制时的钩子 function(files, fileList)
-    onExceed: Function
+    onExceed: Function,
+    // 支持的附件类型
+    acceptType: String,
+    // 支持上传的文件大小，默认5M
+    uploadSize: {
+      type: Number,
+      default: 5
+    }
   },
   computed: {
     // upload基本属性
@@ -81,7 +88,7 @@ export default {
         onError: this.onError,
         onProgress: this.onProgress,
         onChange: this.onChange,
-        beforeUpload: this.beforeUpload,
+        beforeUpload: this.handleBeforeFileUpload,
         beforeRemove: this.beforeRemove,
         listType: this.listType,
         autoUpload: this.autoUpload,
@@ -102,6 +109,46 @@ export default {
     }
   },
   methods: {
+    /**
+     * 自动文件上传前事件
+     * @param file
+     */
+    handleBeforeFileUpload(file){
+      if (this.acceptType) {
+        const fileName = file.name;
+        if (fileName) {
+          const names = fileName.split('.');
+          const fileType = names[1].toUpperCase();
+          const supportFileTypes = this.acceptType.toUpperCase().split(',');
+          if (!supportFileTypes.includes(fileType)) {
+            this.$messageBox({
+              type: 'warning',
+              content: `上传文件格式有误！只支持上传${supportFileTypes.join('、')}格式！`,
+              title: '提示',
+              showConfirmButton: true,
+              center: true
+            })
+            return false;
+          }
+        }
+      }else if (this.uploadSize) {
+        const toM = file.size / 1024 / 1024;
+        if (toM > this.uploadSize) {
+          this.$messageBox({
+            type: 'warning',
+            content: `上传文件过大，请控制文件大小在${this.uploadSize}M以内！`,
+            title: '提示',
+            showConfirmButton: true,
+            center: true
+          })
+          return false;
+        }
+      }
+      if (this.beforeUpload && typeof this.beforeUpload === 'function') {
+        return this.beforeUpload(file);
+      }
+      return true
+    },
     /** upload基本方法 */
     // 清空已上传的文件列表（该方法不支持在 before-upload 中调用）
     clearFiles () {

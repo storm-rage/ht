@@ -8,31 +8,38 @@
                 <el-form ref="searchForm" :model="searchForm">
                   <el-form-item label="凭证开立/转让日期：">
                     <zj-date-range-picker
-                      :startDate.sync="searchForm.voucherDateStart"
-                      :endDate.sync="searchForm.voucherDateEnd"
+                      :startDate.sync="searchForm.stateChangeDateStart"
+                      :endDate.sync="searchForm.stateChangeDateEnd"
                     ></zj-date-range-picker>
                   </el-form-item>
                   <el-form-item label="签发人/转让方：">
-                    <el-input v-model="searchForm.voucherCode" @keyup.enter.native="search"></el-input>
+                    <el-input v-model="searchForm.fromEntNameLike" @keyup.enter.native="search"></el-input>
                   </el-form-item>
                   <el-form-item label="凭证金额：">
-                    <zj-amount-range :startAmt.sync="searchForm.ebillAmtStart" :endAmt.sync="searchForm.ebillAmtEnd"></zj-amount-range>
+                    <zj-amount-range :startAmt.sync="searchForm.ebillAmt" :endAmt.sync="searchForm.ebillAmt"></zj-amount-range>
                   </el-form-item>
                   <el-form-item label="签收类型：">
-                    <el-select v-model="searchForm.signType">
-                      <el-option label="全部"></el-option>
+                    <el-select v-model="searchForm.operType" v-if="dictionary">
+                      <el-option label="全部" value=""></el-option>
+                      <el-option
+                        v-for="item in dictionary.openType"
+                        :label="item.desc"
+                        :value="item.code"
+                        :key="item.code"
+                      />
                     </el-select>
                   </el-form-item>
                 </el-form>
               </template>
-              <zj-table ref="searchTable" :dataList="list" >
-                <zj-table-column field="field1" title="凭证编号"/>
-                <zj-table-column field="field3" title="签发人/转让方"/>
-                <zj-table-column field="field3" title="签收类型" />
-                <zj-table-column field="field4" title="凭证金额" :formatter="money"/>
-                <zj-table-column field="field5" title="凭证到期日" :formatter="date"/>
-                <zj-table-column field="field5" title="凭证开立/转让日期" :formatter="date"/>
-                <zj-table-column field="field5" title="操作">
+              <zj-table ref="searchTable" :api="zjControl.queryBillSignPage" :params="searchForm">
+<!--              <zj-table ref="searchTable"  :dataList="list">-->
+                <zj-table-column field="ebillCode" title="凭证编号"/>
+                <zj-table-column field="fromEntName" title="签发人/转让方"/>
+                <zj-table-column field="operType" title="签收类型" :formatter="obj=>typeMap(dictionary.openType,obj.cellValue)"/>
+                <zj-table-column field="ebillAmt" title="凭证金额" :formatter="money"/>
+                <zj-table-column field="expireDate" title="凭证到期日" :formatter="date"/>
+                <zj-table-column field="stateChangeDate" title="凭证开立/转让日期" :formatter="date"/>
+                <zj-table-column title="操作">
                   <template v-slot="{row}">
                     <zj-button type="text" @click="signFor(row)">签收</zj-button>
                     <zj-button type="text" @click="refuseSignFor(row)">拒签</zj-button>
@@ -42,11 +49,12 @@
             </zj-list-layout>
           </div>
     </zj-content-container>
-    <reject-dialog ref="rejectDialog"/>
+    <reject-dialog ref="rejectDialog" :zjControl="zjControl" :id="rowId" :state="rowState"/>
   </div>
 </template>
 <script>
 import rejectDialog from './components/rejectDialog'
+import billLssueMyBill from "../../../api/billLssueBillSignForApi";
 
 export default {
   components: {
@@ -54,15 +62,20 @@ export default {
   },
   data() {
     return {
-      searchEntForm: {
-        entState: '',
+      zjControl: {
+        getBillSignBillInfoDetail:this.$api.billLssueBillSignFor.getBillSignBillInfoDetail,//凭证签收-详情
+        getBillSignDictionary:this.$api.billLssueBillSignFor.getBillSignDictionary,//获取数据字典
+        getOneBillSignAgreement:this.$api.billLssueBillSignFor.getOneBillSignAgreement,//融单签收-查询融单签收协议信息-单个协议查看
+        passBillSign:this.$api.billLssueBillSignFor.passBillSign,//融单签收-审核通过
+        queryBillSignPage:this.$api.billLssueBillSignFor.queryBillSignPage,//凭证签收-查询
+        rejectBillSign:this.$api.billLssueBillSignFor.rejectBillSign,//融单签收-审批拒绝
       },
       searchForm: {
-        supplierName: '',
-        businessType: '',
-        productType: '',
-        productNo: '',
-        productState: '',
+        stateChangeDateStart: '',
+        stateChangeDateEnd: '',
+        fromEntNameLike: '',
+        ebillAmt: '',
+        operType: '',
       },
       list: [
         {
@@ -72,41 +85,40 @@ export default {
           field4: '订单保理',
           field5: '2022.09.08 11:18:19',
           field6: '生效',
-          field7: '是'
+          field7: '是',
+          id: '1',
+          state: 'B002',
         }
       ],
-      tradeList: []
+      dictionary: {},
+      rowId: '',
+      rowState: '',
     };
   },
   methods: {
-    //凭证签发人/转让企业改变事件
-    entChange(){
-
+    getBillSignDictionary(){
+      this.zjControl.getBillSignDictionary().then(res=>{
+        this.dictionary = res.data
+      })
     },
     toContractSign(row) {
       console.log(row);
-    },
-    handleRadioChange({row}) {
-      this.tradeList.push({
-        field1: '佛山市a有限公司',
-        field2: '是',
-        field3: '756756756767',
-        field4: '非保理',
-        field5: '12',
-        field6: '1000',
-        field7: '2000',
-        field8: '正常'
-      })
     },
     toDetail (row) {
       this.goChild('productInfoManageDetail', row)
     },
     signFor (row) {
-      this.goChild('voucherSignForDetail', row)
+      this.goChild('billSignForDetail', row)
     },
     refuseSignFor(row) {
-      this.$refs.rejectDialog.open({form: this.form}, true)
+      this.rowId = row.id
+      this.rowState = row.state
+      this.$refs.rejectDialog.open({form: this.form}, true, row)
     },
+  },
+  created() {
+    this.getApi()
+    this.getBillSignDictionary()
   }
 };
 </script>

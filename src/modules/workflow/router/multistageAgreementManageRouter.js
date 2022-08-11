@@ -1,7 +1,7 @@
 const multistageAgreementManageRouter = [
   {
-    path: '/multistageAgreementManage',
-    name: 'multistageAgreementManage',
+    path: '/frontBackAgreeManage',
+    name: 'frontBackAgreeManage',
     component: () => import('../views/multistageAgreementManage/index'),
     meta: {
       isMock: true,
@@ -21,7 +21,7 @@ const multistageAgreementManageRouter = [
       title: '阶段性协议维护',
       root: '阶段性协议管理',
       keepAlive: true,
-      parent:'multistageAgreementManage',
+      parent:'frontBackAgreeManage',
       refreshIndex: 0,
       notRequireAuth: true
     }
@@ -35,7 +35,7 @@ const multistageAgreementManageRouter = [
       title: '阶段性协议详情',
       root: '阶段性协议管理',
       keepAlive: true,
-      parent:'multistageAgreementManage',
+      parent:'frontBackAgreeManage',
       refreshIndex: 0,
       notRequireAuth: true
     }
@@ -49,7 +49,7 @@ const multistageAgreementManageRouter = [
       title: '阶段性协议维护交易详情',
       root: '阶段性协议管理',
       keepAlive: true,
-      parent:'multistageAgreementManage',
+      parent:'frontBackAgreeManage',
       refreshIndex: 0,
       notRequireAuth: true
     }

@@ -9,6 +9,10 @@ const userInfoManage = {
   queryUserPage:(params) => {
     return request.get('/sys-user/query-enterprise-users-page',{params})
   },
+  //企业用户维护记录列表查询
+  queryLogsPage:(params) => {
+    return request.get('/sys-user/query-enterprise-users-logs-page',{params})
+  },
   //企业用户数据字典
   getUserDictionary:()=>{
     return request.get('/sys-user/get-sys-user-dictionary')
@@ -80,6 +84,10 @@ const userInfoManage = {
   //修改企业用户
   updateUser:(params) => {
     return request.post('/sys-user/update-user',params)
+  },
+   //获取企业信息-确认
+   getEnterpriseConfirm:(params) => {
+    return request.post('/sys-user/get-sys-enterprise-confirm', params )
   },
   //获取维护记录字典
   getUserLogsDictionary:() => {
