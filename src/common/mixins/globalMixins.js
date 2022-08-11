@@ -97,21 +97,31 @@ export default {
             this.beforeResetSearch()
           }
 
-          for(let key in this.searchForm){
-            if(this.searchFormWhiteList && this.searchFormWhiteList.findIndex(item => item===key) >=0){
-              this.searchForm[key] = this.searchForm[key]
-            }else if(Array.isArray(this.searchForm[key])){
-              this.searchForm[key] = []
-            }else if(typeof(this.searchForm[key]) === 'boolean'){
-              this.searchForm[key] = false
-            }else{
-              this.searchForm[key] = ''
-            }
+          if (!this.searchForm&&this.$parent.$data.searchForm) {
+            this.resetSearchForm(this.$parent.$data.searchForm)
+          }else if (!this.searchForm&&this.$parent.$parent.$data.searchForm) {
+            this.resetSearchForm(this.$parent.$parent.$data.searchForm)
+          }else{
+            this.resetSearchForm(this.searchForm)
           }
+          
           if(this.afterResetSearch && typeof(this.afterResetSearch) === 'function'){
             this.afterResetSearch()
           }
           this.search(boo)
+        },
+        resetSearchForm(searchForm){
+          for(let key in searchForm){
+            if(this.searchFormWhiteList && this.searchFormWhiteList.findIndex(item => item===key) >=0){
+              searchForm[key] = searchForm[key]
+            }else if(Array.isArray(searchForm[key])){
+              searchForm[key] = []
+            }else if(typeof(searchForm[key]) === 'boolean'){
+              searchForm[key] = false
+            }else{
+              this.$set(searchForm,key,'');
+            }
+          }
         },
         goChild(routerName,row = {}){
           if(this.beforeGoChild && typeof(this.beforeGoChild) === 'function'){
