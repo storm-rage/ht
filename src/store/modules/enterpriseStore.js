@@ -1,4 +1,3 @@
-import i18n from '@common/i18n';
 import {getMenuPower} from '@utils/menuTree';
 // 企业store，一个用户多个企业
 const state = {
@@ -13,15 +12,7 @@ const state = {
 const getters = {
   entName: (state) => {
     if (state.entInfo.entName) {
-      i18n.setLocaleMessage('zifp', {
-        'lang': {
-          'domain': 'zifp',
-          'financingName': state.entInfo.entName
-        }
-      })
       return state.entInfo.entName;
-    } else {
-      return  '融单'
     }
   }
 };
@@ -42,14 +33,21 @@ const actions = {
   setEntList ({ commit }, value) {
     commit('SET_ENT_LIST', value)
   },
+  //保存企业信息
+  saveEntInfo({commit}, entList) {
+    // 设置项目列表
+    commit('SET_ENT_LIST', entList)
+    if (entList && entList.length) {
+      commit('SET_ENT_INFO', entList[0]);
+    }
+  },
   // 切换企业
   changeEnt({commit, state, dispatch},{data,entInfo}) {
     if (data.entList&&data.entList.length) {
       commit('SET_ENT_INFO', entInfo)
     }
-    dispatch('menu/setMenuTreeList', data.resList,{ root: true })
-    dispatch('menu/setMenuList', data.resList,{ root: true })
-    dispatch('menu/setNavMenuActive', '0',{ root: true })
+    dispatch('menu/saveMenuTreeList', data.resList,{ root: true })
+    // dispatch('menu/setNavMenuActive', '0',{ root: true })
     dispatch('user/setUserPower', getMenuPower(data.resList),{ root: true })
   }
 }

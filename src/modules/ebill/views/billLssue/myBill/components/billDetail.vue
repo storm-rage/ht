@@ -54,16 +54,16 @@
           <tr>
             <td colspan="8"><span class="underline red"></span></td>
           </tr>
-          <tr>
-            <td colspan="8" align="left">
-              <div class="">签章处:</div>
-              <div>
-                <!-- <span v-for="item in detailData.billInfo.entSignatures" :key="item">
-                      <img :src="'data:image/png;base64,'+item" alt="签章图片" width="150" height="150">
-                    </span> -->
-              </div>
-            </td>
-          </tr>
+<!--          <tr>-->
+<!--            <td colspan="8" align="left">-->
+<!--              <div class="">签章处:</div>-->
+<!--              <div>-->
+<!--                &lt;!&ndash; <span v-for="item in detailData.billInfo.entSignatures" :key="item">-->
+<!--                      <img :src="'data:image/png;base64,'+item" alt="签章图片" width="150" height="150">-->
+<!--                    </span> &ndash;&gt;-->
+<!--              </div>-->
+<!--            </td>-->
+<!--          </tr>-->
         </table>
       </zj-collapse>
     </zj-content>
