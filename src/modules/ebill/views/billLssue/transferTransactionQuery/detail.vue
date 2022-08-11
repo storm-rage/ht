@@ -22,7 +22,7 @@
               <el-form-item label="转让凭证总数：">{{detail.tranNumber}}</el-form-item>
             </el-col>
             <el-col :span="8">
-              <el-form-item label="转让总金额：">{{detail.tranAmt}}元</el-form-item>
+              <el-form-item label="转让总金额：">{{detail.tranAmt ? `${detail.tranAmt}元` : ''}}</el-form-item>
             </el-col>
           </el-row>
         </el-form>
