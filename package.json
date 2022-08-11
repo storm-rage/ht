@@ -53,8 +53,8 @@
     "less": "^3.11.3",
     "less-loader": "^6.1.0",
     "mockjs": "^1.1.0",
-    "sass": "^1.23.7",
-    "sass-loader": "^8.0.0",
+    "sass": "~1.23.7",
+    "sass-loader": "~8.0.0",
     "vue-template-compiler": "^2.6.11"
   },
   "eslintConfig": {
