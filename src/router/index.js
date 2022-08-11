@@ -18,6 +18,39 @@ const router = new Router({
   mode: 'history',
   fallback: true
 })
+// 处理单点登录
+router.beforeResolve((to, from, next) => {
+  const searchParams = window.location.search
+  if (searchParams && searchParams.indexOf('?token') >= 0&&to.name!=='signAgreement') {
+    const query = searchParams.split('&');
+    const tokenQuery = query[0].split('=')
+    const token = tokenQuery[1];
+    if (token) {
+      store.dispatch('user/ssoTokenLogin',token).then((res) => {
+        if (res.isSuccess) {
+          if (res.needSignAgreement) {
+            next({
+              path: '/signAgreement',
+              params:{
+                rowData:res.model
+              }
+            })
+          }else {
+            window.location.href='/home';
+          }
+        }else {
+          // window.location.href='/login';
+        }
+      }).catch(() => {
+        // window.location.href='/login';
+      })
+    }else {
+      // window.location.href='/login';
+    }
+  }else {
+   next();
+  }
+});
 router.beforeEach((to, from, next) => {
   // 需要确认权限
   if (!to.meta.notRequireAuth) {
@@ -39,7 +72,7 @@ router.beforeEach((to, from, next) => {
         routerName = to.name
       }
       const key = powerArr.includes(routerName)
-      if(!to.meta.notRequireAuth && !key && to.name!== 'home' && to.name !== 'whith'){
+      if(!to.meta.notRequireAuth && !key && to.name!== 'home'){
         Message.error('当前用户无此菜单权限，如有疑问，请联系系统管理员！')
         window.setTimeout(()=>{
           router.replace({name:from.name})
@@ -63,7 +96,7 @@ router.beforeEach((to, from, next) => {
   }
   //头部标题
   if (to.meta.title) {
-    window.document.title = to.meta.title.replace(new RegExp("\\{0\\}","g"),store.getters['project/productName'])
+    window.document.title = to.meta.title
   } else {
     let menu = store.state.menu.menuList.find(item => item.url === to.name)
     window.document.title = menu ? menu.name : process.env.VUE_APP_TITLE

@@ -36,7 +36,6 @@
 import ContentHeader from  './contentHeader.vue';
 import Agreement from './agreement';
 import FaceRecognition from './faceRecognition';
-import {getMenuPower} from "@utils/menuTree";
 export default {
   props: {
     userInfos: {
@@ -59,12 +58,6 @@ export default {
   },
   data() {
     return {
-      zjControl:{
-        getFaceQrode:this.$api.login.getFaceQrode,//获取二维码
-        queryFaceResult:this.$api.login.queryFaceResult,//结果查询
-        queryUserProtocol:this.$api.login.queryUserProtocol,//协议查询
-        signUserProtocol:this.$api.login.signUserProtocol,//人脸签署
-      },
       //是否成功
       isSuccess: true,
       // 是否显示人脸识别
@@ -114,30 +107,9 @@ export default {
     },
     //保存相关信息
     saveInfo(loginRes){
-      // 设置项目列表
-      this.$store.dispatch('enterprise/setEntList', loginRes.projectList);
-      if (loginRes.entInfoList&&loginRes.entInfoList.length&&!loginRes.currentEnt) {
-        this.$store.dispatch('enterprise/setEntInfo', loginRes.projectList[0]);
-      } else if(loginRes.currentEnt) {
-        this.$store.dispatch('enterprise/setEntInfo', loginRes.currentEnt);
-      }
-      // 保存菜单树
-      this.$store.dispatch('menu/setMenuTreeList', JSON.parse(JSON.stringify(loginRes.resList)));
-      // 保存菜单列表
-      this.$store.dispatch('menu/setMenuList', JSON.parse(JSON.stringify(loginRes.resList)));
-      // 保存用户信息
-      this.$store.dispatch('user/setUserInfo', {
-        userName: loginRes.userName,
-        loginName: loginRes.loginName,
-        entName: loginRes.entName,
-        entType:loginRes.entType,
-        entId:loginRes.entId,
-        mobileNo:loginRes.mobileNo,
-        power:getMenuPower(loginRes.resList),
-        signZJDJBFlag:loginRes.signZJDJBFlag
-      })
+      this.$store.dispatch('user/saveUserInfo', loginRes);
       //设置默认到账户中心
-      this.$store.dispatch('menu/setNavMenuActive', '0')
+      // this.$store.dispatch('menu/setNavMenuActive', '0')
     }
   }
 };
