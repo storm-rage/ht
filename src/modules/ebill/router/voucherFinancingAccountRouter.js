@@ -1,7 +1,7 @@
 const voucherFinancingAccountRouter = [
   {
-    path: '/voucherFinancingAccount',
-    name: 'voucherFinancingAccount',
+    path: '/rdFactoringLedger',
+    name: 'rdFactoringLedger',
     component: () => import('../views/queryStatistics/voucherFinancingAccount'),
     meta: {
       isMock: true,
@@ -13,8 +13,8 @@ const voucherFinancingAccountRouter = [
     }
   },
   {
-    path: '/voucherFinancingAccountDetail',
-    name: 'voucherFinancingAccountDetail',
+    path: '/rdFactoringLedgerDetail',
+    name: 'rdFactoringLedgerDetail',
     component: () => import('../views/queryStatistics/voucherFinancingAccount/detail'),
     meta: {
       isMock: true,
@@ -22,7 +22,7 @@ const voucherFinancingAccountRouter = [
       root: '查询统计',
       keepAlive: true,
       refreshIndex: 0,
-      parent:'voucherFinancingAccount',
+      parent:'rdFactoringLedger',
       notRequireAuth: true
     }
   },
