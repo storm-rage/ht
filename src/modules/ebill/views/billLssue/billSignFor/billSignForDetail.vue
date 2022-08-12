@@ -76,8 +76,10 @@
       </table>
       <el-row class="zj-center">
         <el-checkbox v-model="agreeCheck">已阅读并同意</el-checkbox>
-        <zj-button type="text" @click="getOneBillSignAgreement(item)"
-                   v-for="(item, index) in protocols" :key="index"
+        <zj-button type="text"
+                   @click="getOneBillSignAgreement(item)"
+                   v-for="(item, index) in protocols"
+                   :key="index"
         >《{{ item.protocolName }}》</zj-button>
       </el-row>
 

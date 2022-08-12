@@ -22,8 +22,8 @@
             </el-col>
             <el-col :span="12">
               <el-form-item label="融资申请金额：">
-                <span>{{moneyNoSynbol(detail.tranAmt)}}</span>
-                <span>{{digitUp(detail.tranAmt)}}</span>
+                <span>{{detail.tranAmt ? moneyNoSynbol(detail.tranAmt) : ''}}</span>
+                <span>{{detail.tranAmt ? digitUp(detail.tranAmt) : ''}}</span>
               </el-form-item>
             </el-col>
           </el-row>
@@ -31,8 +31,8 @@
             <el-col :span="12">
               <el-form-item label="融资期限：">
                 {{date(detail.applyDatetime)}}
-                至{{date(detail.expireDate)}}
-                共{{detail.estimateDays}}
+                {{detail.expireDate ? `至`+date(detail.expireDate) : ''}}
+                {{detail.estimateDays ? `共${detail.estimateDays}` : ''}}
               </el-form-item>
             </el-col>
             <el-col :span="12">
@@ -108,8 +108,8 @@ export default {
   data() {
     return {
       zjControl: {
-        //getMyFinancingDetail:this.$api.myFinancing.getMyFinancingDetail,//我的融资-详情
-        //getMyFinancingDirectory:this.$api.myFinancing.getMyFinancingDirectory,//我的融资-获取数据字典
+        getMyFinancingDetail:this.$api.myFinancing.getMyFinancingDetail,//我的融资-详情
+        getMyFinancingDirectory:this.$api.myFinancing.getMyFinancingDirectory,//我的融资-获取数据字典
         downloadFile:this.$api.baseCommon.downloadFile,
       },
       detail:{},

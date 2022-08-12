@@ -56,7 +56,7 @@
       </zj-content-block>
       <zj-content-block>
         <zj-header :title="`贸易背景资料-${dataForm.accountBillInner?dataForm.accountBillInner[0].acctBillCode:''}`"/>
-        <el-tabs v-model="tabs" type="card" class="zj-tabs-card">
+        <el-tabs v-model="tabs" class="zj-tabs-card">
           <el-tab-pane label="贸易合同信息" name="tradeContract" >
             <trade-contract :zjControl="zjControl" :form="dataForm.contractInfo"/>
           </el-tab-pane>

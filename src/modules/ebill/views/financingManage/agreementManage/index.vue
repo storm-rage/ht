@@ -1,14 +1,16 @@
 <template>
   <zj-content-container>
     <!--  阶段性协议管理  -->
-    <el-tabs v-model="tabs" type="card" class="zj-tabs-card">
-      <el-tab-pane label="阶段性协议维护" name="multistageAgreementMaintain" >
-        <multistage-agreement-maintain :zjControl="zjControl" :dictionary="dictionary" @update="handleContractInfo" :mBtn="zjBtn"/>
-      </el-tab-pane>
-      <el-tab-pane label="我的阶段性协议" name="myMultistageAgreement" >
-        <my-multistage-agreement :zjControl="zjControl" :dictionary="dictionary" :mBtn="zjBtn"/>
-      </el-tab-pane>
-    </el-tabs>
+    <zj-content-block>
+      <el-tabs v-model="tabs" class="zj-tabs-card zj-p-l-16 zj-p-r-16">
+        <el-tab-pane label="阶段性协议维护" name="multistageAgreementMaintain" >
+          <multistage-agreement-maintain :zjControl="zjControl" :dictionary="dictionary" @update="handleContractInfo" :mBtn="zjBtn"/>
+        </el-tab-pane>
+        <el-tab-pane label="我的阶段性协议" name="myMultistageAgreement" >
+          <my-multistage-agreement :zjControl="zjControl" :dictionary="dictionary" :mBtn="zjBtn"/>
+        </el-tab-pane>
+      </el-tabs>
+    </zj-content-block>
     <zj-content-footer>
       <zj-button type="primary" @click="submit" v-if="tabs === 'multistageAgreementMaintain'" :api="zjBtn.submitPhasedAgree">提交</zj-button>
       <zj-button status="back" @click="back">返回</zj-button>
