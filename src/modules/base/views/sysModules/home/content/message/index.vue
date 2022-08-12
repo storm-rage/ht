@@ -5,19 +5,28 @@
         <right-more-btn @click.native="toMore"></right-more-btn>
       </template>
     </zj-header>
-    <div class="message-list-block">
-      <list-item-block  v-for="(item,index) in list" :key="`${index}message`" is-round>
-        <template slot="title">{{item.title}}</template>
+    <div v-loading="loading" ref="messageList" class="message-list-block">
+      <list-item-block
+        v-for="(item, index) in list"
+        :key="`${index}message`"
+        is-round
+      >
+        <template slot="title">{{ item.title }}</template>
         <template slot="tip" v-if="item.isNotRead">&nbsp;</template>
-        <template slot="date">{{item.date}}</template>
+        <template slot="date">{{ item.date }}</template>
       </list-item-block>
+      <el-empty v-if="list.length === 0" style="padding: 0;">
+        <template slot="image">
+          <div></div>
+        </template>
+      </el-empty>
     </div>
   </home-content-block>
 </template>
 <script>
-import HomeContentBlock from '../../components/homeContentBlock';
-import RightMoreBtn from '../../components/rightMoreBtn';
-import ListItemBlock from '../../components/listItemBlock';
+import HomeContentBlock from '../../components/homeContentBlock'
+import RightMoreBtn from '../../components/rightMoreBtn'
+import ListItemBlock from '../../components/listItemBlock'
 export default {
   components: {
     HomeContentBlock,
@@ -26,63 +35,45 @@ export default {
   },
   data () {
     return {
-      list: [
-        {
-          title: '电子债券转让通知',
-          date: '2022-07-12',
-          isNotRead: true
-        },
-        {
-          title: '融单签收',
-          date: '2022-08-12',
-          isNotRead: true
-        },
-        {
-          title: '生长公司集团债券转让1200000.000很长0.000很长0.000很长0.000很长0.000很长0.000很长0.000很长0.000很长0.000很长0.000很长0.000很长',
-          date: '2022-08-12',
-          isNotRead: true
-        },
-        {
-          title: '广州公司很长司很长司很长司很长司很长司很长司很长司很长司很长司很长司很长司很长司很长司很长司很长司很长司很长',
-          date: '2022-08-12',
-          isNotRead: false
-        },
-        {
-          title: '广州公司很长司很长司很长司很长司很长司很长司很长司很长司很长司很长司很长司很长司很长司很长司很长司很长司很长',
-          date: '2022-08-12',
-          isNotRead: false
-        },
-        {
-          title: '广州公司很长司很长司很长司很长司很长司很长司很长司很长司很长司很长司很长司很长司很长司很长司很长司很长司很长',
-          date: '2022-08-12',
-          isNotRead: false
-        },
-        {
-          title: '广州公司很长司很长司很长司很长司很长司很长司很长司很长司很长司很长司很长司很长司很长司很长司很长司很长司很长',
-          date: '2022-08-12',
-          isNotRead: false
-        },
-        {
-          title: '广州公司很长司很长司很长司很长司很长司很长司很长司很长司很长司很长司很长司很长司很长司很长司很长司很长司很长',
-          date: '2022-08-12',
-          isNotRead: false
-        },
-      ]
+      loading: false,
+      zjControl: {
+        getMoreMessage: this.$api.home.getMoreMessage
+      },
+      list: []
     }
+  },
+  mounted () {
+    this.getApi()
+    this.getList()
   },
   methods: {
     toMore () {
       this.goChild('homeMessage')
+    },
+    getList () {
+      this.loading = true
+      this.$refs.messageList.style.minHeight = '60px'
+      this.zjControl
+        .getMoreMessage()
+        .then(res => {
+          this.list = res.data.rows || []
+          this.$refs.messageList.style.minHeight = ''
+          this.loading = false
+        })
+        .catch(err => {
+          this.loading = false
+          this.$refs.messageList.style.minHeight = ''
+        })
     }
   }
-};
+}
 </script>
 <style lang="less" scoped>
 .home-content-message {
-  .message-list-block {
-    overflow: auto;
-    margin: 0 -20px -20px;
-    padding: 0 20px 20px;
-  }
+  // .message-list-block {
+  //   overflow: auto;
+  //   margin: 0 -20px -20px;
+  //   padding: 0 20px 20px;
+  // }
 }
 </style>
