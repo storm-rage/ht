@@ -4,18 +4,13 @@
       <template slot="searchForm">
         <el-form ref="searchForm" :model="searchForm">
           <el-form-item label="买方企业名称：" class="col-center">
-            <el-input v-model.trim="searchForm.ebillCode" />
+            <el-input v-model.trim="searchForm.buyerEntName" />
           </el-form-item>
           <el-form-item label="卖方企业名称：" class="col-center">
-            <el-input v-model.trim="searchForm.ebillCode" />
+            <el-input v-model.trim="searchForm.sellerEntName" />
           </el-form-item>
           <el-form-item label="贸易关系状态：" class="col-center">
-            <el-select
-              v-model="searchForm.isGenerateVoucher"
-              placeholder="请选择"
-              clearable
-              :popper-append-to-body="false"
-            >
+            <el-select v-model="searchForm.state" placeholder="请选择" clearable :popper-append-to-body="false">
               <el-option value="" label="全部"></el-option>
               <!-- <el-option
               v-for="item in dictionary.isGenerateVouchers"
@@ -29,22 +24,11 @@
         </el-form>
       </template>
       <div class="zj-search-response">
-        <zj-button
-          class="zj-m-l-10 zj-m-t-10 zj-m-b-10 mb-10 mt-10"
-          type="primary"
-          @click="openDialog"
-          >新增</zj-button
-        >
+        <zj-button class="zj-m-l-10 zj-m-t-10 zj-m-b-10 mb-10 mt-10" type="primary" @click="openDialog">新增</zj-button>
         <zj-content style="padding-top: 0">
-          <zj-content-tip
-            text="注：证明材料可为买卖双方发票，贸易合同等证明双方真实贸易关系的材料，支持上次pdf，图片和压缩包！"
-          ></zj-content-tip>
+          <zj-content-tip text="注：证明材料可为买卖双方发票，贸易合同等证明双方真实贸易关系的材料，支持上次pdf，图片和压缩包！"></zj-content-tip>
         </zj-content>
-        <zj-table
-          ref="searchTable"
-          :params="searchForm"
-          :api="zjControl.relationLsit"
-        >
+        <zj-table ref="searchTable" :params="searchForm" :api="zjControl.relationLsit">
           <zj-table-column field="buyerEntName" title="买方企业名称" />
           <zj-table-column field="sellerEntName" title="卖方企业名称" />
           <zj-table-column field="bankAccount" title="卖方银行账号" />
@@ -54,90 +38,39 @@
           <zj-table-column field="sellerEntId" title="贸易关系状态" />
           <zj-table-column field="buyerIsHtEnterprise" title="协议" />
           <zj-table-column field="sellerEntName" title="证明材料" />
-          <zj-table-column
-            field="state"
-            title="上次更新时间"
-            :formatter="date"
-          />
+          <zj-table-column field="state" title="上次更新时间" :formatter="date" />
           <zj-table-column title="操作" fixed="right">
             <template v-slot="{ row }">
               <zj-button type="text" @click="edit(row)">修改</zj-button>
-              <zj-button
-                type="text"
-                @click="upCredential(row)"
-                :api="zjBtn.getEnterprise"
-                >上传材料证明</zj-button
-              >
+              <zj-button type="text" @click="upCredential(row)" :api="zjBtn.getEnterprise">上传材料证明</zj-button>
             </template>
           </zj-table-column>
         </zj-table>
       </div>
     </zj-list-layout>
-    <el-dialog
-      :visible.sync="dialogVisible"
-      :close-on-click-modal="false"
-      center
-      width="500px"
-      :title="type == 'add' ? '新增贸易关系' : '修改贸易关系'"
-      custom-class="mbi-editDialog"
-      @close="cancel"
-      top="6vh"
-    >
-      <el-form
-        ref="formModel"
-        class="mbi-form"
-        :model="formModel"
-        :rules="formRules"
-        :class="editFlag ? '' : 'nmb0'"
-        label-width="140px"
-      >
-        <el-form-item
-          label="买方企业名称："
-          prop="buyerEntName"
-          :class="{ 'zj-m-b-5': !editFlag }"
-        >
+    <el-dialog :visible.sync="dialogVisible" :close-on-click-modal="false" center width="500px"
+      :title="type == 'add' ? '新增贸易关系' : '修改贸易关系'" custom-class="mbi-editDialog" @close="cancel" top="6vh">
+      <el-form ref="formModel" class="mbi-form" :model="formModel" :rules="formRules" :class="editFlag ? '' : 'nmb0'"
+        label-width="140px">
+        <el-form-item label="买方企业名称：" prop="buyerEntName" :class="{ 'zj-m-b-5': !editFlag }">
           <span class="static-text">{{ formModel.buyerEntName }}</span>
         </el-form-item>
-        <el-form-item
-          label="卖方企业名称："
-          :class="{ 'zj-m-b-5': !editFlag }"
-          prop="sellerEntName"
-        >
+        <el-form-item label="卖方企业名称：" :class="{ 'zj-m-b-5': !editFlag }" prop="sellerEntName">
           <el-input v-model="formModel.sellerEntName" />
         </el-form-item>
-        <el-form-item
-          label="卖方银行账号："
-          prop="bankAccount"
-          :class="{ 'zj-m-b-5': !editFlag }"
-        >
+        <el-form-item label="卖方银行账号：" prop="bankAccount" :class="{ 'zj-m-b-5': !editFlag }">
           <el-input v-model="formModel.bankAccount" />
         </el-form-item>
-        <el-form-item
-          label="卖方银行账号户名："
-          prop="bankName"
-          :class="{ 'zj-m-b-5': !editFlag }"
-        >
+        <el-form-item label="卖方银行账号户名：" prop="bankName" :class="{ 'zj-m-b-5': !editFlag }">
           <el-input v-model="formModel.bankName" />
         </el-form-item>
-        <el-form-item
-          label="卖方企业开户行："
-          prop="bankName"
-          :class="{ 'zj-m-b-5': !editFlag }"
-        >
+        <el-form-item label="卖方企业开户行：" prop="bankName" :class="{ 'zj-m-b-5': !editFlag }">
           <el-input v-model="formModel.bankName" />
         </el-form-item>
-        <el-form-item
-          label="银行联行号："
-          prop="bankNo"
-          :class="{ 'zj-m-b-5': !editFlag }"
-        >
+        <el-form-item label="银行联行号：" prop="bankNo" :class="{ 'zj-m-b-5': !editFlag }">
           <el-input v-model="formModel.bankNo" />
         </el-form-item>
-        <el-form-item
-          label="银行类型："
-          prop="bankType"
-          :class="{ 'zj-m-b-5': !editFlag }"
-        >
+        <el-form-item label="银行类型：" prop="bankType" :class="{ 'zj-m-b-5': !editFlag }">
           <!--        <span class="static-text" v-show="!editFlag">{{formModel.invoiceEmail}}</span>-->
           <el-input v-model="formModel.bankType" />
         </el-form-item>
@@ -149,16 +82,8 @@
       </el-row>
     </el-dialog>
 
-    <el-dialog
-      :visible.sync="dialogVisible2"
-      :close-on-click-modal="false"
-      center
-      width="50%"
-      title="上传证明材料"
-      custom-class="mbi-editDialog"
-      @close="cancel"
-      top="6vh"
-    >
+    <el-dialog :visible.sync="dialogVisible2" :close-on-click-modal="false" center width="50%" title="上传证明材料"
+      custom-class="mbi-editDialog" @close="cancel" top="6vh">
       <div class="upForm">
         <div class="upFormItem">
           <span>买方企业名称：{{ buyerEntName }}</span>
@@ -171,21 +96,13 @@
         <div class="upFormItem">
           <!-- <ZjUpload api="hhh">上传</ZjUpload> -->
           <zj-upload class="zj-inline" ref="upload" :httpRequest="dayUpload">
-            <zj-button
-              type="primary"
-              style="width: 100px"
-              size="mini"
-              slot="trigger"
-              >上传</zj-button
-            >
+            <zj-button type="primary" style="width: 100px" size="mini" slot="trigger">上传</zj-button>
           </zj-upload>
         </div>
 
         <div class="upFormItem">
           <zj-content style="padding-top: 0">
-            <zj-content-tip
-              text="注：1.证明材料可为买卖双方发票，贸易合同等证明双方真实贸易关系的材料。2.支持上传pdf，图片和压缩包！"
-            ></zj-content-tip>
+            <zj-content-tip text="注：1.证明材料可为买卖双方发票，贸易合同等证明双方真实贸易关系的材料。2.支持上传pdf，图片和压缩包！"></zj-content-tip>
           </zj-content>
         </div>
       </div>
@@ -195,33 +112,21 @@
       </el-row>
     </el-dialog>
 
-    <el-dialog
-      :visible.sync="dialogVisibleGo"
-      :close-on-click-modal="false"
-      center
-      width="50%"
-      title="贸易关系确认函"
-      custom-class="mbi-editDialog"
-      @close="cancel"
-      top="6vh"
-    >
+    <el-dialog :visible.sync="dialogVisibleGo" :close-on-click-modal="false" center width="50%" title="贸易关系确认函"
+      custom-class="mbi-editDialog" @close="cancel" top="6vh">
       <div class="upForm">
         <div class="upFormItem">
-          <span
-            >Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean
+          <span>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean
             euismod bibendum laoreet. Proin gravida dolor sit amet lacus
             accumsan et viverra justo commodo. Proin sodales pulvinar sic
             tempor. Sociis natoque penatibus et magnis dis parturient montes,
             nascetur ridiculus mus. Nam fermentum, nulla luctus pharetra
             vulputate, felis tellus mollis orci, sed rhoncus pronin sapien nunc
-            accuan eget.</span
-          >
+            accuan eget.</span>
         </div>
       </div>
       <el-row slot="footer" class="dialog-footer">
-        <zj-button type="primary" status="primary" @click="saveTo"
-          >确认签署</zj-button
-        >
+        <zj-button type="primary" status="primary" @click="saveTo">确认签署</zj-button>
       </el-row>
     </el-dialog>
   </div>
@@ -260,8 +165,9 @@ export default {
         relationAddtradeCheck: this.$api.tradeRelations.relationAddtradeCheck, //新增校验
         relationEnt: this.$api.tradeRelations.relationEnt, //修改贸易关系
         materialAttach: this.$api.tradeRelations.materialAttach, //上传证明材料
+        getDirectory: this.$api.tradeRelations.tradeRelationsGetDirectory, //字典
       },
-
+      dictionary:{},
       searchForm: {},
       tableData: [{ id: 1 }],
       formModel: {},
@@ -276,6 +182,7 @@ export default {
   },
   created() {
     this.getApi();
+    this.getDirectory1();
   },
   watch: {
     dialogVisible(value) {
@@ -285,8 +192,13 @@ export default {
     },
   },
   methods: {
+      getDirectory1() {
+      this.zjControl.getDirectory().then((res) => {
+        this.dictionary = res.data;
+      });
+    },
     //取消
-    cancel() {},
+    cancel() { },
     //修改
     edit(row) {
       this.type = "edit";
@@ -331,14 +243,15 @@ export default {
               bankType: this.formModel.bankType, //银行类型
             };
             this.zjControl.relationAdd(params).then((res) => {
-              this.$Message.success("新增成功！");
+              // this.$Message.success("新增成功！");
               this.dialogVisible = false;
             });
           }
         });
       }
       if (this.type == "edit") {
-        alert("修改");
+        // alert("修改");
+        // this.$Message.success("修改成功！");
         let params = {
           buyerEntName: this.formModel.buyerEntName, //买方企业名称
           sellerEntName: this.formModel.sellerEntName, //卖方企业名称
@@ -349,8 +262,9 @@ export default {
           bankType: this.formModel.bankType, //银行类型
         };
         this.zjControl.relationEnt(params).then((res) => {
-          this.$Message.success("修改成功！");
+          // this.$Message.success("修改成功！");
           this.dialogVisible = false;
+          // 提示和关闭修改框未生效
         });
       }
     },
@@ -394,6 +308,7 @@ export default {
       text-align: center;
     }
   }
+
   .workflow-bottom {
     .right {
       width: 100%;

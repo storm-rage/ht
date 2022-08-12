@@ -46,7 +46,7 @@
       <zj-table
         ref="searchTable"
         :params="searchForm"
-        :api="zjControl.relationLsit"
+        :api="zjControl.recordPage"
       >
         <zj-table-column field="bankAccount" title="申请流水号" />
         <zj-table-column field="bankAccname" title="买方企业名称" />
@@ -67,7 +67,7 @@ export default {
   data() {
     return {
       zjControl: {
-        relationLsit: this.$api.tradeRelations.relationLsit,//交易记录查询列表
+        recordPage: this.$api.tradeRelations.recordPage,//交易记录查询列表
       },
       searchForm: {},
     };

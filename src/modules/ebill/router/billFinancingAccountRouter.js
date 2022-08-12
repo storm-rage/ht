@@ -1,7 +1,7 @@
 const billFinancingAccountRouter = [
   {
-    path: '/billFinancingAccount',
-    name: 'billFinancingAccount',
+    path: '/ddblFactoringLedger',
+    name: 'ddblFactoringLedger',
     component: () => import('../views/queryStatistics/billFinancingAccount'),
     meta: {
       isMock: true,
@@ -13,8 +13,8 @@ const billFinancingAccountRouter = [
     }
   },
   {
-    path: '/billFinancingAccountDetail',
-    name: 'billFinancingAccountDetail',
+    path: '/ddblFactoringLedgerDetail',
+    name: 'ddblFactoringLedgerDetail',
     component: () => import('../views/queryStatistics/billFinancingAccount/detail'),
     meta: {
       isMock: true,
@@ -22,7 +22,7 @@ const billFinancingAccountRouter = [
       root: '查询统计',
       keepAlive: true,
       refreshIndex: 0,
-      parent:'billFinancingAccount',
+      parent:'ddblFactoringLedger',
       notRequireAuth: true
     }
   },
