@@ -4,9 +4,9 @@
     :visible.sync="dialogShow" width="600px"
     :close-on-click-modal="false" left
   >
-    <el-form :model="dialogForm" ref="dialogForm" :rules="rules">
+    <el-form :model="form" ref="dialogForm" :rules="rules">
       <el-form-item label="请输入拒绝原因：" prop="refuseReason">
-        <el-input type="textarea"></el-input>
+        <el-input type="textarea" v-model="form.refuseReason"></el-input>
       </el-form-item>
     </el-form>
     <div slot="footer" class="dialog-footer">
@@ -21,14 +21,14 @@
 export default {
   name: "submitDialog",
   props: {
-    show: { type: Boolean, default: false},
-    form: {},
-
+    zjControl: Object,
+    financingId: String,
   },
   data() {
     return {
       dialogShow:false,
       dialogForm: {},
+      form: {},
       rules: {
         refuseReason:[
           {required: true, message:'请输入拒绝原因！', trigger:'blur'}
@@ -38,8 +38,15 @@ export default {
   },
   methods: {
     onConfirm() {
-      // this.zjControl.xxx(this.form)
-      this.goParent()
+      let params = {
+        agreementList: this.dialogForm.agreementList,
+        flag: '2',//1-通过 2-拒绝
+        id: this.financingId,
+        reason: this.form.refuseReason,
+      }
+      this.zjControl.submitFinancingReview(params).then(res=>{
+        this.$message.success(res.msg)
+      })
       this.dialogShow = false
     },
     cancel() {

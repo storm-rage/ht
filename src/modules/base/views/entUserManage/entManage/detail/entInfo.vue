@@ -17,9 +17,13 @@
           <bank-account ref="bankAccount" />
 
           <!-- 控制人信息 -->
-          <controller ref="controller" :detailData="detailData" v-if="$route.name !== 'registerAuditApplyAudit'"/>
+          <controller
+            ref="controller"
+            :detailData="detailData"
+            v-if="$route.name !== 'registerAuditApplyAudit'"
+          />
 
-          <!-- <zj-collapse title="天眼查信息">
+          <zj-collapse title="天眼查信息">
             <zj-button
               type="text"
               @click="activeEyeSky = !activeEyeSky"
@@ -35,7 +39,7 @@
               :entId="eyeSkyId"
               @eyeSkyChange="eyeSkyChange"
             />
-          </zj-collapse> -->
+          </zj-collapse>
         </zj-content>
       </zj-content-block>
 
@@ -69,7 +73,7 @@
       </zj-content-block>
 
       <zj-content-block>
-        <!-- <zj-header title="相关资料附件" />
+        <zj-header title="相关资料附件" />
         <div class="attach-body">
           <ul class="attach-bar">
             <li
@@ -175,7 +179,7 @@
               <i class="el-icon-arrow-right next" @click="prevnext('+')" />
             </div>
           </div>
-        </div> -->
+        </div>
       </zj-content-block>
 
       <zj-content-block>

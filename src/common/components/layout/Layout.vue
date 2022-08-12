@@ -1,7 +1,6 @@
 <template>
   <div class="layout">
     <el-container style="height: 100%">
-
       <!-- 头部 -->
       <el-header style="padding: 0;height: auto">
         <navbar />

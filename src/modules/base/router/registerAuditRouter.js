@@ -23,7 +23,7 @@ const registerAudit = [
     component: () => import('../views/sysModules/register/registerAudit/registerAudit.vue'),
     meta: {
       title:'申请信息审核-审核',
-      parent:'registerAudit',
+      parent:'platformAudit',
       root:'企业与用户管理',
       keepAlive:true,
       refreshIndex:0,
@@ -37,7 +37,7 @@ const registerAudit = [
     component: () => import('../views/sysModules/register/registerAudit/registerAudit.vue'),
     meta: {
       title:'注册协议审核',
-      parent:'registerAudit',
+      parent:'platformAudit',
       root:'企业与用户管理',
       keepAlive:true,
       refreshIndex:0,

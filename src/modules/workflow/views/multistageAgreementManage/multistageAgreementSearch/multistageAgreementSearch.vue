@@ -3,7 +3,7 @@
     <!--  阶段性协议查询  -->
     <zj-list-layout>
       <template slot="searchForm">
-        <el-form ref="searchForm" :model="searchForm">
+        <el-form ref="searchForm" :model="searchForm" style="border-bottom:none;">
           <el-form-item label="供应商名称：">
             <el-input v-model="searchForm.sellerNameLike" @keyup.enter.native="enterSearch"/>
           </el-form-item>

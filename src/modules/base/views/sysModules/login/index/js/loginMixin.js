@@ -1,7 +1,6 @@
 import LoginEditPassword from "../../editPassword/LoginEditPassword";
 import sw_cookie from "@utils/cookie";
 import frozenDialog from "../../components/frozenDialog";
-import {getMenuPower} from '@utils/menuTree';
 import LoginType from '../loginType';
 import HtLoginHeader from '../loginHeader';
 import HtLoginFooter from '../loginFooter';
@@ -90,30 +89,9 @@ export default {
     //保存相关信息
     saveInfo(loginRes) {
       // 设置项目列表
-      this.$store.dispatch('enterprise/setEntList', loginRes.entInfoList);
-      if (loginRes.entInfoList && loginRes.entInfoList.length) {
-        this.$store.dispatch('enterprise/setEntInfo', loginRes.entInfoList[0]);
-      }
-      const menuList = loginRes.resList
-      // 保存菜单树
-      this.$store.dispatch('menu/setMenuTreeList', menuList)
-      // 保存菜单列表
-      this.$store.dispatch('menu/setMenuList', menuList)
-
-      // 保存用户信息
-      this.$store.dispatch('user/setUserInfo', {
-        userName: loginRes.userName,
-        loginName: loginRes.loginName,
-        lastLoginTime: loginRes.lastLoginTime,
-        entName: loginRes.entName,
-        entType: loginRes.entType,
-        entId: loginRes.entId,
-        mobileNo: loginRes.mobileNo,
-        power: getMenuPower(menuList),
-        signZJDJBFlag: loginRes.signZJDJBFlag
-      })
+      this.$store.dispatch('user/saveUserInfo', loginRes);
       //设置默认到账户中心
-      this.$store.dispatch('menu/setNavMenuActive', '0')
+      // this.$store.dispatch('menu/setNavMenuActive', '0')
     },
     // input修改背景色
     inputFocus(e) {
@@ -123,10 +101,7 @@ export default {
       }
     },
     inputBlur(e) {
-      if (e.target.value) {
-        e.currentTarget.style.backgroundColor = ''
-      } else {
-        e.currentTarget.style.backgroundColor = 'rgba(155,155,155,0.1)'
+      if (!e.target.value) {
         window.setTimeout(() => {
           this.$refs.userForm.clearValidate([e.target.name])
         }, 20)

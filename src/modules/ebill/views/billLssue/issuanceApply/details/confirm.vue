@@ -44,7 +44,9 @@
 export default {
   data() {
     return {
-      zjControl: {},
+      zjControl: {
+        billCommit: this.$api.openBillApply.billCommit, //对账单-提交复核
+      },
       searchForm: {},
       tableData: [{ id: 1 }],
       agreeCheck: false,
@@ -65,7 +67,11 @@ export default {
           this.$message.warning("请检查我已阅读并同意相关协议是否勾选");
           return;
         } else {
-          this.$message.success("提交成功!");
+          this.zjControl.billCommit().then((res) => {
+            if (res.code === 200) {
+              this.$message.success("提交成功!");
+            }
+          });
         }
       });
     },

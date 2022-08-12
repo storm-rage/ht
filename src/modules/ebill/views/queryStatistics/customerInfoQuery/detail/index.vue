@@ -2,7 +2,7 @@
   <zj-content-container ref="detailContainer" style="padding-bottom: 0;" >
     <!--  企业信息明细  -->
     <zj-top-header :title="titleInfo"/>
-    <el-tabs v-model="tabs" type="card" class="zj-tabs-card">
+    <el-tabs v-model="tabs" class="zj-tabs-card zj-p-l-16 zj-p-r-16">
       <el-tab-pane label="企业信息" name="entInfo" >
         <keep-alive>
           <ent-info v-if="tabs==='entInfo'" :zjControl="zjControl" :uDictionary="uDictionary" :uBtn="zjBtn"/>

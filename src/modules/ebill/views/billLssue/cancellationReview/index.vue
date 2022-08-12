@@ -48,10 +48,10 @@
         />
         <zj-table-column field="rejectNotes" title="作废原因" />
         <zj-table-column title="操作" fixed="right">
-          <template>
+          <template v-slot="{ row }">
             <zj-button
               type="text"
-              @click="goChild('', row)"
+              @click="goChild('billCancellationReview', row)"
               :api="zjBtn.getEnterprise"
               >复核</zj-button
             >
@@ -72,7 +72,6 @@ export default {
   created() {
     this.getApi();
   },
-  methods: {
-  },
+  methods: {},
 };
 </script>

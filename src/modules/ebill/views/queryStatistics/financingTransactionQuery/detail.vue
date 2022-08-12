@@ -27,55 +27,61 @@
                 <el-col :span="8">
                   <el-form-item label="融资企业：">{{form.fromEntName}}</el-form-item>
                 </el-col>
-                <el-col :span="8" v-if="form.financingProductType !== '0'">
+                <el-col :span="8" v-if="row.financingProductType !== '0'">
                   <el-form-item label="融资金额：">{{form.buyerEntName}}</el-form-item>
                 </el-col>
-                <el-col :span="8" v-if="form.financingProductType !== '0'">
+                <el-col :span="8" v-if="row.financingProductType !== '0'">
                   <el-form-item label="融资折扣率：">{{form.interestRate}}</el-form-item>
                 </el-col>
-                <el-col :span="8" v-if="form.financingProductType === '0'">
+                <el-col :span="8" v-if="row.financingProductType === '0'">
                   <el-form-item label="买方企业名称：">{{form.buyerEntName}}</el-form-item>
                 </el-col>
-                <el-col :span="8" v-if="form.financingProductType === '0'">
+                <el-col :span="8" v-if="row.financingProductType === '0'">
                   <el-form-item label="融资月利率：">{{form.interestRate}}</el-form-item>
                 </el-col>
               </el-row>
               <el-row>
-                <el-col :span="8" v-if="form.financingProductType === '0'">
+                <el-col :span="8" v-if="row.financingProductType === '0'">
                   <el-form-item label="融资申请金额：">
                     {{form.tranAmt}}
                     <div>{{digitUp(form.tranAmt)}}</div>
                   </el-form-item>
                 </el-col>
-                <el-col :span="8" v-if="form.financingProductType !== '0'">
+                <el-col :span="8" v-if="row.financingProductType !== '0'">
                   <el-form-item label="申请转让金额：">
                     {{form.tranAmt}}
-                    <zj-text-tip text="（申请转让金额 = 融资申请金额/折扣率）"/>
+                    <div>
+                      <zj-content-tip text="（申请转让金额 = 融资申请金额/折扣率）" v-if="form.tranAmt"></zj-content-tip>
+                    </div>
                   </el-form-item>
                 </el-col>
-                <el-col :span="8" v-if="form.financingProductType === '0'">
+                <el-col :span="8" v-if="row.financingProductType === '0'">
                   <el-form-item label="融资开始日：">{{form.loanDate}}</el-form-item>
                 </el-col>
-                <el-col :span="8" v-if="form.financingProductType === '0'">
+                <el-col :span="8" v-if="row.financingProductType === '0'">
                   <el-form-item label="融资到期日：">{{form.expireDate}}</el-form-item>
                 </el-col>
-                <el-col :span="8" v-if="form.financingProductType !== '0'">
+                <el-col :span="8" v-if="row.financingProductType !== '0'">
                   <el-form-item label="融资月利率：">{{form.interestRate}}</el-form-item>
                 </el-col>
-                <el-col :span="8" v-if="form.financingProductType !== '0'">
+                <el-col :span="8" v-if="row.financingProductType !== '0'">
                   <el-form-item label="融资开始日：">{{form.loanDate}}</el-form-item>
                 </el-col>
               </el-row>
               <el-row>
                 <el-col :span="8">
                   <el-form-item label="预计融资期限：">
-                    {{date(form.estimateTimeStart)}}至{{date(form.estimateTimeEnd)}}共{{form.totalDay}}天
+                    {{ date(form.estimateTimeStart) }}
+                    {{ form.estimateTimeEnd ? `至` + date(form.estimateTimeEnd) : '' }}
+                    {{ form.totalDay ? `共${form.totalDay}天` : ''}}
                   </el-form-item>
                 </el-col>
                 <el-col :span="8">
                   <el-form-item label="预计利息：">
                     {{form.interestAmt}}
-                    <zj-text-tip text="（预计利息 = 融资申请金额*融资月利率/30*预计融资天数）"/>
+                    <div>
+                      <zj-content-tip text="（预计利息 = 融资申请金额*融资月利率/30*预计融资天数）" v-if="form.interestAmt"></zj-content-tip>
+                    </div>
                   </el-form-item>
                 </el-col>
               </el-row>
@@ -99,7 +105,8 @@
               </zj-collapse>
               <zj-table ref="searchTable" class="zj-search-table"
                         :dataList="form.phasedAgreements"
-                        v-if="form.financingProductType === '0'"
+                        :pager="false"
+                        v-if="row.financingProductType === '0'"
               >
                 <zj-table-column field="agreementNo" title="阶段性协议编号" />
                 <zj-table-column field="agreementName" title="阶段性协议名称" />
@@ -121,7 +128,8 @@
               </zj-table>
               <zj-table ref="searchTable" class="zj-search-table"
                         :dataList="form.phasedAgreements"
-                        v-if="form.financingProductType !== '0'"
+                        :pager="false"
+                        v-if="row.financingProductType !== '0'"
               >
                 <zj-table-column field="agreementNo" title="凭证编号" />
                 <zj-table-column field="agreementName" title="原始凭证编号" />
@@ -139,6 +147,7 @@
               <zj-header title="协议信息"/>
               <zj-table ref="searchTable" class="zj-search-table"
                         :dataList="form.financingAgreement"
+                        :pager="false"
               >
                 <zj-table-column field="seq" title="序号" />
                 <zj-table-column field="agreementNo" title="协议编号" />
@@ -156,34 +165,34 @@
                 <el-col :span="8">
                   <el-form-item label="保理合同编号：">{{form.contractNo}}</el-form-item>
                 </el-col>
-                <el-col :span="8" v-if="form.financingProductType !== '0'">
+                <el-col :span="8" v-if="row.financingProductType !== '0'">
                   <el-form-item label="保理类型：">{{form.contractType}}</el-form-item>
                 </el-col>
-                <el-col :span="8" v-if="form.financingProductType === '0'">
+                <el-col :span="8" v-if="row.financingProductType === '0'">
                   <el-form-item label="总金额：">{{form.factoringCreditAmount}}</el-form-item>
                 </el-col>
-                <el-col :span="8" v-if="form.financingProductType !== '0'">
+                <el-col :span="8" v-if="row.financingProductType !== '0'">
                   <el-form-item label="合同金额：">{{form.contractAmount}}</el-form-item>
                 </el-col>
-                <el-col :span="8" v-if="form.financingProductType === '0'">
+                <el-col :span="8" v-if="row.financingProductType === '0'">
                   <el-form-item label="剩余可用金额：">{{form.availableCreditAmount}}</el-form-item>
                 </el-col>
               </el-row>
               <el-row>
-                <el-col :span="8" v-if="form.financingProductType !== '0'">
+                <el-col :span="8" v-if="row.financingProductType !== '0'">
                   <el-form-item label="剩余可用金额：">{{form.availableCreditAmount}}</el-form-item>
                 </el-col>
-                <el-col :span="8" v-if="form.financingProductType === '0'">
+                <el-col :span="8" v-if="row.financingProductType === '0'">
                   <el-form-item label="额度有效期：">{{date(form.factoringCreditStartDate)}}
                     {{form.factoringCreditStartDate?`至${date(form.factoringCreditStartDate)}`:''}}
                   </el-form-item>
                 </el-col>
-                <el-col :span="8" v-if="form.financingProductType !== '0'">
+                <el-col :span="8" v-if="row.financingProductType !== '0'">
                   <el-form-item label="保理合同到期日：">{{form.availableCreditAmount}}</el-form-item>
                 </el-col>
               </el-row>
             </zj-content-block>
-            <zj-content-block v-if="form.financingProductType !== '0'">
+            <zj-content-block v-if="row.financingProductType !== '0'">
               <zj-header title="总控额度信息"/>
               <el-row>
                 <el-col :span="8">
@@ -198,6 +207,7 @@
               <zj-header title="其他附件"/>
               <zj-table ref="searchTable" class="zj-search-table"
                         :dataList="form.otherAttachs"
+                        :pager="false"
               >
                 <zj-table-column field="seq" title="序号" />
                 <zj-table-column field="bizType" title="附件类型" />
@@ -214,62 +224,65 @@
           </el-form>
       </zj-content-block>
 
-      <zj-content-block v-if="workflow === 'pzxx' && form.financingProductType === '0'">
-        <el-content-block>
-          <zj-header title="凭证信息"/>
-          <zj-table ref="billInfoTable" class="zj-search-table"
-                    :dataList="form.list"
-                    @after-load="handleDataChange"
-                    @radio-change="handleRadioChange"
-                    :radio-config="{highlight: true}"
-          >
-            <zj-table-column type="radio" width="40"/>
-            <zj-table-column field="voucherNo" title="凭证编号" />
-            <zj-table-column field="voucherNo" title="原始凭证编号" />
-            <zj-table-column field="voucherSigner" title="凭证签发人" />
-            <zj-table-column field="entName" title="转让企业" />
-            <zj-table-column field="voucherAcc" title="签发日期" :formatter="date"/>
-            <zj-table-column field="voucherAcc" title="凭证金额" :formatter="money"/>
-            <zj-table-column field="voucherAcc" title="凭证到期日" :formatter="date"/>
-          </zj-table>
-        </el-content-block>
-        <el-content-block>
-          <zj-header title="对账单信息-${}"/>
-          <zj-table ref="searchTable"
-                    :dataList="form.list"
-          >
-            <zj-table-column type="radio" width="40"/>
-            <zj-table-column field="field2" title="对账单名称"/>
-            <zj-table-column field="field3" title="买方名称"/>
-            <zj-table-column field="field5" title="供应商业务系统编码"/>
-            <zj-table-column field="field5" title="供应商名称"/>
-            <zj-table-column field="field5" title="对账日期" :formatter="date"/>
-            <zj-table-column field="field5" title="入库日期" :formatter="date"/>
-            <zj-table-column field="field5" title="预计付款日期" :formatter="date"/>
-            <zj-table-column field="field5" title="对账单金额" :formatter="money"/>
-            <zj-table-column field="field5" title="是否申请开立债权凭证" :formatter="(obj)=>typeMap(dictionary,obj.cellValue)"/>
-            <zj-table-column field="field5" title="对账人" />
-            <zj-table-column field="field5" title="对账单来源" />
-          </zj-table>
-        </el-content-block>
-        <el-content-block>
-          <zj-header :title="`贸易背景资料（资产编号：）`"/>
-          <el-tabs v-model="tabs" type="card" class="zj-tabs-card">
-            <el-tab-pane label="贸易合同信息" name="tradeContract" >
-              <trade-contract :zjControl="zjControl" :form="form.contractInfo"/>
-            </el-tab-pane>
-            <el-tab-pane label="发票信息" name="invoice" >
-              <invoice :invoiceList="form.invoices"/>
-            </el-tab-pane>
-            <el-tab-pane label="其他附件" name="attaList" >
-              <attaList :attaList="form.otherAttachs"/>
-            </el-tab-pane>
-          </el-tabs>
-        </el-content-block>
+      <zj-content-block v-if="workflow === 'pzxx' && row.financingProductType !== '0'">
+          <zj-content-block>
+            <zj-header title="凭证信息"/>
+            <zj-table ref="billInfoTable" class="zj-search-table"
+                      :api="zjControl.getFinancingBillInfos"
+                      :params="{id : row.id, serialNo: row.serialNo,}"
+                      @after-load="handleDataChange"
+                      @radio-change="handleRadioChange"
+                      :radio-config="{highlight: true}"
+                      :pager="false"
+            >
+              <zj-table-column type="radio" width="40"/>
+              <zj-table-column field="ebillCode" title="凭证编号" />
+              <zj-table-column field="sourceCode" title="原始凭证编号" />
+              <zj-table-column field="writerName" title="凭证签发人" />
+              <zj-table-column field="transferName" title="转让企业" />
+              <zj-table-column field="openDate" title="签发日期" :formatter="date"/>
+              <zj-table-column field="ebillAmt" title="凭证金额" :formatter="money"/>
+              <zj-table-column field="expireDate" title="凭证到期日" :formatter="date"/>
+            </zj-table>
+          </zj-content-block>
+          <zj-content-block>
+            <zj-header :title="`对账单信息${ebillCode?`-${ebillCode}`:''}`"/>
+            <zj-table ref="searchTable"
+                      :dataList="ebillInfo.accountBillInners"
+                      :pager="false"
+            >
+              <zj-table-column field="acctBillCode" title="对账单编号"/>
+              <zj-table-column field="companyName" title="买方名称"/>
+              <zj-table-column field="supplierCode" title="供应商业务系统编码"/>
+              <zj-table-column field="supplierName" title="供应商名称"/>
+              <zj-table-column field="checkBillDate" title="对账日期" :formatter="date"/>
+              <zj-table-column field="inputDate" title="入库日期" :formatter="date"/>
+              <zj-table-column field="estimatedPaymentDate" title="预计付款日期" :formatter="date"/>
+              <zj-table-column field="checkBillAmt" title="对账单金额" :formatter="money"/>
+              <zj-table-column field="isApplyVoucher" title="是否申请开立债权凭证"/>
+              <zj-table-column field="checkBillPerson" title="对账人" />
+              <zj-table-column field="billSource" title="对账单来源" />
+            </zj-table>
+          </zj-content-block>
+          <zj-content-block>
+            <zj-header :title="`贸易背景资料（资产编号：${activeEbillCodeNo}）`"/>
+            <el-tabs v-model="tabs" class="zj-tabs-card">
+              <el-tab-pane label="贸易合同信息" name="tradeContract" >
+                <trade-contract :zjControl="zjControl" :form="ebillInfo.contractInfo"/>
+              </el-tab-pane>
+              <el-tab-pane label="发票信息" name="invoice" >
+                <invoice :invoiceList="ebillInfo.invoices"/>
+              </el-tab-pane>
+              <el-tab-pane label="其他附件" name="attaList" >
+                <attaList :attaList="ebillInfo.otherAttachs"/>
+              </el-tab-pane>
+            </el-tabs>
+          </zj-content-block>
+
       </zj-content-block>
 
       <!-- 底部工作流状态 -->
-      <zj-workflow v-model="workflow" :list="workflowList" v-if="form.financingProductType !== '0'">
+      <zj-workflow v-model="workflow" :list="workflowList" v-if="row.financingProductType !== '0'">
         <!-- 审核时 -->
         <el-row slot="right">
           <el-row class="btn-w85 zj-center">
@@ -277,7 +290,7 @@
           </el-row>
         </el-row>
       </zj-workflow>
-      <zj-content-footer  v-if="form.financingProductType == '0'">
+      <zj-content-footer  v-if="row.financingProductType === '0'">
         <zj-button class="back" @click="goParent">返回</zj-button>
       </zj-content-footer>
 
@@ -306,15 +319,21 @@ export default {
   },
   data() {
     return {
-      form:{},
-      detail:{},
+      form:{
+        operEbTranTxListLogs:[],
+      },
+      ebillInfo:{
+        accountBillInners:[],
+      },
+      ebillCode: '',//选中的凭证信息的编号
+      activeEbillCodeNo: '',//选中的凭证信息的对账单编号
       dictionary:{},
       tabs:'tradeContract',
       zjControl: {
         getFinancingTransDetail:this.$api.financingTransactionQuery.getFinancingTransDetail,//融资交易查询-详情
         getFinancingTransDirectory:this.$api.financingTransactionQuery.getFinancingTransDirectory,//数据字典
         getFinancingBillInfos:this.$api.financingTransactionQuery.getFinancingBillInfos,//凭证信息
-        getOtherInfoByBill:this.$api.financingTransactionQuery.getOtherInfoByBill,//凭证信息
+        getOtherInfoByBill:this.$api.financingTransactionQuery.getOtherInfoByBill,//凭证信息-详情
 
       },
       workflow: 'sqxx',
@@ -334,15 +353,15 @@ export default {
         id : this.row.id,
         serialNo: this.row.serialNo,
       }
+      //申请信息
       if(this.workflow === 'sqxx') {
         this.zjControl.getFinancingTransDetail(params).then(res=>{
           this.form = res.data
         })
       }
+      //凭证信息
       if(this.workflow === 'pzxx') {
-        this.zjControl.getFinancingBillInfos(params).then(res=>{
-          this.form = res.data
-        })
+
       }
     },
     agreementDownLoad() {
@@ -351,22 +370,26 @@ export default {
     attaDownLoad() {},
 
     handleDataChange(rows) {
-      //默认勾选第一个贸易关系
+      //默认勾选第一个凭证信息
       if(rows&& rows.length) {
         this.$refs.billInfoTable.setRadioRow(rows[0])
         this.handleRadioChange({row: rows[0]})
       }
     },
     handleRadioChange({row}) {
+      this.ebillCode = row.ebillCode
       let params = {
-        // busTradeId : row.busTradeId,
-        // coreCompanyName : row.buyerName,
-        // tradeId : row.tradeId,
+        ebBillCode : row.ebillCode ,
       }
-      //获取对账单列表
-      this.zjControl.queryPhasedAgreePage(params).then(res=>{
-        this.form.billList = res.data.phasedAgreeInfoList
-        //背景资料信息列表******
+      this.zjControl.getOtherInfoByBill(params).then(res=>{
+        //对账单列表
+        this.ebillInfo.accountBillInners = res.data.accountBillInners
+        //对账单编号
+        this.activeEbillCodeNo = this.ebillInfo.accountBillInners[0].acctBillCode
+        //背景资料信息列表
+        this.ebillInfo.contractInfo = res.data.contractInfos[0]
+        this.ebillInfo.invoices = res.data.invoices
+        this.ebillInfo.otherAttachs = res.data.otherAttachs
       })
     },
   },

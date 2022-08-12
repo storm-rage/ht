@@ -9,7 +9,7 @@ const openBillAudit = {
   },
   //凭证签发复核-查询
   tableApi: (params) => {
-    return request.get('/open-bill-audit/bill-detail-list', { params })
+    return request.get('/open-bill-audit/list', { params })
   },
   //凭证签发复核-详情-获取对账单明细列表
   billDetailList: (params) => {
@@ -20,7 +20,7 @@ const openBillAudit = {
     return request.get('/open-bill-audit/detail', { params } )
   },
   //凭证签发复核-批量
-  cancelSubmit: (params) => {
+  auditBatch: (params) => {
     return request.post('/open-bill-audit/audit-batch',  params )
   },
 }

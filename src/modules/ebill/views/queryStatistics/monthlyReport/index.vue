@@ -1,7 +1,7 @@
 <template>
   <div>
     <!--  月度统计  -->
-    <zj-tabs v-model="tabs" type="card" class="zj-tabs-card">
+    <zj-tabs v-model="tabs" class="zj-tabs-card">
       <el-tab-pane label="业绩集中度分析" name="businessAnalysis" >
         <business-analysis :zjControl="zjControl" :uDictionary="uDictionary" :uBtn="zjBtn"/>
       </el-tab-pane>

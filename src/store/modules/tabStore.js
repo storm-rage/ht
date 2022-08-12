@@ -1,4 +1,3 @@
-import breadArr from './breadArr.js'
 import router from '../../router/index.js'
 
 // 缓存页签store
@@ -10,24 +9,11 @@ const state = {
   // -----------sw
   tabActive:'', //选中
   tabTagList:[], //tag
-  tabBreadList:[],//bread
 }
 
 const mutations = {
   //添加-单
   tabAdd(state,rItem) {
-    //不添加缓存的白名单过滤
-    let whiteArr = ['whith']
-    let key = whiteArr.some(item => item === rItem.name)
-    if (key && rItem !== 'whith') {
-      state.tabTagList = []
-      state.tabBreadList = []
-      state.tabActive = ''
-      return
-    }else if(rItem === 'whith'){
-      return
-    }
-
     // 存在则选择
     let boo = state.tabTagList.some(item => item.name === rItem.name)
     if (boo) {
@@ -58,8 +44,6 @@ const mutations = {
       //添加到标签数组
       state.tabTagList.push(rItem)
     }
-    //进行面包屑组装
-    state.tabBreadList = breadArr(router.options.routes, state.tabActive)
   },
   //关闭-单
   tabDel(state,rItem){
@@ -93,11 +77,6 @@ const mutations = {
     if(index !== 0){
       state.tabTagList.splice(0,index)
     }
-    // //设置选中
-    // state.tabActive = rItem.name
-    // //组装面包屑
-    // state.tabBreadList = breadArr(router.options.routes, state.tabActive)
-
     router.push({name:rItem.name})
   },
   //关闭所有

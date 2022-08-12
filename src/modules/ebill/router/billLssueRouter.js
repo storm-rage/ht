@@ -52,8 +52,8 @@ const billLssueRouter = [
     }
   },
   {
-    path: '/issuanceReviewList',
-    name: 'issuanceReviewList',
+    path: '/openBillAudit',
+    name: 'openBillAudit',
     component: () => import('../views/billLssue/issuanceReview/index.vue'),
     meta: {
       isMock: true,
@@ -71,6 +71,7 @@ const billLssueRouter = [
     meta: {
       isMock: false,
       title: `债权凭证签发复核`,
+      parent: 'openBillAudit',
       keepAlive: true,
       refreshIndex: 0,
       notRequireAuth: true
@@ -88,8 +89,8 @@ const billLssueRouter = [
     }
   },
   {
-    path: '/cancellationReview',
-    name: 'cancellationReview',
+    path: '/ebBillRejectAudit',
+    name: 'ebBillRejectAudit',
     component: () => import('../views/billLssue/cancellationReview/index.vue'),
     meta: {
       isMock: true,
@@ -101,16 +102,27 @@ const billLssueRouter = [
     }
   },
   {
-    path: '/tansferApp',
-    name: 'tansferApp',
-    component: () => import('../views/billLssue/transferApplication/index.vue'),
+    path: '/billCancellationReview',
+    name: 'billCancellationReview',
+    component: () => import('../views/billLssue/cancellationReview/billCancellationReview'),
     meta: {
       isMock: true,
+      title: `债权凭证作废复核`,
+      parent: 'ebBillRejectAudit',
+      keepAlive: true,
+      refreshIndex: 0,
+      notRequireAuth: true
+    }
+  },
+  {
+    path: '/ebBillApply',
+    name: 'ebBillApply',
+    component: () => import('../views/billLssue/transferApplication/index.vue'),
+    meta: {
       title: `转让申请`,
       root: '电子债权凭证',
       keepAlive: true,
       refreshIndex: 0,
-      notRequireAuth: true
     },
   },
   {
@@ -120,7 +132,7 @@ const billLssueRouter = [
     meta: {
       isMock: false,
       title: `凭证转让申请`,
-      root: '电子债权凭证',
+      parent: 'tansferApp',
       keepAlive: true,
       refreshIndex: 0,
       notRequireAuth: true
@@ -133,7 +145,7 @@ const billLssueRouter = [
     meta: {
       isMock: false,
       title: `凭证转让申请-批量`,
-      root: '电子债权凭证',
+      parent: 'tansferApp',
       keepAlive: true,
       refreshIndex: 0,
       notRequireAuth: true

@@ -142,8 +142,7 @@
       </div>
     </zj-content>
     <zj-content-footer>
-      <!-- <template v-if="userBaseInfo.entInfo.isHtEnterprise"> -->
-      <template>
+      <template v-if="userBaseInfo.entInfo.isHtEnterprise === '0'">
         <zj-button
           type="primary"
           @click="$router.push(`/entInfoMaintain/${userBaseInfo.entInfo.id}`)"
