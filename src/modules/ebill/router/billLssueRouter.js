@@ -132,7 +132,7 @@ const billLssueRouter = [
     meta: {
       isMock: false,
       title: `凭证转让申请`,
-      parent: 'tansferApp',
+      parent: 'ebBillApply',
       keepAlive: true,
       refreshIndex: 0,
       notRequireAuth: true
@@ -145,22 +145,20 @@ const billLssueRouter = [
     meta: {
       isMock: false,
       title: `凭证转让申请-批量`,
-      parent: 'tansferApp',
+      parent: 'ebBillApply',
       keepAlive: true,
       refreshIndex: 0,
       notRequireAuth: true
     }
   },
   {
-    path: '/transferCheck',
-    name: 'transferCheck',
+    path: '/ebBillApplyReview',
+    name: 'ebBillApplyReview',
     component: () => import('../views/billLssue/transferCheck/index.vue'),
     meta: {
-      isMock: false,
       title: `转让复核`,
       keepAlive: true,
       refreshIndex: 0,
-      notRequireAuth: true
     }
   },
   {
@@ -170,7 +168,7 @@ const billLssueRouter = [
     meta: {
       isMock: false,
       title: `凭证转让复核`,
-      root: '转让复核',
+      parent: 'ebBillApplyReview',
       keepAlive: true,
       refreshIndex: 0,
       notRequireAuth: true
