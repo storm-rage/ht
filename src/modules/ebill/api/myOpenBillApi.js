@@ -17,15 +17,23 @@ const myOpenBill = {
   },
   //我签发的凭证-详情
   getOpenBillDetail: (params) => {
-    return request.post('/my-open-bill/get-my-open-bill-detail', params )
+    return request.post('/my-open-bill/get-my-open-bill-detail', params)
+  },
+  //我签发的凭证-贸易背景
+  getOpenBillTrade: (params) => {
+    return request.post('/my-open-bill/get-my-open-bill-detail-trade', params)
+  },
+  //我签发的凭证-凭证轨迹
+  getOpenBillTrade: (params) => {
+    return request.post('/my-open-bill/get-my-open-bill-detail-trace', params)
   },
   //我签发的凭证-撤销
   cancelSubmit: (params) => {
-    return request.post('/my-open-bill/cancel-submit',  params )
+    return request.post('/my-open-bill/cancel-submit', params)
   },
   //我签发的凭证-作废申请
   invalidApply: (params) => {
-    return request.post('/my-open-bill/invalid-apply',  params )
+    return request.post('/my-open-bill/invalid-apply', params)
   },
 }
 export default myOpenBill

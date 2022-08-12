@@ -89,6 +89,17 @@ const billLssueRouter = [
     }
   },
   {
+    path: '/myOpenBillDetail',
+    name: 'myOpenBillDetail',
+    component: () => import('../views/billLssue/issuanceVoucher/detail'),
+    meta: {
+      title: `电子债权凭证详情`,
+      parent: 'myOpenBill',
+      keepAlive: true,
+      refreshIndex: 0,
+    }
+  },
+  {
     path: '/ebBillRejectAudit',
     name: 'ebBillRejectAudit',
     component: () => import('../views/billLssue/cancellationReview/index.vue'),
