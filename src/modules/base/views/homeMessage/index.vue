@@ -1,11 +1,13 @@
 <template>
-  <div class="home-notice">
+  <div ref="homeNotice" class="home-notice">
     <zj-header title="站内信">
-      <el-button slot="right" type="primary" size="mini" style="width: 100px">全部已读</el-button>
+      <el-button slot="right" type="primary" size="mini" style="width: 100px"
+        >全部已读</el-button
+      >
     </zj-header>
-    <zj-content-block>
+    <zj-content-block v-loading="loading" style="padding-bottom: 0;">
       <zj-content>
-        <div class="notice-content-block" v-for="(item,index) in list" :key="index">
+        <!-- <div class="notice-content-block" v-for="(item,index) in list" :key="index">
           <div class="notice-content">
             <div class="left-img">
               <img src="./img/message.png">
@@ -21,76 +23,172 @@
             </div>
           </div>
           <div class="detail-content" :class="{'is-show':selectIds.includes(item.id)}">{{item.content}}</div>
-        </div>
+        </div> -->
+        <el-collapse
+          v-model="collActive"
+          @change="handleCollapseChange"
+          class="notice-content-box"
+          :style="{ maxHeight: listMaxHeight }"
+        >
+          <el-collapse-item
+            class="notice-content-item"
+            v-for="item in list"
+            :key="item.id"
+            :name="item.id"
+          >
+            <template slot="title">
+              <div class="notice-header">
+                <i
+                  :class="[
+                    'left-icon',
+                    'el-collapse-item__arrow',
+                    'el-icon-arrow-right',
+                    collActive.includes(item.id) ? 'is-active' : ''
+                  ]"
+                ></i>
+                <div class="header-title">
+                  <div class="title-type">{{ item.type }}</div>
+                  <div
+                    class="title-theme"
+                    :class="{ 'is-reade': item.isReadFlag == '1' }"
+                  >
+                    {{ item.theme }}
+                  </div>
+                </div>
+                <div class="right-info">
+                  <span v-if="item.creator"
+                    >{{ item.creator }}&nbsp;&nbsp;|</span
+                  >&nbsp;&nbsp;{{ item.createDatetime }}
+                </div>
+              </div>
+            </template>
+            <div>{{ item.content }}</div>
+          </el-collapse-item>
+        </el-collapse>
         <div class="zj-m-t-15">
           <vxe-pager
             background
             :current-page.sync="currentPage"
             :page-size.sync="pageSize"
-            :layouts="['PrevJump', 'PrevPage', 'JumpNumber', 'NextPage', 'NextJump', 'Sizes', 'FullJump']">
+            :layouts="[
+              'PrevJump',
+              'PrevPage',
+              'JumpNumber',
+              'NextPage',
+              'NextJump',
+              'Sizes',
+              'FullJump'
+            ]"
+            @page-change="getList"
+          >
           </vxe-pager>
         </div>
       </zj-content>
     </zj-content-block>
-
   </div>
 </template>
 <script>
 export default {
   data () {
     return {
-      list: [
-        {
-          id: '1',
-          title: '我是公告title',
-          isRead: false,
-          sender: '张三',
-          sendTime: '2022-10-10',
-          content: '内容来了内容来了内容来了内容来了内容来了内容来了内容来了内容来了内容来了内容来了内容来了内容来了内容来了内容来了内容来了内容来了内容来了'
-        },
-        {
-          id: '2',
-          title: '不知名的title',
-          isRead: false,
-          sender: '李四',
-          sendTime: '2022-06-10',
-          content: '内容来了内容来了内容来了内容来了内容来了内容来了内容来了内容来了内容来了内容来了内容来了内容来了内容来了内容来了内容来了内容来了内容来了'
-        },
-        {
-          id: '3',
-          title: '不知名的title2',
-          isRead: true,
-          sendTime: '2022-08-10',
-          content: '内容来了内容来了内容来了内容来了内容来了内容来了内容来了内容来了内容来了内容来了内容来了内容来了内容来了内容来了内容来了内容来了内容来了'
-        }
-      ],
+      loading: false,
+      collActive: [],
+      isReadeColl: [], // 已读coll集合
+      zjControl: {
+        getSysNoticePage: this.$api.home.getSysNoticePage,
+        getSysNoticeDetail: this.$api.home.getSysNoticeDetail,
+        getSysNoticeRead: this.$api.home.getSysNoticeRead
+      },
+      list: [],
       selectIds: [],
       currentPage: 1,
-      pageSize: 10
+      pageSize: 10,
+      listMaxHeight: ''
     }
+  },
+  mounted () {
+    this.listMaxHeight = this.$refs.homeNotice
+      ? this.$refs.homeNotice.clientHeight - 38 - 63 - 60 + 'px'
+      : ''
+    this.getApi()
+    this.getList()
   },
   methods: {
     toViewDetail (item) {
       if (!this.selectIds.includes(item.id)) {
-        this.selectIds.push(item.id);
-      }else {
-        const index = this.selectIds.findIndex((id) => id === item.id);
-        this.$delete(this.selectIds, index);
+        this.selectIds.push(item.id)
+      } else {
+        const index = this.selectIds.findIndex(id => id === item.id)
+        this.$delete(this.selectIds, index)
       }
+    },
+    getList () {
+      this.loading = true
+      window.console.log('this', this)
+      let data = { page: this.currentPage, rows: this.pageSize }
+      if (this.$route.params.rowData?.id) {
+        data.id = this.$route.params.rowData?.id
+      }
+      this.zjControl
+        .getSysNoticePage(data)
+        .then(res => {
+          this.list = res.data.rows || []
+          this.isReadeColl = this.list
+            .filter(item => item.isReadFlag == '1')
+            .map(item => item.id)
+          this.loading = false
+        })
+        .catch(err => {
+          this.loading = false
+        })
+    },
+    handleCollapseChange (val) {
+      // window.console.log('collActive', this.collActive)
+      if (val.length) {
+        let newReadeIndex = val.findIndex(item =>
+          this.isReadeColl.every(ele => ele.id != item.id)
+        )
+        newReadeIndex != -1 && this.getDetail(val[newReadeIndex])
+      }
+    },
+    // 点击详情，发请求保存已读
+    getDetail (id) {
+      this.isReadeColl.push(id)
+      let item = this.list.find(item => item.id == id)
+      item && (item.isReadFlag = '1')
+      this.zjControl
+        .getSysNoticeDetail({ id })
+        .then(res => {})
+        .catch(err => {})
+    },
+    // 全部已读
+    handleAllReade () {
+      let ids = this.list.map(item => item.id).join(',')
+      this.zjControl
+        .getSysNoticeRead({ ids })
+        .then(res => {
+          if (res.code == 200 || res.code == 0) {
+            this.isReadeColl = this.list.map(item => {
+              item.isReadFlag = '1'
+              return item.id
+            })
+          }
+        })
+        .catch(() => {})
     }
   }
-};
+}
 </script>
 <style lang="less" scoped>
 .home-notice {
-  background: #eff3f6!important;
-  padding: 20px 0;
+  background: #eff3f6 !important;
+  padding: 20px 0 0 !important;
   .notice-content-block {
     padding: 15px 10px;
     border-radius: 4px;
     border: 1px solid #ebeef5;
-    background-color: rgba(255,255,255,.7);
-    box-shadow: 0 2px 12px 0 rgba(0, 0, 0, .1);
+    background-color: rgba(255, 255, 255, 0.7);
+    box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1);
     .notice-content {
       display: flex;
       align-items: center;
@@ -130,7 +228,7 @@ export default {
             width: 30%;
           }
         }
-        .detail-btn{
+        .detail-btn {
           &.not-read {
             margin-left: 10px;
           }
@@ -140,7 +238,7 @@ export default {
     .detail-content {
       display: none;
       height: 0;
-      transition: height .2s ease-in;
+      transition: height 0.2s ease-in;
       &.is-show {
         display: block;
         height: auto;
@@ -148,8 +246,64 @@ export default {
       }
     }
   }
-  .notice-content-block+.notice-content-block {
+  .notice-content-block + .notice-content-block {
     margin-top: 10px;
+  }
+  /deep/ .notice-content-box {
+    overflow: auto;
+    .el-collapse-item__header > .el-collapse-item__arrow {
+      display: none;
+    }
+    .notice-content-item {
+      margin-bottom: 10px;
+      &:last-child {
+        margin-bottom: 0;
+      }
+    }
+    .el-collapse-item {
+      border: 1px solid #dcdfe6;
+      border-radius: 5px;
+      .el-collapse-item__header {
+        height: auto;
+      }
+      .el-collapse-item__content {
+        border-top: 1px solid #dcdfe6;
+        padding: 15px 55px;
+        background: #f5f7fa;
+      }
+    }
+    .notice-header {
+      display: flex;
+      align-items: center;
+      width: 100%;
+      line-height: 1.5;
+      padding: 10px 15px 5px;
+      .left-icon {
+        border: 1px solid #dcdfe6;
+        border-radius: 2px;
+        padding: 2px;
+        margin-right: 20px;
+      }
+      .header-title {
+        flex: 1;
+        .title-type {
+          color: #606266;
+          font-size: 12px;
+          margin-bottom: 5px;
+        }
+        .title-theme {
+          font-size: 14px;
+          font-weight: bold;
+        }
+      }
+      .right-info {
+        margin-right: 5px;
+        color: #606266;
+        span {
+          color: inherit;
+        }
+      }
+    }
   }
 }
 </style>

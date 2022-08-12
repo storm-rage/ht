@@ -22,7 +22,7 @@
     },
     //修改系统公告
     sysNoticeAddAller:(params) => {
-      return request.post('/sys-notice/update-sys-notice',params)
+      return request.post('/sys-notice/update-sys-notice',{},{params})
     },
     //系统公告详情
     sysNoticeAddDetails:(params) => {

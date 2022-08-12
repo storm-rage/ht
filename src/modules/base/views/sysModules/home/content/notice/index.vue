@@ -5,19 +5,29 @@
         <right-more-btn @click.native="toMore"></right-more-btn>
       </template>
     </zj-header>
-    <div class="notice-list-block">
-      <list-item-block  v-for="(item,index) in list" :key="`${index}notice`">
-        <template slot="title">{{item.title}}</template>
-        <template slot="tip" v-if="item.isNew">NEW</template>
-        <template slot="date">{{item.date}}</template>
+    <div v-loading="loading" ref="noticeList" class="notice-list-block">
+      <list-item-block
+        v-for="(item, index) in list"
+        :key="`${index}notice`"
+        @click.native="toMore(item)"
+      >
+        <template slot="title">{{ item.theme }}</template>
+        <!-- <template slot="tip" v-if="item.isNew">NEW</template> -->
+        <template slot="date">{{ item.createDatetime }}</template>
       </list-item-block>
+      <el-empty v-if="list.length === 0" style="padding: 0;">
+        <!-- 占位取消图片 -->
+        <template slot="image">
+          <div></div>
+        </template>
+      </el-empty>
     </div>
   </home-content-block>
 </template>
 <script>
-import HomeContentBlock from '../../components/homeContentBlock';
-import RightMoreBtn from '../../components/rightMoreBtn';
-import ListItemBlock from '../../components/listItemBlock';
+import HomeContentBlock from '../../components/homeContentBlock'
+import RightMoreBtn from '../../components/rightMoreBtn'
+import ListItemBlock from '../../components/listItemBlock'
 export default {
   components: {
     HomeContentBlock,
@@ -26,58 +36,45 @@ export default {
   },
   data () {
     return {
-      list: [
-        {
-          title: '供应链金融平台规则上线',
-          isNew: true,
-          date: '2022-07-12'
-        },
-        {
-          title: '产品开通申请条件说明（集团很长很长很长很长很长很长很长很长很长很长很长很长很长',
-          isNew: true,
-          date: '2022-05-28'
-        },
-        {
-          title: '供应商资质规则',
-          isNew: false,
-          date: '2022-05-18'
-        },
-        {
-          title: '凭证作废复核审批人规则，必须是部分很长很长很长很长很长很长很长很长很长很长很长很长很长很长很长很长很长很长很长',
-          isNew: false,
-          date: '2022-05-08'
-        },
-        {
-          title: '凭证作废复核审批人规则，必须是部分很长很长很长很长很长很长很长很长很长很长很长很长很长很长很长很长很长很长很长',
-          isNew: false,
-          date: '2022-05-08'
-        },
-        {
-          title: '凭证作废复核审批人规则，必须是部分很长很长很长很长很长很长很长很长很长很长很长很长很长很长很长很长很长很长很长',
-          isNew: false,
-          date: '2022-05-08'
-        },
-        {
-          title: '凭证作废复核审批人规则，必须是部分很长很长很长很长很长很长很长很长很长很长很长很长很长很长很长很长很长很长很长',
-          isNew: false,
-          date: '2022-05-08'
-        },
-      ]
+      loading: false,
+      zjControl: {
+        getSysNoticePage: this.$api.home.getSysNoticePage
+      },
+      list: []
     }
   },
+  mounted () {
+    this.getApi()
+    this.getList()
+  },
   methods: {
-    toMore () {
-      this.goChild('homeNotice')
+    toMore (item) {
+      this.goChild('homeNotice', item || {})
+    },
+    getList () {
+      this.loading = true
+      this.$refs.noticeList.style.minHeight = '60px'
+      this.zjControl
+        .getSysNoticePage()
+        .then(res => {
+          this.list = res.data.rows || []
+          this.$refs.noticeList.style.minHeight = ''
+          this.loading = false
+        })
+        .catch(err => {
+          this.$refs.noticeList.style.minHeight = ''
+          this.loading = false
+        })
     }
   }
-};
+}
 </script>
 <style lang="less" scoped>
 .home-content-notice {
-  .notice-list-block {
-    overflow: auto;
-    margin: 0 -20px -20px;
-    padding: 0 20px 20px;
-  }
+  // .notice-list-block {
+  //   overflow: auto;
+  //   margin: 0 -20px -20px;
+  //   padding: 0 20px 20px;
+  // }
 }
 </style>

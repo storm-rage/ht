@@ -74,5 +74,45 @@ export default {
   getPayableIssuanceAmt(params) {
     return request.get('/workbench-graph/get-payable-issuance-total-amt', { params, data: {unlock: true} })
   },
-
+  //=============================公告======================================
+  /**
+   * /平台首页-查询系统公告列表
+   * @param params
+   * @returns {Promise<AxiosResponse<any>>}
+   */
+   getSysNoticePage(params) {
+    return request.get('/platform-home/get-sys-notice-page', { params, data: {unlock: true} })
+  },
+  /**
+   * /平台首页-系统公告详情
+   * @param params
+   * @returns {Promise<AxiosResponse<any>>}
+   */
+   getSysNoticeDetail(params) {
+    return request.get('/platform-home/get-sys-notice-detail', { params, data: {unlock: true} })
+  },
+  /**
+   * /平台首页-系统公告全部已读
+   * @param params
+   * @returns {Promise<AxiosResponse<any>>}
+   */
+   getSysNoticeRead(params) {
+    return request.get('/platform-home/get-sys-notice-read', { params, data: {unlock: true} })
+  },
+  //=============================站内信======================================
+  /**
+   * /平台首页-查询站内信
+   * @param params
+   * @returns {Promise<AxiosResponse<any>>}
+   */
+   getMoreMessage(params) {
+    return request.get('/platform-home/get-more-message-station', { params, data: {unlock: true} })
+  },
+  /* /平台首页-站内信详情
+   * @param params
+   * @returns {Promise<AxiosResponse<any>>}
+   */
+   getMessageDetail(params) {
+    return request.get('/platform-home/get-more-message-station', { params, data: {unlock: true} })
+  },
 };
