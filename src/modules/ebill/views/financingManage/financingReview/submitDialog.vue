@@ -19,9 +19,8 @@
 export default {
   name: "submitDialog",
   props: {
-    show: { type: Boolean, default: false},
-    form: {},
-
+    zjControl: Object,
+    financingId: String,
   },
   data() {
     return {
@@ -31,14 +30,21 @@ export default {
   },
   methods: {
     onConfirm() {
-      // this.zjControl.xxx(this.form)
-      // this.goParent()
+      let params = {
+        agreementList: this.dialogForm.agreementList,
+        flag: '1',//1-通过 2-拒绝
+        id: this.financingId,
+        reason: '',
+      }
+      this.zjControl.submitFinancingReview(params).then(res=>{
+        this.$message.success(res.msg)
+      })
       this.dialogShow = false
     },
     cancel() {
       this.dialogShow = false
     },
-    open(form,Boolean) {
+    open(form) {
       this.dialogShow = true
       this.dialogForm = form
       console.log(form)

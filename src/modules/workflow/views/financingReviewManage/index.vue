@@ -1,7 +1,7 @@
 <template>
   <zj-content-container>
     <!--  融资复核管理  -->
-    <el-tabs v-model="tabs" type="card" class="zj-tabs-card">
+    <el-tabs v-model="tabs" class="zj-tabs-card zj-p-l-16 zj-p-r-16">
       <el-tab-pane label="待办" name="toDo" >
         <to-do :zjControl="zjControl" :mDictionary="mDictionary" :mBtn="zjBtn"/>
       </el-tab-pane>

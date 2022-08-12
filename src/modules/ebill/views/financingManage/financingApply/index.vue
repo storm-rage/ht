@@ -1,7 +1,7 @@
 <template>
   <zj-content-container>
     <!--  融资申请  -->
-    <el-tabs v-model="tabs" type="card" class="zj-tabs-card">
+    <el-tabs v-model="tabs" class="zj-tabs-card zj-p-l-16 zj-p-r-16">
       <el-tab-pane label="订单融资" name="orderFinancing" >
         <orderFinancing :zjControl="zjControl" :uDictionary="uDictionary" :uBtn="zjBtn"/>
       </el-tab-pane>
