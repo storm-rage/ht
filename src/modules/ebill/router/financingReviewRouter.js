@@ -18,7 +18,7 @@ const financingReviewRouter = [
     component: () => import('../views/financingManage/financingReview/review'),
     meta: {
       isMock: true,
-      title: '融资融资复核',
+      title: '融资复核详情',
       root: '融资管理',
       keepAlive: true,
       refreshIndex: 0,

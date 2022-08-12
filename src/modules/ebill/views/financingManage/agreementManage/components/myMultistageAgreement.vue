@@ -20,7 +20,7 @@
           </template>
         </zj-table-column>
       </zj-table>
-      <div class="explain-text">
+      <div class="explain-text zj-m-l-10 zj-m-t-10">
         <div>注：</div>
         <ol class="explain-content">
           <li class="explain-item">以上额度信息仅供参考，实际以融资时额度为准。</li>

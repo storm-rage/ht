@@ -15,7 +15,8 @@ export default {
   },
   props: {
     height: String,
-    extendConfig: Object
+    extendConfig: Object,
+    dataList: Array,
   },
   data () {
     this.chartSetting = {
@@ -24,11 +25,11 @@ export default {
         formatter: (obj) => {
           const dataIndex = obj.dataIndex;
           const row = this.chartData.rows[dataIndex];
-          return `${row.amount},${row.rate}%`
+          return `${row.amount}`
         }
       },
       labelLine: {
-        show: false
+        show: true
       },
       offsetY: 120
     }
@@ -38,14 +39,18 @@ export default {
     return {
       loading: false,
       chartData: {
-        columns: ['label','rate'],
-        rows: [
-          {'label': '正常持有','rate': '40','amount': 100000},
-          {'label': '已清算','rate': '10','amount': 5000},
-          {'label': '已融资','rate': '0','amount': 10000},
-          {'label': '已转让','rate': '10','amount': 50000},
-        ]
+        columns: ['label','amount'],
+        rows: []
       }
+    }
+  },
+  watch: {
+    dataList: {
+      handler (val) {
+        this.chartData.rows = val
+      },
+      deep: true,
+      immediate: true
     }
   }
 }

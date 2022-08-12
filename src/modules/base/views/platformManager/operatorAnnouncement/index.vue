@@ -252,7 +252,7 @@ export default {
     //新增
     add() {
       this.type = "add";
-      this.formModel.type = "公告"
+      this.formModel.type = "2" // 公告
       this.dialogVisible = true;
     },
     //修改
@@ -287,9 +287,9 @@ export default {
     //保存
     save() {
       if (this.type === "add") {
-        alert("保存");
+        // alert("保存");
         let params = {
-          state: this.formModel.state, //开关状态（ 1:开启 2:关闭）
+          state: this.formModel.state?'1':'2', //开关状态（ 1:开启 2:关闭）
           target: this.formModel.target, //展示对象（1:核心企业 2:供应商,3:核心企业和供应商）
           theme: this.formModel.theme, //公告主题
           type: this.formModel.type, //公告类型（1:弹框,2:公告,3:宣传栏）
@@ -298,13 +298,14 @@ export default {
           content: this.formModel.content, //内容
         };
         this.zjControl.sysNoticeAdd(params).then((res) => {
-          this.$Message.success("新增成功！");
+          this.$message.success("新增成功！");
           this.dialogVisible = false;
+          this.$refs.searchTable.getList()
         });
       } else if (this.type === "update") {
-        alert("修改");
+        // alert("修改");
         let params = {
-          state: this.formModel.state, //开关状态（ 1:开启 2:关闭）
+          state: this.formModel.state?'1':'2', //开关状态（ 1:开启 2:关闭）
           target: this.formModel.target, //展示对象（1:核心企业 2:供应商,3:核心企业和供应商）
           theme: this.formModel.theme, //公告主题
           type: this.formModel.type, //公告类型（1:弹框,2:公告,3:宣传栏）
@@ -314,8 +315,9 @@ export default {
           id: this.formModel.id
         };
         this.zjControl.sysNoticeAddAller(params).then((res) => {
-          this.$Message.success("修改成功！");
+          this.$message.success("修改成功！");
           this.dialogVisible = false;
+          this.$refs.searchTable.getList()
         });
       }
     },

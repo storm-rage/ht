@@ -47,14 +47,14 @@
               <zj-table ref="searchTable"
                         :api="zjControl.queryMyFinancingPage"
                         :params="searchForm"
-                        :radio-config="{highlight: true}">
+              >
                 <zj-table-column title="融资流水号">
                   <template v-slot="{row}">
                     <zj-button type="text" @click="toDetail(row)">{{row.tranSerialNo}}</zj-button>
                   </template>
                 </zj-table-column>
                 <zj-table-column field="fromEntName" title="融资企业"/>
-              <zj-table-column field="financingProductType" title="融资产品名称"/>
+                <zj-table-column field="financingProductType" title="融资产品名称"/>
                 <zj-table-column field="createDatetime" title="融资申请日期" :formatter="date"/>
                 <zj-table-column field="tranAmt" title="融资金额" :formatter="money"/>
                 <zj-table-column field="interestRate" title="融资月利率" :formatter="rate"/>
@@ -84,11 +84,14 @@ export default {
         queryMyFinancingPage:this.$api.myFinancing.queryMyFinancingPage,//我的融资-查询
       },
       searchForm: {
-        supplierName: '',
-        businessType: '',
-        productType: '',
-        productNo: '',
-        productState: '',
+        tranSerialNoLike: '',
+        applyDatetimeStart: '',
+        applyDatetimeEnd: '',
+        expireDateStart: '',
+        expireDateEnd: '',
+        applyAmtStart: '',
+        applyAmtEnd: '',
+        repaymentFlag: '',
       },
       list: [
         {

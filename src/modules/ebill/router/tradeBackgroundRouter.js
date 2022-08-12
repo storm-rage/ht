@@ -1,8 +1,10 @@
 
 const tradeBackgroundRouter = [
   {
-    path: '/tradeRelations',
-    name: 'tradeRelations',
+    // 贸易关系管理-供应商
+    path: '/tradeRelationEnt',
+    // tradeRelationEnt​
+    name: 'tradeRelationEnt',
     component: () => import('../views/tradeBackground/tradeRelations/index.vue'),
     meta: {
       title: `贸易关系管理`,
@@ -13,6 +15,7 @@ const tradeBackgroundRouter = [
     }
   },
   {
+    // 贸易关系管理-平台方
     path: '/busiessTradeRelations',
     name: 'busiessTradeRelations',
     component: () => import('../views/tradeBackground/busiessTradeRelations/index.vue'),

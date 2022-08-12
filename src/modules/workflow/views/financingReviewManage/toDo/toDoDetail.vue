@@ -233,7 +233,7 @@
         </el-content-block>
         <el-content-block>
           <zj-header title="贸易背景资料（资产编号：12345）"/>
-          <el-tabs v-model="tabs" type="card" class="zj-tabs-card">
+          <el-tabs v-model="tabs" class="zj-tabs-card">
             <el-tab-pane label="贸易合同信息" name="tradeContract" >
               <trade-contract :zjControl="zjControl" :uDictionary="uDictionary" :uBtn="zjBtn" />
             </el-tab-pane>
