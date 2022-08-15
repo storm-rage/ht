@@ -1,7 +1,7 @@
 <template>
   <zj-content-container>
     <!--  阶段性协议管理  -->
-    <el-tabs v-model="tabs" type="card" class="zj-tabs-card">
+    <el-tabs v-model="tabs" class="zj-tabs-card zj-p-l-16 zj-p-r-16">
       <el-tab-pane label="阶段性协议查询" name="multistageAgreementSearch" >
         <multistage-agreement-search :zjControl="zjControl" :uDictionary="uDictionary" :uBtn="zjBtn"/>
       </el-tab-pane>

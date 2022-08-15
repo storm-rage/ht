@@ -18,6 +18,12 @@
                   <el-form-item label="申请状态：">
                     <el-select v-model="searchForm.workflowState">
                       <el-option label="全部" value=""></el-option>
+                      <el-option
+                        v-for="item in dictionary.workflowState"
+                        :label="item.desc"
+                        :value="item.code"
+                        :key="item.code"
+                      />
                     </el-select>
                   </el-form-item>
                 </el-form>
@@ -75,6 +81,10 @@ export default {
       })
     },
 
+  },
+  created() {
+    this.getApi()
+    this.getDic()
   }
 };
 </script>

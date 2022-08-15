@@ -47,8 +47,10 @@
       <div class="zj-search-response">
         <zj-table
           ref="openBillApply"
-          :dataList="dataList"
+          :api="zjControl.onlineList"
           keep-source
+          @checkbox-change="checkChange"
+          @checkbox-all="checkChange"
           :edit-config="{
             trigger: 'manual',
             mode: 'row',
@@ -57,12 +59,16 @@
             showStatus: true,
           }"
         >
-          <zj-table-column type="selection" title="对账单编号" />
-          <zj-table-column field="date" title="买方名称" />
-          <zj-table-column field="name" title="供应商业务系统编码" />
-          <zj-table-column field="address" title="供应商名称" />
-          <zj-table-column field="date1" title="对账日期" :formatter="date" />
-          <zj-table-column field="date2" title="入库日期/放行日期" />
+          <zj-table-column type="checkbox" title="对账单编号" />
+          <zj-table-column field="acctBillCode" title="买方名称" />
+          <zj-table-column field="billSource" title="供应商业务系统编码" />
+          <zj-table-column field="checkBillAmt" title="供应商名称" />
+          <zj-table-column
+            field="checkBillDate"
+            title="对账日期"
+            :formatter="date"
+          />
+          <zj-table-column field="inputDate" title="入库日期/放行日期" />
           <zj-table-column
             field="date3"
             title="预计付款日期"
@@ -75,12 +81,7 @@
           <zj-table-column title="操作" fixed="right">
             <template v-slot="{ row }">
               <template v-if="!$refs.openBillApply.isActiveByRow(row)">
-                <zj-button
-                  type="text"
-                  :api="zjControl.onlineDetail"
-                  @click="minute(row)"
-                  >详情</zj-button
-                >
+                <zj-button type="text" @click="minute(row)">详情</zj-button>
                 <zj-button type="text" @click="edit(row)">修改</zj-button>
               </template>
               <template v-if="$refs.openBillApply.isActiveByRow(row)">
@@ -123,132 +124,12 @@ export default {
       zjControl: {
         onlineList: this.$api.openBillApply.onlineList, //线上对账单-查询
         onlineDetail: this.$api.openBillApply.onlineDetail, //线上对账单-详情
+        billApply: this.$api.openBillApply.billApply, //对账单-签发凭证
       },
       searchForm: {},
-      dataList: [
-        {
-          date: "11111",
-          name: "22222",
-          address: "3333333",
-          date1: "11111",
-          date2: "11111",
-          date3: "11111",
-          date4: "11111",
-          date5: "11111",
-          date6: "11111",
-        },
-        {
-          date: "11111",
-          name: "22222",
-          address: "3333333",
-          date1: "11111",
-          date2: "11111",
-          date3: "11111",
-          date4: "11111",
-          date5: "11111",
-          date6: "11111",
-        },
-        {
-          date: "11111",
-          name: "22222",
-          address: "3333333",
-          date1: "11111",
-          date2: "11111",
-          date3: "11111",
-          date4: "11111",
-          date5: "11111",
-          date6: "11111",
-        },
-        {
-          date: "11111",
-          name: "22222",
-          address: "3333333",
-          date1: "11111",
-          date2: "11111",
-          date3: "11111",
-          date4: "11111",
-          date5: "11111",
-          date6: "11111",
-        },
-        {
-          date: "11111",
-          name: "22222",
-          address: "3333333",
-          date1: "11111",
-          date2: "11111",
-          date3: "11111",
-          date4: "11111",
-          date5: "11111",
-          date6: "11111",
-        },
-        {
-          date: "11111",
-          name: "22222",
-          address: "3333333",
-          date1: "11111",
-          date2: "11111",
-          date3: "11111",
-          date4: "11111",
-          date5: "11111",
-          date6: "11111",
-        },
-        {
-          date: "11111",
-          name: "22222",
-          address: "3333333",
-          date1: "11111",
-          date2: "11111",
-          date3: "11111",
-          date4: "11111",
-          date5: "11111",
-          date6: "11111",
-        },
-        {
-          date: "11111",
-          name: "22222",
-          address: "3333333",
-          date1: "11111",
-          date2: "11111",
-          date3: "11111",
-          date4: "11111",
-          date5: "11111",
-          date6: "11111",
-        },
-        {
-          date: "11111",
-          name: "22222",
-          address: "3333333",
-          date1: "11111",
-          date2: "11111",
-          date3: "11111",
-          date4: "11111",
-          date5: "11111",
-          date6: "11111",
-        },
-        {
-          date: "11111",
-          name: "22222",
-          address: "3333333",
-          date1: "11111",
-          date2: "11111",
-          date3: "11111",
-          date4: "11111",
-          date5: "11111",
-          date6: "11111",
-        },
-        {
-          date: "11111",
-          name: "22222",
-          address: "3333333",
-          date1: "11111",
-          date2: "11111",
-          date3: "11111",
-          date4: "11111",
-          date5: "11111",
-          date6: "11111",
-        },
-      ],
+      onlineDetailLsit: {}, //存储详情数据
       openBillApplyRow: {}, //编辑当前行
+      list: [],
     };
   },
   created() {
@@ -256,10 +137,19 @@ export default {
   },
   methods: {
     //详情
-    minute(row){
-      console.log(row,'详情')
-      // return
-      this.$router.push('/openBillApplyDetails',row)
+    minute(row) {
+      // console.log(row, "详情");
+      this.zjControl.onlineDetail({ id: row.id }).then((res) => {
+        if (res.code === 200) {
+          // console.log(res.data, "data");
+          this.$router.push({
+            name: "openBillApplyDetails",
+            params: { rowData: res.data },
+          });
+        }
+      });
+      // console.log(this.onlineDetailLsit, "传递之前");
+      // return;
     },
     //修改单元格
     edit(row) {
@@ -293,10 +183,25 @@ export default {
     cancel() {
       this.$refs.openBillApply.clearActived();
     },
+    //勾选
+    checkChange() {
+      let checkArr = this.$refs.openBillApply.getCheckboxRecords();
+      console.log(checkArr, "勾选的值11111");
+      this.list = checkArr;
+      console.log(this.list, "勾选的值22222");
+    },
     //签发凭证
     goChild(row) {
       // console.log(row, "=======");
-      this.$router.push("/openBillApplyConfirm");
+      let params = {
+        applyType: "0",
+        accountBillList: this.list,
+      };
+      this.zjControl.billApply(params).then((res) => {
+        if (res.code === 200) {
+          this.$router.push("/openBillApplyConfirm");
+        }
+      });
     },
   },
 };

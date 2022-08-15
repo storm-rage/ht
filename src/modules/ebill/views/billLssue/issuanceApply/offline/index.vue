@@ -50,18 +50,26 @@
       </template>
       <div class="zj-search-response">
         <zj-table
-          :dataList="dataList"
+          :api="zjControl.offlineList"
           ref="selectionCheckbox"
           @checkbox-change="checkChange"
           @checkbox-all="checkChange"
         >
           <zj-table-column type="checkbox" title="对账单编号" />
-          <zj-table-column field="date1" title="供应商编码" />
-          <zj-table-column field="date2" title="供应商名称" />
-          <zj-table-column field="date3" title="对账日期" :formatter="date" />
-          <zj-table-column field="date4" title="对账单金额" />
-          <zj-table-column field="date5" title="付款日期" :formatter="date" />
-          <zj-table-column field="date6" title="开立凭证说明" />
+          <zj-table-column field="acctBillCode" title="供应商编码" />
+          <zj-table-column field="billSource" title="供应商名称" />
+          <zj-table-column
+            field="checkBillAmt"
+            title="对账日期"
+            :formatter="date"
+          />
+          <zj-table-column field="checkBillDate" title="对账单金额" />
+          <zj-table-column
+            field="companyName"
+            title="付款日期"
+            :formatter="date"
+          />
+          <zj-table-column field="supplierCode" title="开立凭证说明" />
           <zj-table-column title="操作" fixed="right">
             <template v-slot="{ row }">
               <zj-button type="text" @click="toDatails(row)"
@@ -95,72 +103,15 @@ export default {
   data() {
     return {
       zjControl: {
-        offlineList: this.$api.openBillApply.offlineList, //线上对账单-查询
+        offlineList: this.$api.openBillApply.offlineList, //线下对账单-查询
         openBill: this.$api.openBillApply.openBill, //下载批量开立凭证导入模板
         billExcel: this.$api.openBillApply.billExcel, //上传开立凭证文件
         billData: this.$api.openBillApply.billData, //上传开立凭证文件-保存数据
         accountOffline: this.$api.openBillApply.accountOffline, //线下对账单-删除
+        billApply: this.$api.openBillApply.billApply, //对账单-签发凭证
       },
       searchForm: {},
       selection: [], //储存删除的值
-      dataList: [
-        {
-          date1: "1值",
-          date2: "1值",
-          date3: "1值",
-          date4: "1值",
-          date5: "1值",
-          date6: "1值",
-        },
-        {
-          date1: "2值",
-          date2: "2值",
-          date3: "2值",
-          date4: "2值",
-          date5: "2值",
-          date6: "2值",
-        },
-        {
-          date1: "3值",
-          date2: "3值",
-          date3: "3值",
-          date4: "3值",
-          date5: "3值",
-          date6: "3值",
-        },
-        {
-          date1: "11111",
-          date2: "22222",
-          date3: "33333",
-          date4: "44444",
-          date5: "55555",
-          date6: "66666",
-        },
-        {
-          date1: "11111",
-          date2: "22222",
-          date3: "33333",
-          date4: "44444",
-          date5: "55555",
-          date6: "66666",
-        },
-        {
-          date1: "11111",
-          date2: "22222",
-          date3: "33333",
-          date4: "44444",
-          date5: "55555",
-          date6: "66666",
-        },
-        {
-          date1: "11111",
-          date2: "22222",
-          date3: "33333",
-          date4: "44444",
-          date5: "55555",
-          date6: "66666",
-        },
-      ],
       excelList: {},
     };
   },
@@ -191,7 +142,14 @@ export default {
     },
     //签发凭证
     goChild(row) {
-      this.$router.push("/openBillApplyConfirm");
+      let params = {
+        ApiModelProperty: '1',
+      };
+      this.zjControl.billApply(params).then((res) => {
+        if (res.code === 200) {
+          this.$router.push("/openBillApplyConfirm");
+        }
+      });
     },
     //维护附件
     toDatails(row) {
@@ -200,9 +158,9 @@ export default {
     //勾选
     checkChange(row) {
       let checkArr = this.$refs.selectionCheckbox.getCheckboxRecords();
-      console.log(checkArr, "===勾选===");
+      // console.log(checkArr, "===勾选===");
       this.selection = checkArr;
-      console.log(this.selection, "===储存勾选===");
+      // console.log(this.selection, "===储存勾选===");
     },
     //勾选删除
     remove() {

@@ -8,13 +8,13 @@
   >
     <p>您确定将所选中的凭证撤销吗？</p>
     <el-form :model="dialogForm" ref="dialogForm" :rules="rules">
-      <el-form-item label="请输入撤销原因：" prop="refuseReason">
+      <el-form-item label="请输入撤销原因：" prop="rejectReason">
         <el-input type="textarea" v-model="dialogForm.rejectReason"></el-input>
       </el-form-item>
     </el-form>
     <div slot="footer" class="dialog-footer">
-      <zj-button status="primary" @click="onConfirm">确认</zj-button>
-      <zj-button status="primary" @click="cancel">取消</zj-button>
+      <zj-button type="primary" @click="onConfirm">确认</zj-button>
+      <zj-button @click="cancel">取消</zj-button>
     </div>
   </el-dialog>
 </template>
@@ -29,12 +29,12 @@ export default {
   data() {
     return {
       zjControl: {
-        invalidApply: this.$api.myOpenBill.invalidApply,
+        cancelSubmit: this.$api.myOpenBill.cancelSubmit,
       },
       dialogShow: false,
       dialogForm: {},
       rules: {
-        refuseReason: [
+        rejectReason: [
           { required: true, message: "请输入撤销原因！", trigger: "blur" },
         ],
       },
@@ -44,8 +44,9 @@ export default {
     onConfirm() {
       this.$refs.dialogForm.validate((valid) => {
         if (valid) {
-          this.zjControl.invalidApply(this.dialogForm).then((res) => {
+          this.zjControl.cancelSubmit(this.dialogForm).then((res) => {
             this.$message.success("已撤销");
+            this.$parent.search()
           });
           this.dialogShow = false;
         }

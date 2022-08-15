@@ -54,7 +54,7 @@
         </tr>
         <tr>
           <td colspan="12">我司同意按照
-            <zj-button type="text" @click="attaDownload">《开单确认书》</zj-button>
+            <zj-button type="text" @click="attaDownload(detailData.kdProtocolFileId)">《{{ detailData.kdProtocolName }}》</zj-button>
             的约定，到期无条件向融单最终持有人兑付融单项下全部应付款项。</td>
         </tr>
         <tr>
@@ -63,20 +63,24 @@
             <div>{{ detailData.remark }}</div>
           </td>
         </tr>
-        <tr>
-          <td colspan="12" align="left">
-            <div class="">企业签章：</div>
-            <div>
-              <span v-for="item in detailData.entSignatures" :key="item">
-                    <img :src="'data:image/png;base64,'+item" alt="签章图片" width="150" height="150">
-              </span>
-            </div>
-          </td>
-        </tr>
+<!--        <tr>-->
+<!--          <td colspan="12" align="left">-->
+<!--            <div class="">企业签章：</div>-->
+<!--            <div>-->
+<!--              <span v-for="item in detailData.entSignatures" :key="item">-->
+<!--                    <img :src="'data:image/png;base64,'+item" alt="签章图片" width="150" height="150">-->
+<!--              </span>-->
+<!--            </div>-->
+<!--          </td>-->
+<!--        </tr>-->
       </table>
       <el-row class="zj-center">
         <el-checkbox v-model="agreeCheck">已阅读并同意</el-checkbox>
-        <zj-button type="text" @click="attaDownload">《收单确认书》</zj-button>
+        <zj-button type="text"
+                   @click="getOneBillSignAgreement(item)"
+                   v-for="(item, index) in protocols"
+                   :key="index"
+        >《{{ item.protocolName }}》</zj-button>
       </el-row>
 
     </zj-content>
@@ -85,37 +89,79 @@
       <vxe-button type="primary" @click="confirmSignFor">确认签收</vxe-button>
       <vxe-button type="back" @click="goParent">取消</vxe-button>
     </zj-content-footer>
+
+    <el-dialog
+      :visible.sync="dialogShow" width="800px"
+      :close-on-click-modal="false"
+    >
+      <div v-html="dialogHtml"></div>
+    </el-dialog>
+
+    <!-- 查看器 -->
+<!--    <zj-preview :visible.sync="viewShow" :fileUrl="viewUrl" :showFooter="false" :fileType="viewType" @close="viewShow=false"/>-->
+    <!-- 协议查看器 -->
+<!--    <zj-multi-agree ref="zjMultiAgree"/>-->
+    <!-- 云证书 -->
+    <zj-certuficate ref="zjCertuficte" @confirm="passConfirm"/>
+
   </zj-content-block>
 </template>
 
 <script>
+import view from "@pubComponent/preview/view";
+
 export default {
   name:'billSignForDetail',
+  mixins:[view],
   data() {
     return {
       zjControl: {
         getBillSignBillInfoDetail:this.$api.billLssueBillSignFor.getBillSignBillInfoDetail,//凭证签收-详情
         passBillSign:this.$api.billLssueBillSignFor.passBillSign,//融单签收-审核通过
+        getOneBillSignAgreement:this.$api.billLssueBillSignFor.getOneBillSignAgreement,//融单签收-查询融单签收协议信息-单个协议查看
+
+        downloadFile:this.$api.baseCommon.downloadFile,
       },
       detailData: {},
-      protocols: {},
-      agreeCheck: false,
+      protocols: [],//协议列表
+      agreeCheck: false,//是否勾选阅读并同意
+      dialogShow: false,
+      dialogHtml: '',
+      idChecked: false,//是否验证云证书
     };
   },
   methods: {
-    attaDownload() {},
+    //收单通知书查看
+    getOneBillSignAgreement(item) {
+      let params = {
+        bizId : item.bizId,
+        protocolType : item.protocolType,
+      }
+      this.zjControl.getOneBillSignAgreement(params).then(res=>{
+        this.dialogHtml = res.data.agreement.html
+        this.dialogShow = true
+      })
+    },
+    attaDownload(fileId) {
+      this.zjControl.downloadFile(fileId)
+    },
     confirmSignFor() {
       if(!this.agreeCheck) {
-        return
+        return this.$message.error('必须勾选已阅读并同意协议')
       }
-      let params = {
-        id: this.row.id,
-        protocols: this.protocols,
-        state: this.row.state,
+      // 调用云证书验证
+      this.$refs.zjCertuficte.open()
+
+      if(this.idChecked) {
+        let params = {
+          id: this.row.id,
+          protocols: this.protocols,
+          state: this.row.state,
+        }
+        this.zjControl.passBillSign(params).then(res => {
+          this.$message.success(res.msg)
+        })
       }
-      this.zjControl.passBillSign(params).then(res => {
-        this.$message.success(res.msg)
-      })
     },
     getBillSignBillInfoDetail() {
       let params = {
@@ -125,6 +171,9 @@ export default {
         this.detailData = res.data.billInfo
         this.protocols = res.data.protocols
       })
+    },
+    passConfirm() {
+      this.idChecked = true
     },
   },
   created() {

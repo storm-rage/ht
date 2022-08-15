@@ -57,11 +57,9 @@
             </zj-list-layout>
           </div>
     </zj-content-container>
-    <el-row style="position: relative;margin-top: 20px;">
-      <zj-content-footer>
-        <zj-button class="submit-button" @click="goChild('voucherFinancingDetail')">下一步</zj-button>
-      </zj-content-footer>
-    </el-row>
+    <zj-content-footer>
+      <zj-button type="primary" @click="goChild('voucherFinancingDetail')">下一步</zj-button>
+    </zj-content-footer>
 
   </div>
 </template>

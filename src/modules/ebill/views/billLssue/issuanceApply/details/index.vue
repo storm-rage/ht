@@ -11,16 +11,11 @@
         <!-- <template slot="title">
           <h4 class="orderTitle">对账单信息</h4>
         </template> -->
-        <ZjHeader>对账单信息
-        </ZjHeader>
-        <zj-table
-          ref="searchTable"
-          :params="searchForm"
-          :api="zjControl.onlineDetail"
-        >
-          <zj-table-column prop="id" title="对账单编号" />
-          <zj-table-column field="" title="买方名称" />
-          <zj-table-column field="" title="供应商编码" />
+        <ZjHeader>对账单信息 </ZjHeader>
+        <zj-table ref="searchTable" :dataList="rowList">
+          <zj-table-column field="acctBillCode" title="对账单编号" />
+          <zj-table-column field="checkBillAmt" title="买方名称" />
+          <zj-table-column field="checkBillDate" title="供应商编码" />
           <zj-table-column field="" title="供应商名称" />
           <zj-table-column field="" title="对账日期" :formatter="date" />
           <zj-table-column field="" title="预计付款日期" :formatter="date" />
@@ -39,10 +34,10 @@
         <zj-table
           ref="searchTable"
           :params="searchForm"
-          :api="zjControl.onlineDetail"
+          :dataList="rowList[0].accountDetailInfo"
         >
-          <zj-table-column prop="id" title="DN合并号" />
-          <zj-table-column field="" title="客户编号" />
+          <zj-table-column field="convertPrice" title="DN合并号" />
+          <zj-table-column field="inputDate" title="客户编号" />
           <zj-table-column field="" title="客户名称" />
           <zj-table-column field="" title="旅行日期" :formatter="date" />
           <zj-table-column field="" title="运输方式" />
@@ -67,14 +62,9 @@
         >
       </el-row>
     </zj-workflow> -->
-      <ZjContentFooter
-        ><zj-button
-          class="back"
-          @click="$router.push('/openBillApply')"
-          :api="zjBtn.passBillSignBatch"
-          >返回</zj-button
-        ></ZjContentFooter
-      >
+    <ZjContentFooter
+      ><zj-button class="back" @click="go">返回</zj-button></ZjContentFooter
+    >
   </div>
 </template>
 <script>
@@ -87,10 +77,22 @@ export default {
       searchForm: {},
       collActive: ["orderInfo"],
       checked: false,
+      rowList: [],
     };
   },
-  created() {},
-  methods: {},
+  created() {
+    // console.log(this.$route.params.rowData, "详情的数据");
+    this.rowList.push(this.$route.params.rowData);
+    // console.log(this.rowList);
+  },
+  methods: {
+    //返回
+    go() {
+      this.$nextTick(() => {
+        this.$router.push("openBillApply");
+      });
+    },
+  },
 };
 </script>
 <style lang="less" scoped>
