@@ -16,8 +16,7 @@ export default {
   name: 'AppMain',
   computed: {
     key() {
-      let key = this.$route.name + '_' + this.$route.meta.refreshIndex
-      return key
+      return this.$route.name + '_' + this.$store.state.tab.currentRouteIndex
     },
   }
 }

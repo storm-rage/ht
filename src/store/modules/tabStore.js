@@ -6,6 +6,8 @@ const state = {
   cachedName: [],
   // 缓存的路由
   cachedRoute: [],
+  // 当前路由index
+  currentRouteIndex: 0,
   // -----------sw
   tabActive:'', //选中
   tabTagList:[], //tag
@@ -14,30 +16,24 @@ const state = {
 const mutations = {
   //添加-单
   tabAdd(state,rItem) {
-    // 存在则选择
-    let boo = state.tabTagList.some(item => item.name === rItem.name)
-    if (boo) {
+    const boo = state.tabTagList.some(item => item.name === rItem.name)
+    if (boo) { // 存在则选择
       //设置选中
       state.tabActive = rItem.name
       if(rItem.params && rItem.params.boo){
         //强制刷新
-        router.options.routes.map(item => {
-          if(item.name === rItem.name){
-            item.meta.refreshIndex !== undefined ? item.meta.refreshIndex += 1 : item.meta.refreshIndex =0
-          }else if(item.children){
-            item.children.map(citem => {
-              if(citem.name === rItem.name){
-                citem.meta.refreshIndex !== undefined ? citem.meta.refreshIndex += 1 : citem.meta.refreshIndex =0
-              }
-            })
-          }
-        })
+        // const routes = router.getRoutes();
+        // const route = routes.find((item) => {return item.name === rItem.name})
+        const route = router.currentRoute
+        if (route != null && route.meta) {
+          route.meta.refreshIndex !== undefined ? route.meta.refreshIndex += 1 : route.meta.refreshIndex =0
+          state.currentRouteIndex = rItem.meta.refreshIndex
+        }
       }
-    }
-    // 不存在则添加
-    else {
+    }else { // 不存在则添加
       if(rItem.meta){
         rItem.meta.refreshIndex += 1
+        state.currentRouteIndex = rItem.meta.refreshIndex
       }
       //并设置选中
       state.tabActive = rItem.name
@@ -88,22 +84,11 @@ const mutations = {
   },
   //刷新
   tabRefresh(state,rItem){
-    router.options.routes.map((item,index) => {
-      if(item.name === rItem.name){
-        item.meta.refreshIndex !== undefined ? item.meta.refreshIndex += 1 : item.meta.refreshIndex =0
-      }else if(item.children){
-        item.children.map((citem,cindex) => {
-          if(citem.name === rItem.name){
-            citem.meta.refreshIndex !== undefined ? citem.meta.refreshIndex += 1 : citem.meta.refreshIndex =0
-            router.options.routes[index].children[cindex].meta.refreshIndex+=1
-          }else if(citem.children){
-            citem.children.map(ccitem => {
-              ccitem.meta.refreshIndex !== undefined ? ccitem.meta.refreshIndex += 1 : ccitem.meta.refreshIndex =0
-            })
-          }
-        })
-      }
-    })
+    const route = router.currentRoute;
+    if (route&&route.name === rItem.name) {
+      route.meta.refreshIndex !== undefined ? route.meta.refreshIndex += 1 : route.meta.refreshIndex =0;
+      state.currentRouteIndex = route.meta.refreshIndex;
+    }
   },
   //----------------------------------------------------
   ADD_CACHE: (state, route) => {
