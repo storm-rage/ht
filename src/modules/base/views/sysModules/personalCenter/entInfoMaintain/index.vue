@@ -63,10 +63,7 @@
           </el-col>
           <el-col :span="8">
             <el-form-item label="企业工商有效期：" prop="registerEndDate">
-              <el-input
-                v-model.trim="form.registerEndDate"
-                :disabled="isDetail"
-              />
+              <zj-date-picker :date.sync="form.registerEndDate" />
             </el-form-item>
           </el-col>
           <el-col :span="8">
@@ -164,6 +161,7 @@
           <zj-button
             class="append zj-m-b-10 zj-m-l-10"
             type="primary"
+            v-if="entData.supplierType === '1'"
             @click="openBankDialog(entData.entBankInfos)"
             >更换银行账户</zj-button
           >
@@ -201,7 +199,7 @@
               title="银行联行号"
               :edit-render="{ name: '$input' }"
             />
-            <zj-table-column title="操作">
+            <zj-table-column title="操作" v-if="entData.supplierType !== '1'">
               <template v-slot="{ row, rowIndex }">
                 <template v-if="!$refs.bank.isActiveByRow(row)">
                   <zj-button type="text" @click="bankEdit(row)">修改</zj-button>
