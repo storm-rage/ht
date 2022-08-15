@@ -3,22 +3,23 @@
     <zj-money-block
       img-name="hold-img"
       text="可转让电子债券凭证金额："
+      :amount="transferAmount"
       tipsText="说明：可转让债权凭证金额：当前状态为“正常持有”的，折扣范围内的可用金额。"
     />
     <zj-list-layout>
       <template slot="searchForm">
         <el-form ref="searchForm" :model="searchForm">
-          <el-form-item label="合同编号：">
+          <el-form-item label="签发人：">
             <el-input
-              v-model="searchForm.issueEntName"
+              v-model="searchForm.payEntName"
               @keyup.enter.native="enterSearch"
             />
           </el-form-item>
 
           <el-form-item label="凭证到期日：" class="col-right">
             <zj-date-range-picker
-              :startDate.sync="searchForm.expireDateStart"
-              :endDate.sync="searchForm.expireDateEnd"
+              :startDate.sync="searchForm.payableExpireDateStart"
+              :endDate.sync="searchForm.payableExpireDateEnd"
             />
           </el-form-item>
 
@@ -32,22 +33,22 @@
 
           <el-form-item label="转让企业：">
             <el-input
-              v-model="searchForm.issueEntName"
+              v-model="searchForm.transferName"
               @keyup.enter.native="enterSearch"
             />
           </el-form-item>
 
           <el-form-item label="债权凭证编号：">
             <el-input
-              v-model="searchForm.issueEntName"
+              v-model="searchForm.ebillCode"
               @keyup.enter.native="enterSearch"
             />
           </el-form-item>
 
           <el-form-item label="凭证签收日：" class="col-right">
             <zj-date-range-picker
-              :startDate.sync="searchForm.expireDateStart"
-              :endDate.sync="searchForm.expireDateEnd"
+              :startDate.sync="searchForm.holderDateStart"
+              :endDate.sync="searchForm.holderDateEnd"
             />
           </el-form-item>
         </el-form>
@@ -71,31 +72,31 @@
             }}</span>
           </template>
         </zj-table-column>
-        <zj-table-column field="issueEntName" title="原始债权凭证编号" />
-        <zj-table-column field="ebillAmt" title="签发人" :formatter="money" />
+        <zj-table-column field="rootCode" title="原始债权凭证编号" />
+        <zj-table-column field="payEntName" title="签发人" :formatter="money" />
         <zj-table-column
-          field="transferAmt"
+          field="receiptEntName"
           title="原始持有人"
           :formatter="money"
         />
         <zj-table-column
-          field="issueDate"
+          field="payableIssuanceDate"
           title="凭证签发日"
           :formatter="date"
         />
         <zj-table-column
-          field="issueDate"
+          field="payableExpireDate"
           title="凭证到期日"
           :formatter="date"
         />
         <zj-table-column
-          field="receiveDate"
+          field="transferName"
           title="转让企业"
           :formatter="date"
         />
-        <zj-table-column field="splusAmt" title="凭证金额" :formatter="money" />
+        <zj-table-column field="ebillAmt" title="凭证金额" :formatter="money" />
         <zj-table-column
-          field="expireDate"
+          field="holderDate"
           title="凭证签收日"
           :formatter="date"
         />
@@ -110,7 +111,7 @@
           <template v-slot="{ row }">
             <zj-button
               type="text"
-              @click="goChild('entManageDetail', row)"
+              @click="goChild('billAssignApply', row)"
               :api="zjBtn.getEnterprise"
               >转让申请</zj-button
             >
@@ -121,7 +122,7 @@
     <zj-content-footer>
       <zj-button
         type="primary"
-        @click="goChild('billAssignApply', ids)"
+        @click="goChild('billAssignApplyS', {paramsDataList:paramsDataList})"
         :api="zjBtn.passBillSignBatch"
         >发起转让申请</zj-button
       >
@@ -132,27 +133,30 @@
 export default {
   data() {
     return {
-      zjControl: {},
+      zjControl: this.$api.billAssignApply,
       searchForm: {},
-      ids: [],
+      parem: [],
       dictionary: {},
+      transferAmount: 0,
+      paramsDataList: []
     };
   },
   created() {
     this.getApi();
+    this.getTransferAmount();
   },
   methods: {
-    // 获取字典
-    queryDictionary() {
-      this.zjControl.queryEntDictionary().then((res) => {
-        this.dictionary = res.data;
+    // 获取可转让金额
+    getTransferAmount() {
+      this.zjControl.getEbBillPage().then((res) => {
+        this.transferAmount = res.data;
       });
     },
     tableCheckChange({ records }) {
       console.log(records);
-      this.ids = [];
+      this.paramsDataList = [];
       records.forEach((item) => {
-        this.ids.push(item.id);
+        this.paramsDataList.push(item);
       });
     },
   },

@@ -3,68 +3,70 @@
     <zj-top-header>凭证转让申请</zj-top-header>
     <zj-content-block>
       <zj-header>电子债权凭证信息</zj-header>
-      <zj-table>
-        <zj-table-column field="ebillCode" title="原始凭证编号">
-        </zj-table-column>
-        <zj-table-column field="issueEntName" title="凭证编号" />
-        <zj-table-column field="ebillAmt" title="签发人" :formatter="money" />
-        <zj-table-column
-          field="transferAmt"
-          title="原始持有人"
-          :formatter="money"
-        />
-        <zj-table-column
-          field="splusAmt"
-          title="凭证签发日"
-          :formatter="money"
-        />
-        <zj-table-column
-          field="issueDate"
-          title="凭证到期日"
-          :formatter="date"
-        />
-        <zj-table-column
-          field="receiveDate"
-          title="转让企业"
-          :formatter="date"
-        />
-        <zj-table-column
-          field="expireDate"
-          title="凭证金额"
-          :formatter="date"
-        />
-        <zj-table-column
-          field="expireDate"
-          title="凭证签收日"
-          :formatter="date"
-        />
-        <zj-table-column
-          field="state"
-          title="凭证状态"
-          :formatter="
-            (obj) => typeMap(dictionary.enterpriseStateList, obj.cellValue)
-          "
-        />
-        <zj-table-column title="操作" fixed="right">
-          <template v-slot="{ row }">
-            <zj-button
-              type="text"
-              @click="goChild('entManageDetail', row)"
-              :api="zjBtn.getEnterprise"
-              >贸易背景</zj-button
-            >
-          </template>
-        </zj-table-column>
-      </zj-table>
+      <zj-content>
+        <zj-table :pager="false" :dataList="dataList">
+          <zj-table-column field="ebillCode" title="原始凭证编号">
+          </zj-table-column>
+          <zj-table-column field="issueEntName" title="凭证编号" />
+          <zj-table-column field="ebillAmt" title="签发人" :formatter="money" />
+          <zj-table-column
+            field="transferAmt"
+            title="原始持有人"
+            :formatter="money"
+          />
+          <zj-table-column
+            field="splusAmt"
+            title="凭证签发日"
+            :formatter="money"
+          />
+          <zj-table-column
+            field="issueDate"
+            title="凭证到期日"
+            :formatter="date"
+          />
+          <zj-table-column
+            field="receiveDate"
+            title="转让企业"
+            :formatter="date"
+          />
+          <zj-table-column
+            field="ebillAmt"
+            title="凭证金额"
+            :formatter="money"
+          />
+          <zj-table-column
+            field="holderDate"
+            title="凭证签收日"
+            :formatter="date"
+          />
+          <zj-table-column
+            field="state"
+            title="凭证状态"
+            :formatter="
+              (obj) => typeMap(dictionary.enterpriseStateList, obj.cellValue)
+            "
+          />
+          <zj-table-column title="操作" fixed="right">
+            <template v-slot="{ row }">
+              <zj-button
+                type="text"
+                @click="goChild('entManageDetail', row)"
+                :api="zjBtn.getEnterprise"
+                >贸易背景</zj-button
+              >
+            </template>
+          </zj-table-column>
+        </zj-table>
+      </zj-content>
     </zj-content-block>
 
     <zj-content-block>
       <zj-header>转让信息</zj-header>
-      <el-form :model="searchForm" label-width="150px">
+      <el-form ref="form" :model="form" :rules="rules" label-width="150px">
         <el-row>
           <el-col :span="8">
-            <el-form-item label="被转让人名称：">
-              <el-select v-model="form.contractType">
+            <el-form-item label="被转让人名称：" prop="holderName">
+              <el-select v-model="form.holderName">
                 <el-option
                   v-for="item in dictionary.roleId"
                   :key="item.code"
@@ -75,52 +77,53 @@
             </el-form-item>
           </el-col>
           <el-col :span="8">
-            <el-form-item label="转让金额：">
+            <el-form-item label="转让金额：" prop="ebillAmt">
               <el-input
-                v-model="form.issueEntName"
+                disabled
+                v-model="form.ebillAmt"
                 @keyup.enter.native="enterSearch"
               />
             </el-form-item>
           </el-col>
           <el-col :span="8">
-            <el-form-item label="收款账号：">
+            <el-form-item label="收款账号：" prop="bankAccount">
               <el-input
-                v-model="form.issueEntName"
+                v-model="form.bankAccount"
                 @keyup.enter.native="enterSearch"
               />
             </el-form-item>
           </el-col>
           <el-col :span="8">
-            <el-form-item label="收款账户户名：">
+            <el-form-item label="收款账户户名：" prop="bankAccname">
               <el-input
-                v-model="form.issueEntName"
+                v-model="form.bankAccname"
                 @keyup.enter.native="enterSearch"
               />
             </el-form-item>
           </el-col>
           <el-col :span="8">
-            <el-form-item label="收款银行联行号：">
+            <el-form-item label="收款银行联行号：" prop="bankNo">
               <el-input
-                v-model="form.issueEntName"
+                v-model="form.bankNo"
                 @keyup.enter.native="enterSearch"
               />
             </el-form-item>
           </el-col>
           <el-col :span="8">
-            <el-form-item label="收款账户开户行：">
+            <el-form-item label="收款账户开户行：" prop="bankName">
               <el-input
-                v-model="form.issueEntName"
+                v-model="form.bankName"
                 @keyup.enter.native="enterSearch"
               />
             </el-form-item>
           </el-col>
           <el-col :span="16">
-            <el-form-item label="备注：">
+            <el-form-item label="备注：" prop="remark">
               <el-input
                 type="textarea"
                 rows="3"
                 placeholder="请输入内容"
-                v-model="form.textarea"
+                v-model="form.remark"
               >
               </el-input>
             </el-form-item>
@@ -129,49 +132,93 @@
       </el-form>
     </zj-content-block>
 
-    <p><a href="#">《xxx协议》</a></p>
+    <p><el-link :underline="false" type="primary">《xxx协议》</el-link></p>
 
     <zj-content-footer>
-      <zj-button type="primary" @click="dialogVisible = true"
-        >提交申请</zj-button
-      >
+      <zj-button type="primary" @click="toApply">提交申请</zj-button>
       <zj-button @click="goParent">返回</zj-button>
     </zj-content-footer>
-
-    <el-dialog
-      title="额度调整申请确认"
-      width="30%"
-      :visible.sync="dialogVisible"
-    >
-      <div class="money-block">
-        <p class="text">您本次申请转让40笔电子债权凭证，共计：</p>
-        <p class="money">1,232,231.00元，</p>
-        <p class="tips-text">请确认。</p>
-      </div>
-      <span slot="footer" class="dialog-footer">
-        <el-button @click="dialogVisible = false">取 消</el-button>
-        <el-button type="primary" @click="binGo">确 定</el-button>
-      </span>
-    </el-dialog>
   </zj-content-container>
 </template>
 
 <script>
+import { validateBankAcct } from "@utils/rules";
+
 export default {
   data() {
     return {
-      form: {},
+      zjControl: this.$api.billAssignApply,
+      form: {
+        ebillAmt: 0,
+      },
       detailData: {},
       dataList: [],
-      dialogVisible: false,
+      ids: [],
       dictionary: {},
+      rules: {
+        holderName: [
+          { required: true, message: "请输入被转让人名称", trigger: "blur" },
+        ],
+        bankAccname: [
+          { required: true, message: "请输入收款账户户名", trigger: "blur" },
+        ],
+        bankAccount: [
+          {
+            required: true,
+            message: "请输入收款账号",
+            trigger: "blur",
+            max: 50,
+          },
+          { validator: validateBankAcct, trigger: "blur" },
+        ],
+        bankNo: [
+          {
+            required: true,
+            message: "请输入收款银行联行号",
+            trigger: "blur",
+            max: 50,
+          },
+          { validator: validateBankAcct, trigger: "blur" },
+        ],
+        bankName: [
+          { required: true, message: "请输入收款账户开户行", trigger: "blur" },
+        ],
+      },
     };
   },
+  created() {
+    this.getRow();
+    this.dataList = this.row.paramsDataList;
+    this.dataList.forEach((item) => {
+      this.form.ebillAmt += parseFloat(item.ebillAmt);
+      this.ids.push(item.ebillCode);
+    });
+  },
   methods: {
-    // 获取字典
-    queryEntDictionary() {
-      this.zjControl.queryEntDictionary().then((res) => {
-        this.dictionary = res.data;
+    // 提交申请
+    toApply() {
+      this.$refs.form.validate((valid) => {
+        if (valid) {
+          this.$confirm(
+            `您本次申请转让<b style="font-size: 18px;">${this.dataList.length}</b>笔电子债权凭证，共计：<br/>
+        <b style="font-size: 18px;">${this.form.ebillAmt}</b>元请确认<br>`,
+            "转让申请确认",
+            {
+              dangerouslyUseHTMLString: true,
+              confirmButtonText: "确定",
+              cancelButtonText: "取消",
+            }
+          ).then(() => {
+            let params = {
+              ids: this.ids,
+              billInfoList: [this.form],
+            };
+            this.zjControl.submitEbBillOneToMany(params).then((res) => {
+              this.$message.success("申请成功!");
+              this.goParent();
+            });
+          });
+        }
       });
     },
   },
