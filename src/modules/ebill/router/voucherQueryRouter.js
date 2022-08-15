@@ -1,7 +1,7 @@
 const voucherSignForRouter = [
   {
-    path: '/voucherQuery',
-    name: 'voucherQuery',
+    path: '/electronicClaimsBill',
+    name: 'electronicClaimsBill',
     component: () => import('../views/queryStatistics/voucherQuery'),
     meta: {
       isMock: true,
@@ -22,7 +22,7 @@ const voucherSignForRouter = [
       root: '查询统计',
       keepAlive: true,
       refreshIndex: 0,
-      parent:'voucherQuery',
+      parent:'electronicClaimsBill',
       notRequireAuth: true
     }
   },

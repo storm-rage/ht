@@ -71,7 +71,8 @@
                 <zj-table-column field="payableAmt" title="债权凭证金额" :formatter="money"/>
                 <zj-table-column field="payableIssuanceDate" title="债权凭证签发日期" :formatter="date"/>
                 <zj-table-column field="payableExpireDate" title="债权凭证到期日" :formatter="date"/>
-                <zj-table-column field="state" title="债权凭证状态" :formatter="obj=>typeMap(dictionary.stateList,obj.cellValue)"/>
+                <zj-table-column field="state" title="债权凭证状态" />
+<!--                <zj-table-column field="state" title="债权凭证状态" :formatter="obj=>typeMap(dictionary.stateList,obj.cellValue)"/>-->
               </zj-table>
             </zj-list-layout>
           </div>
