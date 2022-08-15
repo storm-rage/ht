@@ -2,19 +2,23 @@
   <zj-content-container>
     <!--  融资申请  -->
     <el-tabs v-model="tabs" class="zj-tabs-card zj-p-l-16 zj-p-r-16">
-      <el-tab-pane label="订单融资" name="orderFinancing" >
-        <orderFinancing :zjControl="zjControl" :uDictionary="uDictionary" :uBtn="zjBtn"/>
+      <el-tab-pane label="订单融资" name="orderFinancing" v-if="tabInfo.orderTab">
+        <orderFinancing :zjControl="zjControl" :uBtn="zjBtn"/>
       </el-tab-pane>
-      <el-tab-pane label="入库融资/凭证融资" name="voucherFinancing" >
-        <voucherFinancing :zjControl="zjControl" :mDictionary="mDictionary" :mBtn="zjBtn"/>
+      <el-tab-pane label="入库融资/凭证融资" name="voucherFinancing" v-if="tabInfo.billTab || tabInfo.warehouseTab">
+        <voucherFinancing :zjControl="zjControl" :mBtn="zjBtn"/>
       </el-tab-pane>
     </el-tabs>
+    <zj-content-footer>
+      <zj-button type="primary" @click="toNext">下一步</zj-button>
+    </zj-content-footer>
 
   </zj-content-container>
 </template>
 <script>
 import orderFinancing from "./orderFinancing/orderFinancing";
 import voucherFinancing from "./voucherFinancing/voucherFinancing";
+import financingApply from "../../../api/financingApplyApi";
 export default {
   name: "financingManage",
   components: {
@@ -22,74 +26,50 @@ export default {
   },
   data() {
     return {
-      searchForm: {
-        productName: '',
-        businessType: '',
-        productType: '',
-        productNo: '',
-        productState: '',
+      zjControl: {
+        downloadFinancAgreeTemplate:this.$api.financingApply.downloadFinancAgreeTemplate,//下载融资协议
+        getDirectory:this.$api.financingApply.getDirectory,//数据字典
+        getFinancingApplyBillDetail:this.$api.financingApply.getFinancingApplyBillDetail,//入库/凭证融资详情
+        getFinancingApplyOrderDetail:this.$api.financingApply.getFinancingApplyOrderDetail,//订单融资详情
+        getFinancingApplyTab:this.$api.financingApply.getFinancingApplyTab,//获取tab
+        getOrderFinancingCredit:this.$api.financingApply.getOrderFinancingCredit,//获取贸易关系列表
+        getPhasedAgreement:this.$api.financingApply.getPhasedAgreement,//获取阶段性协议列表
+        queryFinancingApplyBillPage:this.$api.financingApply.queryFinancingApplyBillPage,//获取入库融资/凭证融资列表
+        submitFinancingBillApply:this.$api.financingApply.submitFinancingBillApply,//入库/凭证融资提交
+        submitFinancingOrderApply:this.$api.financingApply.submitFinancingOrderApply,//订单融资提交
+        downloadFile:this.$api.baseCommon.downloadFile,
       },
-      list: [
-        {
-          field1: 'scm00001',
-          field2: '某某产品一号',
-          field3: '上游',
-          field4: '订单保理',
-          field5: '2022.09.08 11:18:19',
-          field6: '生效',
-          field7: '是'
-        }
-      ],
-      tradeList: [],
       tabs:'orderFinancing',
-      tabAtive:'orderFinancing',
-      zjControl: {},
       uDictionary:{},
-      mDictionary:{}
+      tabInfo: {
+        orderTab: '',//订单融资Tab:0-不展示 1-展示
+        billTab: '',//凭证融资Tab:0-不展示 1-展示
+        warehouseTab: '',//入库融资Tab:0-不展示 1-展示
+      },
 
     };
   },
   methods: {
-    /**
-     *
-     * @param row
-     */
-    toContractDetail(row) {
-      console.error(row);
-      this.$router.push({name: 'businessDetail'});
-    },
-    /**
-     *
-     * @param row
-     */
-    toContractSign(row) {
-      console.log(row);
-    },
-    handleRadioChange({row}) {
-      this.tradeList.push({
-        field1: '佛山市a有限公司',
-        field2: '是',
-        field3: '756756756767',
-        field4: '非保理',
-        field5: '12',
-        field6: '1000',
-        field7: '2000',
-        field8: '正常'
+    getTabInfo() {
+      this.zjControl.getFinancingApplyTab().then(res=>{
+        this.tabInfo = res.data
       })
     },
     getApiAfter(){
       this.zjBtn.userInfo ? this.tabAtive = 'orderFinancing' : this.tabAtive = 'voucherFinancing'
     },
-    toDetail (row) {
-      this.goChild('productInfoManageDetail', row)
+    toNext() {
+      if(this.tabs === 'orderFinancing') {
+        this.goChild('orderFinancingDetail')
+      }
+      if(this.tabs === 'voucherFinancing') {
+        this.goChild('voucherFinancingDetail')
+      }
     },
-    toEdit (row) {
-      this.goChild('productInfoManageEdit', row)
-    },
-    toEditQuota (row) {},
   },
   created() {
     this.getApi()
+    this.getTabInfo()
   }
 };
 </script>
