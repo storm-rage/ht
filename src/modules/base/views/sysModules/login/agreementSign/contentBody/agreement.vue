@@ -62,7 +62,7 @@ export default {
     // 是否使用云证书
     isUseYunCert: {
       type: Boolean,
-      default: false
+      default: true
     }
   },
   created() {
