@@ -76,7 +76,6 @@
                     :dataList="form.ebBillModelList"
                     :pager="false"
           >
-            <zj-table-column type="seq" title="序号" width="60"/>
             <zj-table-column field="ebillCode" title="债权凭证编号" />
             <zj-table-column field="rootCode" title="原始债权凭证编号" />
             <zj-table-column field="writerName" title="凭证签发人" />
@@ -107,6 +106,9 @@
         <zj-content-block>
           <zj-header title="贸易背景"/>
           <!--    贸易背景      -->
+          <el-row class="button-row">
+            <zj-button type="primary" @click="toTradeBackground">贸易背景</zj-button>
+          </el-row>
 
         </zj-content-block>
       </zj-content-block>
@@ -179,6 +181,11 @@ export default {
         tranAmt: this.form.tranAmt,
       }
       this.zjControl.downloadFinancAgreeTemplate(params)
+    },
+    toTradeBackground() {
+      let testArr = [{a:1}, {b:2}, ]//测试数据
+      this.goChild('tradeBackgroundMaintain', {ebBillModelList: [...testArr]})
+      // this.goChild('tradeBackgroundMaintain', {ebBillModelList: this.form.ebBillModelList})
     },
     submit(){
       this.$refs.form.validate(boo=>{

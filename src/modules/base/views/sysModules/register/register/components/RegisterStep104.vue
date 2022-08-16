@@ -23,7 +23,7 @@
           <zj-table-column field="email" title="邮箱"/>
           <zj-table-column field="bankAcctNo" title="银行卡号"/>
           <zj-table-column field="htSysCode" title="海天业务系统账号" v-if="form.isHtEnterprise == '1'"/>
-          <zj-table-column field="idCheckState" title="是否完成身份核验" v-if="form.isHtEnterprise == '1'"/>
+          <zj-table-column field="idCheckState" title="是否完成身份核验" v-if="form.isHtEnterprise == '1'" :formatter="obj=>typeMap(dictionary.idCheckStateList,obj.cellValue)"/>
           <zj-table-column  title="操作" fixed="right">
             <template v-slot="{row}">
               <zj-button type="text" @click="maintainOperator(row)">维护</zj-button>
@@ -46,7 +46,7 @@
           <zj-table-column title="附件类型">
             <template v-slot="{row}">
               <span style="color: red">{{ row.fileType? '*' : '' }}</span>
-              {{ row.fileType ? row.fileType : '' }}
+              {{ row.fileType ? typeMap(dictionary.attachTypeList,row.fileType)||row.fileType : '' }}
             </template>
           </zj-table-column>
           <zj-table-column field="needSeal" title="是否需要加盖企业公章" v-if="form.isHtEnterprise == '1'"/>
@@ -817,6 +817,9 @@ export default {
         id: this.entInfoObj.form.id,
         name: this.entInfoObj.form.name,
       }).then(res=>{
+        if(this.form.isHtEnterprise === '1') {
+          this.registerUserList = res.data.registerUserList
+        }
         this.registerAttachList = res.data.registerAttachList
         this.setInvoiceInfo()
 
