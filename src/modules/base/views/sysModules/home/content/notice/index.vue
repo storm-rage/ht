@@ -12,7 +12,7 @@
         @click.native="toMore(item)"
       >
         <template slot="title">{{ item.theme }}</template>
-        <!-- <template slot="tip" v-if="item.isNew">NEW</template> -->
+        <template slot="tip" v-if="item.isReadFlag=='0'">NEW</template>
         <template slot="date">{{ item.createDatetime }}</template>
       </list-item-block>
       <el-empty v-if="list.length === 0" style="padding: 0;">
@@ -49,7 +49,13 @@ export default {
   },
   methods: {
     toMore (item) {
-      this.goChild('homeNotice', item || {})
+      // this.goChild('homeNotice', item || {})
+      this.$router.push({
+        name: 'homeNotice',
+        query: {
+          rowId: item.id
+        }
+      })
     },
     getList () {
       this.loading = true

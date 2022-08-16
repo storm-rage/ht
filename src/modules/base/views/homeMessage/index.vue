@@ -1,7 +1,12 @@
 <template>
   <div ref="homeNotice" class="home-notice">
     <zj-header title="站内信">
-      <el-button slot="right" type="primary" size="mini" style="width: 100px"
+      <el-button
+        slot="right"
+        type="primary"
+        size="mini"
+        @click="handleAllReade"
+        style="width: 100px"
         >全部已读</el-button
       >
     </zj-header>
@@ -47,22 +52,22 @@
                   ]"
                 ></i>
                 <div class="header-title">
-                  <div class="title-type">{{ item.type }}</div>
+                  <div class="title-type">系统公告</div>
                   <div
                     class="title-theme"
                     :class="{ 'is-reade': item.isReadFlag == '1' }"
                   >
-                    {{ item.theme }}
+                    {{ item.messageTitle }}
                   </div>
                 </div>
                 <div class="right-info">
                   <span v-if="item.creator"
                     >{{ item.creator }}&nbsp;&nbsp;|</span
-                  >&nbsp;&nbsp;{{ item.createDatetime }}
+                  >&nbsp;&nbsp;{{ item.sendDatetime }}
                 </div>
               </div>
             </template>
-            <div>{{ item.content }}</div>
+            <div>{{ item.messageContent }}</div>
           </el-collapse-item>
         </el-collapse>
         <div class="zj-m-t-15">
@@ -95,9 +100,9 @@ export default {
       collActive: [],
       isReadeColl: [], // 已读coll集合
       zjControl: {
-        getSysNoticePage: this.$api.home.getSysNoticePage,
-        getSysNoticeDetail: this.$api.home.getSysNoticeDetail,
-        getSysNoticeRead: this.$api.home.getSysNoticeRead
+        getMoreMessage: this.$api.home.getMoreMessage,
+        getMessageDetail: this.$api.home.getMessageDetail,
+        postMessageRead: this.$api.home.postMessageRead
       },
       list: [],
       selectIds: [],
@@ -124,15 +129,21 @@ export default {
     },
     getList () {
       this.loading = true
-      window.console.log('this', this)
       let data = { page: this.currentPage, rows: this.pageSize }
-      if (this.$route.params.rowData?.id) {
-        data.id = this.$route.params.rowData?.id
-      }
       this.zjControl
-        .getSysNoticePage(data)
+        .getMoreMessage(data)
         .then(res => {
-          this.list = res.data.rows || []
+          this.list =
+            res.data.rows.map(item => {
+              if (
+                this.$route.query.rowId &&
+                item.id == this.$route.query.rowId
+              ) {
+                this.collActive.push(item.id)
+                item.isReadFlag == '0' && this.handleCollapseChange(item.id)
+              }
+              return item
+            }) || []
           this.isReadeColl = this.list
             .filter(item => item.isReadFlag == '1')
             .map(item => item.id)
@@ -143,29 +154,32 @@ export default {
         })
     },
     handleCollapseChange (val) {
-      // window.console.log('collActive', this.collActive)
+      // window.console.log('val', val);
+      // window.console.log('this.isReadeColl', this.isReadeColl);
       if (val.length) {
         let newReadeIndex = val.findIndex(item =>
-          this.isReadeColl.every(ele => ele.id != item.id)
+          this.isReadeColl.every(ele => ele != item)
         )
         newReadeIndex != -1 && this.getDetail(val[newReadeIndex])
       }
     },
-    // 点击详情，发请求保存已读
+    // 点击的是未读的，调详情接口保存已读状态
     getDetail (id) {
-      this.isReadeColl.push(id)
       let item = this.list.find(item => item.id == id)
       item && (item.isReadFlag = '1')
       this.zjControl
-        .getSysNoticeDetail({ id })
-        .then(res => {})
+        .getMessageDetail({ id })
+        .then(res => {
+          this.isReadeColl.push(id)
+          this.$store.dispatch('user/setMessageTipNum')
+        })
         .catch(err => {})
     },
     // 全部已读
     handleAllReade () {
       let ids = this.list.map(item => item.id).join(',')
       this.zjControl
-        .getSysNoticeRead({ ids })
+        .postMessageRead({ ids })
         .then(res => {
           if (res.code == 200 || res.code == 0) {
             this.isReadeColl = this.list.map(item => {
@@ -294,6 +308,9 @@ export default {
         .title-theme {
           font-size: 14px;
           font-weight: bold;
+          &.is-reade {
+            color: #606266;
+          }
         }
       }
       .right-info {

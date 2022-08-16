@@ -133,6 +133,7 @@ export default {
         fullPath:newRouter.fullPath,
         path:newRouter.path,
         meta:newRouter.meta,
+        query: newRouter.query,
         params:{
           boo:newRouter.params && newRouter.params.rowData ? true : false
         }

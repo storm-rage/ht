@@ -34,7 +34,9 @@ function download (url, params = {}, type, method = 'get') {
           let content = res.data
           let blob = new Blob([content])
           let fileName = params.fileName || decodeURIComponent(res.headers['content-disposition'].split('filename*=')[1].split("''")[1])
+          window.console.log({fileName});
           if ('download' in document.createElement('a')) {
+            window.console.log('downlad');
             // 非IE下载
             let elink = document.createElement('a')
             elink.download = fileName
@@ -45,6 +47,7 @@ function download (url, params = {}, type, method = 'get') {
             URL.revokeObjectURL(elink.href) // 释放URL 对象
             document.body.removeChild(elink)
           } else {
+            window.console.log('ie');
             // IE10+下载
             navigator.msSaveBlob(blob, fileName)
           }

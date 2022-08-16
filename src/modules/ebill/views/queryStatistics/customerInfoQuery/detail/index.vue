@@ -1,108 +1,91 @@
 <template>
-  <zj-content-container ref="detailContainer" style="padding-bottom: 0;" >
+  <zj-content-container ref="detailContainer" style="padding-bottom: 0;">
     <!--  企业信息明细  -->
-    <zj-top-header :title="titleInfo"/>
+    <zj-top-header :title="titleInfo" />
     <el-tabs v-model="tabs" class="zj-tabs-card zj-p-l-16 zj-p-r-16">
-      <el-tab-pane label="企业信息" name="entInfo" >
+      <el-tab-pane label="企业信息" name="entInfo">
         <keep-alive>
-          <ent-info v-if="tabs==='entInfo'" :zjControl="zjControl" :uDictionary="uDictionary" :uBtn="zjBtn"/>
+          <ent-info
+            v-if="tabs === 'entInfo'"
+            :detailData="defailData"
+            :zjControl="zjControl"
+            :dictionary="dictionary"
+            :zjBtn="zjBtn"
+          />
         </keep-alive>
       </el-tab-pane>
-      <el-tab-pane label="用户信息" name="userInfo" >
+      <el-tab-pane label="用户信息" name="userInfo">
         <keep-alive>
-          <user-info :detailEl="$refs.detailContainer" v-if="tabs==='userInfo'" :zjControl="zjControl" :mDictionary="mDictionary" :mBtn="zjBtn"/>
+          <user-info
+            v-if="tabs === 'userInfo'"
+            :detailEl="$refs.detailContainer"
+            :detailData="defailData"
+            :zjControl="zjControl"
+            :dictionary="dictionary"
+            :zjBtn="zjBtn"
+          />
         </keep-alive>
       </el-tab-pane>
     </el-tabs>
-      <zj-content-footer style="margin-top: 20px;">
-        <zj-button class="submit-button" @click="goParent">返回</zj-button>
-      </zj-content-footer>
-
+    <zj-content-footer style="margin-top: 20px;">
+      <zj-button class="submit-button" @click="goParent">返回</zj-button>
+    </zj-content-footer>
   </zj-content-container>
 </template>
 <script>
-import entInfo from "./entInfo";
-import userInfo from "./userInfo";
+import entInfo from './entInfo'
+import userInfo from './userInfo'
 export default {
-  name: "entInfoDetail",
+  name: 'entInfoDetail',
   components: {
-    entInfo,userInfo,
+    entInfo,
+    userInfo
   },
   computed: {
     titleInfo () {
-      return this.tabs === 'entInfo'?'企业信息明细':this.tabs === 'userInfo'?'客户信息明细':''
+      return this.tabs === 'entInfo'
+        ? '企业信息明细'
+        : this.tabs === 'userInfo'
+        ? '客户信息明细'
+        : ''
     }
   },
-  data() {
+  data () {
     return {
-      searchForm: {
-        productName: '',
-        businessType: '',
-        productType: '',
-        productNo: '',
-        productState: '',
+      detailId: '', // 当前的详情id
+      tabs: 'entInfo',
+      tabAtive: 'entInfo',
+      zjControl: {
+        getEntInfoDetail: this.$api.entInfoQuery.getEntInfoDetail,
+        getDirectory: this.$api.entInfoQuery.getDirectory, // 数据字典
       },
-      list: [
-        {
-          field1: 'scm00001',
-          field2: '某某产品一号',
-          field3: '上游',
-          field4: '订单保理',
-          field5: '2022.09.08 11:18:19',
-          field6: '生效',
-          field7: '是'
-        }
-      ],
-      tradeList: [],
-      tabs:'entInfo',
-      tabAtive:'entInfo',
-      zjControl: {},
-      uDictionary:{},
-      mDictionary:{}
-
-    };
+      dictionary: {},
+      defailData: {}
+    }
   },
   methods: {
-    /**
-     *
-     * @param row
-     */
-    toContractDetail(row) {
-      console.error(row);
-      this.$router.push({name: 'businessDetail'});
-    },
-    /**
-     *
-     * @param row
-     */
-    toContractSign(row) {
-      console.log(row);
-    },
-    handleRadioChange({row}) {
-      this.tradeList.push({
-        field1: '佛山市a有限公司',
-        field2: '是',
-        field3: '756756756767',
-        field4: '非保理',
-        field5: '12',
-        field6: '1000',
-        field7: '2000',
-        field8: '正常'
+    getDictionary () {
+      this.zjControl.getDirectory().then(res => {
+        this.dictionary = Object.assign({}, res.data)
       })
     },
-    getApiAfter(){
-      this.zjBtn.userInfo ? this.tabAtive = 'businessAnalysis' : this.tabAtive = 'businessReport'
-    },
-    toDetail (row) {
-      this.goChild('productInfoManageDetail', row)
-    },
-    toEdit (row) {
-      this.goChild('productInfoManageEdit', row)
-    },
-    toEditQuota (row) {},
+    getDetail () {  
+      this.detailId = this.$route.query.rowId
+      this.zjControl
+        .getEntInfoDetail({id: this.detailId})
+        .then(res => {
+          this.defailData = res.data || {}
+        })
+        .catch(() => {})
+    }
   },
-  created() {
+  activated() {
+    (this.detailId!=this.$route.query.rowId) && this.getDetail()
+  },
+  created () {
     this.getApi()
+    this.getDictionary()
+    this.getDetail()
   }
-};
+}
 </script>

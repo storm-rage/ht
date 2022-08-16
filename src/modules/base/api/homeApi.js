@@ -2,6 +2,16 @@ import request from '@common/axios/request'
 export default {
   //=============================数据驾驶舱======================================
   /**
+   * 首页-消息未读数量
+   * @param params
+   * @returns {Promise<AxiosResponse<any>>}
+   */
+   getMessageReadCount(params) {
+    return request.get('/platform-home/get-message-station-read-count', { params })
+  },
+
+  //=============================数据驾驶舱======================================
+  /**
    * 数据驾驶舱-核心企业
    * @param params
    * @returns {Promise<AxiosResponse<any>>}
@@ -96,7 +106,7 @@ export default {
    * @param params
    * @returns {Promise<AxiosResponse<any>>}
    */
-   getSysNoticeRead(params) {
+   postSysNoticeRead(params) {
     return request.get('/platform-home/get-sys-notice-read', { params, data: {unlock: true} })
   },
   //=============================站内信======================================
@@ -113,6 +123,13 @@ export default {
    * @returns {Promise<AxiosResponse<any>>}
    */
    getMessageDetail(params) {
-    return request.get('/platform-home/get-more-message-station', { params, data: {unlock: true} })
+    return request.get('/platform-home/get-message-station-by-id', { params, data: {unlock: true} })
+  },
+  /* /平台首页-站内信详情全部已读
+   * @param params
+   * @returns {Promise<AxiosResponse<any>>}
+   */
+   postMessageRead(params) {
+    return request.get('/platform-home/get-message-station-read-by-id', { params, data: {unlock: true} })
   },
 };
