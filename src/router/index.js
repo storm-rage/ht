@@ -13,44 +13,48 @@ const originalPush = Router.prototype.push
 Router.prototype.push = function push(location) {
   return originalPush.call(this, location).catch(err => err)
 }
+const originalReplace = Router.prototype.replace
+Router.prototype.replace = function push(location) {
+  return originalReplace.call(this, location).catch(err => err)
+}
 const router = new Router({
   routes: RouterConfig.concat(CommonRouters),
   mode: 'history',
   fallback: true
 })
 // 处理单点登录
-router.beforeResolve((to, from, next) => {
-  const searchParams = window.location.search
-  if (searchParams && searchParams.indexOf('?token') >= 0&&to.name!=='signAgreement') {
-    const query = searchParams.split('&');
-    const tokenQuery = query[0].split('=')
-    const token = tokenQuery[1];
-    if (token) {
-      store.dispatch('user/ssoTokenLogin',token).then((res) => {
-        if (res.isSuccess) {
-          if (res.needSignAgreement) {
-            next({
-              path: '/signAgreement',
-              params:{
-                rowData:res.model
-              }
-            })
-          }else {
-            window.location.href='/home';
-          }
-        }else {
-          // window.location.href='/login';
-        }
-      }).catch(() => {
-        // window.location.href='/login';
-      })
-    }else {
-      // window.location.href='/login';
-    }
-  }else {
-   next();
-  }
-});
+// router.beforeResolve((to, from, next) => {
+//   const searchParams = window.location.search
+//   if (searchParams && searchParams.indexOf('?token') >= 0&&to.name!=='signAgreement') {
+//     const query = searchParams.split('&');
+//     const tokenQuery = query[0].split('=')
+//     const token = tokenQuery[1];
+//     if (token) {
+//       store.dispatch('user/ssoTokenLogin',token).then((res) => {
+//         if (res.isSuccess) {
+//           if (res.needSignAgreement) {
+//             next({
+//               path: '/signAgreement',
+//               params:{
+//                 rowData:res.model
+//               }
+//             })
+//           }else {
+//             window.location.href='/home';
+//           }
+//         }else {
+//           // window.location.href='/login';
+//         }
+//       }).catch(() => {
+//         // window.location.href='/login';
+//       })
+//     }else {
+//       // window.location.href='/login';
+//     }
+//   }else {
+//    next();
+//   }
+// });
 router.beforeEach((to, from, next) => {
   // 需要确认权限
   if (!to.meta.notRequireAuth) {

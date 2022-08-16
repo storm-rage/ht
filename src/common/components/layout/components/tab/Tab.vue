@@ -36,9 +36,7 @@ export default {
       contextmenuVisible: false,
       contextmenuLeft: 0,
       contextmenuTop: 0,
-      currentRoute: {
-        name: this.$route.name
-      },
+      currentRoute: this.$route,
       rightNavLeft: 0,
       rightNavTop: 0,
       activeRouter: this.$route.name
@@ -65,7 +63,10 @@ export default {
      * 点击事件
      * @param route
      */
-    handleTabsClick(route){
+    handleTabsClick(tabPane){
+      const route = this.tabTagList.find((item) => {
+        return item.name === tabPane.name;
+      });
       this.currentRoute = route
       this.$router.push(route)
     },
@@ -162,6 +163,7 @@ export default {
   }
   .el-tabs__nav-prev,.el-tabs__nav-next {
     font-size: 18px;
+    line-height: 31px;
   }
 }
 </style>
