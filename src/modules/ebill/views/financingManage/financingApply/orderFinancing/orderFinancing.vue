@@ -1,18 +1,23 @@
 <template>
-  <div>
   <zj-content-container>
     <!--  订单融资  -->
     <zj-content-block>
       <zj-content>
         <div class="zj-search-response">
-          <zj-table ref="searchTable" :dataList="list"  @radio-change="handleRadioChange" :radio-config="{highlight: true}">
+          <zj-table ref="tradeRelationTable"
+                    :api="zjControl.getOrderFinancingCredit"
+                    @after-load="handleDataChange"
+                    @radio-change="handleRadioChange"
+                    :radio-config="{highlight: true}"
+                    :pager="false"
+          >
             <zj-table-column type="radio" width="40"/>
-            <zj-table-column field="field1" title="买方企业名称"/>
-            <zj-table-column field="field2" title="是否已有订单保理额度"/>
-            <zj-table-column field="field3" title="额度总额"/>
-            <zj-table-column field="field5" title="剩余可用额度" :formatter="money"/>
+            <zj-table-column field="buyerName" title="买方企业名称"/>
+            <zj-table-column field="isFactoringCredit" title="是否已有订单保理额度" :formatter="obj=>typeMap(dictionary,obj.cellValue)"/>
+            <zj-table-column field="totalCreditAmount" title="额度总额" :formatter="money"/>
+            <zj-table-column field="availableCreditAmount" title="剩余可用额度" :formatter="money"/>
           </zj-table>
-          <div class="explain-text">
+          <div class="explain-text zj-m-l-10 zj-m-t-10">
             <div>注：</div>
             <ol class="explain-content">
               <li class="explain-item">以上额度信息仅供参考，实际以融资时额度为准。</li>
@@ -21,14 +26,19 @@
             </ol>
           </div>
         </div>
-        <zj-header title="阶段性协议信息"></zj-header>
-        <zj-table ref="searchTable" :dataList="list"  @radio-change="handleRadioChange" :radio-config="{highlight: true}">
-          <zj-table-column field="field1" title="阶段性协议编号"/>
-          <zj-table-column field="field2" title="阶段性协议名称"/>
-          <zj-table-column field="field3" title="协议类型"/>
-          <zj-table-column field="field5" title="协议签订日期" :formatter="date"/>
-          <zj-table-column field="field5" title="协议预计到期日" :formatter="date"/>
-          <zj-table-column field="state" title="状态" />
+        <zj-header title="阶段性协议信息"/>
+        <zj-table ref="searchTable"
+                  :dataList="agreementList"
+                  @radio-change="handleRadioChange"
+                  :radio-config="{highlight: true}"
+                  :pager="false"
+        >
+          <zj-table-column field="agreementNo" title="阶段性协议编号"/>
+          <zj-table-column field="agreementName" title="阶段性协议名称"/>
+          <zj-table-column field="agreementType" title="协议类型"/>
+          <zj-table-column field="agreementStartDate" title="协议签订日期" :formatter="date"/>
+          <zj-table-column field="agreementEstimateEndDate" title="协议预计到期日" :formatter="date"/>
+          <zj-table-column field="agreementStatus" title="状态" :formatter="obj=>typeMap(dictionary,obj.cellValue)"/>
           <zj-table-column field="fileName" title="附件" />
           <vxe-table-column fixed="right" title="操作">
             <template v-slot="{row}">
@@ -39,23 +49,17 @@
       </zj-content>
     </zj-content-block>
   </zj-content-container>
-  <zj-content-footer>
-    <zj-button type="primary" @click="goChild('orderFinancingDetail')">下一步</zj-button>
-  </zj-content-footer>
-  </div>
 </template>
 <script>
 export default {
+  name: 'orderFinancing',
+  props: {
+    zjControl: Object,
+    dictionary: Object,
+  },
   components: {},
   data() {
     return {
-      searchForm: {
-        supplierName: '',
-        businessType: '',
-        productType: '',
-        productNo: '',
-        productState: '',
-      },
       list: [
         {
           field1: 'scm00001',
@@ -67,35 +71,24 @@ export default {
           fileName: '是'
         }
       ],
-      tradeList: []
+      agreementList: [],
     };
   },
   methods: {
-    /**
-     *
-     * @param row
-     */
-    toContractDetail(row) {
-      console.error(row);
-      this.$router.push({name: 'businessDetail'});
-    },
-    /**
-     *
-     * @param row
-     */
-    toContractSign(row) {
-      console.log(row);
+    handleDataChange(rows) {
+      //默认勾选第一个贸易关系
+      if (rows&& rows.length) {
+        this.$refs.tradeRelationTable.setRadioRow(rows[0])
+        this.handleRadioChange({row: rows[0]})
+      }
     },
     handleRadioChange({row}) {
-      this.tradeList.push({
-        field1: '佛山市a有限公司',
-        field2: '是',
-        field3: '756756756767',
-        field4: '非保理',
-        field5: '12',
-        field6: '1000',
-        field7: '2000',
-        field8: '正常'
+      //获取阶段性协议列表
+      let params = {
+        ...row
+      }
+      this.zjControl.getPhasedAgreement(params).then(res=>{
+        this.agreementList = res.data
       })
     },
     toDetail (row) {
@@ -104,9 +97,9 @@ export default {
     toEdit (row) {
       this.goChild('productInfoManageEdit', row)
     },
-    toEditQuota(row) {},
-    download(){},
-    nextStep(){},
+    download(row) {
+      this.zjControl.downloadFile(row.fileId)
+    },
   }
 };
 </script>

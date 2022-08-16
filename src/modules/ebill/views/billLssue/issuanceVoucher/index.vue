@@ -75,11 +75,15 @@
         :api="zjControl.tableApi"
         @before-load="getDataList"
       >
-        <zj-table-column field="ebillCode" title="凭证编号"> 
-          <template v-slot="{ row }" v-if="row.state !== 'P001'">
-            <span class="table-elbill-code" @click="goChild('billLssueMyBillDetail',row)">{{
-              row.ebillCode
-            }}</span>
+        <zj-table-column field="ebillCode" title="凭证编号">
+          <template v-slot="{ row }">
+            <span v-if="row.state === 'P001'">{{ row.ebillCode }}</span>
+            <span
+              v-else
+              class="table-elbill-code"
+              @click="goChild('myOpenBillDetail', row)"
+              >{{ row.ebillCode }}</span
+            >
           </template>
         </zj-table-column>
         <zj-table-column field="payEntName" title="签发人" />
@@ -104,13 +108,26 @@
           title="凭证到期日"
           :formatter="date"
         />
-        <zj-table-column
-          field="state"
-          title="凭证状态"
-          :formatter="
-            (obj) => typeMap(dictionary.stateList, obj.cellValue)
-          "
-        />
+        <zj-table-column field="state" title="凭证状态">
+          <template v-slot="{ row }">
+            <el-popover
+              placement="right"
+              width="240"
+              trigger="hover"
+              v-if="row.state === 'P001'"
+            >
+              <p class="zj-m-b-5">作废时间：{{ row.rejectDatetime }}</p>
+              <p>作废原因：{{ row.rejectNotes }}</p>
+              <span class="table-elbill-code" slot="reference">
+                {{ typeMap(dictionary.stateList, row.state) }}
+              </span>
+            </el-popover>
+
+            <span v-else>
+              {{ typeMap(dictionary.stateList, row.state) }}
+            </span>
+          </template>
+        </zj-table-column>
         <zj-table-column field="acctBillCode" title="对账单编号" />
         <zj-table-column title="操作" fixed="right">
           <template v-slot="{ row }">
@@ -118,7 +135,7 @@
               type="text"
               @click="toCancellation(row.id)"
               :api="zjBtn.invalidApply"
-               v-if="row.state === 'P000'"
+              v-if="row.state === 'P000'"
               >作废申请</zj-button
             >
             <zj-button
@@ -150,7 +167,7 @@ export default {
       searchForm: {},
       dictionary: {},
       form: {},
-      dataList: []
+      dataList: [],
     };
   },
   created() {
@@ -158,7 +175,7 @@ export default {
     this.getDirectory();
   },
   methods: {
-     getDataList(data) {
+    getDataList(data) {
       this.dataList = data;
     },
     // 获取字典
@@ -168,7 +185,7 @@ export default {
       });
     },
     exportData() {
-      this.$api.exportBill(this.searchForm);
+      this.zjControl.exportBill(this.searchForm);
     },
 
     //作废弹框
@@ -178,7 +195,7 @@ export default {
     //撤销弹框
     toRevocation(id) {
       this.$refs.revocationDialog.open({ id }, true);
-    }
+    },
   },
 };
 </script>
