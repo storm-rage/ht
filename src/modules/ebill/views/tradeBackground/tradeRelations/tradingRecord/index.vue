@@ -5,19 +5,19 @@
         <el-form ref="searchForm" :model="searchForm">
           <el-form-item label="买方企业名称：" class="col-right">
             <el-input
-              v-model="searchForm.ebillCode"
+              v-model="searchForm.buyerEntName"
               @keyup.enter.native="enterSearch"
             />
           </el-form-item>
           <el-form-item label="卖方企业名称：" class="col-right">
             <el-input
-              v-model="searchForm.ebillCode"
+              v-model="searchForm.sellerEntName"
               @keyup.enter.native="enterSearch"
             />
           </el-form-item>
           <el-form-item label="申请状态：" class="col-center">
             <el-select
-              v-model="searchForm.isGenerateVoucher"
+              v-model="searchForm.applyStatus"
               placeholder="请选择"
               clearable
               :popper-append-to-body="false"
@@ -37,7 +37,7 @@
 
           <el-form-item label="申请流水号：" class="col-right">
             <el-input
-              v-model="searchForm.ebillCode"
+              v-model="searchForm.serialNo"
               @keyup.enter.native="enterSearch"
             />
           </el-form-item>
@@ -48,16 +48,16 @@
         :params="searchForm"
         :api="zjControl.recordPage"
       >
-        <zj-table-column field="bankAccount" title="申请流水号" />
-        <zj-table-column field="bankAccname" title="买方企业名称" />
-        <zj-table-column field="buyerEntId" title="卖方企业名称" />
-        <zj-table-column field="bankName" title="卖方银行账号" />
+        <zj-table-column field="serialNo" title="申请流水号" />
+        <zj-table-column field="buyerEntName" title="买方企业名称" />
+        <zj-table-column field="sellerEntName" title="卖方企业名称" />
+        <zj-table-column field="bankAccount" title="卖方银行账号" />
         <zj-table-column field="bankAccname" title="卖方企业银行账户户名" />
-        <zj-table-column field="buyerEntName" title="卖方企业开户行" />
+        <zj-table-column field="bankName" title="卖方企业开户行" />
         <zj-table-column field="bankNo" title="银行联行号" />
-        <zj-table-column field="sellerEntId" title="银行类型" />
-        <zj-table-column field="bankAccname" title="申请状态" />
-        <zj-table-column field="bankAccname" title="申请时间" :formatter="date" />
+        <!-- <zj-table-column field="sellerEntId" title="银行类型" /> -->
+        <zj-table-column field="applyStatus" title="申请状态" />
+        <zj-table-column field="applyDatetime" title="申请时间" :formatter="date" />
       </zj-table>
     </zj-list-layout>
   </div>
