@@ -16,7 +16,7 @@ export default {
     })
   },
   created() {
-    this.$store.dispatch('user/setMessageTipNum')
+    this.$store.dispatch('user/setMessageTipNum').then(()=>{}).catch(()=>{})
   },
   methods: {
     goMessageView() {
