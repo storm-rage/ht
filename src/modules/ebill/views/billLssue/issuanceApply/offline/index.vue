@@ -55,21 +55,22 @@
           @checkbox-change="checkChange"
           @checkbox-all="checkChange"
         >
-          <zj-table-column type="checkbox" title="对账单编号" />
-          <zj-table-column field="acctBillCode" title="供应商编码" />
-          <zj-table-column field="billSource" title="供应商名称" />
+          <zj-table-column type="checkbox" />
+          <zj-table-column field="acctBillCode" title="对账单编号" />
+          <zj-table-column field="supplierCode" title="供应商编码" />
+          <zj-table-column field="supplierName" title="供应商名称" />
           <zj-table-column
-            field="checkBillAmt"
+            field="checkBillDate"
             title="对账日期"
             :formatter="date"
           />
-          <zj-table-column field="checkBillDate" title="对账单金额" />
+          <zj-table-column field="checkBillAmt" title="对账单金额" :formatter="money"/>
           <zj-table-column
-            field="companyName"
-            title="付款日期"
+            field="estimatedPaymentDate"
+            title="预计付款日期"
             :formatter="date"
           />
-          <zj-table-column field="supplierCode" title="开立凭证说明" />
+          <zj-table-column field="voucherRemark" title="开立凭证说明" />
           <zj-table-column title="操作" fixed="right">
             <template v-slot="{ row }">
               <zj-button type="text" @click="toDatails(row)"
