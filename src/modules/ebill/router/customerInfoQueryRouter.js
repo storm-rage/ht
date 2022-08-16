@@ -1,7 +1,7 @@
 
 const customerInfoQueryRouter = [
   {
-    path: '/customerInfoQuery',
+    path: '/entInfoQuery',
     name: 'customerInfoQuery',
     component: () => import('../views/queryStatistics/customerInfoQuery'),
     meta: {

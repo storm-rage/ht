@@ -17,20 +17,20 @@
             <el-form ref="searchForm" :model="searchForm">
               <el-form-item label="企业名称">
                 <el-input
-                  v-model.trim="searchForm.companyName"
+                  v-model.trim="searchForm.nameLike"
                   @keyup.enter.native="search"
                 ></el-input>
               </el-form-item>
               <el-form-item label="平台客户类型">
                 <el-select
-                  v-model="searchForm.customerType"
+                  v-model="searchForm.entType"
                   placeholder="请选择"
                   filterable
                   :popper-append-to-body="false"
                 >
                   <el-option label="全部" value=""></el-option>
                   <el-option
-                    v-for="item in dictionary.customerType"
+                    v-for="item in dictionary.entType"
                     :key="item.code"
                     :label="item.desc"
                     :value="item.code"
@@ -39,13 +39,13 @@
               </el-form-item>
               <el-form-item label="创建日期">
                 <zj-date-range-picker
-                  :startDate.sync="searchForm.createDateStart"
-                  :endDate.sync="searchForm.createDateEnd"
+                  :startDate.sync="searchForm.finalAuditDatetimeStart"
+                  :endDate.sync="searchForm.finalAuditDatetimeEnd"
                 ></zj-date-range-picker>
               </el-form-item>
               <el-form-item label="统一社会信用代码">
                 <el-input
-                  v-model.trim="searchForm.creditCode"
+                  v-model.trim="searchForm.bizLicence"
                   @keyup.enter.native="search"
                 ></el-input>
               </el-form-item>
@@ -89,15 +89,15 @@
               </template>
             </zj-table-column>
             <zj-table-column
-              field="companyName"
+              field="nameLike"
               title="企业名称"
               width="130px"
             />
             <zj-table-column
-              field="customerType"
+              field="entType"
               title="平台客户类型"
               :formatter="
-                obj => typeMap(dictionary.customerType, obj.cellValue)
+                obj => typeMap(dictionary.entType, obj.cellValue)
               "
               width="127px"
             />
@@ -120,7 +120,7 @@
               width="127px"
             />
             <zj-table-column
-              field="creditCode"
+              field="bizLicence"
               title="统一社会信用代码"
               width="125px"
             />
@@ -133,13 +133,13 @@
               width="92px"
             />
             <zj-table-column
-              field="createDateStart"
+              field="finalAuditDatetimeStart"
               title="创建日期"
               width="167px"
             >
               <!-- <template v-slot="{ row }">
-                {{ date(row.createDateStart)
-                }}{{ row.createDateEnd ? `~${date(row.createDateEnd)}` : '' }}
+                {{ date(row.finalAuditDatetimeStart)
+                }}{{ row.finalAuditDatetimeEnd ? `~${date(row.finalAuditDatetimeEnd)}` : '' }}
               </template> -->
             </zj-table-column>
           </zj-table>
@@ -150,6 +150,7 @@
 </template>
 <script>
 export default {
+  name: "entInfoQuery",
   components: {},
   data () {
     return {
@@ -161,11 +162,11 @@ export default {
         //   .queryStatementSrmAccountBillPage //查询
       },
       searchForm: {
-        companyName: '',
-        customerType: '',
-        createDateStart: '',
-        createDateEnd: '',
-        creditCode: '',
+        nameLike: '',
+        entType: '',
+        finalAuditDatetimeStart: '',
+        finalAuditDatetimeEnd: '',
+        bizLicence: '',
         entCode: '',
         customerState: ''
       },

@@ -119,7 +119,7 @@ export default {
       zjControl: {
         getSysNoticePage: this.$api.home.getSysNoticePage,
         getSysNoticeDetail: this.$api.home.getSysNoticeDetail,
-        getSysNoticeRead: this.$api.home.getSysNoticeRead
+        postSysNoticeRead: this.$api.home.postSysNoticeRead
       },
       list: [],
       selectIds: [],
@@ -194,7 +194,7 @@ export default {
     handleAllReade () {
       let ids = this.list.map(item => item.id).join(',')
       this.zjControl
-        .getSysNoticeRead({ ids })
+        .postSysNoticeRead({ ids })
         .then(res => {
           if (res.code == 200 || res.code == 0) {
             this.isReadeColl = this.list.map(item => {

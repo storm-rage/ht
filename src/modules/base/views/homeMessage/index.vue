@@ -102,7 +102,7 @@ export default {
       zjControl: {
         getMoreMessage: this.$api.home.getMoreMessage,
         getMessageDetail: this.$api.home.getMessageDetail,
-        getMessageRead: this.$api.home.getMessageRead
+        postMessageRead: this.$api.home.postMessageRead
       },
       list: [],
       selectIds: [],
@@ -154,10 +154,11 @@ export default {
         })
     },
     handleCollapseChange (val) {
-      this.$store.dispatch('user/setMessageTipNum')
+      // window.console.log('val', val);
+      // window.console.log('this.isReadeColl', this.isReadeColl);
       if (val.length) {
         let newReadeIndex = val.findIndex(item =>
-          this.isReadeColl.every(ele => ele.id != item.id)
+          this.isReadeColl.every(ele => ele != item)
         )
         newReadeIndex != -1 && this.getDetail(val[newReadeIndex])
       }
@@ -170,6 +171,7 @@ export default {
         .getMessageDetail({ id })
         .then(res => {
           this.isReadeColl.push(id)
+          this.$store.dispatch('user/setMessageTipNum')
         })
         .catch(err => {})
     },
@@ -177,7 +179,7 @@ export default {
     handleAllReade () {
       let ids = this.list.map(item => item.id).join(',')
       this.zjControl
-        .getMessageRead({ ids })
+        .postMessageRead({ ids })
         .then(res => {
           if (res.code == 200 || res.code == 0) {
             this.isReadeColl = this.list.map(item => {
