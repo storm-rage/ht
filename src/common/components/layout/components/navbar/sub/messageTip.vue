@@ -1,10 +1,26 @@
 <template>
-  <div class="navbar-message-tip">
-    <i class="ht-iconfont hd-shixing_remind"></i>&nbsp;消息&nbsp;<span class="message-tip-badge">99+</span>
+  <div class="navbar-message-tip" @click="goMessageView">
+    <i class="ht-iconfont hd-shixing_remind"></i>&nbsp;消息&nbsp;<span class="message-tip-badge" v-if="!!messageNum">{{messageNum + (messageNum>99?'+':'')}}</span>
   </div>
 </template>
 <script>
-export default {};
+import { mapState } from 'vuex'
+export default {
+  data() {
+    return {
+    }
+  },
+  computed: {
+    ...mapState({
+      messageNum: state=> state.user.messageTipNum
+    })
+  },
+  methods: {
+    goMessageView() {
+      this.goChild('homeMessage')
+    }
+  },
+};
 </script>
 <style lang="less" scoped>
 @import "~@assets/less/variables";

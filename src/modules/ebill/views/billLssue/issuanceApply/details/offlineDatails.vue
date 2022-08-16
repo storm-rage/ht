@@ -145,7 +145,7 @@
       <zj-button type="primary">提交复核</zj-button>
       <zj-button
         class="back"
-        @click="$router.push('/openBillApply')"
+        @click="handleBack"
         :api="zjBtn.passBillSignBatch"
         >返回</zj-button
       ></ZjContentFooter
@@ -163,7 +163,12 @@ export default {
     };
   },
   created() {},
-  methods: {},
+  methods: {
+    handleBack() {
+      this.$store.commit('tab/tabDel',this.$route)
+      this.$router.push('/openBillApply')
+    }
+  },
 };
 </script>
 <style lang="less" scoped>

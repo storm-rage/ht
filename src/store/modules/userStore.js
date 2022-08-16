@@ -3,10 +3,12 @@ import windowCookie from "@utils/cookie";
 import {windowLsStorege,windowSSStorage} from '@utils/storageUtils';
 import {getMenuPower} from '@utils/menuTree';
 import loginApi from '@modules/base/api/loginApi';
+import {getMessageNum} from '@modules/base/api/homeApi';
 
 const state = {
   // 用户信息
   userInfo: {},
+  messageTipNum: ''
 }
 
 const mutations = {
@@ -22,6 +24,9 @@ const mutations = {
   },
   SET_USER_POWER:(state, power) => {
     state.userInfo.power = power
+  },
+  SET_MESSAGE_TIP_NUM: (state,num) =>{
+    state.messageTipNum = num
   }
 }
 
@@ -98,6 +103,19 @@ const actions = {
       windowCookie.remove(item)
     })
   },
+  // 消息未读数量更新
+  setMessageTipNum({state, commit}) {
+    return new Promise((resove,reject)=>{
+      // getMessageNum()
+      //   .then(res=>{
+      commit('SET_MESSAGE_TIP_NUM', res.data)
+      resove()
+      //   })
+      //   .catch(()=>{
+      //     reject()
+      //   })
+    })
+  }
 }
 
 const getters = {
