@@ -43,5 +43,33 @@ const financingApply = {
   submitFinancingOrderApply: (params) => {
     return request.post('/financing-apply/submit-financing-order-apply', params )
   },
+
+  /**
+   * 贸易背景资料管理api
+   * */
+  //获取数据字典
+  getDictionary: (params) => {
+    return request.get('/financing-apply/get_dictionary', {params} )
+  },
+  //贸易背景管理-获取详情
+  getTradeBackgroundInfo: (params) => {
+    return request.get('/financing-apply/get-trade-background-info', {params} )
+  },
+  //贸易背景管理-合同维护
+  maintainContract: (params) => {
+    return request.post('/financing-apply/maintain-contract', params )
+  },
+  //贸易背景管理-发票维护
+  maintainInvoice: (params) => {
+    return request.post('/financing-apply/maintain-invoice', params )
+  },
+  //贸易背景管理-其它附件维护
+  maintainOtherAttach: (params) => {
+    return request.post('/financing-apply/maintain-other-attach', params )
+  },
+  //贸易背景管理-附件上传
+  uploadMaintainFile: (params) => {
+    return request.post('/financing-apply/upload-maintain-file', params )
+  },
 }
 export default financingApply

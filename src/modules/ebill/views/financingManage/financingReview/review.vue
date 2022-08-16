@@ -3,8 +3,8 @@
     <zj-content-container>
       <!--  订单融资复核  -->
       <div class="quota-manage">
-        剩余可用额度：{{detail.availableCreditAmount}}
-        总额度：{{detail.totalCreditAmount}}
+        剩余可用额度：{{form.availableCreditAmount}}
+        总额度：{{form.totalCreditAmount}}
       </div>
       <zj-content-block>
         <zj-top-header :title="titleInfo"/>
@@ -25,22 +25,24 @@
             </el-col>
             <el-col :span="12">
               <el-form-item label="融资合同期限：">
-                {{form.contractTimeStart}}至{{form.contractTimeEnd}}
+                {{form.contractTimeStart}}{{form.contractTimeEnd?`至${form.contractTimeEnd}`:''}}
               </el-form-item>
             </el-col>
           </el-row>
           <el-row>
             <el-col :span="12">
               <el-form-item label="融资申请金额：" >
-                <zj-number-input :precision="4" v-model="form.tranAmt">
+                <zj-number-input :precision="2" v-model="form.tranAmt">
                   <template slot="append">元</template>
                 </zj-number-input>
-                <div>{{digitUp(form.tranAmt)}}</div>
+                <div>{{form.tranAmt?digitUp(form.tranAmt):''}}</div>
               </el-form-item>
             </el-col>
             <el-col :span="12" v-if="row.financingProductType === '0'">
               <el-form-item label="预计融资期限：">
-                {{form.estimateTimeStart}}至{{form.estimateTimeEnd}}共{{form.estimateDays}}天
+                {{form.estimateTimeStart}}
+                {{form.estimateTimeEnd?`至${form.estimateTimeEnd}`:''}}
+                {{form.estimateDays?`共${form.estimateDays}天`:''}}
               </el-form-item>
             </el-col>
             <el-col :span="12" v-if="row.financingProductType !== '0'">
@@ -59,7 +61,7 @@
             </el-col>
             <el-col :span="12" v-if="row.financingProductType === '0'">
               <el-form-item label="预计利息：">
-                <div>{{money(form.interestAmt)}}</div>
+                {{form.interestAmt?money(form.interestAmt):''}}
                 <zj-content-tip text="（预计利息 = 融资申请金额*融资月利率/30*预计融资天数）"/>
               </el-form-item>
             </el-col>
@@ -67,12 +69,14 @@
           <el-row v-if="row.financingProductType !== '0'">
             <el-col :span="12">
               <el-form-item label="预计融资期限：">
-                {{form.estimateTimeStart}}至{{form.estimateTimeEnd}}共{{form.estimateDays}}天
+                {{form.estimateTimeStart}}
+                {{form.estimateTimeEnd?`至${form.estimateTimeEnd}`:''}}
+                {{form.estimateDays?`共${form.estimateDays}天`:''}}
               </el-form-item>
             </el-col>
             <el-col :span="12">
               <el-form-item label="预计利息：">
-                <div>{{money(form.interestAmt)}}</div>
+                {{form.interestAmt?money(form.interestAmt):''}}
                 <zj-content-tip text="（预计利息 = 融资申请金额*融资月利率/30*预计融资天数）"/>
               </el-form-item>
             </el-col>
@@ -85,13 +89,13 @@
         </el-form>
         <zj-content-block>
           <zj-table ref="searchTable" class="zj-search-table"
-                    :dataList="detail.phasedAgreements"
+                    :dataList="form.phasedAgreements"
                     :pager="false"
                     v-if="row.financingProductType === '0'"
           >
             <zj-table-column field="agreementNo" title="阶段性协议编号" />
             <zj-table-column field="agreementName" title="阶段性协议名称" />
-            <zj-table-column field="agreementStartDate" title="协议签订日期" />
+            <zj-table-column field="agreementStartDate" title="协议签订日期" :formatter="date"/>
             <zj-table-column field="agreementEstimateEndDate" title="协议预计到期日" :formatter="date"/>
             <zj-table-column field="agreementStatus" title="状态" :formatter="(obj)=>typeMap(dictionary.states,obj.cellValue)"/>
             <zj-table-column field="fileName" title="附件" />
@@ -102,7 +106,7 @@
             </zj-table-column>
           </zj-table>
           <zj-table ref="searchTable" class="zj-search-table"
-                    :dataList="detail.voucherList"
+                    :dataList="form.voucherList"
                     :pager="false"
                     v-if="row.financingProductType !== '0'"
           >
@@ -151,7 +155,7 @@
 import submitDialog from './submitDialog'
 import rejectDialog from './rejectDialog'
 export default {
-  name: "detail",
+  name: "reviewDetail",
   components: {
     submitDialog,rejectDialog
   },
@@ -167,9 +171,10 @@ export default {
         getFinancingReviewDetail: this.$api.financingReview.getFinancingReviewDetail,//详情
         queryFinancingReviewPage: this.$api.financingReview.queryFinancingReviewPage,//查询
         submitFinancingReview: this.$api.financingReview.submitFinancingReview,//提交
+
+        downloadFile:this.$api.baseCommon.downloadFile,
       },
       form: {},
-      detail: {},
       dictionary: {},
       checked: false,
     }
@@ -184,7 +189,9 @@ export default {
         this.form = res.data
       })
     },
-    attaDownLoad() {},
+    attaDownLoad(row) {
+      this.zjControl.downloadFile(row.fileId)
+    },
     reject() {
       if(this.checked) {
         this.$refs.rejectDialog.open({form: this.form}, true)
