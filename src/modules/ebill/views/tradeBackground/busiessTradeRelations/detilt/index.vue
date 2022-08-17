@@ -5,7 +5,7 @@
     <info />
 
     <ZjContentFooter>
-        <zj-button>返回</zj-button>
+        <zj-button @click="goback()">返回</zj-button>
     </ZjContentFooter>
   </zj-content-container>
 </template>
@@ -22,6 +22,11 @@ export default {
       zjControl: {},
     };
   },
+  methods:{
+    goback(){
+      this.$router.go(-1)
+    }
+  }
 };
 </script>
 
