@@ -6,19 +6,18 @@
         <zj-header title="企业基础信息" />
         <el-row>
           <h4 class="bl zj-m-l-20 mb-10">企业信息</h4>
-          <el-col :span="pageType === 'add' ? 24 : 8">
+          <el-col :span="isAdd ? 24 : 8">
             <el-form-item label="企业名称：" prop="name">
               <template>
                 <el-input v-model="form.name" :disabled="isDetail || isEdit" />
-                <!-- <zj-button
+                <zj-button
                   class="zj-m-l-10"
+                  v-if="isAdd"
                   type="primary"
-                  @click="searchEye">确定</zj-button
-                > -->
+                  @click="getEnterpriseConfirm"
+                  >确定</zj-button
+                >
               </template>
-              <!-- <template v-else>
-                {{ form.name }}
-              </template> -->
             </el-form-item>
           </el-col>
           <el-col :span="8">
@@ -66,7 +65,7 @@
                   ]"
                   :key="item.code"
                   :label="item.code"
-                  :disabled="isDetail || isEdit"
+                  :disabled="isDetail || isEdit || item.code === '0'"
                   >{{ item.desc }}</el-radio
                 >
               </el-radio-group>
@@ -74,7 +73,7 @@
           </el-col>
           <el-col
             :span="24"
-            v-show="form.isHtEnterprise === '1' && form.entType === 'B'"
+            v-if="form.isHtEnterprise === '1' && form.entType === 'B'"
           >
             <el-form-item label="是否双岗：" prop="isDoublePost">
               <el-radio-group v-model="form.isDoublePost">
@@ -145,9 +144,9 @@
           </el-col>
           <el-col :span="8">
             <el-form-item label="企业经营类型：" prop="custType">
-              <el-select v-model="form.entType" :disabled="isDetail">
+              <el-select v-model="form.custType" :disabled="isDetail">
                 <el-option
-                  v-for="(item, index) in dictionary.entTypeList"
+                  v-for="(item, index) in dictionary.custTypeList"
                   :key="index"
                   :value="item.code"
                   :label="item.desc"
@@ -213,7 +212,7 @@
           </el-col>
         </el-row>
         <el-row>
-          <h4 class="bl zj-m-l-20 mb-10">银行账户信息（选填）</h4>
+          <h4 class="bl zj-m-l-20 mb-10">银行账户信息</h4>
           <el-col :span="8">
             <el-form-item label="银行账户名称：" prop="bankAccname">
               <el-input v-model="form.bankAccname" :disabled="isDetail" />
@@ -285,20 +284,16 @@
         </el-row>
       </zj-content-block>
       <!-- 企业操作员 -->
-      <zj-content-block v-if="pageType === 'add'">
+      <zj-content-block v-if="isAdd">
         <zj-header title="企业操作员" />
         <zj-content>
-          <zj-button
-            class="append zj-m-b-10"
-            icon="el-icon-circle-plus-outline"
-            @click="sysUserAdd"
+          <zj-button class="append zj-m-b-10" type="primary" @click="sysUserAdd"
             >新增</zj-button
           >
           <zj-table
             ref="sysUser"
             :dataList="form.sysUserList"
             :pager="false"
-            @radio-change="handleRadioChange"
             keep-source
             auto-resize
             :edit-config="{
@@ -310,11 +305,6 @@
             }"
             class="sysUserAdd"
           >
-            <zj-table-column
-              type="radio"
-              width="40px"
-              fixed="left"
-            ></zj-table-column>
             <zj-table-column
               field="userName"
               title="姓名"
@@ -348,6 +338,15 @@
                 options: dictionary.roleIdListTableList,
               }"
             />
+            <zj-table-column
+              field="statementAccountType"
+              title="开凭证对账单类型权限"
+              :edit-render="{
+                name: '$select',
+                props: { multiple: true },
+                options: dictionary.statementAccountTypeListTable,
+              }"
+            />
             <zj-table-column title="操作">
               <template v-slot="{ row, rowIndex }">
                 <template v-if="!$refs.sysUser.isActiveByRow(row)">
@@ -369,21 +368,6 @@
               </template>
             </zj-table-column>
           </zj-table>
-          <zj-content>
-            <h4>请选择开凭证对账单类型权限</h4>
-            <el-select
-              v-model="form.bankType"
-              :popper-append-to-body="false"
-              :disabled="isDetail"
-            >
-              <el-option
-                v-for="(item, index) in dictionary.bankTypeList"
-                :key="index"
-                :value="item.code"
-                :label="item.desc"
-              />
-            </el-select>
-          </zj-content>
         </zj-content>
       </zj-content-block>
       <!-- 企业附件 -->
@@ -414,13 +398,13 @@
             <zj-table-column field="fileName" title="附件名称" />
             <zj-table-column title="操作">
               <template v-slot="{ row }">
-                <zj-button
+                <!-- <zj-button
                   type="text"
                   class="zj-m-r-10"
                   @click="pubAttachDownload(row)"
                   v-if="row.fileId"
                   >下载</zj-button
-                >
+                > -->
                 <zj-upload
                   :httpRequest="pubAttachUpload"
                   :data="{ row }"
@@ -466,6 +450,7 @@
           <el-col :span="16">
             <el-form-item label="地址：" prop="invoiceAddress">
               <el-input
+                style="width: 100%"
                 v-model="form.invoiceAddress"
                 @input="invoiceOneAndAll"
                 :disabled="isDetail"
@@ -495,11 +480,13 @@
         </el-row>
       </zj-content-block>
       <!--  其他附件    -->
-      <other-file-setting
-        ref="ofileSetting"
-      ></other-file-setting>
+      <other-file-setting ref="ofileSetting" isEdit></other-file-setting>
       <!--  操作记录  -->
-      <operate-log ref="operateLog" :logList="logList"></operate-log>
+      <operate-log
+        ref="operateLog"
+        :logList="logList"
+        v-if="!isAdd"
+      ></operate-log>
     </el-form>
   </zj-content-block>
 </template>

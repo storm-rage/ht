@@ -23,13 +23,16 @@
               </el-col>
               <el-col :span="8">
                 <el-form-item label="平台客户类型：">
-                  <span>{{ detailData.entType | value }}</span>
-                  <span></span>
+                  <span>{{
+                    typeMap(dictionary.entTypeList, detailData.entType)
+                  }}</span>
                 </el-form-item>
               </el-col>
               <el-col :span="8">
                 <el-form-item label="是否海天集团：">
-                  <span>{{ detailData.isHtEnterprise | value }}</span>
+                   <span>{{
+                    typeMap(dictionary.isHtEnterpriseList, detailData.isHtEnterprise)
+                  }}</span>
                 </el-form-item>
               </el-col>
               <el-col :span="8">
@@ -60,7 +63,9 @@
               </el-col>
               <el-col :span="8">
                 <el-form-item label="企业规模：">
-                  <span>{{ detailData.scale | value }}</span>
+                     <span>{{
+                    typeMap(dictionary.scaleList, detailData.scale)
+                  }}</span>
                 </el-form-item>
               </el-col>
               <el-col :span="8">
@@ -90,7 +95,7 @@ export default {
         getEbBusinessParamLog: this.$api.entInfoManage.getEbBusinessParamLog,
       },
       detailData: {},
-      dictionary: {}
+      dictionary: {},
     };
   },
   created() {

@@ -13,6 +13,10 @@ const entInfoManage = {
   addEnterprise: (params) => {
     return request.post('/sys-enterprise/add-sys-enterprise', params)
   },
+    // 企业信息管理--新增-确认
+    getEnterpriseConfirm: (params) => {
+      return request.get('/sys-enterprise/get-sys-enterprise-confirm', { params })
+    },
   // 企业信息管理--新增趋势
   getEnterpriseRegister: (params) => {
     return request.get('/sys-enterprise/get-sys-enterprise-register-trend', { params })

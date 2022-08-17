@@ -37,28 +37,30 @@
         </el-form>
       </template>
       <template slot="btnGroups">
-        <zj-button
-          class="append"
-          icon="el-icon-circle-plus-outline"
-          @click="goChild('entManageAdd')"
-          :api="zjBtn.addEnterprise"
-          >新增</zj-button
-        >
-        <zj-button
-          class="export"
-          icon="iconfont icon-daochu"
-          @click="exportList"
-          :api="zjBtn.exportEnterpriseList"
-          >导出数据</zj-button
-        >
+        <zj-content>
+          <zj-button
+            type="primary"
+            icon="el-icon-circle-plus-outline"
+            @click="goChild('entManageAdd')"
+            :api="zjBtn.addEnterprise"
+            >新增</zj-button
+          >
+          <zj-button
+            type="primary"
+            icon="el-icon-download"
+            @click="exportList"
+            :api="zjBtn.exportEnterpriseList"
+            >导出数据</zj-button
+          >
+        </zj-content>
       </template>
       <zj-table
         ref="searchTable"
         :params="searchForm"
         :api="zjControl.tableApi"
       >
-        <zj-table-column title="企业编码" >
-           <template v-slot="{ row }">
+        <zj-table-column title="企业编码">
+          <template v-slot="{ row }">
             <span
               class="table-elbill-code"
               @click="goChild('entDetail', row)"
@@ -105,7 +107,8 @@ export default {
         tableApi: this.$api.entInfoManage.queryEnterprise,
         queryEntDictionary: this.$api.entInfoManage.queryEntDictionary,
         exportEnterpriseList: this.$api.entInfoManage.exportEnterpriseList,
-        updateEnterprise: this.$api.entInfoManage.updateEnterprise
+        updateEnterprise: this.$api.entInfoManage.updateEnterprise,
+        addEnterprise: this.$api.entInfoManage.addEnterprise,
       },
       dictionary: {},
       searchListFlag: false,

@@ -22,8 +22,8 @@
             :detailData="detailData"
             v-if="$route.name !== 'registerAuditApplyAudit'"
           />
-
-          <zj-collapse title="天眼查信息">
+          <!-- 天眼查信息 -->
+          <!-- <zj-collapse title="天眼查信息">
             <zj-button
               type="text"
               @click="activeEyeSky = !activeEyeSky"
@@ -39,7 +39,7 @@
               :entId="eyeSkyId"
               @eyeSkyChange="eyeSkyChange"
             />
-          </zj-collapse>
+          </zj-collapse> -->
         </zj-content>
       </zj-content-block>
 
