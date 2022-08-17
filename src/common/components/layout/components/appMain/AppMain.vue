@@ -1,7 +1,7 @@
 <template>
   <div class="zj-main">
     <transition name="fade-transform" mode="out-in">
-      <keep-alive>
+      <keep-alive :max="5">
         <router-view class="router-view" v-if="$route.meta.keepAlive" :key="key">{{key}}</router-view>
       </keep-alive>
     </transition>
@@ -18,6 +18,12 @@ export default {
     key() {
       return this.$route.name + '_' + this.$store.state.tab.currentRouteIndex
     },
+    excludeRule () {
+      const maxIndex = this.$store.state.tab.currentRouteIndex-1;
+      if (maxIndex > 0) {
+        return new RegExp('((?!'+this.$route.name+'_).)[0-'+maxIndex+']+$');
+      }
+    }
   }
 }
 </script>

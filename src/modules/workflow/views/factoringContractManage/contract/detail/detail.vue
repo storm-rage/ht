@@ -2,13 +2,13 @@
   <zj-content-container>
     <zj-top-header title="国内商业保理合同确认交易详情"></zj-top-header>
     <!--  业务申请信息  -->
-    <biz-apply-info></biz-apply-info>
+    <biz-apply-info :biz-info="tranInfo"></biz-apply-info>
     <!--  具体业务信息  -->
-    <contract-detail></contract-detail>
+    <contract-detail :contract-info="bizInfo" :serial-no="row.serialNo"></contract-detail>
     <!--  操作记录  -->
-    <operate-log></operate-log>
+    <operate-log :log-list="operateRecordList"></operate-log>
     <zj-content-footer>
-      <zj-button @click="back">返回</zj-button>
+      <zj-button @click="goParent">返回</zj-button>
     </zj-content-footer>
   </zj-content-container>
 </template>
@@ -23,10 +23,33 @@ export default {
     ContractDetail
   },
   data () {
-    return {};
+    return {
+      zjControl: {
+        getEbContractFlowDetail: this.$api.factoringContractWorkflow.getEbContractFlowDetail
+      },
+      // 交易信息(工作流业务申请信息)
+      tranInfo:{},
+      // 业务信息
+      bizInfo:{},
+      // 操作记录
+      operateRecordList: []
+    };
+  },
+  created() {
+    this.getApi();
+    this.getRow();
+    this.getDetail();
   },
   methods: {
-    back () {}
+    getDetail() {
+      this.zjControl.getEbContractFlowDetail({
+        serialNo: this.row.serialNo
+      }).then(res => {
+        this.tranInfo = res.data.basicInfo;
+        this.bizInfo = res.data.contractInfo;
+        this.operateRecordList = res.data.ebContractOperateRecordList;
+      })
+    }
   }
 }
 </script>

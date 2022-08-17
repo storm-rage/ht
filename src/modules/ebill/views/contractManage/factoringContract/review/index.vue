@@ -97,7 +97,7 @@ export default {
       });
     },
     toReview(row) {
-      this.goChild('contractSignReview',{contractId: row.contractId,contractNo: row.contractNo})
+      this.goChild('contractSignReview',{serialNo: row.serialNo})
     },
   },
 };

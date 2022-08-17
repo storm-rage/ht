@@ -7,52 +7,69 @@
           <el-row>
             <el-col :span="8">
               <el-form-item label="合同编号：">
-                <span>334354534</span>
+                <span>{{contractInfo.contractNo}}</span>
               </el-form-item>
             </el-col>
             <el-col :span="8">
               <el-form-item label="合同生成时间：">
-                <span>2021.01.01 11:11:22</span>
+                <span>{{contractInfo.contractGenerateDate}}</span>
               </el-form-item>
             </el-col>
           </el-row>
         </div>
-        <zj-table :pager="false">
+        <zj-table :dataList="contractInfo.supplierCreditFlowInfoList" :pager="false">
           <zj-table-column
             type="seq"
             width="60"
             title="序号"/>
           <zj-table-column
-            field="field2"
-            title="买方企业名称"/>
+            field="supplierName"
+            title="供应商名称"/>
           <zj-table-column
-            field="field3"
-            title="应收账款转让期限"/>
+            field="buyerName"
+            title="核心企业名称"/>
           <zj-table-column
-            field="field4"
+            field="isHtEnterpriseDesc"
+            title="核心企业是否海天集团"/>
+          <zj-table-column
+            field="factoringCreditEndDate"
+            title="应收账款转让期限">
+            <template v-slot="{row}">
+              {{row.accountTransferStartDate}}～{{row.accountTransferEndDate}}
+            </template>
+          </zj-table-column>
+          <zj-table-column
+            field="totalCreditAmount"
             title="授信额度" :formatter="money"/>
           <zj-table-column
-            field="field5"
-            title="额度期限"/>
+            field="factoringCreditEndDate"
+            title="额度期限">
+            <template v-slot="{row}">
+              {{row.accountTransferStartDate}}～{{row.factoringCreditEndDate}}
+            </template>
+          </zj-table-column>
         </zj-table>
       </zj-content>
     </zj-content-block>
     <zj-content-block>
-      <zj-header title="本次确认合同/协议"></zj-header>
+      <zj-header :title="contractFileTitle"></zj-header>
       <zj-content>
-        <zj-table>
+        <zj-table :params="{serialNo: serialNo}" :api="zjControl.queryEbContractFlowFilePage">
           <zj-table-column
             type="seq"
             width="60"
             title="序号"/>
           <zj-table-column
-            field="field2"
+            field="contractNo"
             title="合同/协议编号"/>
           <zj-table-column
-            field="field3"
+            field="buyerName"
+            title="核心企业名称"/>
+          <zj-table-column
+            field="contractName"
             title="合同/协议名称"/>
           <zj-table-column
-            field="field4"
+            field="signer"
             title="签署方"/>
           <zj-table-column title="操作" fixed="right">
             <template v-slot="{ row }">
@@ -66,11 +83,35 @@
 </template>
 <script>
 export default {
+  props: {
+    // 合同信息
+    contractInfo: {
+      type: Object,
+      required: true
+    },
+    // 申请流水号
+    serialNo: {
+      type: String,
+      required: true
+    },
+    // 合同附件title,除了和详情不一样
+    contractFileTitle: {
+      type: String,
+      default: '待确认合同/协议'
+    }
+  },
   data () {
-    return {};
+    return {
+      zjControl: {
+        queryEbContractFlowFilePage: this.$api.factoringContractWorkflow.queryEbContractFlowFilePage,
+        downApi: this.$api.baseCommon.downloadFile,
+      }
+    };
   },
   methods: {
-    toDownload (row) {}
+    toDownload (row) {
+      this.zjControl.downApi(row);
+    }
   }
 };
 </script>

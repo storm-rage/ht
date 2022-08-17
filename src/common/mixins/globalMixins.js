@@ -104,7 +104,7 @@ export default {
           }else{
             this.resetSearchForm(this.searchForm)
           }
-          
+
           if(this.afterResetSearch && typeof(this.afterResetSearch) === 'function'){
             this.afterResetSearch()
           }
@@ -155,7 +155,7 @@ export default {
           if(this.beforeGoParent && typeof(this.beforeGoParent) === 'function'){
             this.beforeGoParent()
           }
-          //父
+          //父,todo:需要改造
           let rItem = {
             name: typeof(parentName) !== 'object' && parentName ? parentName : this.row.parent ||  this.$route.meta.newParent || this.$route.meta.parent,
             meta:Object.assign({},this.$route.meta),
@@ -165,10 +165,7 @@ export default {
           }
           this.$store.commit('tab/tabAdd',rItem)
           //子
-          let cuRoute = {
-            name:this.$route.name
-          }
-          this.$store.commit('tab/tabDel',cuRoute)
+          this.tabDel();
         },
         tabDel(){
           let rItem = {
