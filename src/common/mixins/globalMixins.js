@@ -1,4 +1,5 @@
 import {windowLsStorege} from '@utils/storageUtils';
+import store from "@/store";
 export default {
   install(Vue){
     Vue.mixin({
@@ -172,6 +173,7 @@ export default {
             name:this.$route.name,
           }
           this.$store.commit('tab/tabDel',rItem)
+          this.$store.dispatch('tab/removeCache', rItem)
         },
         tabRefresh(){
           let rItem = {
