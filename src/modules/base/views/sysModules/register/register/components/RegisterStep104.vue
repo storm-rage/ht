@@ -437,7 +437,6 @@ export default {
             (i.certNo===''||null) ||
             (i.certStartDate===''||null) ||
             (i.certType===''||null) ||
-            (i.idCheckState===''||null) ||
             (i.mobileNo===''||null) ||
             (i.roleId===''||null) ||
             (i.userId===''||null) ||
@@ -453,7 +452,6 @@ export default {
             (i.certNo===''||null) ||
             (i.certStartDate===''||null) ||
             (i.certType===''||null) ||
-            (i.idCheckState===''||null) ||
             (i.mobileNo===''||null) ||
             (i.roleId===''||null) ||
             (i.userId===''||null) ||
@@ -574,22 +572,9 @@ export default {
               let params = Object.assign({},this.entInfoObj)
               params.form.registerUserList = this.registerUserList
               this.$emit('update:entInfoObj',params)
-              if(res.data.idCheckState == '否') {
-                this.$messageBox({
-                  type:'warning',
-                  title:`温馨提示`,
-                  content:`手机核验身份失败，是否继续使用手机号核验？您亦也可录入银行卡号进行核验，谢谢！`,
-                  showCancelButton:false,
-                  messageResolve:()=>{
-
-                  },
-                })
-              }
-              if(res.data.idCheckState == '是') {
-                let activeRoleId = this.typeMap(this.dictionary.roleIdList,res.data.roleId)
-                this.$message.success(`维护${activeRoleId}成功！`)
-                this.maintainInfo = false
-              }
+              let activeRoleId = this.typeMap(this.dictionary.roleIdList,res.data.roleId)
+              this.$message.success(`维护${activeRoleId}成功！`)
+              this.maintainInfo = false
             })
           }
         })
@@ -604,7 +589,6 @@ export default {
             (i.certNo===''||null) ||
             (i.certStartDate===''||null) ||
             (i.certType===''||null) ||
-            (i.idCheckState===''||null) ||
             (i.mobileNo===''||null) ||
             (i.roleId===''||null) ||
             (i.userId===''||null) ||
@@ -620,7 +604,6 @@ export default {
             (i.certNo===''||null) ||
             (i.certStartDate===''||null) ||
             (i.certType===''||null) ||
-            (i.idCheckState===''||null) ||
             (i.mobileNo===''||null) ||
             (i.roleId===''||null) ||
             (i.userId===''||null) ||
@@ -747,7 +730,6 @@ export default {
             (i.certNo===''||null) ||
             (i.certStartDate===''||null) ||
             (i.certType===''||null) ||
-            (i.idCheckState===''||null) ||
             (i.mobileNo===''||null) ||
             (i.roleId===''||null) ||
             (i.userId===''||null) ||
@@ -763,7 +745,6 @@ export default {
             (i.certNo===''||null) ||
             (i.certStartDate===''||null) ||
             (i.certType===''||null) ||
-            (i.idCheckState===''||null) ||
             (i.mobileNo===''||null) ||
             (i.roleId===''||null) ||
             (i.userId===''||null) ||
@@ -817,9 +798,7 @@ export default {
         id: this.entInfoObj.form.id,
         name: this.entInfoObj.form.name,
       }).then(res=>{
-        if(this.form.isHtEnterprise === '1') {
-          this.registerUserList = res.data.registerUserList
-        }
+        this.registerUserList = res.data.registerUserList
         this.registerAttachList = res.data.registerAttachList
         this.setInvoiceInfo()
 

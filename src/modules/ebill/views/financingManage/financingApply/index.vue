@@ -3,10 +3,10 @@
     <!--  融资申请  -->
     <el-tabs v-model="tabs" class="zj-tabs-card zj-p-l-16 zj-p-r-16">
       <el-tab-pane label="订单融资" name="orderFinancing" v-if="tabInfo.orderTab">
-        <orderFinancing :zjControl="zjControl" :uBtn="zjBtn"/>
+        <orderFinancing :zjControl="zjControl" :dictionary="dictionary" :uBtn="zjBtn"/>
       </el-tab-pane>
       <el-tab-pane label="入库融资/凭证融资" name="voucherFinancing" v-if="tabInfo.billTab || tabInfo.warehouseTab">
-        <voucherFinancing :zjControl="zjControl" :mBtn="zjBtn"/>
+        <voucherFinancing :zjControl="zjControl" :dictionary="dictionary" :mBtn="zjBtn"/>
       </el-tab-pane>
     </el-tabs>
     <zj-content-footer>
@@ -40,6 +40,7 @@ export default {
         downloadFile:this.$api.baseCommon.downloadFile,
       },
       tabs:'orderFinancing',
+      dictionary:{},
       uDictionary:{},
       tabInfo: {
         orderTab: '',//订单融资Tab:0-不展示 1-展示
@@ -50,6 +51,11 @@ export default {
     };
   },
   methods: {
+    getDic() {
+      this.zjControl.getDirectory().then(res=>{
+        this.dictionary = res.data
+      })
+    },
     getTabInfo() {
       this.zjControl.getFinancingApplyTab().then(res=>{
         this.tabInfo = res.data
@@ -69,6 +75,7 @@ export default {
   },
   created() {
     this.getApi()
+    this.getDic()
     this.getTabInfo()
   }
 };
