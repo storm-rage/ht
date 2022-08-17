@@ -1,5 +1,4 @@
 import {windowLsStorege} from '@utils/storageUtils';
-import store from "@/store";
 export default {
   install(Vue){
     Vue.mixin({
