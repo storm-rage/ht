@@ -9,7 +9,7 @@
               class="export"
               icon="el-icon-download"
               @click="toExport"
-              :api="zjBtn.exportStatementAccountBill"
+              :api="zjBtn.exportEntInfoList"
               >导出</vxe-button
             >
           </template>
@@ -17,20 +17,20 @@
             <el-form ref="searchForm" :model="searchForm">
               <el-form-item label="企业名称">
                 <el-input
-                  v-model.trim="searchForm.companyName"
+                  v-model.trim="searchForm.nameLike"
                   @keyup.enter.native="search"
                 ></el-input>
               </el-form-item>
               <el-form-item label="平台客户类型">
                 <el-select
-                  v-model="searchForm.customerType"
+                  v-model="searchForm.entType"
                   placeholder="请选择"
                   filterable
                   :popper-append-to-body="false"
                 >
                   <el-option label="全部" value=""></el-option>
                   <el-option
-                    v-for="item in dictionary.customerType"
+                    v-for="item in dictionary.entType"
                     :key="item.code"
                     :label="item.desc"
                     :value="item.code"
@@ -39,32 +39,32 @@
               </el-form-item>
               <el-form-item label="创建日期">
                 <zj-date-range-picker
-                  :startDate.sync="searchForm.createDateStart"
-                  :endDate.sync="searchForm.createDateEnd"
+                  :startDate.sync="searchForm.finalAuditDatetimeStart"
+                  :endDate.sync="searchForm.finalAuditDatetimeEnd"
                 ></zj-date-range-picker>
               </el-form-item>
               <el-form-item label="统一社会信用代码">
                 <el-input
-                  v-model.trim="searchForm.creditCode"
+                  v-model.trim="searchForm.bizLicence"
                   @keyup.enter.native="search"
                 ></el-input>
               </el-form-item>
               <el-form-item label="平台企业编码">
                 <el-input
-                  v-model.trim="searchForm.entCode"
+                  v-model.trim="searchForm.code"
                   @keyup.enter.native="search"
                 ></el-input>
               </el-form-item>
               <el-form-item label="平台客户状态">
                 <el-select
-                  v-model="searchForm.customerState"
+                  v-model="searchForm.state"
                   placeholder="请选择"
                   filterable
                   :popper-append-to-body="false"
                 >
                   <el-option label="全部" value=""></el-option>
                   <el-option
-                    v-for="item in dictionary.customerState"
+                    v-for="item in dictionary.state"
                     :key="item.code"
                     :label="item.desc"
                     :value="item.code"
@@ -77,38 +77,32 @@
             ref="searchTable"
             :params="searchForm"
             :dataList="list"
-            :api="zjControl.queryStatementSrmAccountBillPage"
+            :api="zjControl.queryEntInfo"
           >
-            <zj-table-column title="平台企业编号" width="150px">
+            <zj-table-column title="平台企业编码" width="150px">
               <template v-slot="{ row }">
                 <zj-button
                   type="text"
-                  @click="goChild('customerInfoQueryDetail', row)"
-                  >{{ row.billCode }}</zj-button
+                  @click="$router.push({name: 'entInfoQueryDetail', query: {rowId: row.id}})"
+                  >{{ row.code }}</zj-button
                 >
               </template>
             </zj-table-column>
+            <zj-table-column field="name" title="企业名称" minWidth="130px" />
             <zj-table-column
-              field="companyName"
-              title="企业名称"
-              width="130px"
-            />
-            <zj-table-column
-              field="customerType"
+              field="entType"
               title="平台客户类型"
-              :formatter="
-                obj => typeMap(dictionary.customerType, obj.cellValue)
-              "
+              :formatter="obj => typeMap(dictionary.entType, obj.cellValue)"
               width="127px"
             />
             <zj-table-column
-              field="isHT"
+              field="isHtEnterprise"
               title="是否海天集团"
               :formatter="obj => (obj.cellValue == 1 ? '是' : '否')"
               width="97px"
             />
             <zj-table-column
-              field="bankAccname"
+              field="isOpenProduct"
               title="是否已开通产品"
               :formatter="obj => (obj.cellValue == 1 ? '是' : '否')"
               width="127px"
@@ -120,26 +114,25 @@
               width="127px"
             />
             <zj-table-column
-              field="creditCode"
+              field="bizLicence"
               title="统一社会信用代码"
-              width="125px"
+              minWidth="125px"
             />
             <zj-table-column
-              field="customerState"
+              field="state"
               title="平台客户状态"
-              :formatter="
-                obj => typeMap(dictionary.customerState, obj.cellValue)
-              "
-              width="92px"
+              :formatter="obj => typeMap(dictionary.state, obj.cellValue)"
+              width="100px"
             />
             <zj-table-column
-              field="createDateStart"
+              field="finalAuditDatetime"
               title="创建日期"
               width="167px"
+              :formatter="date"
             >
               <!-- <template v-slot="{ row }">
-                {{ date(row.createDateStart)
-                }}{{ row.createDateEnd ? `~${date(row.createDateEnd)}` : '' }}
+                {{ date(row.finalAuditDatetimeStart)
+                }}{{ row.finalAuditDatetimeEnd ? `~${date(row.finalAuditDatetimeEnd)}` : '' }}
               </template> -->
             </zj-table-column>
           </zj-table>
@@ -150,47 +143,36 @@
 </template>
 <script>
 export default {
+  name: 'entInfoQuery',
   components: {},
   data () {
     return {
       zjControl: {
-        // exportStatementAccountBill: this.$api.billSearch
-        //   .exportStatementAccountBill, //对账单查询-导出
-        // getDirectory: this.$api.billSearch.getDirectory, //数据字典
-        // queryStatementSrmAccountBillPage: this.$api.billSearch
-        //   .queryStatementSrmAccountBillPage //查询
+        getDirectory: this.$api.entInfoQuery.getDirectory, // 数据字典
+        exportEntInfoList: this.$api.entInfoQuery.exportEntInfoList,  // 导出
+        queryEntInfo: this.$api.entInfoQuery.queryEntInfo //查询
       },
       searchForm: {
-        companyName: '',
-        customerType: '',
-        createDateStart: '',
-        createDateEnd: '',
-        creditCode: '',
-        entCode: '',
-        customerState: ''
+        nameLike: '',
+        entType: '',
+        finalAuditDatetimeStart: '',
+        finalAuditDatetimeEnd: '',
+        bizLicence: '',
+        code: '',
+        state: ''
       },
-      list: [
-        {
-          billCode: 'scm00001',
-          field2: '某某产品一号',
-          field3: '上游',
-          field4: '订单保理',
-          field5: '2022.09.08 11:18:19',
-          field6: '生效',
-          field7: '是'
-        }
-      ],
+      list: [],
       dictionary: {}
     }
   },
   methods: {
     getDictionary () {
-      // this.zjControl.getDirectory().then(res => {
-      //   this.dictionary = Object.assign({}, res.data)
-      // })
+      this.zjControl.getDirectory().then(res => {
+        this.dictionary = Object.assign({}, res.data)
+      })
     },
     toExport () {
-      this.zjControl.exportStatementAccountBill()
+      this.zjControl.exportEntInfoList(this.searchForm)
     }
   },
   created () {

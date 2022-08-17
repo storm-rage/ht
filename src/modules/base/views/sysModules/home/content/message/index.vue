@@ -10,10 +10,11 @@
         v-for="(item, index) in list"
         :key="`${index}message`"
         is-round
+        @click.native="toMore(item)"
       >
-        <template slot="title">{{ item.title }}</template>
-        <template slot="tip" v-if="item.isNotRead">&nbsp;</template>
-        <template slot="date">{{ item.date }}</template>
+        <template slot="title">{{ item.messageTitle }}</template>
+        <template slot="tip" v-if="item.isReadFlag=='0'">&nbsp;</template>
+        <template slot="date">{{ item.sendDatetime }}</template>
       </list-item-block>
       <el-empty v-if="list.length === 0" style="padding: 0;">
         <template slot="image">
@@ -47,14 +48,20 @@ export default {
     this.getList()
   },
   methods: {
-    toMore () {
-      this.goChild('homeMessage')
+    toMore (item) {
+      // this.goChild('homeMessage')
+      this.$router.push({
+        name: 'homeMessage',
+        query: {
+          rowId: item.id
+        }
+      })
     },
     getList () {
       this.loading = true
       this.$refs.messageList.style.minHeight = '60px'
       this.zjControl
-        .getMoreMessage()
+        .getMoreMessage({ page: '1', rows: '4' })
         .then(res => {
           this.list = res.data.rows || []
           this.$refs.messageList.style.minHeight = ''

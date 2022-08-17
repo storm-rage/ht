@@ -3,8 +3,8 @@
  */
 const invoiceQueryRouter = [
   {
-    path: '/invoiceQuery',
-    name: 'invoiceQuery',
+    path: '/queryInvoice',
+    name: 'queryInvoice',
     component: () => import('../views/queryStatistics/invoiceQuery'),
     meta: {
       isMock: true,

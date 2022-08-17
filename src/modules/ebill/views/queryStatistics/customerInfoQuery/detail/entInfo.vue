@@ -8,37 +8,39 @@
           <el-row>
             <el-col :span="8">
               <el-form-item label="平台企业编码：">{{
-                form.entCode
+                valueFormatter(form.code)
               }}</el-form-item>
             </el-col>
             <el-col :span="8">
-              <el-form-item label="企业名称：">{{ form.entCode }}</el-form-item>
+              <el-form-item label="企业名称：">{{ valueFormatter(form.name) }}</el-form-item>
             </el-col>
             <el-col :span="8">
-              <el-form-item label="企业简称：">{{ form.entCode }}</el-form-item>
+              <el-form-item label="企业简称：">{{
+                valueFormatter(form.shortName)
+              }}</el-form-item>
             </el-col>
           </el-row>
           <el-row>
             <el-col :span="8">
               <el-form-item label="统一社会信用代码：">{{
-                form.entCode
+                valueFormatter(form.bizLicence)
               }}</el-form-item>
             </el-col>
             <el-col :span="8">
               <el-form-item label="平台客户类型：">{{
-                form.entCode
+                typeMap(dictionary.entType, form.entType)
               }}</el-form-item>
             </el-col>
             <el-col :span="8">
               <el-form-item label="是否海天集团：">{{
-                form.entCode
+                ifOrNot(form.isHtEnterprise)
               }}</el-form-item>
             </el-col>
           </el-row>
           <el-row>
             <el-col :span="8">
               <el-form-item label="客户业务系统编码：">{{
-                form.entCode
+                valueFormatter(form.customCode)
               }}</el-form-item>
             </el-col>
           </el-row>
@@ -47,17 +49,17 @@
           <el-row>
             <el-col :span="8">
               <el-form-item label="企业联系人姓名：">
-                {{ form.bankAccname }}
+                {{ valueFormatter(form.fastMailName) }}
               </el-form-item>
             </el-col>
             <el-col :span="8">
               <el-form-item label="企业联系人手机号：">
-                {{ form.bankAccno }}
+                {{ valueFormatter(form.fastMailPhone) }}
               </el-form-item>
             </el-col>
             <el-col :span="8">
               <el-form-item label="企业联系地址：">
-                {{ form.bankAccno }}
+                {{ valueFormatter(form.fastMailAddress) }}
               </el-form-item>
             </el-col>
           </el-row>
@@ -66,17 +68,17 @@
           <el-row>
             <el-col :span="8">
               <el-form-item label="法定代表人姓名：">
-                {{ form.bankAccname }}
+                {{ valueFormatter(form.legalPersonName) }}
               </el-form-item>
             </el-col>
             <el-col :span="8">
               <el-form-item label="法定代表人身份证号：">
-                {{ form.bankName }}
+                {{ valueFormatter(form.legalCertNo) }}
               </el-form-item>
             </el-col>
             <el-col :span="8">
               <el-form-item label="法人身份证有效期：">
-                {{ form.bankAccno }}
+                {{ date(valueFormatter(form.legalCertExpireDate)) }}
               </el-form-item>
             </el-col>
           </el-row>
@@ -85,41 +87,41 @@
           <el-row>
             <el-col :span="8">
               <el-form-item label="企业名称：">
-                {{ form.bankAccname }}
+                {{ valueFormatter(form.name) }}
               </el-form-item>
             </el-col>
             <el-col :span="8">
               <el-form-item label="纳税人识别号：">
-                {{ form.bankName }}
+                {{ valueFormatter(form.invoiceTaxpayerId) }}
               </el-form-item>
             </el-col>
             <el-col :span="8">
               <el-form-item label="电话：">
-                {{ form.bankAccno }}
+                {{ valueFormatter(form.invoicePhone) }}
               </el-form-item>
             </el-col>
           </el-row>
           <el-row>
             <el-col :span="8">
               <el-form-item label="开户行：">
-                {{ form.bankAccname }}
+                {{ valueFormatter(form.invoiceBankInfo) }}
               </el-form-item>
             </el-col>
             <el-col :span="8">
               <el-form-item label="银行账号：">
-                {{ form.bankName }}
+                {{ valueFormatter(form.invoiceBankAccno) }}
               </el-form-item>
             </el-col>
             <el-col :span="8">
               <el-form-item label="地址：">
-                {{ form.bankAccno }}
+                {{ valueFormatter(form.invoiceAddress) }}
               </el-form-item>
             </el-col>
           </el-row>
           <el-row>
             <el-col :span="8">
               <el-form-item label="邮箱：">
-                {{ form.bankAccname }}
+                {{ valueFormatter(form.invoiceEmail) }}
               </el-form-item>
             </el-col>
           </el-row>
@@ -131,19 +133,19 @@
           <el-row>
             <el-col :span="8">
               <el-form-item label="是否已开通产品：">
-                {{ form.bankAccname }}
+                {{ ifOrNot(form.isOpenProduct) }}
               </el-form-item>
             </el-col>
             <el-col :span="8">
               <el-form-item label="开通产品：">
-                {{ form.bankAccname }}
+                {{ valueFormatter(form.productType) }}
               </el-form-item>
             </el-col>
           </el-row>
           <el-row>
             <el-col :span="8">
               <el-form-item label="是否已有融资：">
-                {{ form.bankAccname }}
+                {{ ifOrNot(form.isFinancing) }}
               </el-form-item>
             </el-col>
           </el-row>
@@ -155,58 +157,40 @@
 <script>
 export default {
   components: {},
+  props: {
+    detailData: {
+      type: Object,
+      default: () => {
+        return {}
+      }
+    },
+    dictionary: {
+      type: Object,
+      default: () => {
+        return {}
+      }
+    }
+  },
   data () {
     return {
-      form: {},
-      list: [
-        {
-          field1: 'scm00001',
-          field2: '某某产品一号',
-          field3: '上游',
-          field4: '订单保理',
-          field5: '2022.09.08 11:18:19',
-          field6: '生效',
-          field7: '是'
+      form: {}
+    }
+  },
+  watch: {
+    detailData: {
+      handler (val) {
+        if (val) {
+          this.form = JSON.parse(JSON.stringify(val))
         }
-      ],
-      tradeList: []
+      },
+      deep: true,
+      immediate: true
     }
   },
   methods: {
-    /**
-     *
-     * @param row
-     */
-    toContractDetail (row) {
-      console.error(row)
-      this.$router.push({ name: 'businessDetail' })
-    },
-    /**
-     *
-     * @param row
-     */
-    toContractSign (row) {
-      console.log(row)
-    },
-    handleRadioChange ({ row }) {
-      this.tradeList.push({
-        field1: '佛山市a有限公司',
-        field2: '是',
-        field3: '756756756767',
-        field4: '非保理',
-        field5: '12',
-        field6: '1000',
-        field7: '2000',
-        field8: '正常'
-      })
-    },
-    toDetail (row) {
-      this.goChild('productInfoManageDetail', row)
-    },
-    toEdit (row) {
-      this.goChild('productInfoManageEdit', row)
-    },
-    toEditQuota (row) {}
+    valueFormatter(val) {
+      return val ?? '-'
+    }
   }
 }
 </script>

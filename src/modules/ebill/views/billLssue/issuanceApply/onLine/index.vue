@@ -59,8 +59,9 @@
             showStatus: true,
           }"
         >
-          <zj-table-column type="checkbox" title="对账单编号" />
-          <zj-table-column field="acctBillCode" title="买方名称" />
+          <zj-table-column type="checkbox"/>
+          <zj-table-column field="acctBillCode" title="对账单编号" />
+          <zj-table-column field="companyName" title="买方名称" />
           <zj-table-column field="billSource" title="供应商业务系统编码" />
           <zj-table-column field="checkBillAmt" title="供应商名称" />
           <zj-table-column
@@ -70,16 +71,27 @@
           />
           <zj-table-column field="inputDate" title="入库日期/放行日期" />
           <zj-table-column
-            field="date3"
+            field="estimatedPaymentDate"
             title="预计付款日期"
             :formatter="date"
-          />
-          <zj-table-column field="date4" title="对账单金额" />
-          <zj-table-column field="date5" title="是否开立凭证" />
-          <zj-table-column field="date6" title="对账单来源" />
-          <zj-table-column field="date1" title="开立凭证说明" />
-          <zj-table-column title="操作" fixed="right">
+          >
             <template v-slot="{ row }">
+              <div v-if="$refs.openBillApply.isActiveByRow(row)">
+                <zj-date-picker
+                  class="table-date-picker"
+                  :date.sync="row.estimatedPaymentDate"
+                />
+              </div>
+              <div v-else>{{date(row.estimatedPaymentDate)}}</div>
+            </template>
+          </zj-table-column>
+          <zj-table-column field="checkBillAmt" title="对账单金额"/>
+          <zj-table-column field="openBillAmt" title="开单金额" :edit-render="{ name: '$input' }"/>
+          <zj-table-column field="isIssueVoucher" title="是否开立凭证" />
+          <zj-table-column field="billSource" title="对账单来源" />
+          <zj-table-column field="voucherRemark" title="开立凭证说明" :edit-render="{ name: '$input' }"/>
+          <zj-table-column title="操作" fixed="right">
+            <template v-slot="{ row, rowIndex }">
               <template v-if="!$refs.openBillApply.isActiveByRow(row)">
                 <zj-button type="text" @click="minute(row)">详情</zj-button>
                 <zj-button type="text" @click="edit(row)">修改</zj-button>
@@ -125,6 +137,7 @@ export default {
         onlineList: this.$api.openBillApply.onlineList, //线上对账单-查询
         onlineDetail: this.$api.openBillApply.onlineDetail, //线上对账单-详情
         billApply: this.$api.openBillApply.billApply, //对账单-签发凭证
+        updateStatementOnline: this.$api.openBillApply.updateStatementOnline, // 修改
       },
       searchForm: {},
       onlineDetailLsit: {}, //存储详情数据
@@ -176,8 +189,18 @@ export default {
     //保存单元格
     save(row) {
       this.form = { ...this.form, ...row };
-      this.$refs.openBillApply.clearActived();
-      this.$message.success("保存成功");
+      this.zjControl.updateStatementOnline({
+        id: row.id,
+        acctBillCode: row.acctBillCode,
+        estimatedPaymentDate: row.estimatedPaymentDate,
+        voucherRemark: row.openBillAmt,
+        payableAmvoucherRemarkt: row.voucherRemark,
+      })
+        .then(res=>{
+          this.$refs.openBillApply.clearActived();
+          this.$message.success("保存成功");   
+        })
+        .catch(()=>{})
     },
     //取消单元格
     cancel() {
@@ -210,6 +233,18 @@ export default {
 .zj-search-condition {
   margin-top: 10px;
   margin-left: 20px;
+}
+.zj-search-response {
+  /deep/ .is--controls {
+    line-height: 2.5;
+  }
+}
+.table-date-picker {
+  width: 100%;
+  /deep/ .el-input__inner{
+    width: 100%;
+    min-width: auto;
+  }
 }
 /deep/#ZjWorkflow {
   .workflow-top {

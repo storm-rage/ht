@@ -1,8 +1,8 @@
 
 const customerInfoQueryRouter = [
   {
-    path: '/customerInfoQuery',
-    name: 'customerInfoQuery',
+    path: '/entInfoQuery',
+    name: 'entInfoQuery',
     component: () => import('../views/queryStatistics/customerInfoQuery'),
     meta: {
       isMock: true,
@@ -14,8 +14,8 @@ const customerInfoQueryRouter = [
     }
   },
   {
-    path: '/customerInfoQueryDetail',
-    name: 'customerInfoQueryDetail',
+    path: '/entInfoQueryDetail',
+    name: 'entInfoQueryDetail',
     component: () => import('../views/queryStatistics/customerInfoQuery/detail'),
     meta:{
       isMock:false,
