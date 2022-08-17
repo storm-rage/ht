@@ -37,9 +37,9 @@
             <template v-slot="{ row }">
             <zj-button
             type="text"
-            @click="downs(row)"
+            @click="downsagreement(row)"
             >
-            {{row.agreementName}}
+            {{row.agreementFileName}}
               </zj-button>
               </template>
           </zj-table-column>
@@ -48,7 +48,7 @@
             <template v-slot="{ row }">
             <zj-button
             type="text"
-            @click="downs(row)"
+            @click="downstuff(row)"
             >
             {{row.fileName}}
               </zj-button>
@@ -132,6 +132,14 @@
     </el-dialog>
         <!-- 云证书签章 -->
     <zj-certuficate ref="certuficate" @confirm="handleCertuficateDone"/>
+    <!-- 查看器 -->
+    <zj-preview
+    :visible.sync="viewShow"
+    :fileUrl="viewUrl"
+    :showFooter="false"
+    :fileType="viewType"
+    @close="viewShow=false"
+    />
   </div>
 </template>
 <script>
@@ -176,6 +184,7 @@ export default {
         getDirectory: this.$api.tradeRelations.tradeRelationsGetDirectory, //字典
         ...this.$api.myBasicInformation,
         ...this.$api.myBillingInformation,
+        downloadFile: this.$api.baseCommon.downloadFile,//下载
       },
       dictionary: {},
       searchForm: {},
@@ -211,6 +220,22 @@ export default {
     },
   },
   methods: {
+    downstuff(row) {
+      let params = {
+        fileUrl:row.fileId,
+        fileName:row.fileName
+      }
+      this.zjControl.downloadFile(params).then((res) => {
+      });
+    },
+    downsagreement(row) {
+      let params = {
+        fileUrl:row.agreementFileId,
+        fileName:row.agreementFileName
+      }
+      this.zjControl.downloadFile(params).then((res) => {
+      });
+    },
     // 
     getDirectory1() {
       console.log(222)
