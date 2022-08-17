@@ -139,8 +139,8 @@ export default {
         fileId : row.fileId,
         fileName : row.fileName,
         fileRemark : row.fileRemark,
-        phasedOperateFlag : 'DEL',
-        recordId : '',
+        phasedOperateFlag : OperateFlag.DEL,
+        recordId : row.recordId || '',
         tradeId : this.agreementParams.tradeId || '',
       }
       this.zjControl.delContract(params).then(res => {
@@ -188,8 +188,8 @@ export default {
         fileId : row.fileId,
         fileName : row.fileName,
         fileRemark : row.fileRemark,
-        phasedOperateFlag : 'SAVE',
-        recordId : '',
+        phasedOperateFlag : row.fileId ? OperateFlag.UPDATE : OperateFlag.ADD,
+        recordId : row.recordId || '',
         tradeId : this.agreementParams.tradeId || '',
       }
       this.zjControl.delContract(params).then(res => {
@@ -200,6 +200,7 @@ export default {
             this.contractInfoList = res.data.contractInfoList
             this.$refs.attaTable.iRefresh(true)
             let params = {
+              recordId : res.data.businessApplyInfo.recordId,
               contractInfoList : this.contractInfoList,
               ...this.agreementParams,
             }

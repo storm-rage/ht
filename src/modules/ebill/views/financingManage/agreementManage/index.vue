@@ -57,6 +57,7 @@ export default {
         buyerId : this.contractInfo.buyerId,
         buyerName : this.contractInfo.buyerName,
         contractInfoList : this.contractInfo.contractInfoList,
+        recordId : this.contractInfo.recordId || '',
         tradeId : this.contractInfo.tradeId,
       }
       console.log(this.contractInfo)

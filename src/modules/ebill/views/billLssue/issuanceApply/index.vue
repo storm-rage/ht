@@ -12,7 +12,7 @@
 import onLine from './onLine'
 import offline from './offline'
 export default {
-  name: "index",
+  name: "openBillApply",
   components:{onLine, offline},
   data(){
     return{

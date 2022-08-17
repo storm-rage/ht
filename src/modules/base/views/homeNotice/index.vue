@@ -119,7 +119,7 @@ export default {
       zjControl: {
         getSysNoticePage: this.$api.home.getSysNoticePage,
         getSysNoticeDetail: this.$api.home.getSysNoticeDetail,
-        getSysNoticeRead: this.$api.home.getSysNoticeRead
+        postSysNoticeRead: this.$api.home.postSysNoticeRead
       },
       list: [],
       selectIds: [],
@@ -148,13 +148,19 @@ export default {
     getList () {
       this.loading = true
       let data = { page: this.currentPage, rows: this.pageSize }
-      if (this.$route.params.rowData?.id) {
-        data.id = this.$route.params.rowData?.id
-      }
       this.zjControl
         .getSysNoticePage(data)
         .then(res => {
-          this.list = res.data.rows || []
+          this.list =
+            res.data.rows.map(item => {
+              if (
+                this.$route.query.rowId &&
+                item.id == this.$route.query.rowId
+              ) {
+                this.collActive.push(item.id)
+              }
+              return item
+            }) || []
           this.isReadeColl = this.list
             .filter(item => item.isReadFlag == '1')
             .map(item => item.id)
@@ -165,9 +171,8 @@ export default {
         })
     },
     handleCollapseChange (val) {
-      window.console.log('val', val)
+      // window.console.log('val', val)
       if (val.length) {
-        window.console.log('this.isReadeColl', this.isReadeColl)
         let newReadeIndex = val.findIndex(item =>
           this.isReadeColl.every(ele => ele != item)
         )
@@ -176,19 +181,20 @@ export default {
     },
     // 点击详情，发请求保存已读
     getDetail (id) {
-      this.isReadeColl.push(id)
       let item = this.list.find(item => item.id == id)
       item && (item.isReadFlag = '1')
       this.zjControl
         .getSysNoticeDetail({ id })
-        .then(res => {})
+        .then(res => {
+          this.isReadeColl.push(id)
+        })
         .catch(err => {})
     },
     // 全部已读
     handleAllReade () {
       let ids = this.list.map(item => item.id).join(',')
       this.zjControl
-        .getSysNoticeRead({ ids })
+        .postSysNoticeRead({ ids })
         .then(res => {
           if (res.code == 200 || res.code == 0) {
             this.isReadeColl = this.list.map(item => {

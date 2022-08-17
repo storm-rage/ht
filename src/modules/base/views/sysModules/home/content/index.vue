@@ -1,20 +1,20 @@
 <template>
   <div class="home-content">
     <el-row :gutter="15" type="flex">
-      <el-col :span="16">
+      <el-col :span="14">
         <!-- <home-banner></home-banner> -->
-        <data-driver></data-driver>
+        <home-charts></home-charts>
       </el-col>
-      <el-col :span="8">
+      <el-col :span="10">
         <home-notice class="home-content-notice"></home-notice>
         <!-- <home-message class="home-content-message" style="margin-top: 15px"></home-message> -->
       </el-col>
     </el-row>
     <el-row :gutter="15" type="flex" style="margin-top: 15px;">
-      <el-col :span="16">
+      <el-col :span="14">
         <home-todo></home-todo>
       </el-col>
-      <el-col :span="8">
+      <el-col :span="10">
         <home-message class="home-content-message"></home-message>
       </el-col>
     </el-row>
@@ -40,12 +40,12 @@ import HomeBanner from './banner'
 import HomeCharts from './charts';
 export default {
   components: {
-    DataDriver,
+    // DataDriver,
     HomeNotice,
     HomeTodo,
     HomeMessage,
     // HomeBanner,
-    // HomeCharts
+    HomeCharts
   }
 }
 </script>

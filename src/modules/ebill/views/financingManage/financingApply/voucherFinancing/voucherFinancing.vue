@@ -6,8 +6,12 @@
         <el-form ref="searchEntForm" :model="searchEntForm">
           <el-form-item label="凭证签发人/转让企业：">
             <el-select v-model="searchEntForm.entState" @change="entChange">
-              <el-option value="未登记" />
-              <el-option value="已登记" />
+              <el-option
+                v-for="item in dictionary.entInfoList"
+                :label="item.desc"
+                :value="item.code"
+                :key="item.code"
+              />
             </el-select>
           </el-form-item>
         </el-form>
@@ -72,6 +76,7 @@ export default {
   name: 'voucherFinancing',
   props: {
     zjControl: Object,
+    dictionary: Object,
   },
   data() {
     return {

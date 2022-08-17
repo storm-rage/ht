@@ -23,7 +23,7 @@
           <zj-table-column field="email" title="邮箱"/>
           <zj-table-column field="bankAcctNo" title="银行卡号"/>
           <zj-table-column field="htSysCode" title="海天业务系统账号" v-if="form.isHtEnterprise == '1'"/>
-          <zj-table-column field="idCheckState" title="是否完成身份核验" v-if="form.isHtEnterprise == '1'"/>
+          <zj-table-column field="idCheckState" title="是否完成身份核验" v-if="form.isHtEnterprise == '1'" :formatter="obj=>typeMap(dictionary.idCheckStateList,obj.cellValue)"/>
           <zj-table-column  title="操作" fixed="right">
             <template v-slot="{row}">
               <zj-button type="text" @click="maintainOperator(row)">维护</zj-button>
@@ -46,7 +46,7 @@
           <zj-table-column title="附件类型">
             <template v-slot="{row}">
               <span style="color: red">{{ row.fileType? '*' : '' }}</span>
-              {{ row.fileType ? row.fileType : '' }}
+              {{ row.fileType ? typeMap(dictionary.attachTypeList,row.fileType)||row.fileType : '' }}
             </template>
           </zj-table-column>
           <zj-table-column field="needSeal" title="是否需要加盖企业公章" v-if="form.isHtEnterprise == '1'"/>
@@ -437,7 +437,6 @@ export default {
             (i.certNo===''||null) ||
             (i.certStartDate===''||null) ||
             (i.certType===''||null) ||
-            (i.idCheckState===''||null) ||
             (i.mobileNo===''||null) ||
             (i.roleId===''||null) ||
             (i.userId===''||null) ||
@@ -453,7 +452,6 @@ export default {
             (i.certNo===''||null) ||
             (i.certStartDate===''||null) ||
             (i.certType===''||null) ||
-            (i.idCheckState===''||null) ||
             (i.mobileNo===''||null) ||
             (i.roleId===''||null) ||
             (i.userId===''||null) ||
@@ -574,22 +572,9 @@ export default {
               let params = Object.assign({},this.entInfoObj)
               params.form.registerUserList = this.registerUserList
               this.$emit('update:entInfoObj',params)
-              if(res.data.idCheckState == '否') {
-                this.$messageBox({
-                  type:'warning',
-                  title:`温馨提示`,
-                  content:`手机核验身份失败，是否继续使用手机号核验？您亦也可录入银行卡号进行核验，谢谢！`,
-                  showCancelButton:false,
-                  messageResolve:()=>{
-
-                  },
-                })
-              }
-              if(res.data.idCheckState == '是') {
-                let activeRoleId = this.typeMap(this.dictionary.roleIdList,res.data.roleId)
-                this.$message.success(`维护${activeRoleId}成功！`)
-                this.maintainInfo = false
-              }
+              let activeRoleId = this.typeMap(this.dictionary.roleIdList,res.data.roleId)
+              this.$message.success(`维护${activeRoleId}成功！`)
+              this.maintainInfo = false
             })
           }
         })
@@ -604,7 +589,6 @@ export default {
             (i.certNo===''||null) ||
             (i.certStartDate===''||null) ||
             (i.certType===''||null) ||
-            (i.idCheckState===''||null) ||
             (i.mobileNo===''||null) ||
             (i.roleId===''||null) ||
             (i.userId===''||null) ||
@@ -620,7 +604,6 @@ export default {
             (i.certNo===''||null) ||
             (i.certStartDate===''||null) ||
             (i.certType===''||null) ||
-            (i.idCheckState===''||null) ||
             (i.mobileNo===''||null) ||
             (i.roleId===''||null) ||
             (i.userId===''||null) ||
@@ -747,7 +730,6 @@ export default {
             (i.certNo===''||null) ||
             (i.certStartDate===''||null) ||
             (i.certType===''||null) ||
-            (i.idCheckState===''||null) ||
             (i.mobileNo===''||null) ||
             (i.roleId===''||null) ||
             (i.userId===''||null) ||
@@ -763,7 +745,6 @@ export default {
             (i.certNo===''||null) ||
             (i.certStartDate===''||null) ||
             (i.certType===''||null) ||
-            (i.idCheckState===''||null) ||
             (i.mobileNo===''||null) ||
             (i.roleId===''||null) ||
             (i.userId===''||null) ||
@@ -817,6 +798,7 @@ export default {
         id: this.entInfoObj.form.id,
         name: this.entInfoObj.form.name,
       }).then(res=>{
+        this.registerUserList = res.data.registerUserList
         this.registerAttachList = res.data.registerAttachList
         this.setInvoiceInfo()
 

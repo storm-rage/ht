@@ -123,7 +123,7 @@ export default {
       });
     },
     toViewDetail(row) {
-      this.goChild('mySignContractDetail',{contractId: row.contractId})
+      this.goChild('mySignContractDetail',{serialNo: row.serialNo})
     }
   }
 }

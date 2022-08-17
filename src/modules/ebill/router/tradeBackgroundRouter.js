@@ -16,12 +16,12 @@ const tradeBackgroundRouter = [
   },
   {
     // 贸易关系管理-平台方
-    path: '/busiessTradeRelations',
-    name: 'busiessTradeRelations',
+    path: '/tradeRelationPlatform',
+    name: 'tradeRelationPlatform',
     component: () => import('../views/tradeBackground/busiessTradeRelations/index.vue'),
     meta: {
       isMock: true,
-      title: `贸易关系管理`,
+      title: `贸易关系管理平台方`,
       root: '客户信息管理',
       keepAlive: true,
       refreshIndex: 0,

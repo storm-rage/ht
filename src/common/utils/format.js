@@ -189,6 +189,10 @@ export default {
       if(obj[name] && Number(obj[name]) > 99999999999999.99){
         obj[name] = '99999999999999.99'
       }
+    },
+    Vue.prototype.ifOrNot = function (val) {
+      // 1: '是'    0/其他: '否'
+      return val&&val=='1'? '是' : '否'
     }
   }
 }

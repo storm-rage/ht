@@ -60,6 +60,10 @@ const openBillApply = {
     onlineList: (params) => {
         return request.get('/open-bill-apply/query-statement-account-online-page', {params})
     },
+    //线上对账单-修改
+    updateStatementOnline: (params) => {
+        return request.get('/open-bill-apply/update-statement-account-online', {params})
+    },
     //上传开立凭证文件-保存数据
     billData: (params) => {
         return request.post('/open-bill-apply/save-batch-open-bill-data', params)

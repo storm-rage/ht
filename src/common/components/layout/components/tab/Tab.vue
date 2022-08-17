@@ -55,6 +55,7 @@ export default {
     //删除
     deleteClick(item){
       this.$store.commit('tab/tabDel',item)
+      this.$store.dispatch('tab/removeCache', item)
     },
     closeAllTab () {
       this.$store.commit('tab/tabClear');
@@ -103,6 +104,7 @@ export default {
     // 关闭其他标签页
     closeOtherTab () {
       this.$store.commit('tab/tabOther',this.currentRoute)
+      this.$store.dispatch('tab/removeOtherCache',this.currentRoute)
     },
     //刷新标签
     refreshTab () {
@@ -133,6 +135,7 @@ export default {
         fullPath:newRouter.fullPath,
         path:newRouter.path,
         meta:newRouter.meta,
+        query: newRouter.query,
         params:{
           boo:newRouter.params && newRouter.params.rowData ? true : false
         }
