@@ -85,10 +85,12 @@ const mutations = {
     router.push({name:rItem.name})
   },
   //关闭所有
-  tabClear(state,rItem){
+  tabClear(state){
     state.tabTagList = []
     state.tabBreadList = []
     state.tabActive = ''
+    state.cachedName = []
+    state.cachedRoute = []
     router.push({name:'home'})
   },
   //刷新

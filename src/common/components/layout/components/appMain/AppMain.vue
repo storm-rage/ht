@@ -1,12 +1,9 @@
 <template>
   <div class="zj-main">
     <transition name="fade-transform" mode="out-in">
-      <keep-alive :max="5">
-        <router-view class="router-view" v-if="$route.meta.keepAlive" :key="key">{{key}}</router-view>
+      <keep-alive :max="10" :include="includeRules">
+        <router-view class="router-view" :key="key">{{key}}</router-view>
       </keep-alive>
-    </transition>
-    <transition name="fade-transform" mode="out-in">
-      <router-view class="router-view" v-if="!$route.meta.keepAlive"></router-view>
     </transition>
   </div>
 </template>
@@ -18,11 +15,8 @@ export default {
     key() {
       return this.$route.name + '_' + this.$store.state.tab.currentRouteIndex
     },
-    excludeRule () {
-      const maxIndex = this.$store.state.tab.currentRouteIndex-1;
-      if (maxIndex > 0) {
-        return new RegExp('((?!'+this.$route.name+'_).)[0-'+maxIndex+']+$');
-      }
+    includeRules () {
+      return this.$store.state.tab.cachedName;
     }
   }
 }
