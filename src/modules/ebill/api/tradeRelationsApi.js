@@ -20,6 +20,7 @@
     tradeRelationsGetDirectory: () => {
       return request.get('/trade-relation-ent/get-trade-relation-dictionary')
     },
+    //get-trade-relation-dictionary
     //预览协议
     relationUpdate:(params) => {
         return request.get('/trade-relation-ent/get-agreement-detail',{params})

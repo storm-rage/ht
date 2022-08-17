@@ -1,8 +1,5 @@
 <template>
   <div>
-    <!-- 若已上传证明文件，再次点击“上传证明材料”时，弹出提醒：“已有证明材料，上传将覆盖原证明材料，是否继续上传？”按钮：确认&取消。点击确认，则继续。点击取消，则关闭弹窗
-          8月15日需求变动
-    -->
     <zj-list-layout>
       <template slot="searchForm">
         <el-form ref="searchForm" :model="searchForm">
@@ -35,18 +32,49 @@
           <zj-table-column field="bankNo" title="银行联行号" />
           <!-- <zj-table-column field="bankType" title="银行类型" /> -->
           <zj-table-column field="state" title="贸易关系状态" />
-          <zj-table-column field="agreementName" title="协议" />
-          <zj-table-column field="fileName" title="证明材料" />
+          <!-- <zj-table-column field="agreementName" title="协议" /> -->
+          <zj-table-column title="协议">
+            <template v-slot="{ row }">
+            <zj-button
+            type="text"
+            @click="downs(row)"
+            >
+            {{row.agreementName}}
+              </zj-button>
+              </template>
+          </zj-table-column>
+          <!-- <zj-table-column field="fileName" title="证明材料" /> -->
+          <zj-table-column title="证明材料">
+            <template v-slot="{ row }">
+            <zj-button
+            type="text"
+            @click="downs(row)"
+            >
+            {{row.fileName}}
+              </zj-button>
+              </template>
+          </zj-table-column>
           <zj-table-column field="lastUpdateDatetime" title="上次更新时间" :formatter="date" />
           <zj-table-column title="操作" fixed="right" width="100px">
             <template v-slot="{ row }">
               <zj-button type="text" @click="edit(row)" v-if="row.isBuyerFlag==1">修改</zj-button>
-              <!-- <zj-button type="text" @click="upCredential(row)" :api="zjBtn.getEnterprise">上传材料证明</zj-button> -->
+              <!-- <zj-button type="text" @click="edit(row)">修改</zj-button> -->
+              <zj-upload 
+              :httpRequest="uploadfg"
+              :data="{row}"
+              accept=".pdf,.jpg,.zip,.bmp,.gif,.jpeg,.png,.rar"
+              style="display: inline-block"
+              :autoUpload="true"
+              v-if="row.fileName"
+              >
+              <zj-button type="text"   :api="zjBtn.getEnterprise"  v-if="row.isBuyerFlag==0&&row.fileName">覆盖材料证明</zj-button>
+              </zj-upload>
               <zj-upload 
               :httpRequest="uploadsc"
               :data="{row}"
               accept=".pdf,.jpg,.zip,.bmp,.gif,.jpeg,.png,.rar"
               style="display: inline-block"
+               v-if="!row.fileName"
               >
               <zj-button type="text" :api="zjBtn.getEnterprise" v-if="row.isBuyerFlag==0" >上传材料证明</zj-button>
               </zj-upload>
@@ -61,16 +89,19 @@
       <el-form ref="formModel" class="mbi-form" :model="formModel" :rules="formRules" :class="editFlag ? '' : 'nmb0'"
         label-width="140px">
         <el-form-item label="买方企业名称：" prop="buyerEntName" :class="{ 'zj-m-b-5': !editFlag }">
-          <span class="static-text">{{ formModel.buyerEntName }}</span>
+          <span class="static-text" v-if="type=='edit'">{{ formModel.buyerEntName }}</span>
+          <span class="static-text" v-if="type=='add'">{{ userBaseInfo.entInfo.name }}</span>
         </el-form-item>
         <el-form-item label="卖方企业名称：" :class="{ 'zj-m-b-5': !editFlag }" prop="sellerEntName">
-          <el-input v-model="formModel.sellerEntName" />
+          <el-input v-model="formModel.sellerEntName" v-if="type == 'add'"/>
+          <el-input v-model="formModel.sellerEntName" :disabled="true" v-else/>
         </el-form-item>
         <el-form-item label="卖方银行账号：" prop="bankAccount" :class="{ 'zj-m-b-5': !editFlag }">
           <el-input v-model="formModel.bankAccount" />
         </el-form-item>
         <el-form-item label="卖方银行账号户名：" prop="bankAccname" :class="{ 'zj-m-b-5': !editFlag }">
-          <el-input v-model="formModel.bankAccname" />
+          <el-input v-model="formModel.bankAccname" v-if="type == 'add'"/>
+          <el-input v-model="formModel.bankAccname" :disabled="true" v-else/>
         </el-form-item>
         <el-form-item label="卖方企业开户行：" prop="bankName" :class="{ 'zj-m-b-5': !editFlag }">
           <el-input v-model="formModel.bankName" />
@@ -78,10 +109,7 @@
         <el-form-item label="银行联行号：" prop="bankNo" :class="{ 'zj-m-b-5': !editFlag }">
           <el-input v-model="formModel.bankNo" />
         </el-form-item>
-        <el-form-item label="银行类型：" prop="bankType" :class="{ 'zj-m-b-5': !editFlag }">
-          <!--        <span class="static-text" v-show="!editFlag">{{formModel.invoiceEmail}}</span>-->
-          <el-input v-model="formModel.bankType" />
-        </el-form-item>
+        
       </el-form>
 
       <el-row slot="footer" class="dialog-footer">
@@ -89,58 +117,30 @@
         <zj-button class="back" @click="dialogVisibleTo">取消</zj-button>
       </el-row>
     </el-dialog>
-
-    <!-- <el-dialog :visible.sync="dialogVisible2" :close-on-click-modal="false" center width="50%" title="上传证明材料"
+    <el-dialog :visible.sync="dialogVisibleGo" :close-on-click-modal="false" center width="50%" title=""
       custom-class="mbi-editDialog" @close="cancel" top="6vh">
       <div class="upForm">
         <div class="upFormItem">
-          <span>买方企业名称：{{ buyerEntName }}</span>
-        </div>
-        <div class="upFormItem">
-          <span>卖方企业名称：{{ sellerEntName }}</span>
-        </div>
-        <div class="upFormItem">
-          <zj-upload class="zj-inline" ref="upload" :auto-upload="false" :multiple="true" :showFileList="true"
-            :onRemove="onRemove" :onChange="onChange" :httpRequest="dayUpload" 
-            accept=".pdf,.jpg,.zip,.bmp,.gif,.jpeg,.png,.rar">
-            <zj-button type="primary" style="width: 100px" size="mini" slot="trigger">上传</zj-button>
-            <div class="upFormItem">
-              <zj-content style="padding-top: 0">
-                <zj-content-tip text="注：1.证明材料可为买卖双方发票，贸易合同等证明双方真实贸易关系的材料。2.支持上传pdf，图片和压缩包！"></zj-content-tip>
-              </zj-content>
-            </div>
-                    <zj-button status="primary" @click="saveTo">保存</zj-button>
-        <zj-button class="back" @click="dialogVisible2 = false">取消</zj-button>
-          </zj-upload>
+            <span v-html="previewAgreement.htmlStr"></span>
         </div>
       </div>
       <el-row slot="footer" class="dialog-footer">
-      </el-row>
-    </el-dialog> -->
-
-    <el-dialog :visible.sync="dialogVisibleGo" :close-on-click-modal="false" center width="50%" title="贸易关系确认函"
-      custom-class="mbi-editDialog" @close="cancel" top="6vh">
-      <div class="upForm">
-        <div class="upFormItem">
-          <span>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean
-            euismod bibendum laoreet. Proin gravida dolor sit amet lacus
-            accumsan et viverra justo commodo. Proin sodales pulvinar sic
-            tempor. Sociis natoque penatibus et magnis dis parturient montes,
-            nascetur ridiculus mus. Nam fermentum, nulla luctus pharetra
-            vulputate, felis tellus mollis orci, sed rhoncus pronin sapien nunc
-            accuan eget.</span>
-        </div>
-      </div>
-      <el-row slot="footer" class="dialog-footer">
-        <zj-button type="primary" status="primary" @click="saveTo">确认签署</zj-button>
+        <!-- <zj-button type="primary" status="primary" @click="signUserProtocol">确认签署</zj-button> -->
+        <!-- 云证书有问题，直接跳到新增联调接口 -->
+        <zj-button type="primary" status="primary" @click="lastadd">确认签署</zj-button>
       </el-row>
     </el-dialog>
+        <!-- 云证书签章 -->
+    <zj-certuficate ref="certuficate" @confirm="handleCertuficateDone"/>
   </div>
 </template>
 <script>
+import view from "@pubComponent/preview/view";
 export default {
+  mixins:[view],
   data() {
     return {
+      collActive: ["orderInfo"],
       relList: [],
       formRules: {
         sellerEntName: [
@@ -171,7 +171,11 @@ export default {
         relationAddtradeCheck: this.$api.tradeRelations.relationAddtradeCheck, //新增校验
         relationEnt: this.$api.tradeRelations.relationEnt, //修改贸易关系
         materialAttach: this.$api.tradeRelations.materialAttach, //上传证明材料
+        relationUpdate: this.$api.tradeRelations.relationUpdate, //预览协议
+        signUserProtocol:this.$api.login.signUserProtocol,//人脸签署
         getDirectory: this.$api.tradeRelations.tradeRelationsGetDirectory, //字典
+        ...this.$api.myBasicInformation,
+        ...this.$api.myBillingInformation,
       },
       dictionary: {},
       searchForm: {},
@@ -186,13 +190,18 @@ export default {
       dialogVisibleGo: false,
       fileOBList: [],
       tjid: "",
-
+      userBaseInfo:{},
+      previewAgreement:{},
+      checkData:{}
     };
   },
   created() {
+    this.zjControl.getDirectory = this.$api.tradeRelations.tradeRelationsGetDirectory
+    this.getDirectory1()
     this.getApi();
-    this.getDirectory1();
+    
     this.getRow();
+    this.getUserInfo();
   },
   watch: {
     dialogVisible(value) {
@@ -202,10 +211,41 @@ export default {
     },
   },
   methods: {
-    
+    // 
     getDirectory1() {
+      console.log(222)
       this.zjControl.getDirectory().then((res) => {
         this.dictionary = res.data;
+      });
+    },
+    lastadd(){
+      this.zjControl.relationAdd(this.checkData).then((res) => {
+        this.dialogVisible = false;
+        this.dialogVisibleGo = false;
+        this.$message.success("新增成功！");
+        this.search()
+            });
+    },
+      // 去签协议
+    signUserProtocol() {
+      // if (this.isUseYunCert) {
+      //   // 调用云证书
+      //   this.$refs.certuficate.open()
+      // }else {
+      //   this.handleCertuficateDone();
+      // }
+      this.$refs.certuficate.open()
+    },
+    //云证书返回
+    handleCertuficateDone(){
+      // this.zjControl.signUserProtocol().then(() => {
+      //   this.$refs.certuficate.close()
+      // })
+    },
+    // 获取信息
+    getUserInfo() {
+      this.zjControl.getUserInfo().then((res) => {
+        this.userBaseInfo = res.data;
       });
     },
     //取消
@@ -232,18 +272,34 @@ export default {
     //保存
     save(row) {
       if (this.type == "add") {
-        alert("保存");
+        // alert("保存");
         let paramsWod = {
-          // buyerEntName: this.formModel.buyerEntName, //买方企业名称
+          buyerEntName: this.userBaseInfo.entInfo.name, //买方企业名称
           sellerEntName: this.formModel.sellerEntName, //卖方企业名称
-          // bankAccount: this.formModel.bankAccount, //卖方银行账号
-          // invoicePhone: this.formModel.invoicePhone, //卖方银行账号户名
-          // invoiceBankInfo: this.formModel.invoiceBankInfo, //卖方企业开户行
-          // bankNo: this.formModel.bankNo, //银行联号
-          // bankType: this.formModel.bankType, //银行类型
+          bankAccount: this.formModel.bankAccount, //卖方银行账号
+          bankAccname: this.formModel.bankAccname, //卖方银行账号户名
+          bankName: this.formModel.bankName, //卖方企业开户行
+          bankNo: this.formModel.bankNo, //银行联号
+          bankType: this.formModel.bankType, //银行类型
         };
         this.zjControl.relationAddtradeCheck(paramsWod).then((res) => {
+            this.checkData=res.data
           if (res.code == 200) {
+            let paramsWod = {
+              buyerEntName: this.userBaseInfo.entInfo.name, //买方企业名称
+              sellerEntName: this.formModel.sellerEntName, //卖方企业名称
+              bankAccount: this.formModel.bankAccount, //卖方银行账号
+              bankAccname: this.formModel.bankAccname, //卖方银行账号户名
+              bankName: this.formModel.bankName, //卖方企业开户行
+              bankNo: this.formModel.bankNo, //银行联号
+              bankType: this.formModel.bankType, //银行类型
+        };
+              this.zjControl.relationUpdate(paramsWod).then((res) => {
+              // this.$Message.success("新增成功！");
+              // this.dialogVisible = false;
+            this.previewAgreement=res.data
+            console.log(res.data);
+            });
             this.dialogVisibleGo = true;
             let params = {
               buyerEntName: this.formModel.buyerEntName, //买方企业名称
@@ -254,10 +310,10 @@ export default {
               bankNo: this.formModel.bankNo, //银行联号
               bankType: this.formModel.bankType, //银行类型
             };
-            this.zjControl.relationAdd(params).then((res) => {
-              // this.$Message.success("新增成功！");
-              this.dialogVisible = false;
-            });
+            // this.zjControl.relationAdd(params).then((res) => {
+            //   // this.$Message.success("新增成功！");
+            //   this.dialogVisible = false;
+            // });
           }
         });
       }
@@ -275,79 +331,41 @@ export default {
           bankType: this.formModel.bankType, //银行类型
         };
         this.zjControl.relationEnt(params).then((res) => {
-          // this.$Message.success("修改成功！");
+          this.$message.success("修改成功！");
           // alert("修改成功！");
           this.search()
           this.dialogVisible = false;
         });
       }
     },
-    //上传证明材料
-
-    // upCredential(row) {
-    //   this.buyerEntName = row.buyerEntName; //买方企业名称
-    //   this.sellerEntName = row.sellerEntName; //卖方企业名称
-    //   this.listId = row.id;
-    //   this.dialogVisible2 = true;
-    // },
-    // 直接上传不弹框，需要判断是否已有证明材料（没写，$messageBox没挂上）
-    uploadsc({file,data}){
-              console.log(data);
+    uploadfg({file,data}){
+console.log(data.row);
+this.$messageBox({
+         type:"confirm",
+         title:"溫馨提示",
+         content:"已有证明材料，上传将覆盖原证明材料，是否继续上传？",
+         showCancelButton:true,
+         messageResolve:()=>{
+          console.log(data);
           let formData = new FormData()
           formData.append('fileOB', file)
           formData.append('id', data.row.id)
           this.$api.tradeRelations.materialAttach(formData).then(() => {
             this.search()
-             
-            this.$MessageBox.success('发票上传成功')
-      //  this.$MessageBox({
-      //    type:"confirm",
-      //    title:"溫馨提示",
-      //    content:"当前已有证明材料是否继续上传",
-      //    showCancelButton:true,
-      //    messageResolve:()=>{
-      //   }
-      // })
+            this.$message.success('发票上传成功')
       })
-     
+        }
+      })
     },
-    // //上传按钮
-    // dayUpload({ file, files }) {
-    //   console.log(files);
-    //   let formData = new FormData()
-    //   formData.append('fileOBList', file.file)
-    //   // this.$api.tradeRelations.materialAttach(formData).then(ret => {
-    //   //   this.$messageBox({
-    //   //     type: 'success',
-    //   //     content:'操作成功',
-    //   //   });
-    //   // }).catch(() => {
-    //   // })
-    //   this.$api.tradeRelations.materialAttach(formData).then(() => {
-    //     this.$Message.success('发票上传成功')
-    //   })
-    // },
-    // // 移除
-    // onRemove(file, fileList) {
-    //   console.log("onRemove");
-    // },
-    // onChange(file, fileList) {
-    //   // console.log("change");
-    //   // console.log(file);
-    //   // this.fileOBList=fileList
-    //   // console.log(fileList);
-    //   let formData = new FormData()
-
-    //   this.file = formData.append("file", file)
-    // },
-    //上传证明保存
-    saveTo() {
-      // console.log(file, fileList,data);
-      // this.zjControl.materialAttach(formData).then((res) => {
-      //   console.log(res, "---------------");
-      // });
-      console.log("saveto点击");
-      
+    uploadsc({file,data}){
+console.log(data);
+          let formData = new FormData()
+          formData.append('fileOB', file)
+          formData.append('id', data.row.id)
+          this.$api.tradeRelations.materialAttach(formData).then(() => {
+            this.search()
+            this.$message.success('发票上传成功')
+      })
     },
   },
 };
