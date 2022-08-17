@@ -86,14 +86,14 @@ router.beforeEach((to, from, next) => {
       }
     }
     // 添加缓存页签
-    if (!store.state.tab.cachedName.includes(to.name)) {
-      // 当前页签未缓存 遍历菜单列表判断是否需要缓存
-      // const menu = store.state.menu.menuList.find(item => item.url === to.name)
-      // if (menu) {
-      //   to.meta.title = to.meta.title || menu.name
-      // }
-      store.dispatch('tab/addCache', to)
-    }
+    // if (!store.state.tab.cachedName.includes(to.name)) {
+    //   // 当前页签未缓存 遍历菜单列表判断是否需要缓存
+    //   // const menu = store.state.menu.menuList.find(item => item.url === to.name)
+    //   // if (menu) {
+    //   //   to.meta.title = to.meta.title || menu.name
+    //   // }
+    //   store.dispatch('tab/addCache', to)
+    // }
   }
   else {
     next()
