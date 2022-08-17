@@ -48,8 +48,8 @@ const financingApply = {
    * 贸易背景资料管理api
    * */
   //获取数据字典
-  getDictionary: (params) => {
-    return request.get('/financing-apply/get_dictionary', {params} )
+  getTradeBackDictionary: (params) => {
+    return request.get('/financing-apply/get-trade-back-dictionary', {params} )
   },
   //贸易背景管理-获取详情
   getTradeBackgroundInfo: (params) => {
