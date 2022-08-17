@@ -88,7 +88,7 @@ export default {
       });
     },
     toSign(row) {
-      this.goChild('contractSignApply',{contractId: row.contractId,contractNo: row.contractNo})
+      this.goChild('contractSignApply',{serialNo: row.serialNo})
     }
   }
 };

@@ -88,11 +88,11 @@ router.beforeEach((to, from, next) => {
     // 添加缓存页签
     if (!store.state.tab.cachedName.includes(to.name)) {
       // 当前页签未缓存 遍历菜单列表判断是否需要缓存
-      let menu = store.state.menu.menuList.find(item => item.url === to.name)
-      if (menu) {
-        to.meta.title = to.meta.title || menu.name
-        store.dispatch('tab/addCache', to)
-      }
+      // const menu = store.state.menu.menuList.find(item => item.url === to.name)
+      // if (menu) {
+      //   to.meta.title = to.meta.title || menu.name
+      // }
+      store.dispatch('tab/addCache', to)
     }
   }
   else {
@@ -102,14 +102,14 @@ router.beforeEach((to, from, next) => {
   if (to.meta.title) {
     window.document.title = to.meta.title
   } else {
-    let menu = store.state.menu.menuList.find(item => item.url === to.name)
-    window.document.title = menu ? menu.name : process.env.VUE_APP_TITLE
+    // const menu = store.state.menu.menuList.find(item => item.url === to.name)
+    window.document.title = process.env.VUE_APP_TITLE
   }
 })
 
 router.afterEach( ( to,form ) => {
   if( to.name !== 'register' ){
-    let localArr = ['registerStep','registerEntInfoObj']
+    const localArr = ['registerStep','registerEntInfoObj']
     localArr.forEach(item => windowSSStorage.removeItem(item) )
   }
 })

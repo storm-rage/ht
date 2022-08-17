@@ -1,9 +1,8 @@
 <template>
   <div>
-    <detail-page ref="detailPage"  :stepList="stepList"
+    <detail-page ref="detailPage"
                  :detail-info="detailInfo"
                  :dictionary="dictionary"
-                 :stepActive="1"
                  title="合同签约复核"></detail-page>
     <zj-content-footer>
       <span style="display: inline-block;margin-right: 5px">
@@ -48,29 +47,7 @@ export default {
       detailInfo: {},
       // 字典
       dictionary: {},
-      stepList: [
-        {
-          title: '签约申请',
-          time: '2022.02.02 11:11:12',
-          user: '小山'
-        },
-        {
-          title: '签约复核',
-          desc: ''
-        },
-        {
-          title: '核心企业签署转让回执',
-          desc: ''
-        },
-        {
-          title: '保理公司签约',
-          desc: ''
-        },
-        {
-          title: '保理合同签约完成',
-          desc: ''
-        }
-      ],
+      stepList: [],
       passLoading: false,
       rejectLoading: false
     };
@@ -87,7 +64,7 @@ export default {
       });
     },
     getDetail() {
-      this.zjControl.queryEbContractReviewSignDetail({contractId: this.row.contractId}).then(res => {
+      this.zjControl.queryEbContractReviewSignDetail({serialNo: this.row.serialNo}).then(res => {
         this.detailInfo = res.data;
       });
     },
@@ -100,8 +77,7 @@ export default {
         }).then(() => {
           this.passLoading = true;
           this.zjControl.submitEbContractApplyReview({
-            contractNo: this.row.contractNo,
-            contractId: this.row.contractId,
+            serialNo: this.row.serialNo,
             operResult: OperResult.PASS
           }).then(res => {
             this.passLoading = false;
@@ -127,8 +103,7 @@ export default {
       this.rejectLoading = false;
       this.zjControl.submitEbContractApplyReview({
         auditOpinion: text,
-        contractNo: this.row.contractNo,
-        contractId: this.row.contractId,
+        serialNo: this.row.serialNo,
         operResult: OperResult.REJECT
       }).then((ret) => {
         this.rejectLoading = false;
