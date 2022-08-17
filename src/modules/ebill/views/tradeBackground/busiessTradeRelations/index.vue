@@ -56,20 +56,21 @@
       <zj-table
         ref="searchTable"
         :params="searchForm"
-        :api="zjControl.queryList"
+        :api="zjControl.relationLsit"
       >
-        <zj-table-column prop="id" title="买方企业名称" />
-        <zj-table-column field="" title="买方是否海天集团" />
-        <zj-table-column field="" title="卖方企业名称" />
-        <zj-table-column field="" title="卖方银行账号" />
-        <zj-table-column field="" title="卖方企业开户行" />
-        <zj-table-column field="" title="卖方企业银行账户户名" />
-        <zj-table-column field="" title="银行联行号" />
-        <zj-table-column field="" title="银行类型" />
-        <zj-table-column field="" title="贸易关系状态" />
-        <zj-table-column field="" title="协议" />
-        <zj-table-column field="" title="证明材料" />
-        <zj-table-column field="" title="上次更新时间" :formatter="date" />
+        <!-- <zj-table-column prop="id" field="" title="买方企业名称" /> -->
+        <zj-table-column field="buyerEntName" title="买方企业名称" />
+        <zj-table-column field="buyerIsHtEnterprise" title="买方是否海天集团" />
+        <zj-table-column field="sellerEntName" title="卖方企业名称" />
+        <zj-table-column field="bankAccount" title="卖方银行账号" />
+        <zj-table-column field="bankName" title="卖方企业开户行" />
+        <zj-table-column field="bankAccname" title="卖方企业银行账户户名" />
+        <zj-table-column field="bankNo" title="银行联行号" />
+        <zj-table-column field="bankType" title="银行类型" />
+        <zj-table-column field="state" title="贸易关系状态" />
+        <zj-table-column field="mygxqrhFileId" title="协议" />
+        <zj-table-column field="mygxzmclFileName" title="证明材料" />
+        <zj-table-column field="lastUpdateDatetime" title="上次更新时间" :formatter="date" />
         <zj-table-column title="操作" fixed="right">
           <template v-slot="{ row }">
             <zj-button type="text" @click="toInfo(row)">详情</zj-button>
@@ -117,7 +118,7 @@ export default {
     return {
       workflow: "",
       zjControl: {
-        queryList: this.$api.billLssue.queryList,
+        relationLsit: this.$api.platformRelations.relationLsit,
       },
       searchForm: {
         expireDateStart: "",
