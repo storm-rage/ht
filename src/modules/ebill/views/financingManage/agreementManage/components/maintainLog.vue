@@ -3,7 +3,7 @@
     <zj-list-layout>
       <template slot="rightBtns">
         <vxe-button class="reset" icon="el-icon-refresh" @click="resetSearch()">重置</vxe-button>
-        <vxe-button class="search" icon="el-icon-search" @click="search(true,'searchTable')">查询</vxe-button>
+        <vxe-button class="search" icon="el-icon-search" @click="search()">查询</vxe-button>
       </template>
       <template slot="searchForm">
         <el-form ref="searchForm" :model="searchForm">
@@ -18,9 +18,9 @@
           </el-form-item>
           <el-form-item label="申请状态：">
             <el-select v-model="searchForm.applyStatus">
-              <el-option label="全部"></el-option>
+              <el-option label="全部" value=""/>
               <el-option
-                v-for="item in dictionary.agreementStateList"
+                v-for="item in dictionary.applyStatusList"
                 :label="item.desc"
                 :value="item.code"
                 :key="item.code"
@@ -29,16 +29,21 @@
           </el-form-item>
         </el-form>
       </template>
-      <zj-table ref="logTable"
-                :dataList="logList"
-                :pager="false"
+      <zj-table ref="searchTable"
+                :api="zjControl.getMyTradeRelationRecord"
+                :params="{
+                  ...searchForm,
+                  busTradeId: row.busTradeId,
+                  buyerId: row.buyerId,
+                  buyerName: row.buyerName,
+                }"
       >
         <zj-table-column type="seq" width="60" title="序号"/>
-        <zj-table-column field="operType" title="申请流水号"/>
-        <zj-table-column field="operPerson" title="买方企业名称"/>
-        <zj-table-column field="operDatetime" title="申请时间"/>
-        <zj-table-column field="operResult" title="申请状态"/>
-        <zj-table-column field="notes" title="操作">
+        <zj-table-column field="serialNo" title="申请流水号"/>
+        <zj-table-column field="coreName" title="买方企业名称"/>
+        <zj-table-column field="receiveDatetime" title="申请时间"/>
+        <zj-table-column field="applyStatus" title="申请状态"/>
+        <zj-table-column title="操作" fixed="right">
           <template v-slot="{row}">
             <zj-button type="text" @click="toDetail(row)" :api="zjBtn.getTradeRelationRecordDetail">详情</zj-button>
           </template>
@@ -55,7 +60,14 @@
 // 维护记录
 export default {
   name: 'maintainLog',
-  components: {},
+  watch: {
+    searchForm: {
+      handler (val) {
+        console.log(val)
+        return {...val}
+      },
+    }
+  },
   data () {
     return {
       zjControl:{
@@ -69,25 +81,12 @@ export default {
         receiveDatetimeEnd:'',
         applyStatus:'',
       },
-      logList: [],
       dictionary: {},
     };
   },
   methods: {
     toDetail(row) {
       this.goChild('frontPhasedMaintainLogDetail',row)
-    },
-    getMyTradeRelationRecord() {
-      let params = {
-        busTradeId: this.row.busTradeId,
-        buyerId: this.row.buyerId,
-        buyerName: this.row.buyerName,
-        page: 1,
-        rows: 10,
-      }
-      this.zjControl.getMyTradeRelationRecord(params).then(res => {
-        this.logList = res.data.rows
-      })
     },
     getPhasedAgreeDirectory() {
       this.zjControl.getPhasedAgreeDirectory().then(res=>{
@@ -99,7 +98,6 @@ export default {
     this.getApi()
     this.getRow()
     this.getPhasedAgreeDirectory()
-    this.getMyTradeRelationRecord()
 
   }
 }
