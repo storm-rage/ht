@@ -178,6 +178,12 @@ export default {
     invoice,
     attaList,
   },
+  created() {
+    this.getApi()
+    // this.getDictionary()
+    this.getRow()
+    console.log(this.row);
+  },
   data() {
     return {
       form:{},

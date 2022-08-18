@@ -125,9 +125,9 @@
         </div>
       </div>
       <el-row slot="footer" class="dialog-footer">
-        <!-- <zj-button type="primary" status="primary" @click="signUserProtocol">确认签署</zj-button> -->
+        <zj-button type="primary" status="primary" @click="signUserProtocol">确认签署</zj-button>
         <!-- 云证书有问题，直接跳到新增联调接口 -->
-        <zj-button type="primary" status="primary" @click="lastadd">确认签署</zj-button>
+        <!-- <zj-button type="primary" status="primary" @click="lastadd">确认签署</zj-button> -->
       </el-row>
     </el-dialog>
         <!-- 云证书签章 -->
@@ -266,6 +266,7 @@ export default {
       // this.zjControl.signUserProtocol().then(() => {
       //   this.$refs.certuficate.close()
       // })
+      console.log("云证书返回");
     },
     // 获取信息
     getUserInfo() {
