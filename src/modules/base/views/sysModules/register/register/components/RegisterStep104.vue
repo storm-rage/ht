@@ -163,7 +163,7 @@
           </el-form-item>
           <div class="zj-inline zj-center zj-w-20">至</div>
           <el-form-item prop="certEndDate" class="zj-inline">
-            <zj-date-picker placeholder="年/月/日" :date.sync="formModel.certEndDate" :pickerOptions="{ disabledDate: certEndDateDisabledDate }" ></zj-date-picker>
+            <zj-date-picker placeholder="年/月/日" :date.sync="formModel.certEndDate" :pickerOptions="{ disabledDate: certEndDateDisabledDate }" :disabled="formModel.term" ></zj-date-picker>
           </el-form-item>
           <el-row>
             <el-checkbox v-model="formModel.term" @change="isChecked">长期有效</el-checkbox>
@@ -557,7 +557,7 @@ export default {
             this.formModel.userId = this.formModel.userId ? this.formModel.userId : ''
             this.formModel.isHtEnterprise  = this.entInfoObj.form.isHtEnterprise
             this.formModel.certStartDate = this.formModel.certStartDate.replace(/-/g,'')
-            this.formModel.certEndDate = this.formModel.certEndDate.replace(/-/g,'')
+            this.formModel.certEndDate = this.formModel.term ? '' : this.formModel.certEndDate.replace(/-/g,'')
             this.zjControl.saveRegisterEntUser(this.formModel).then( res => {
               //更新列表数据
               this.operatorTable = false
