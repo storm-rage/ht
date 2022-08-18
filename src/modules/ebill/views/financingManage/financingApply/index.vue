@@ -3,7 +3,7 @@
     <!--  融资申请  -->
     <el-tabs v-model="tabs" class="zj-tabs-card zj-p-l-16 zj-p-r-16">
       <el-tab-pane label="订单融资" name="orderFinancing" v-if="tabInfo.orderTab">
-        <orderFinancing :zjControl="zjControl" :dictionary="dictionary" :uBtn="zjBtn"/>
+        <orderFinancing :zjControl="zjControl" :dictionary="dictionary" :uBtn="zjBtn" @nextStepParams="handelNextStepParams"/>
       </el-tab-pane>
       <el-tab-pane label="入库融资/凭证融资" name="voucherFinancing" v-if="tabInfo.billTab || tabInfo.warehouseTab">
         <voucherFinancing :zjControl="zjControl" :dictionary="dictionary" :mBtn="zjBtn"/>
@@ -41,7 +41,7 @@ export default {
       },
       tabs:'orderFinancing',
       dictionary:{},
-      uDictionary:{},
+      nextStepParams:{},
       tabInfo: {
         orderTab: '',//订单融资Tab:0-不展示 1-展示
         billTab: '',//凭证融资Tab:0-不展示 1-展示
@@ -65,12 +65,17 @@ export default {
       this.zjBtn.userInfo ? this.tabAtive = 'orderFinancing' : this.tabAtive = 'voucherFinancing'
     },
     toNext() {
+      console.log(JSON.stringify(this.nextStepParams))
       if(this.tabs === 'orderFinancing') {
-        this.goChild('orderFinancingDetail')
+
+        this.goChild('orderFinancingDetail', {buyerId: this.nextStepParams.buyerId})
       }
       if(this.tabs === 'voucherFinancing') {
-        this.goChild('voucherFinancingDetail')
+        this.goChild('voucherFinancingDetail', this.nextStepParams)
       }
+    },
+    handelNextStepParams(val) {
+      this.nextStepParams = {...val}
     },
   },
   created() {

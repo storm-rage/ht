@@ -17,7 +17,7 @@
           <el-row >
             <el-col :span="8">
               <el-form-item label="SRM阶段性协议编号：" prop="srmAgreementNo">
-                <el-input v-model="form.srmAgreementNo"></el-input>
+                <el-input v-model="form.srmAgreementNo" :disabled="row.isAgreementOnline === '0'"/>
               </el-form-item>
             </el-col>
             <el-col :span="8">
@@ -25,7 +25,7 @@
                 <el-select v-model="form.agreementType"
                            placeholder="请选择"
                            clearable
-                           :disabled="row.isAgreementOnline === 'SRM'"
+                           :disabled="row.isAgreementOnline === '0'"
                            :popper-append-to-body="false">
                   <el-option
                     v-for="item in dictionary.agreementTypeList"
@@ -38,24 +38,24 @@
             </el-col>
             <el-col :span="8">
               <el-form-item label="阶段性协议编号：" prop="agreementNo">
-                <el-input v-model="form.agreementNo" :disabled="row.isAgreementOnline === 'SRM'"/>
+                <el-input v-model="form.agreementNo" :disabled="row.isAgreementOnline === '0'"/>
               </el-form-item>
             </el-col>
           </el-row>
           <el-row>
             <el-col :span="8">
               <el-form-item label="阶段性协议名称："  prop="agreementName">
-                <el-input v-model="form.agreementName" :disabled="row.isAgreementOnline === 'SRM'"/>
+                <el-input v-model="form.agreementName" :disabled="row.isAgreementOnline === '0'"/>
               </el-form-item>
             </el-col>
             <el-col :span="8">
               <el-form-item label="阶段性协议开始日：" prop="agreementStartDate">
-                <zj-date-picker :date.sync="form.agreementStartDate"  :format="'yyyy年MM月dd日'"/>
+                <zj-date-picker :date.sync="form.agreementStartDate"  :format="'yyyy年MM月dd日'" :disabled="row.isAgreementOnline === '0'"/>
               </el-form-item>
             </el-col>
             <el-col :span="8">
               <el-form-item label="阶段性协议预计到期日：" prop="agreementEstimateEndDate">
-                <zj-date-picker :date.sync="form.agreementEstimateEndDate"  :format="'yyyy年MM月dd日'"/>
+                <zj-date-picker :date.sync="form.agreementEstimateEndDate"  :format="'yyyy年MM月dd日'" :disabled="row.isAgreementOnline === '0'"/>
               </el-form-item>
             </el-col>
           </el-row>
@@ -65,12 +65,13 @@
                 <zj-number-input
                   :precision="0"
                   v-model="form.agreementNumber"
+                  :disabled="row.isAgreementOnline === '0'"
                 />
               </el-form-item>
             </el-col>
             <el-col :span="8">
               <el-form-item label="单位：">
-                <el-input v-model="form.unit">
+                <el-input v-model="form.unit" :disabled="row.isAgreementOnline === '0'">
 <!--                  <template slot="append">元</template>-->
                 </el-input>
               </el-form-item>
@@ -79,14 +80,17 @@
               <el-form-item label="单价：">
                 <zj-number-input
                   :precision="2"
-                  v-model="form.price"/>
+                  v-model="form.price"
+                  :disabled="row.isAgreementOnline === '0'"
+                />
               </el-form-item>
             </el-col>
           </el-row>
           <el-row>
             <el-col :span="8">
               <el-form-item label="计价单位：">
-                <el-input v-model="form.price">
+                <el-input v-model="form.price"
+                          :disabled="row.isAgreementOnline === '0'">
 <!--                  <template slot="append">元</template>-->
                 </el-input>
               </el-form-item>
@@ -96,6 +100,7 @@
                 <zj-number-input :precision="0"
                                  v-model="form.agreementEstimatedPrice"
                                  placeholder="请输入协议预估总价"
+                                 :disabled="row.isAgreementOnline === '0'"
                 />
                 <div>{{form.agreementEstimatedPrice?digitUp(form.agreementEstimatedPrice):''}}</div>
               </el-form-item>
@@ -105,7 +110,9 @@
                 <el-select v-model="form.agreementStatus"
                            placeholder="请选择"
                            clearable
-                           :popper-append-to-body="false">
+                           :popper-append-to-body="false"
+                           :disabled="row.isAgreementOnline === '0'"
+                >
                   <el-option
                     v-for="item in dictionary.agreementStateList"
                     :label="item.desc"
@@ -119,7 +126,7 @@
           <el-row>
             <el-col :span="24">
               <el-form-item label="请上传合同附件：" prop="fileName">
-                <zj-upload class="zj-inline" ref="upload" :httpRequest="attaUpload" >
+                <zj-upload class="zj-inline" ref="upload" :httpRequest="attaUpload" v-if="row.isAgreementOnline !== '0'">
                   <zj-button slot="trigger">选择文件</zj-button>
                 </zj-upload>
                 <span class="zj-m-l-10">{{ form.fileName?form.fileName:'未选择任何文件' }}</span>
@@ -237,7 +244,7 @@ export default {
           let params = {
             ...this.form,
             phasedId: this.row.phasedId,
-            attachId: this.form.fileId,
+            attachId: this.form.attachId,
           }
           //新增保存
           if(this.title === '新增') {

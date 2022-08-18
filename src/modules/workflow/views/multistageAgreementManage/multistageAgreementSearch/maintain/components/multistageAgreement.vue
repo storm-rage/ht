@@ -28,7 +28,7 @@
         <zj-table-column title="操作" fixed="right">
           <template v-slot="{row}">
             <zj-button type="text" @click="addEditAgreement(row,'维护')" :api="zjControl.savePhasedAgree">维护</zj-button>
-            <zj-button type="text" @click="attaDelete(row)" :api="zjControl.deletePhasedAgree">删除</zj-button>
+            <zj-button type="text" @click="attaDelete(row)" :api="zjControl.deletePhasedAgree" v-if="row.isAgreementOnline !== '0'">删除</zj-button>
           </template>
         </zj-table-column>
       </zj-table>

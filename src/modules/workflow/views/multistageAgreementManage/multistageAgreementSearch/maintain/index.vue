@@ -85,7 +85,7 @@ export default {
       if(isHaveFinancingAgreement) {
         let params = {
           applyId: '',//申请记录id：保理公司直接维护时不需要传
-          operateFlag: flag==='提交'?'1':'0',//1-确认提交 0-拒绝
+          operateFlag: flag==='提交'?'0':'1',//0-确认提交 1-拒绝
           phasedIdList: [...idList],
           rejectReason: this.rejectReason,
           serialNo: '',//申请流水号：保理公司直接维护时不需要传
