@@ -157,7 +157,10 @@ export default {
       this.userData.password = newInfo.newPassword //更新密码
       this.isOneLogin = false //隐藏手机输入框
       this.loginCount = 0 //重置登录次数
-      this.submitForm(true)
+      this.userData.smsCode = ''
+      this.userData.captcha = ''
+      this.getCaptcha() // 重新请求验证码
+      // this.submitForm(true)
     },
     // 重置页面状态
     resetState() {
