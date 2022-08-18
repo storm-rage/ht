@@ -1,5 +1,5 @@
 <template>
-  <div class="zj-login-type">
+  <div class="zj-login-type" :class="{'is-one-login': isOneLogin}">
     <div class="flex-item" @click="handleClick('1')">
       <span class="text" :class="{'active': currentVal==='1'}">账号登陆</span>
     </div>
@@ -11,7 +11,12 @@
 <script>
 export default {
   props: {
-    value: String
+    value: String,
+    // 是否首次登录
+    isOneLogin: {
+      type: Boolean,
+      default: false
+    }
   },
   data() {
     return {
@@ -33,6 +38,14 @@ export default {
   display: flex;
   align-items: center;
   margin-top: 10%;
+  // 首次登录情况样式
+  &.is-one-login {
+    @media only screen and (max-height: 1080px) {
+      & {
+        margin-top: 5%;
+      }
+    }
+  }
   .flex-item {
     text-align: center;
     .text {
