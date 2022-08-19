@@ -46,6 +46,9 @@ export default {
       title: {
         text: '签发凭证总金额',
         left: 'center'
+      },
+      tooltip: {
+        formatter: '{b0}月<br /><p style="text-indent: 2em;">{a0}: {c0}</p>'
       }
     }
     return {
@@ -70,7 +73,7 @@ export default {
         .getPayableIssuanceAmt()
         .then(res => {
           this.loading = false
-          this.dataList = res.data.payableIssuanceMonths || []
+          this.chartData.rows = res.data.payableIssuanceMonths || []
         })
         .catch(err => {
           this.loading = false

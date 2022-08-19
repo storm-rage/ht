@@ -1009,8 +1009,8 @@
         return this.$refs.zjTable.updateFooter()
       },
       // 更新单元格状态（当使用自定义渲染时可能会用到）
-      updateStatus () {
-        return this.$refs.zjTable.updateStatus()
+      updateStatus (scope) {
+        return this.$refs.zjTable.updateStatus(scope)
       },
       // 隐藏指定列
       hideColumn () {

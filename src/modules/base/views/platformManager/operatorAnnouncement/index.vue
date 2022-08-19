@@ -248,6 +248,16 @@ export default {
       this.type = "";
       this.dialogVisible = true;
       this.formModel = {...row};
+      if (this.formModel.target === "门户") {
+        this.formModel.target = 1;
+      } else {
+        this.formModel.target = 2;
+      }
+      if(this.formModel.state == "开启"){
+        this.formModel.state = true
+      }else{
+        this.formModel.state = false
+      }
     },
     //新增
     add() {
@@ -282,7 +292,7 @@ export default {
         this.zjControl.sysNoticeAddDelete({ id: row.id }).then(() => {
           alert("已删除");
         });
-      });
+      }).catch(()=>{})
     },
     //保存
     save() {
