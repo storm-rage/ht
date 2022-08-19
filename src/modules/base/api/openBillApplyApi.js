@@ -4,6 +4,15 @@
 import request from '@common/axios/request'
 
 const openBillApply = {
+    //对账单-签发凭证
+    billApply: (params) => {
+        return request.post('/open-bill-apply/open-bill-apply', params)
+    },
+    // 开单确认书-协议查看
+    getKdAgreeemnt: (params) => {
+        return request.post('/open-bill-apply/get-kd-agreeemnt', params)
+    },
+
     //============================= 线上 ======================================
     //线上对账单-查询
     onlineList: (params) => {
@@ -42,10 +51,6 @@ const openBillApply = {
     //线下对账单-维护附件
     accountOfflineAttach: (params) => {
         return request.get('/open-bill-apply/get-statement-account-offline-attach', { params })
-    },
-    //对账单-签发凭证
-    billApply: (params) => {
-        return request.post('/open-bill-apply/open-bill-apply', params)
     },
     //对账单-提交复核
     billCommit: (params) => {

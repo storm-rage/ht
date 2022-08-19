@@ -23,13 +23,17 @@
         title="对账单金额"
         :formatter="money"
       />
-      <zj-table-column field="payableAmt" title="开单金额" :formatter="money" />
+      <zj-table-column
+        field="openBillAmt"
+        title="开单金额"
+        :formatter="money"
+      />
       <zj-table-column
         field="dueBillDate"
         title="海e单到期日"
         :formatter="date"
       />
-      <zj-table-column field="voucherRemark" title="海e单到期日" />
+      <zj-table-column field="voucherRemark" title="备注" />
       <zj-table-column title="操作" fixed="right">
         <template v-slot="{ row }">
           <zj-button type="text" @click="viewConfirm(row)"
@@ -39,7 +43,7 @@
       </zj-table-column>
 
       <template slot="pager-left">
-        开单笔数：{{ row.list.length || 0 }}&nbsp;&nbsp; 开单金额：{{
+        开单笔数：{{ row.list ? row.list.length : 0 }}&nbsp;&nbsp; 开单金额：{{
           money(allPayableAmt)
         }}
       </template>
@@ -73,7 +77,8 @@ export default {
   data () {
     return {
       zjControl: {
-        billCommit: this.$api.openBillApply.billCommit //对账单-提交复核
+        billCommit: this.$api.openBillApply.billCommit, //对账单-提交复核
+        getKdAgreeemnt: this.$api.openBillApply.getKdAgreeemnt // 开单确认书-协议查看
       },
       searchForm: {},
       tableData: [{ id: 1 }],
@@ -84,7 +89,9 @@ export default {
   },
   computed: {
     allPayableAmt () {
-      return this.row.list.reduce((all, item) => (all += +item.payableAmt), 0)
+      return this.row.list
+        ? this.row.list.reduce((all, item) => (all += +item.payableAmt), 0)
+        : 0
     }
   },
   activated () {
@@ -112,6 +119,7 @@ export default {
             })
             .then(res => {
               if (res.code === 200) {
+                this.toParent()
                 this.$message.success('提交成功!')
               }
             })
@@ -125,17 +133,22 @@ export default {
     },
     // 开单确认书
     viewConfirm (row) {
-      // let params = {
-      //   bizId: item.bizId,
-      //   protocolType: item.protocolType
-      // }
-      // this.zjControl
-      //   .getOneBillSignAgreement(params)
-      //   .then(res => {
-      //   })
-      //   .catch()
-      this.dialogHtml = row.agreeemntText
-      this.dialogShow = true
+      let data = {
+        id: row.id,
+        acctBillCode: row.acctBillCode,
+        companyName: row.companyName,
+        dueBillDate: row.dueBillDate,
+        ebillCode: row.ebillCode,
+        openBillAmt: row.openBillAmt,
+        supplierName: row.supplierName
+      }
+      this.zjControl
+        .getKdAgreeemnt(data)
+        .then(res => {
+          this.dialogHtml = res.data.agreement.html
+          this.dialogShow = true
+        })
+        .catch(() => {})
     }
   }
 }
