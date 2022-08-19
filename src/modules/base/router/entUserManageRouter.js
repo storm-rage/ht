@@ -87,7 +87,7 @@ const entUserManage = [
   },
   {
     path: '/userDetail',
-    name: 'userVindicate',
+    name: 'userDetail',
     component: () => import('../views/entUserManage/userManage/vindicate'),
     meta: {
       title: '用户详情',

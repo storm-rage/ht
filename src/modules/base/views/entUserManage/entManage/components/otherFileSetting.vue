@@ -173,7 +173,7 @@ export default {
       this.$api.baseCommon.uploadFile(formData).then((res) => {
         data.data.row.fileId = res.data.fileId;
         data.data.row.fileName = res.data.fileName;
-        data.data.row.fileSize = res.data.fileSize
+        data.data.row.fileSize = res.data.fileSize;
       });
     },
   },

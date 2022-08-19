@@ -29,11 +29,7 @@
         />
         <zj-table-column field="certNo" title="证件号码" />
         <zj-table-column field="roleName" title="操作角色" width="125" />
-        <zj-table-column
-          field="issueCertState"
-          title="发证书"
-          v-if="cBtn.certKey"
-        >
+        <zj-table-column field="issueCertState" title="发证书">
           <template v-slot="{ row }">
             <zj-button
               type="text"

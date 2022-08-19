@@ -30,8 +30,11 @@
               </el-col>
               <el-col :span="8">
                 <el-form-item label="是否海天集团：">
-                   <span>{{
-                    typeMap(dictionary.isHtEnterpriseList, detailData.isHtEnterprise)
+                  <span>{{
+                    typeMap(
+                      dictionary.isHtEnterpriseList,
+                      detailData.isHtEnterprise
+                    )
                   }}</span>
                 </el-form-item>
               </el-col>
@@ -63,7 +66,7 @@
               </el-col>
               <el-col :span="8">
                 <el-form-item label="企业规模：">
-                     <span>{{
+                  <span>{{
                     typeMap(dictionary.scaleList, detailData.scale)
                   }}</span>
                 </el-form-item>
@@ -78,6 +81,9 @@
         </zj-collapse>
       </template>
     </ent-info>
+    <zj-content-footer>
+      <zj-button @click="goParent">返回</zj-button>
+    </zj-content-footer>
   </zj-content-container>
 </template>
 
