@@ -64,12 +64,7 @@
       <ZjHeader>附件信息</ZjHeader>
       <zj-content>
         <zj-table :dataList="xq.attachList">
-          <zj-table-column field="orderNo" title="序号" />
-           <!-- <zj-table-column title="序号">
-            <template v-slot="{ row }">
-             {{row.length}}
-            </template>
-          </zj-table-column> -->
+          <zj-table-column type="seq" title="序号" />
           <zj-table-column field="fileId" title="附件名称" />
           <zj-table-column title="操作">
             <template v-slot="{ row }">

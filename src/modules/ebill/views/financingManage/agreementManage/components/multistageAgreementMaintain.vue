@@ -136,7 +136,7 @@ export default {
     },
     //删除合同附件
     attaDelete(row) {
-      if(this.businessApplyInfo.recordId) {
+      if(this.businessApplyInfo && this.businessApplyInfo.recordId) {
         return this.$message.error('提交审核中，不能删除合同附件！')
       }
       let params = {
@@ -171,7 +171,7 @@ export default {
     },
     //新增合同附件
     addAtta() {
-      if(this.businessApplyInfo.recordId) {
+      if(this.businessApplyInfo && this.businessApplyInfo.recordId) {
         return this.$message.error('提交审核中，不能新增合同附件！')
       }
       if(!this.tableEditReport(["attaTable"])){return}
