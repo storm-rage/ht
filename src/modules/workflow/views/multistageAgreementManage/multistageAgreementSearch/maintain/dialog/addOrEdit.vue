@@ -251,7 +251,7 @@ export default {
             console.log(params)
             this.zjControl.savePhasedAgree(params).then(res=>{
               //...
-              this.$emit('agreementUpdate')
+              this.$emit('agreementUpdate', params)
               this.$message.success(res.msg)
               this.clearForm()
               this.dialogVisible = false
@@ -261,7 +261,7 @@ export default {
           if(this.title === '维护') {
             this.zjControl.savePhasedAgree(params).then(res=>{
               //...
-              this.$emit('agreementUpdate')
+              this.$emit('agreementUpdate', params)
               this.$message.success(res.msg)
               this.clearForm()
               this.dialogVisible = false
