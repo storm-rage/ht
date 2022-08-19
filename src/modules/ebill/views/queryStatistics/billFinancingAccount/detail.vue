@@ -9,85 +9,86 @@
               <el-row>
                 <el-col :span="12">
                   <el-form-item label="融资企业：">
-                    {{form.entName}}
+                    {{xqx.toEntName}}
                   </el-form-item>
                 </el-col>
                 <el-col :span="12">
                   <el-form-item label="买方企业名称：">
-                    {{form.entName}}
+                    {{xqx.buyerEntName}}
                   </el-form-item>
                 </el-col>
               </el-row>
               <el-row>
                 <el-col :span="12">
                   <el-form-item label="融资流水号：">
-                    {{form.entName}}
+                    {{xqx.serialNo}}
                   </el-form-item>
                 </el-col>
                 <el-col :span="12">
                   <el-form-item label="融资金额：">
-                    {{form.entName}}
-                    <div>{{digitUp(9999)}}</div>
+                    {{xqx.tranAmt}}
+                    <div>{{digitUp(xqx.tranAmt)}}</div>
                   </el-form-item>
                 </el-col>
               </el-row>
               <el-row>
                 <el-col :span="12">
                   <el-form-item label="融资期限：">
-                    {{date(form.dateStart)}}至{{date(form.dateStart)}}共{{form.total}}天
+                    {{date(xqx.estimateTimeStart)}}至{{date(xqx.estimateTimeEnd)}}共{{form.total}}天
                   </el-form-item>
                 </el-col>
                 <el-col :span="12">
                   <el-form-item label="融资月利率：">
-                    {{form.entName}}
+                    {{xqx.interestRate}}
                   </el-form-item>
                 </el-col>
               </el-row>
               <el-row>
                 <el-col :span="12">
                   <el-form-item label="融资状态：">
-                    {{form.entName}}
+                    {{xqx.workflowState}}
                   </el-form-item>
                 </el-col>
                 <el-col :span="12">
                   <el-form-item label="收款银行账号：">
-                    {{form.dateStart}}
+                    {{xqx.receiptBankNo}}
                   </el-form-item>
                 </el-col>
               </el-row>
               <el-row>
                 <el-col :span="12">
                   <el-form-item label="还款状态：">
-                    {{form.dateStart}}
+                    {{xqx.repaymentFlag}}
                   </el-form-item>
                 </el-col>
               </el-row>
               <zj-collapse title="还款记录" class="zj-m-t-10">
-                <zj-table ref="searchTable" class="zj-search-table" :dataList="detail.voucherList"
+                <zj-table ref="searchTable" class="zj-search-table" :dataList="xqx.repaymentRecordList"
                 >
-                  <zj-table-column field="voucherNo" title="序号" />
-                  <zj-table-column field="voucherNo" title="还款方式" :formatter="date"/>
-                  <zj-table-column field="voucherSigner" title="凭证编号" />
-                  <zj-table-column field="voucherSigner" title="还款日期" />
-                  <zj-table-column field="entName" title="计息天数" />
-                  <zj-table-column field="voucherAcc" title="还款金额" :formatter="money"/>
-                  <zj-table-column field="voucherAcc" title="还款本金" :formatter="money"/>
-                  <zj-table-column field="voucherAcc" title="还款利息" :formatter="money"/>
-                  <zj-table-column field="voucherAcc" title="未偿还本金" :formatter="money"/>
-                  <zj-table-column field="voucherAcc" title="年化本金" :formatter="money"/>
+                  <zj-table-column type="seq" title="序号" />
+                  <zj-table-column field="voucherNo" title="还款方式" :formatter="date"/><!-- 缺字段 -->
+                  
+                  <zj-table-column field="voucherSigner" title="凭证编号" /><!-- 缺字段 -->
+                  <zj-table-column field="repaymentDate" title="还款日期" />
+                  <zj-table-column field="repaymentInterestDays" title="计息天数" />
+                  <zj-table-column field="repaymentAmt" title="还款金额" :formatter="money"/>
+                  <zj-table-column field="repaymentPrincipalAmt" title="还款本金" :formatter="money"/>
+                  <zj-table-column field="repaymentInterestAmt" title="还款利息" :formatter="money"/>
+                  <zj-table-column field="voucherAcc" title="未偿还本金" :formatter="money"/><!-- 缺字段 -->
+                  <zj-table-column field="yearAmt" title="年化本金" :formatter="money"/>
                   <el-row slot="pager-left" class="slotRows" >
-                    <span class="table-tips">还款金额合计：{{moneyNoSynbol(detail.total,' ')}}</span>
-                    <span class="table-tips">已还款本金合计：{{moneyNoSynbol(detail.total,' ')}}</span>
-                    <span class="table-tips">已还款利息合计：{{moneyNoSynbol(detail.total,' ')}}</span>
+                    <span class="table-tips">还款金额合计：{{moneyNoSynbol(detail.total,' ')}}</span><!-- 缺字段 -->
+                    <span class="table-tips">已还款本金合计：{{moneyNoSynbol(detail.total,' ')}}</span><!-- 缺字段 -->
+                    <span class="table-tips">已还款利息合计：{{moneyNoSynbol(detail.total,' ')}}</span><!-- 缺字段 -->
                   </el-row>
                 </zj-table>
               </zj-collapse>
             </zj-content-block>
             <zj-content-block>
               <zj-header title="融资协议"/>
-              <zj-table ref="searchTable" class="zj-search-table" :dataList="detail.voucherList"
+              <zj-table ref="searchTable" class="zj-search-table" :dataList="xqx.agreementFileList"
               >
-                <zj-table-column field="index" title="序号" />
+                <zj-table-column type="seq" title="序号" />
                 <zj-table-column field="fileName" title="协议附件" />
                 <zj-table-column title="操作" >
                   <template v-slot="{row}">
@@ -98,11 +99,11 @@
             </zj-content-block>
             <zj-content-block>
               <zj-header title="其他附件"/>
-              <zj-table ref="searchTable" class="zj-search-table" :dataList="detail.voucherList"
+              <zj-table ref="searchTable" class="zj-search-table" :dataList="xqx.otherAttachList"
               >
-                <zj-table-column field="index" title="序号" />
-                <zj-table-column field="agreementNo" title="附件类型" />
-                <zj-table-column field="fileName" title="补充说明" />
+                <zj-table-column type="seq" title="序号" />
+                <zj-table-column field="bizType" title="附件类型" />
+                <zj-table-column field="remark" title="补充说明" />
                 <zj-table-column title="操作" >
                   <template v-slot="{row}">
                     <zj-button type="text" @click="attaDownLoad(row.fileId)">下载</zj-button>
@@ -117,15 +118,15 @@
       <zj-content-block v-if="workflow === 'pzxx'">
         <zj-content-block>
           <zj-header title="阶段性协议信息"/>
-          <zj-table ref="searchTable" class="zj-search-table" :dataList="list" :radio-config="{highlight: true}"
+          <zj-table ref="searchTable" class="zj-search-table" :dataList="xqa" :radio-config="{highlight: true}"
           >
-            <zj-table-column field="voucherNo" title="阶段性协议编号" />
-            <zj-table-column field="voucherNo" title="阶段性协议名称" />
-            <zj-table-column field="voucherNo" title="协议签订日期" />
-            <zj-table-column field="voucherSigner" title="协议到期日" />
-            <zj-table-column field="entName" title="数量" />
-            <zj-table-column field="voucherAcc" title="单价" :formatter="date"/>
-            <zj-table-column field="voucherAcc" title="协议预估总价" :formatter="money"/>
+            <zj-table-column field="agreementNo" title="阶段性协议编号" />
+            <zj-table-column field="agreementName" title="阶段性协议名称" />
+            <zj-table-column field="agreementStartDate" title="协议签订日期" />
+            <zj-table-column field="agreementEstimateEndDate" title="协议到期日" />
+            <zj-table-column field="agreementNumber" title="数量" />
+            <zj-table-column field="price" title="单价" :formatter="date"/>
+            <zj-table-column field="agreementEstimatedPrice" title="协议预估总价" :formatter="money"/>
             <zj-table-column field="fileName" title="附件" />
             <zj-table-column title="操作">
               <template v-slot="{row}">
@@ -160,10 +161,15 @@ export default {
     return {
       form:{},
       detail:{},
-      zjControl: {},
+      zjControl: {
+        ddblAgreementDetail: this.$api.factoringLedger.ddblAgreementDetail,//协议
+        ddblFinancingDetail: this.$api.factoringLedger.ddblFinancingDetail,//详情
+      },
       uDictionary:{},
       mDictionary:{},
       workflow: 'sqxx',
+      xqa:{},
+      xqx:{},
       workflowList: [
         { label: '融资申请信息', value: 'sqxx' }, { label: '阶段性协议信息', value: 'pzxx' }
       ],
@@ -181,9 +187,28 @@ export default {
 
     }
   },
+  created() {
+    this.getApi()
+    this.getRow()
+    this.getDetails()
+  },
   methods: {
     agreementDownLoad() {
 
+    },
+    getDetails() {
+      console.log(this.row);
+      let parms={serialNo:this.row.serialNo}
+      //详情
+      this.zjControl.ddblAgreementDetail(parms).then(res => {
+        this.xqx=res.data
+        console.log(res.data,"详情");
+      })
+      //协议
+      this.zjControl.ddblFinancingDetail(parms).then(res => {
+        this.xqa=res.data
+        console.log(res.data,"协议");
+      })
     },
     attaDownLoad() {},
     submit(){

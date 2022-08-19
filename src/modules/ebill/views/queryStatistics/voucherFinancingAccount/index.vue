@@ -76,11 +76,6 @@ export default {
         rdgetDirectory: this.$api.factoringLedger.rdgetDirectory,//字典
         rdqueryPage: this.$api.factoringLedger.rdqueryPage,//查询列表
       },
-      // rdexport:this.$api.FactoringLedger.rdexport,//导出
-      // rdDetailrzxq:this.$api.FactoringLedger.rdDetailrzxq,//融资申请详情
-      // rdDetailpzxx:this.$api.FactoringLedger.rdDetailpzxx,//凭证信息详情
-      // rdgetDirectory:this.$api.FactoringLedger.rdgetDirectory,//字典
-      // rdqueryPage:this.$api.FactoringLedger.rdqueryPage,//查询列表
       searchForm: {
         serialNo: '',
         fromEntName: '',
@@ -118,7 +113,7 @@ export default {
     },
     goDetail(row){
       row.parent='rdFactoringLedger'
-      this.goChild('queryAccountBillDetail', row)
+      this.goChild('rdFactoringLedgerDetail', row)
     },
   },
   created() {

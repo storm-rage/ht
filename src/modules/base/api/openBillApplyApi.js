@@ -4,6 +4,38 @@
 import request from '@common/axios/request'
 
 const openBillApply = {
+    //对账单-签发凭证
+    billApply: (params) => {
+        return request.post('/open-bill-apply/open-bill-apply', params)
+    },
+    // 开单确认书-协议查看
+    getKdAgreeemnt: (params) => {
+        return request.post('/open-bill-apply/get-kd-agreeemnt', params)
+    },
+
+    //============================= 线上 ======================================
+    //线上对账单-查询
+    onlineList: (params) => {
+        return request.get('/open-bill-apply/query-statement-account-online-page', {params})
+    },
+    //线上对账单-详情
+    onlineDetail: (params) => {
+        return request.get('/open-bill-apply/get-statement-account-online-detail', { params })
+    },
+    //线上对账单-签发凭证
+    onlineBill: (params) => {
+        return request.post('/open-bill-apply/online-open-bill-apply', params)
+    },
+    //线上对账单-修改
+    updateStatementOnline: (params) => {
+        return request.get('/open-bill-apply/update-statement-account-online', {params})
+    },
+    //线上对账单-提交复核
+    openBillCommit: (params) => {
+        return request.post('/open-bill-apply/online-open-bill-commit', params)
+    },
+
+    //============================= 线下 ======================================
     //线下对账单-删除
     accountOffline: (params) => {
         return request.post('/open-bill-apply/delete-statement-account-offline', params)
@@ -12,17 +44,13 @@ const openBillApply = {
     openBill: (params) => {
         return request.post('/open-bill-apply/download-batch-open-bill-template', params)
     },
+    // 线下对账单-维护附件字典
+    getOpenBillDictionary: (params) => {
+        return request.get('/open-bill-apply/get-open-bill-dictionary', { params })
+    },
     //线下对账单-维护附件
     accountOfflineAttach: (params) => {
         return request.get('/open-bill-apply/get-statement-account-offline-attach', { params })
-    },
-    //线上对账单-详情
-    onlineDetail: (params) => {
-        return request.get('/open-bill-apply/get-statement-account-online-detail', { params })
-    },
-    //对账单-签发凭证
-    billApply: (params) => {
-        return request.post('/open-bill-apply/open-bill-apply', params)
     },
     //对账单-提交复核
     billCommit: (params) => {
@@ -40,14 +68,6 @@ const openBillApply = {
     maintainOther: (params) => {
         return request.post('/open-bill-apply/offline-statement-maintain-other', params)
     },
-    //线上对账单-签发凭证
-    onlineBill: (params) => {
-        return request.post('/open-bill-apply/online-open-bill-apply', params)
-    },
-    //线上对账单-提交复核
-    openBillCommit: (params) => {
-        return request.post('/open-bill-apply/online-open-bill-commit', params)
-    },
     //接收海顺返回结果
     receiveResult: (params) => {
         return request.post('/open-bill-apply/open-bill-receive-result', params)
@@ -55,14 +75,6 @@ const openBillApply = {
     //线下对账单-查询
     offlineList: (params) => {
         return request.get('/open-bill-apply/query-statement-account-offline-page', {params})
-    },
-    //线上对账单-查询
-    onlineList: (params) => {
-        return request.get('/open-bill-apply/query-statement-account-online-page', {params})
-    },
-    //线上对账单-修改
-    updateStatementOnline: (params) => {
-        return request.get('/open-bill-apply/update-statement-account-online', {params})
     },
     //上传开立凭证文件-保存数据
     billData: (params) => {

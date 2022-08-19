@@ -9,14 +9,14 @@
     ></gys-charts>
     <!--  核心企业    -->
     <hx-charts
-      v-if="entInfo.entType === constEntType.HX"
+      v-if="entInfo.entType === constEntType.HX || true"
       :title="title"
       :height="height"
       :extendConfig="extendConfig"
     ></hx-charts>
     <!--  保理    -->
     <yy-charts
-      v-if="entInfo.entType === constEntType.BL"
+      v-if="entInfo.entType === constEntType.BL && false"
       :title="title"
       :height="height"
       :extendConfig="extendConfig"

@@ -1,10 +1,13 @@
 <template>
-<ve-pie :loading="loading"
-        :height="height"
-        :data="chartData"
-        :settings="chartSetting"
-        :legend="{bottom: 0}"
-        :data-empty="!chartData.rows.length"></ve-pie>
+  <ve-pie
+    :loading="loading"
+    :height="height"
+    :data="chartData"
+    :extend="chartExtend"
+    :settings="chartSetting"
+    :legend="{ bottom: 0 }"
+    :data-empty="!chartData.rows.length"
+  ></ve-pie>
 </template>
 <script>
 import VePie from 'v-charts/lib/pie.common.min'
@@ -16,16 +19,14 @@ export default {
   props: {
     height: String,
     extendConfig: Object,
-    dataList: Array,
+    dataList: Array
   },
   data () {
     this.chartSetting = {
       label: {
         position: 'inner',
-        formatter: (obj) => {
-          const dataIndex = obj.dataIndex;
-          const row = this.chartData.rows[dataIndex];
-          return `${row.amount}`
+        formatter: obj => {
+          return `${obj.value} , ${obj.percent}%`
         }
       },
       labelLine: {
@@ -34,12 +35,17 @@ export default {
       offsetY: 120
     }
     this.chartExtend = {
-      ...this.extendConfig
+      ...this.extendConfig,
+      ...{
+        title: {
+          text: '单位：万元'
+        }
+      }
     }
     return {
       loading: false,
       chartData: {
-        columns: ['label','amount'],
+        columns: ['label', 'amt'],
         rows: []
       }
     }
