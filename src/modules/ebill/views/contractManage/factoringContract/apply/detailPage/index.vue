@@ -1,7 +1,6 @@
 <template>
   <div>
     <detail-page ref="detailPage"
-                 :stepList="stepList"
                  :detail-info="detailInfo"
                  :dictionary="dictionary"
                  title="合同签约申请"></detail-page>
@@ -30,28 +29,7 @@ export default {
       detailInfo: {},
       // 字典
       dictionary: {},
-      stepList: [
-        {
-          title: '签约申请',
-          desc: ''
-        },
-        {
-          title: '签约复核',
-          desc: ''
-        },
-        {
-          title: '买方签署转让回执',
-          desc: ''
-        },
-        {
-          title: '保理公司签约',
-          desc: ''
-        },
-        {
-          title: '保理合同签约完成',
-          desc: ''
-        }
-      ],
+      stepList: [],
       loading: false
     };
   },
@@ -67,7 +45,7 @@ export default {
       });
     },
     getDetail() {
-      this.zjControl.queryEbContractEnterSignDetail({contractId: this.row.contractId}).then(res => {
+      this.zjControl.queryEbContractEnterSignDetail({serialNo: this.row.serialNo}).then(res => {
         this.detailInfo = res.data;
       });
     },
@@ -79,8 +57,7 @@ export default {
       }).then(() => {
         this.loading = true;
         this.zjControl.submitEbContractApply({
-          contractNo: this.row.contractNo,
-          contractId: this.row.contractId
+          serialNo: this.row.serialNo
         }).then(res => {
           this.loading = false;
           //成功，关闭

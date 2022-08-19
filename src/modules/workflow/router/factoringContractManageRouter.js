@@ -4,12 +4,10 @@ const factoringContractManageRouter = [
     name: 'factoringContractAudit',
     component: () => import('../views/factoringContractManage/contract/review/audit.vue'),
     meta: {
-      isMock: true,
       title: '国内商业保理合同确认',
-      root: '我的代办',
+      parent: 'myTodo',
       keepAlive: true,
-      refreshIndex: 0,
-      notRequireAuth: true
+      refreshIndex: 0
     }
   },
   {
@@ -17,12 +15,10 @@ const factoringContractManageRouter = [
     name: 'factoringContractApplyDetail',
     component: () => import('../views/factoringContractManage/contract/detail/detail.vue'),
     meta: {
-      isMock: true,
       title: '国内商业保理合同确认交易详情',
-      root: '我的代办',
+      parent: 'myTodo',
       keepAlive: true,
-      refreshIndex: 0,
-      notRequireAuth: true
+      refreshIndex: 0
     }
   },
   {
@@ -30,12 +26,10 @@ const factoringContractManageRouter = [
     name: 'factoringQuotaChangeAudit',
     component: () => import('../views/factoringContractManage/quota/review/audit.vue'),
     meta: {
-      isMock: true,
       title: '额度变更审核',
-      root: '我的代办',
+      parent: 'myTodo',
       keepAlive: true,
-      refreshIndex: 0,
-      notRequireAuth: true
+      refreshIndex: 0
     }
   },
   {
@@ -43,12 +37,10 @@ const factoringContractManageRouter = [
     name: 'factoringQuotaChangeDetail',
     component: () => import('../views/factoringContractManage/quota/detail/detail.vue'),
     meta: {
-      isMock: true,
       title: '额度变更审核详情',
-      root: '我的代办',
+      parent: 'myTodo',
       keepAlive: true,
-      refreshIndex: 0,
-      notRequireAuth: true
+      refreshIndex: 0
     }
   },
 ];

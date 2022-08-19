@@ -26,6 +26,25 @@
         </el-row>
         <el-row>
           <el-col :span="12">
+            <el-form-item label="应收账款金额：" prop="tranAmt">
+              <zj-number-input :precision="2" v-model="form.tranAmt" @change="handleChange">
+                <template slot="append">元</template>
+              </zj-number-input>
+              <div>{{form.tranAmt?digitUp(form.tranAmt):''}}</div>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="应收账款转让比例：" prop="tranAmt">
+              {{form.contractNo}}
+              <zj-number-input :precision="0" v-model="form.tranAmt" @change="handleChange">
+                <template slot="append">%</template>
+              </zj-number-input>
+              <div>{{form.tranAmt?digitUp(form.tranAmt):''}}</div>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="12">
             <el-form-item label="融资申请金额：" prop="tranAmt">
               <zj-number-input :precision="2" v-model="form.tranAmt" @change="handleChange">
                 <template slot="append">元</template>
@@ -34,28 +53,28 @@
             </el-form-item>
           </el-col>
           <el-col :span="12">
+            <el-form-item label="融资月利率：">{{form.factoringFinancingMonthRate}}</el-form-item>
+          </el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="12">
             <el-form-item label="融资开始日：" prop="applyDatetime">
               <zj-date-picker :date.sync="form.applyDatetime" :overNow="true" :format="'yyyy-MM-dd'" @change="handleChange"/>
             </el-form-item>
           </el-col>
-        </el-row>
-        <el-row>
           <el-col :span="12">
             <el-form-item label="融资到期日：" prop="expireDate">
               <zj-date-picker :date.sync="form.expireDate" :format="'yyyy-MM-dd'" @change="handleChange"/>
             </el-form-item>
           </el-col>
+        </el-row>
+        <el-row>
           <el-col :span="12">
             <el-form-item label="预计融资期限：">
               {{date(form.applyDatetime)}}
               {{form.expireDate?`至${date(form.expireDate)}`:''}}
               {{form.estimateDays?`共${date(form.estimateDays)}天`:''}}
             </el-form-item>
-          </el-col>
-        </el-row>
-        <el-row>
-          <el-col :span="12">
-            <el-form-item label="融资月利率：">{{form.factoringFinancingMonthRate}}</el-form-item>
           </el-col>
           <el-col :span="12">
             <el-form-item label="预计利息：">
@@ -76,7 +95,7 @@
           >
             <zj-table-column field="agreementNo" title="阶段性协议编号" />
             <zj-table-column field="agreementName" title="阶段性协议名称" />
-            <zj-table-column field="voucherSigner" title="协议类型" />
+            <zj-table-column field="agreementType" title="协议类型" :formatter="(obj)=>typeMap(dictionary.agreementType,obj.cellValue)"/>
             <zj-table-column field="agreementStartDate" title="协议签订日期" :formatter="date"/>
             <zj-table-column field="agreementEstimateEndDate" title="协议预计到期日" :formatter="date"/>
             <zj-table-column field="agreementStatus" title="状态" :formatter="(obj)=>typeMap(dictionary.states,obj.cellValue)"/>
@@ -156,6 +175,8 @@ export default {
     },
     getDetail() {
       let params = {
+        buyerId: this.$route.params.rowData.buyerId,
+        discountRate: this.form.discountRate || '',
         tranAmt: this.form.tranAmt || '',
         applyDatetime: this.form.applyDatetime || '',
         expireDate: this.form.expireDate || '',
@@ -196,6 +217,7 @@ export default {
     this.getApi()
     this.getDic()
     this.getDetail()
+    console.log(this.$route.params.rowData.buyerId)
   }
 }
 </script>

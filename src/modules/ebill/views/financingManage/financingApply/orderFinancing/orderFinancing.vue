@@ -35,10 +35,10 @@
         >
           <zj-table-column field="agreementNo" title="阶段性协议编号"/>
           <zj-table-column field="agreementName" title="阶段性协议名称"/>
-          <zj-table-column field="agreementType" title="协议类型"/>
+          <zj-table-column field="agreementType" title="协议类型" :formatter="obj=>typeMap(dictionary.agreementType,obj.cellValue)"/>
           <zj-table-column field="agreementStartDate" title="协议签订日期" :formatter="date"/>
           <zj-table-column field="agreementEstimateEndDate" title="协议预计到期日" :formatter="date"/>
-          <zj-table-column field="agreementStatus" title="状态" :formatter="obj=>typeMap(dictionary,obj.cellValue)"/>
+          <zj-table-column field="agreementStatus" title="状态" :formatter="obj=>typeMap(dictionary.agreementStatus,obj.cellValue)"/>
           <zj-table-column field="fileName" title="附件" />
           <vxe-table-column fixed="right" title="操作">
             <template v-slot="{row}">
@@ -72,6 +72,7 @@ export default {
         }
       ],
       agreementList: [],
+      activeEntParams: {},
     };
   },
   methods: {
@@ -83,6 +84,9 @@ export default {
       }
     },
     handleRadioChange({row}) {
+      this.activeEntParams = {...row}
+      console.log(this.activeEntParams)
+      this.$emit('nextStepParams',this.activeEntParams)
       //获取阶段性协议列表
       let params = {
         ...row

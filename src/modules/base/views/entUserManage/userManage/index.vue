@@ -64,7 +64,6 @@
             <zj-button
               type="text"
               @click="goChild('userVindicate', row)"
-              :api="zjBtn.getUserInformation"
               >维护</zj-button
             >
           </template>
@@ -80,15 +79,23 @@ export default {
   components: {},
   data() {
     return {
-      zjControl: {
-        queryUserPage: this.$api.userInfoManage.queryUserPage,
-        getUserInformation: this.$api.userInfoManage.getUserInformation,
-      },
+      zjControl:  this.$api.userInfoManage,
       searchForm: {},
       dictionary: {},
     };
   },
-  methods: {},
+  created() {
+    this.getApi();
+    this.getDictionary()
+  },
+  methods: {
+    //获取字典
+    getDictionary() {
+      this.zjControl.getUserDictionary().then((res) => {
+        this.dictionary = res.data;
+      });
+    },
+  },
 };
 </script>
 

@@ -30,6 +30,7 @@ const mutations = {
         const route = router.currentRoute
         if (route != null && route.meta) {
           route.meta.refreshIndex !== undefined ? route.meta.refreshIndex += 1 : route.meta.refreshIndex =0
+          rItem.meta = {refreshIndex: route.meta.refreshIndex};
           state.currentRouteIndex = rItem.meta.refreshIndex
         }
       }
@@ -37,7 +38,15 @@ const mutations = {
       if(rItem.meta){
         rItem.meta.refreshIndex += 1
         state.currentRouteIndex = rItem.meta.refreshIndex
-      }
+      }/*else {
+        // 修复关闭跳转问题
+        const route = router.getRoutes().find((item) => {return item.name === rItem.name})
+        if (route != null && route.meta) {
+          rItem.meta = route.meta
+          // 缓存
+          state.currentRouteIndex = rItem.meta.refreshIndex
+        }
+      }*/
       //并设置选中
       state.tabActive = rItem.name
       //添加到标签数组
@@ -47,7 +56,7 @@ const mutations = {
   //关闭-单
   tabDel(state,rItem){
     //查找下标
-    let index = state.tabTagList.findIndex(item => item.name === rItem.name)
+    const index = state.tabTagList.findIndex(item => item.name === rItem.name)
     //当要删除的为当前选中的
     if(rItem.name === state.tabActive){
       //当下标存在 并且大于零
@@ -79,10 +88,12 @@ const mutations = {
     router.push({name:rItem.name})
   },
   //关闭所有
-  tabClear(state,rItem){
+  tabClear(state){
     state.tabTagList = []
     state.tabBreadList = []
     state.tabActive = ''
+    state.cachedName = []
+    state.cachedRoute = []
     router.push({name:'home'})
   },
   //刷新
@@ -95,7 +106,7 @@ const mutations = {
   },
   //----------------------------------------------------
   ADD_CACHE: (state, route) => {
-    if (!state.cachedName.includes(route.name)) {
+    if (!state.cachedName.includes(route.name) && route.meta&& route.meta.keepAlive) {
       state.cachedName.push(route.name)
       state.cachedRoute.push({
         path: route.path,

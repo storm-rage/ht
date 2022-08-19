@@ -77,18 +77,20 @@ export default {
     },
     submit(flag) {
       let idList = []
-      for(let i of this.detailData.phasedAgreementList) {
-        idList.push(i.phasedId)
+      if(this.detailData.phasedAgreementList) {
+        for(let i of this.detailData.phasedAgreementList) {
+          idList.push(i.phasedId)
+        }
       }
       //判断是否有一条协议状态为可融资
-      let isHaveFinancingAgreement = this.detailData.phasedAgreementList.some(i=>{return i.agreementStatus === '1'})
+      let isHaveFinancingAgreement = this.detailData.phasedAgreementList?this.detailData.phasedAgreementList.some(i=>{return i.agreementStatus === '1'}):false
       if(isHaveFinancingAgreement) {
         let params = {
-          applyId: '',//申请记录id：保理公司直接维护时不需要传
-          operateFlag: flag==='提交'?'1':'0',//1-确认提交 0-拒绝
+          applyId: this.detailData.businessApplyInfo.applyId,//申请记录id：保理公司直接维护时不需要传
+          operateFlag: flag==='提交'?'0':'1',//0-确认提交 1-拒绝
           phasedIdList: [...idList],
           rejectReason: this.rejectReason,
-          serialNo: '',//申请流水号：保理公司直接维护时不需要传
+          serialNo: this.detailData.businessApplyInfo.serialNo,//申请流水号：保理公司直接维护时不需要传
         }
         this.$messageBox({
           type:'info',
@@ -97,6 +99,7 @@ export default {
           showCancelButton: true,
           messageResolve:()=>{
             this.zjControl.submitBackPhasedAgree(params).then(res=>{
+              this.getDetail()
               this.$message.success(res.msg)
             })
           }

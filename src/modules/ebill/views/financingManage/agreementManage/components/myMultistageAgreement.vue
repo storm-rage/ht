@@ -127,13 +127,10 @@ export default {
     },
     //协议列表
     queryMyPhasedAgreePage(coreName) {
-      let params = {
-        ...coreName,
-        page: 1,
-        rows: 10,
-      }
-      this.zjControl.queryMyPhasedAgreePage(params).then(res => {
-        this.myPhasedAgreePageList = res.data.rows
+      this.searchForm = {...this.searchForm, ...coreName}
+      console.log(this.searchForm)
+      this.$nextTick(() => {
+        this.$refs.searchTable.getList(this.searchForm)
       })
     },
     toLogList(row) {

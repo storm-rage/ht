@@ -111,7 +111,7 @@
               </el-form-item>
             </el-col>
             <el-col :span="8">
-              <el-form-item label="银行卡号：">
+              <el-form-item label="银行卡号：" prop="bankAcctNo">
                 <el-input
                   v-model.trim="form.bankAcctNo"
                   :disabled="pageType === 1"
@@ -164,7 +164,7 @@
         <h4 class="zj-m-b-20">
           请将以上已盖章影像资料对应的纸质版邮递至以下地址：
         </h4>
-        <el-form ref="form" label-width="100px">
+        <el-form label-width="100px">
           <el-row>
             <el-col :span="8">
               <el-form-item label="收件人：">
@@ -203,7 +203,7 @@
   </zj-content-container>
 </template>
 <script>
-import { newValidateFixedPhone } from "@utils/rules";
+import { validateIdCard,newValidateFixedPhone,validateBankAcct } from "@utils/rules";
 export default {
   components: {},
 
@@ -239,6 +239,7 @@ export default {
             message: "请输入证件号码",
             trigger: ["blur"],
           },
+          { validator: validateIdCard, trigger: ["blur"] },
         ],
         certStartDate: [
           {
@@ -267,6 +268,7 @@ export default {
             trigger: ["blur"],
           },
         ],
+        bankAcctNo:  { validator: validateBankAcct, trigger: ["blur"] }
       },
     };
   },
@@ -336,6 +338,7 @@ export default {
     },
     //上传附件
     handleFileUpload({ file, data }) {
+      console.log(file)
       let formData = new FormData();
       formData.append("bizType", "user");
       formData.append("file", file);

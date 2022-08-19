@@ -2,7 +2,7 @@ import request from '@common/axios/request'
 const login = {
   //获取手机验证码
   sendMobileCaptcha:(params) => {
-    return request.get('/login/send-mobile-captcha',{params})
+    return request.post('/login/hadaySendMessage',params)
   },
   // 登录
   login: (params) => {

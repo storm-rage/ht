@@ -37,28 +37,30 @@
         </el-form>
       </template>
       <template slot="btnGroups">
-        <zj-button
-          class="append"
-          icon="el-icon-circle-plus-outline"
-          @click="goChild('entManageAdd')"
-          :api="zjBtn.addEnterprise"
-          >新增</zj-button
-        >
-        <zj-button
-          class="export"
-          icon="iconfont icon-daochu"
-          @click="exportList"
-          :api="zjBtn.exportEnterpriseList"
-          >导出数据</zj-button
-        >
+        <zj-content>
+          <zj-button
+            type="primary"
+            icon="el-icon-circle-plus-outline"
+            @click="goChild('entManageAdd')"
+            :api="zjBtn.addEnterprise"
+            >新增</zj-button
+          >
+          <zj-button
+            type="primary"
+            icon="el-icon-download"
+            @click="exportList"
+            :api="zjBtn.exportEnterpriseList"
+            >导出数据</zj-button
+          >
+        </zj-content>
       </template>
       <zj-table
         ref="searchTable"
         :params="searchForm"
         :api="zjControl.tableApi"
       >
-        <zj-table-column title="企业编码" >
-           <template v-slot="{ row }">
+        <zj-table-column title="企业编码">
+          <template v-slot="{ row }">
             <span
               class="table-elbill-code"
               @click="goChild('entDetail', row)"
@@ -75,10 +77,10 @@
         />
         <zj-table-column field="applyDate" title="创建日期" :formatter="date" />
         <zj-table-column
-          field="registerState"
+          field="state"
           title="企业状态"
           :formatter="
-            (obj) => typeMap(dictionary.enterpriseStateList, obj.cellValue)
+            (obj) => typeMap(dictionary.registerStateList, obj.cellValue)
           "
         />
         <zj-table-column title="操作" fixed="right">
@@ -105,7 +107,8 @@ export default {
         tableApi: this.$api.entInfoManage.queryEnterprise,
         queryEntDictionary: this.$api.entInfoManage.queryEntDictionary,
         exportEnterpriseList: this.$api.entInfoManage.exportEnterpriseList,
-        updateEnterprise: this.$api.entInfoManage.updateEnterprise
+        updateEnterprise: this.$api.entInfoManage.updateEnterprise,
+        addEnterprise: this.$api.entInfoManage.addEnterprise,
       },
       dictionary: {},
       searchListFlag: false,

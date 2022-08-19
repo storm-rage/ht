@@ -39,6 +39,7 @@ export default {
     },
     // 复核通过
     toReviewPass() {
+      this.$refs.auditRemark.getForm().clearValidate();
       this.$confirm('是否确认复核通过？','温馨提示',{
         type: 'warning',
         confirmButtonText: '确定',
@@ -102,6 +103,7 @@ export default {
     },
     // 驳回申请通过
     toPass() {
+      this.$refs.auditRemark.getForm().clearValidate();
       this.$confirm('是否确认审核通过？','温馨提示',{
         type: 'warning',
         confirmButtonText: '确定',

@@ -2,16 +2,16 @@
   <el-form :model="form" ref="form" :rules="rules">
     <zj-content-block>
       <zj-header title="其他附件"></zj-header>
+      <el-button
+        style="width: 100px"
+        class="zj-m-b-10 zj-m-l-10"
+        size="small"
+        type="primary"
+        v-if="isEdit"
+        @click="toAddFile"
+        >新增</el-button
+      >
       <zj-content>
-        <el-button
-          style="width: 100px"
-          class="zj-m-t-10 zj-m-b-10"
-          size="small"
-          type="primary"
-          v-if="isEdit"
-          @click="toAddFile"
-          >新增</el-button
-        >
         <zj-table
           ref="fileTable"
           :dataList="fileList"
@@ -38,7 +38,8 @@
                 <zj-upload
                   class="zj-inline"
                   :httpRequest="handleFileUpload"
-                  :autoUpload="false"
+                  :data="{ row }"
+                  :autoUpload="true"
                   :onChange="handleFileChange"
                 >
                   <zj-button slot="trigger" type="text">上传</zj-button>
@@ -103,7 +104,7 @@ export default {
       return this.$refs.form;
     },
     getData() {
-      return { list: this.fileList };
+      return this.fileList;
     },
     // 下载
     toDownload(row) {},
@@ -166,7 +167,15 @@ export default {
       currentFile.file = file;
       this.$set(this.fileList, this.currentEditIndex, currentFile);
     },
-    handleFileUpload() {},
+    handleFileUpload(data) {
+      let formData = new FormData();
+      formData.append("file", data.file);
+      this.$api.baseCommon.uploadFile(formData).then((res) => {
+        data.data.row.fileId = res.data.fileId;
+        data.data.row.fileName = res.data.fileName;
+        data.data.row.fileSize = res.data.fileSize;
+      });
+    },
   },
 };
 </script>

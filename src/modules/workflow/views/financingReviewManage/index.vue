@@ -20,7 +20,7 @@ import toDo from "./toDo";
 import done from "./done";
 import settle from "./settle";
 export default {
-  name: "financingReviewManage",
+  name: "financingAuditManage",
   components: {
     toDo,done,settle
   },

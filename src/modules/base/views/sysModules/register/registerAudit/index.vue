@@ -58,12 +58,11 @@
           </el-form-item>
         </el-form>
       </template>
-      <!-- <zj-table
+      <zj-table
         ref="searchTable"
         :params="searchForm"
         :api="zjControl.tableApi"
-      > -->
-      <zj-table ref="searchTable" :api="zjControl.tableApi">
+      >
         <zj-table-column field="serialNo" title="申请流水号">
           <template v-slot="{ row }">
             <span

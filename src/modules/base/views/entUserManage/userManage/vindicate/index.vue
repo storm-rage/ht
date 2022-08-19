@@ -21,7 +21,9 @@
               </el-col>
               <el-col :span="8">
                 <el-form-item label="证件类型：">
-                  <span>{{ detailData.certType | value }}</span>
+                  {{
+                    typeMap(this.dictionary.certType, this.detailData.certType)
+                  }}
                 </el-form-item>
               </el-col>
               <el-col :span="8">
@@ -31,10 +33,8 @@
               </el-col>
               <el-col :span="8">
                 <el-form-item label="证件有效期：">
-                  <span
-                    >{{ detailData.certStartDate | value }} 至
-                    {{ detailData.certEndDate | value }}</span
-                  >
+                  <span>{{ detailData.certStartDate | value }} 至
+                    {{ detailData.certEndDate | value }}</span>
                 </el-form-item>
               </el-col>
               <el-col :span="8">
@@ -63,32 +63,19 @@
             <zj-table-column field="code" title="企业代码" />
             <zj-table-column field="customCode" title="客户业务系统编码" />
             <zj-table-column field="entName" title="企业名称" />
-            <zj-table-column field="isHtEnterprise" title="是否海天集团" />
-            <zj-table-column field="entType" title="平台客户类型" />
-            <zj-table-column field="createDatetime" title="新增日期" />
-            <zj-table-column field="entState" title="企业状态" />
-            <zj-table-column field="roleId" title="角色" />
-            <zj-table-column field="userState" title="状态" />
-            <zj-table-column
-              field="field3"
-              title="支持开立债权凭证的对账单类型"
-              v-if="pageType !== 'detail'"
-            />
-            <zj-table-column
-              title="操作"
-              fixed="right"
-              width="200px"
-              v-if="pageType !== 'detail'"
-            >
-              <template>
-                <zj-button type="text" @click="makeCertKey(row)"
-                  >制key</zj-button
-                >
-                <zj-button type="text" @click="freezeUser(row)">冻结</zj-button>
-                <zj-button type="text" @click="unfreezeUser(row)"
-                  >解冻</zj-button
-                >
-                <zj-button type="text" @click="cancelUser(row)">注销</zj-button>
+            <zj-table-column field="isHtEnterprise" title="是否海天集团" :formatter="(obj) => typeMap(dictionary.isHtEnterprise, obj.cellValue)" />
+            <zj-table-column field="entType" title="平台客户类型" :formatter="(obj) => typeMap(dictionary.entType, obj.cellValue)" />
+            <zj-table-column field="createDatetime" title="新增日期" :formatter="date" />
+            <zj-table-column field="entState" title="企业状态" :formatter="(obj) => typeMap(dictionary.enterpriseStateList, obj.cellValue)" />
+            <zj-table-column field="roleId" title="角色" :formatter="(obj) => typeMap(dictionary.sysRoleList, obj.cellValue)" />
+            <zj-table-column field="userState" title="状态" :formatter="(obj) => typeMap(dictionary.userState, obj.cellValue)" />
+            <zj-table-column field="field3" title="支持开立债权凭证的对账单类型" v-if="pageType !== 'detail'" />
+            <zj-table-column title="操作" fixed="right" width="240px" v-if="pageType !== 'detail'">
+              <template v-slot="{ row }">
+                <zj-button type="text" @click="makeCertKey(row)">制key</zj-button>
+                <zj-button type="text" @click="freezeUser(row)"  v-if="row.userState === '1'">冻结</zj-button>
+                <zj-button type="text" @click="unfreezeUser(row)" v-if="row.userState === '5'">解冻</zj-button>
+                <zj-button type="text" @click="cancelUser(row)"  v-if="row.userState === '1' || row.userState === '5'">注销</zj-button>
               </template>
             </zj-table-column>
           </zj-table>
@@ -96,12 +83,7 @@
       </zj-content-block>
     </el-form>
     <zj-content-footer>
-      <zj-button
-        type="primary"
-        @click="goChild('userUpdate', row)"
-        v-if="pageType !== 'detail'"
-        >修改</zj-button
-      >
+      <zj-button type="primary" @click="goChild('userUpdate', row)" v-if="pageType !== 'detail'">修改</zj-button>
       <zj-button @click="goParent">返回</zj-button>
     </zj-content-footer>
   </zj-content-container>
@@ -114,13 +96,21 @@ export default {
       zjControl: this.$api.userInfoManage,
       pageType: this.$route.meta.pageType,
       detailData: {},
+      dictionary: {},
     };
   },
   created() {
     this.getRow();
+    this.getDictionary();
     this.getUserInformation();
   },
   methods: {
+    //获取字典
+    getDictionary() {
+      this.zjControl.getUserDictionary().then((res) => {
+        this.dictionary = res.data;
+      });
+    },
     // 获取详情
     getUserInformation() {
       this.zjControl.getUserInformation({ id: this.row.id }).then((res) => {
@@ -134,27 +124,27 @@ export default {
         title: `制key确认`,
         content: `${"是否确认为用户" + row.userName + "  -  制作key"}`,
         messageResolve: () => {
-          if (row.certType === "1") {
-            let paramsKey = {
-              userId: row.id,
-              p10: "",
-            };
-            this.zjControl.makeCertKey(paramsKey).then(() => {
-              this.$Message.success(`已为用户：${row.userName}  -  制Key成功`);
-              this.search(false);
-            });
-          } else if (row.certType === "2") {
-            let paramsClound = {
-              entId: row.entId,
-              userId: row.id,
-            };
-            this.zjControl.bindCloudCerUser(paramsClound).then(() => {
-              this.$Message.success(
-                `已为用户：${row.userName}  -  绑定云证书成功！`
-              );
-              this.search(false);
-            });
-          }
+          // if (row.certType === "1") {
+          let paramsKey = {
+            userId: row.id,
+            p10: "",
+          };
+          this.zjControl.makeCertKey(paramsKey).then(() => {
+            this.$Message.success(`已为用户：${row.userName}  -  制Key成功`);
+            this.search(false);
+          });
+          // } else if (row.certType === "2") {
+          //   let paramsClound = {
+          //     entId: row.entId,
+          //     userId: row.id,
+          //   };
+          //   this.zjControl.bindCloudCerUser(paramsClound).then(() => {
+          //     this.$Message.success(
+          //       `已为用户：${row.userName}  -  绑定云证书成功！`
+          //     );
+          //     this.search(false);
+          //   });
+          // }
         },
       });
     },
