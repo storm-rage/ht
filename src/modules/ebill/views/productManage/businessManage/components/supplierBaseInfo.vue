@@ -141,7 +141,7 @@ export default {
   },
   computed: {
     isDDBL () {
-      return this.params.productType&&this.params.productType.indexOf(ProductType.DDBL)
+      return this.params.productType&&this.params.productType.indexOf(ProductType.DDBL)>=0
     }
   },
   data () {
