@@ -77,10 +77,10 @@
         />
         <zj-table-column field="applyDate" title="创建日期" :formatter="date" />
         <zj-table-column
-          field="registerState"
+          field="state"
           title="企业状态"
           :formatter="
-            (obj) => typeMap(dictionary.enterpriseStateList, obj.cellValue)
+            (obj) => typeMap(dictionary.registerStateList, obj.cellValue)
           "
         />
         <zj-table-column title="操作" fixed="right">

@@ -19,7 +19,9 @@
             </el-col>
             <el-col :span="8">
               <el-form-item label="平台客户类型：">
-                <span>{{ detailData.entType | value }}</span>
+                <span>{{
+                  typeMap(dictionary.entType, detailData.entType)
+                }}</span>
               </el-form-item>
             </el-col>
             <el-col :span="8">
@@ -29,7 +31,9 @@
             </el-col>
             <el-col :span="8">
               <el-form-item label="是否海天集团：">
-                <span>{{ detailData.isHtEnterprise | value }}</span>
+                <span>{{
+                  typeMap(dictionary.isHtEnterprise, detailData.isHtEnterprise)
+                }}</span>
               </el-form-item>
             </el-col>
           </el-row>
@@ -52,13 +56,13 @@
                   placeholder="请选择"
                   :popper-append-to-body="false"
                 >
-                  <!-- <el-option
-              v-for="item in dictionary.isGenerateVouchers"
-              :key="item.code"
-              :label="item.desc"
-              :value="item.code"
-            >
-            </el-option> -->
+                  <el-option
+                    v-for="item in dictionary.certType"
+                    :key="item.code"
+                    :label="item.desc"
+                    :value="item.code"
+                  >
+                  </el-option>
                 </el-select>
               </el-form-item>
             </el-col>
@@ -88,24 +92,25 @@
             </el-col>
             <el-col :span="8">
               <el-form-item label="海天业务系统账号：">
-                <el-input v-model="form.a" />
+                <el-input v-model="form.htSysCode" />
               </el-form-item>
             </el-col>
             <el-col :span="24">
               <el-form-item label="用户角色：">
                 <el-select
-                  v-model="form.roleId"
+                  v-model="form.roles.roleId"
                   filterable
                   placeholder="请选择"
                   :popper-append-to-body="false"
+                  multipl
                 >
-                  <!-- <el-option
-              v-for="item in dictionary.isGenerateVouchers"
-              :key="item.code"
-              :label="item.desc"
-              :value="item.code"
-            >
-            </el-option> -->
+                  <el-option
+                    v-for="item in dictionary.sysRoleList"
+                    :key="item.code"
+                    :label="item.desc"
+                    :value="item.code"
+                  >
+                  </el-option>
                 </el-select>
               </el-form-item>
             </el-col>
@@ -115,18 +120,19 @@
                 label-width="280px"
               >
                 <el-select
-                  v-model="form.a"
+                  v-model="form.roles.statementAccountType"
                   filterable
                   placeholder="请选择"
                   :popper-append-to-body="false"
+                  multiple
                 >
-                  <!-- <el-option
-              v-for="item in dictionary.isGenerateVouchers"
-              :key="item.code"
-              :label="item.desc"
-              :value="item.code"
-            >
-            </el-option> -->
+                  <el-option
+                    v-for="item in dictionary.statementAccountTypeList"
+                    :key="item.code"
+                    :label="item.desc"
+                    :value="item.code"
+                  >
+                  </el-option>
                 </el-select>
               </el-form-item>
             </el-col>
@@ -170,16 +176,25 @@ export default {
   data() {
     return {
       zjControl: this.$api.userInfoManage,
-      form: {},
+      form: {
+        roles: {},
+      },
       detailData: {},
+      dictionary: {},
       attachInfo: [{ fileId: "", type: "身份证影印件", fileName: "" }],
     };
   },
   created() {
     this.getRow();
-    this.getUserInformation();
+    this.getDictionary();
   },
   methods: {
+    //获取字典
+    getDictionary() {
+      this.zjControl.getUserDictionary().then((res) => {
+        this.dictionary = res.data;
+      });
+    },
     //获取企业信息-确认
     getEnterpriseConfirm() {
       this.zjControl
@@ -189,25 +204,21 @@ export default {
         });
     },
     //上传附件
-    handleFileUpload({ file, data }) {
-      console.log(file, data);
+    handleFileUpload(data) {
       let formData = new FormData();
-      formData.append("fileId", file.uid);
-      formData.append("fileName", file.name);
-      formData.append("fileSize", file.size);
-      formData.append("fileType", file.type);
-      this.zjControl.uploadAttach(formData).then((res) => {
-        data.row.fileId = res.data.fileId;
-        data.row.fileName = res.data.fileName;
-        this.$message.success("附件上传成功!");
+      formData.append("file", data.file);
+      this.$api.baseCommon.uploadFile(formData).then((res) => {
+        data.data.row.fileId = res.data.fileId;
+        data.data.row.fileName = res.data.fileName;
+        data.data.row.fileSize = res.data.fileSize;
       });
     },
     // 新增用户
     submit() {
-      this.form.attachName = this.attachInfo[0].fileName
-      this.form.fileId = this.attachInfo[0].fileName
-      this.form.id = this.attachInfo[0].id
-      this.zjControl.addUser(this.form).then((res) => {
+      let params = Object.assign(this.form, this.detailData);
+      params.attachName = this.attachInfo[0].fileName;
+      params.fileId = this.attachInfo[0].fileId;
+      this.zjControl.addUser(params).then((res) => {
         this.$message.success("新增用户成功！");
         this.goParent();
       });

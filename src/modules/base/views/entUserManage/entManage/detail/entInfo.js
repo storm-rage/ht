@@ -95,7 +95,7 @@ export default {
           fourLabel: '证件有效期：', fourValue: this.date(fx.certStartDate), fiveValue: this.date(fx.certEndDate)
         },
       ]
-      是否开通天眼查
+      //是否开通天眼查
       if (this.detailData.isOpenTyc === '1') {
         // threeLabel:'天眼查核准日期',threeValue:''
         this.infoList[0].threeLabel = '天眼查核准日期：'

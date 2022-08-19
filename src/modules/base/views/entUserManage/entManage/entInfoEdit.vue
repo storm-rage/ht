@@ -335,7 +335,7 @@
               title="操作员角色"
               :edit-render="{
                 name: '$select',
-                options: dictionary.roleIdListTableList,
+                options: statementAccountTypeTable,
               }"
             />
             <zj-table-column
@@ -383,15 +383,6 @@
           >
             <zj-table-column title="附件类型">
               <template v-slot="{ row }">
-                <span
-                  v-if="
-                    (form.entType === 'B' || form.entType === 'S') &&
-                    row.busType !== 'QYZZ' &&
-                    row.busType !== 'QYKZRZ'
-                  "
-                  class="error"
-                  >*</span
-                >
                 {{ typeMap(dictionary.busTypeList, row.busType) }}
               </template>
             </zj-table-column>

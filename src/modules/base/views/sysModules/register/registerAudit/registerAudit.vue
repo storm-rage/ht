@@ -61,7 +61,7 @@
                   <el-col :span="8">
                     <el-form-item label="平台客户类型：">
                       <span>{{
-                        typeMap(dictionary.entTypeList, this.form.entType)
+                        typeMap(dictionary.entTypeList, detailData.entType)
                       }}</span>
                     </el-form-item>
                   </el-col>
@@ -104,7 +104,7 @@
       <!-- 审批信息 -->
       <zj-content-block v-show="workflow === 'spxx'">
         <!--操作记录 -->
-        <operate-log :logList="logList"></operate-log>
+        <operate-log :logList="detailData.entRegLogList || []"></operate-log>
         <!--审核信息 -->
         <el-form
           label-width="170px"
@@ -141,15 +141,12 @@
 
               <el-form-item
                 label="供应商类型："
-                prop="isDoublePost"
+                prop="supplierType"
                 v-if="form.entType === 'S'"
               >
                 <el-radio-group v-model="form.supplierType">
                   <el-radio
-                    v-for="item in [
-                      { code: '1', desc: '直接供应商' },
-                      { code: '0', desc: '间接供应商' },
-                    ]"
+                    v-for="item in dictionary.supplierTypeList"
                     :key="item.code"
                     :label="item.code"
                     >{{ item.desc }}</el-radio
@@ -201,14 +198,27 @@
       <!-- 审核时 -->
       <el-row slot="right" v-if="$route.name === 'registerAuditApplyAudit'">
         <span v-show="workflow === 'spxx'">
-          <zj-button type="primary" @click="submitAudit">暂存</zj-button>
-          <zj-button type="primary" @click="submitAudit">审核通过</zj-button>
-          <zj-button @click="submitAudit">审核驳回</zj-button>
-          <zj-button @click="submitAudit">注册拒绝</zj-button>
+          <zj-button
+            type="primary"
+            @click="submitAudit('1')"
+            v-if="detailData.applyStatus === 'E001'"
+            >暂存</zj-button
+          >
+          <zj-button type="primary" @click="submitAudit('2')"
+            >审核通过</zj-button
+          >
+          <zj-button
+            @click="submitAudit('3')"
+            v-if="detailData.applyStatus === 'E002'"
+            >审核驳回</zj-button
+          >
+          <zj-button
+            @click="submitAudit('4')"
+            v-if="detailData.applyStatus === 'E001'"
+            >注册拒绝</zj-button
+          >
         </span>
-        <zj-button class="back zj-m-l-15" @click="goParent"
-          >返回</zj-button
-        >
+        <zj-button class="back zj-m-l-15" @click="goParent">返回</zj-button>
       </el-row>
     </zj-workflow>
 
@@ -229,7 +239,7 @@ import view from "@pubComponent/preview/view.js";
 import OperateLog from "@modules/workflow/views/components/operateLog";
 import AuditRemark from "@modules/workflow/views/components/auditRemark";
 import entInfo from "@modules/base/views/entUserManage/entManage/detail/entInfo.vue";
-import {windowSSStorage} from '@utils/storageUtils';
+import { windowSSStorage } from "@utils/storageUtils";
 export default {
   components: {
     OperateLog,
@@ -249,7 +259,6 @@ export default {
       dictionary: {}, //字典
       zjControl: {
         ...this.$api.registerAudit,
-        getEbBusinessParamLog: this.$api.entInfoManage.getEbBusinessParamLog,
       }, //api
 
       workflow: "sqxx",
@@ -257,7 +266,6 @@ export default {
         { label: "申请信息", value: "sqxx" },
         { label: "审批信息", value: "spxx" },
       ],
-      logList: [],
       form: {},
       rules: {
         shortName: [
@@ -267,14 +275,12 @@ export default {
         entType: [
           { required: true, message: "请选择平台客户类型", trigger: "change" },
         ],
-        sealEntId: [
-          { required: true, message: "请选择签章企业", trigger: "change" },
-        ],
         supplierType: [
-          { required: true, message: "请选择供应商类型", trigger: "change" },
-        ],
-        notes: [
-          { required: false, message: "请输入审核意见", trigger: "change" },
+          {
+            required: true,
+            message: "请选择供应商类型",
+            trigger: "change",
+          },
         ],
       },
     };
@@ -282,9 +288,7 @@ export default {
   created() {
     this.getApi();
     this.getRow();
-    this.form.id = this.row.id;
     this.getDirectory();
-    // this.getEbBusinessParamLog()
     this.getAuditDetail();
   },
   methods: {
@@ -313,113 +317,64 @@ export default {
         // 银行账户
         entInfoDom.$refs.bankAccount.dataList = res.data.entBanksList;
 
-        // //审核时
-        // if (this.$route.name === 'registerAuditApplyAudit') {
-        //   //审批信息表单
-        //   if (res.data.entType) {
-        //     this.entTypeChange(res.data.entType)
-        //   }
-        //   for (let key in this.form) {
-        //     this.form[key] = res.data[key]
-        //   }
-        //   if (this.form.projectInfoList.length <= 0) {
-        //     this.form.projectInfoList.push({
-        //       id: '',
-        //       projectId: '',
-        //       projectName: '',
-        //       operationFlag: 'A',
-        //       selectProductList: []
-        //     })
-        //   }
-        // }
+        //审核信息
+        this.form = this.detailData;
+        this.form.id = this.row.id;
       });
     },
     // 提交表单 1-暂存 2-审核通过 3-审核驳回 4-审核拒绝
     submitAudit(type) {
-      if (type === "3" || type === "4") {
-        this.$refs.auditRemark.getForm().validate((valid) => {
-          if (!valid) {
-            return;
+      this.$refs.form.validate((valid) => {
+        if (valid) {
+          // if (
+          //   !this.form.notes ||
+          //   (this.form.notes && this.form.notes.trim().length < 1)
+          // ) {
+          //   return this.$Message.warning("驳回时审核意见必须填写!");
+          // }
+          if (type === "3" || type === "4") {
+            let flag = false;
+            this.$refs.auditRemark.getForm().validate((valid) => {
+              console.log(this.$refs.auditRemark);
+              flag = valid;
+            });
+            if (!flag) return;
           }
-        });
-      }
-      let message = "";
-      if (type === "1") {
-        message = "暂存成功";
-      }
-      if (type === "2") {
-        message = "审核通过成功";
-      }
-      if (type === "3") {
-        message = "审核驳回成功";
-      }
-      if (type === "4") {
-        message = "审核拒绝成功";
-      }
+          let message = "";
+          if (type === "1") {
+            message = "暂存成功";
+          }
+          if (type === "2") {
+            message = "审核通过成功";
+          }
+          if (type === "3") {
+            message = "审核驳回成功";
+          }
+          if (type === "4") {
+            message = "审核拒绝成功";
+          }
 
-      let autoApi = "";
-      this.$refs.auditRemark.getForm().clearValidate();
-      const { notes } = this.$refs.auditRemark.getData();
+          let autoApi = "";
+          this.$refs.auditRemark.getForm().clearValidate();
+          const { notes } = this.$refs.auditRemark.getData();
 
-      let params = {
-        ...this.form,
-        submitAuditFlag: "2",
-        notes,
-      };
+          let params = {
+            ...this.form,
+            submitAuditFlag: type,
+            notes,
+          };
 
-      if (this.detailData.applyStatus === "E001") {
-        autoApi = this.zjControl.submitPlatformAudit; // 初审
-      } else {
-        autoApi = this.zjControl.submitAuditConfirm; // 复审
-      }
+          if (this.detailData.applyStatus === "E001" || this.detailData.applyStatus === "E005") {
+            autoApi = this.zjControl.submitPlatformAudit; // 初审
+          } else {
+            autoApi = this.zjControl.submitAuditConfirm; // 复审
+          }
 
-      autoApi(params).then(() => {
-        this.$Message.success(message);
-        this.goParent();
-      });
-    },
-    // auditPass() {
-    //   autoApi(params).then(() => {
-    //     this.$Message.success("审核成功！");
-    //     this.goParent();
-    //   });
-    // },
-    // //暂存
-    // holdSave() {
-    //   let params = this.form;
-    //   this.zjControl.submitPlatformAudit(params).then(() => {
-    //     this.$Message.success("暂存成功！");
-    //     this.goParent();
-    //   });
-    // },
-    // //驳回
-    // auditReject() {
-    //   this.$refs.auditRemark.getForm().validate((valid) => {
-    //     if (valid) {
-    //       let params = {};
-    //       this.zjControl.submitPlatformAudit(params).then(() => {
-    //         this.$message.success("驳回成功！");
-    //         this.goParent();
-    //       });
-    //     }
-    //   });
-    // },
-    // //拒绝
-    // registerRefuse() {
-    //   this.$refs.auditRemark.getForm().validate((valid) => {
-    //     if (valid) {
-    //       let params = {};
-    //       this.zjControl.submitPlatformAudit(params).then(() => {
-    //         this.$message.success("拒绝成功！");
-    //         this.goParent();
-    //       });
-    //     }
-    //   });
-    // },
-    //获取操作记录
-    getEbBusinessParamLog() {
-      this.zjControl.getEbBusinessParamLog({ id: this.row.id }).then((res) => {
-        this.logList = res.data.sysEntRegLogList;
+          autoApi(params).then(() => {
+            this.$message.success(message);
+            this.goParent();
+          });
+        }
       });
     },
   },
