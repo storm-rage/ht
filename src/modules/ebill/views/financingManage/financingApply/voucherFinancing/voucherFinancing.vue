@@ -2,9 +2,9 @@
   <zj-content-container>
     <!--  凭证融资  -->
       <div class="zj-search-condition zj-m-b-20" style="border-bottom: none;">
-        <zj-header title="请选择凭证签发人/转让企业"/>
+        <zj-header title="请选择海e单开单人/转让企业"/>
         <el-form ref="searchForm" :model="searchForm">
-          <el-form-item label="凭证签发人/转让企业：">
+          <el-form-item label="海e单开单人/转让企业：">
             <el-select v-model="searchForm.entId" @change="entChange">
               <el-option
                 v-for="item in dictionary.entInfoList"

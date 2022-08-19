@@ -161,30 +161,30 @@
             <el-row v-if="this.row.productType === 'RD' || this.infoForm.productType === 'RD'">
               <el-row class="el-claims-voucher">
                 <el-form-item label="对账单付款日前N天通知核心企业："  prop="rdEndNoticeCompanyDays" label-width="300px">
-                  <zj-number-input v-model="infoForm.rdEndNoticeCompanyDays" >
+                  <zj-number-input :precision="0" v-model="infoForm.rdEndNoticeCompanyDays" >
                     <template slot="append">天</template>
                   </zj-number-input>
                 </el-form-item>
               </el-row>
               <el-row class="el-claims-voucher">
                 <el-form-item label="对账单付款日前X天停止业务："  prop="rdBeforeStopDays"  label-width="300px">
-                  <zj-number-input v-model="infoForm.rdBeforeStopDays" >
+                  <zj-number-input :precision="0" v-model="infoForm.rdBeforeStopDays" >
                     <template slot="append">天</template>
                   </zj-number-input>
-                  <span class="tips">注：对账单付款日前X天至凭证到期日，凭证即不能融资，也不能转让。</span>
+                  <span class="zj-m-l-10">注：对账单付款日前X天至凭证到期日，凭证即不能融资，也不能转让。</span>
                 </el-form-item>
               </el-row>
               <el-row class="el-claims-voucher">
                 <el-form-item label="对账单付款日前Z天未结算通知保理公司："  prop="rdEndNoticeBlDays" label-width="300px">
-                  <zj-number-input v-model="infoForm.rdEndNoticeBlDays" >
+                  <zj-number-input :precision="0" v-model="infoForm.rdEndNoticeBlDays" >
                     <template slot="append">天</template>
                   </zj-number-input>
-                  <span class="tips">注：对账单付款日前Z天，若对账单未发起结算，则通知保理公司。</span>
+                  <span class="zj-m-l-10">注：对账单付款日前Z天，若对账单未发起结算，则通知保理公司。</span>
                 </el-form-item>
               </el-row>
               <el-row class="el-claims-voucher">
                 <el-form-item label="对账单付款日后Y天未付款通知保理公司："  prop="rdAfterNopayNoticeDays" label-width="300px">
-                  <zj-number-input v-model="infoForm.rdAfterNopayNoticeDays" >
+                  <zj-number-input :precision="0" v-model="infoForm.rdAfterNopayNoticeDays" >
                     <template slot="append">天</template>
                   </zj-number-input>
                 </el-form-item>
@@ -230,7 +230,7 @@
       </zj-content>
     </zj-content-block>
     <zj-content-footer>
-      <zj-button class="submit-button" @click="submit">提交</zj-button>
+      <zj-button type="primary" @click="submit">提交</zj-button>
       <zj-button class="back" @click="goParent">返回</zj-button>
     </zj-content-footer>
   </zj-content-container>
