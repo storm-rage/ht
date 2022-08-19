@@ -72,6 +72,7 @@ export default {
         }
       ],
       agreementList: [],
+      activeEntParams: {},
     };
   },
   methods: {
@@ -83,6 +84,9 @@ export default {
       }
     },
     handleRadioChange({row}) {
+      this.activeEntParams = {...row}
+      console.log(this.activeEntParams)
+      this.$emit('nextStepParams',this.activeEntParams)
       //获取阶段性协议列表
       let params = {
         ...row

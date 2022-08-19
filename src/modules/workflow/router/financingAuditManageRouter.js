@@ -1,4 +1,4 @@
-const financingReviewManageRouter = [
+const financingAuditManageRouter = [
   {
     path: '/financingReviewManage',
     name: 'financingReviewManage',
@@ -70,4 +70,4 @@ const financingReviewManageRouter = [
   },
 
 ]
-export default financingReviewManageRouter
+export default financingAuditManageRouter

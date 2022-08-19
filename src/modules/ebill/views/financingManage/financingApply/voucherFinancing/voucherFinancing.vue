@@ -3,20 +3,20 @@
     <!--  凭证融资  -->
       <div class="zj-search-condition zj-m-b-20" style="border-bottom: none;">
         <zj-header title="请选择凭证签发人/转让企业"/>
-        <el-form ref="searchEntForm" :model="searchEntForm">
+        <el-form ref="searchForm" :model="searchForm">
           <el-form-item label="凭证签发人/转让企业：">
-            <el-select v-model="searchEntForm.entState" @change="entChange">
+            <el-select v-model="searchForm.entId" @change="entChange">
               <el-option
                 v-for="item in dictionary.entInfoList"
-                :label="item.desc"
-                :value="item.code"
-                :key="item.code"
+                :label="item.entName"
+                :value="item.entId"
+                :key="item.entId"
               />
             </el-select>
           </el-form-item>
         </el-form>
-        <zj-header title="凭证信息"/>
         <zj-list-layout>
+          <zj-header title="凭证信息"/>
           <template slot="rightBtns">
             <vxe-button class="reset" icon="el-icon-refresh" @click="resetSearch()">重置</vxe-button>
             <vxe-button class="search" icon="el-icon-search" @click="search()">查询</vxe-button>
@@ -48,8 +48,8 @@
             </el-form>
           </template>
           <zj-table ref="searchTable"
-                    :api="zjControl.queryFinancingApplyBillPage"
-                    :params="searchForm"
+                    :api="searchForm.entId?zjControl.queryFinancingApplyBillPage:''"
+                    :params="searchForm.entId?searchForm:{}"
                     @radio-change="handleRadioChange"
                     :radio-config="{highlight: true}"
           >
@@ -80,10 +80,8 @@ export default {
   },
   data() {
     return {
-      searchEntForm: {
-        entState: '',
-      },
       searchForm: {
+        entId: '',
         holderDateStart: '',
         holderDateEnd: '',
         expireDateStart: '',
@@ -105,12 +103,21 @@ export default {
 
       }
     },
-    entChange() {
-      console.log();
+    entChange(val) {
+      let params = {
+        ...this.searchForm,
+        entId: val,//选择凭证签发人ID/转让企业ID
+        page: 1,
+        rows: 10,
+      }
+      this.zjControl.queryFinancingApplyBillPage(params).then(res=>{
+        console.log('billlist')
+      })
     },
     handleRadioChange({row}) {
 
     },
+    toNext() {},
     toEditQuota (row) {},
     applyLoan () {},
   },
