@@ -31,19 +31,19 @@ const registerAudit = [
     }
   },
   // 注册协议审核页面
-  {
-    path:'/registerAuditProtocolAudit',
-    name:'registerAuditProtocolAudit',
-    component: () => import('../views/sysModules/register/registerAudit/registerAudit.vue'),
-    meta: {
-      title:'注册协议审核',
-      parent:'platformAudit',
-      root:'企业与用户管理',
-      keepAlive:true,
-      refreshIndex:0,
-      notRequireAuth: true
-    }
-  }
+  // {
+  //   path:'/registerAuditProtocolAudit',
+  //   name:'registerAuditProtocolAudit',
+  //   component: () => import('../views/sysModules/register/registerAudit/registerAudit.vue'),
+  //   meta: {
+  //     title:'注册协议审核',
+  //     parent:'platformAudit',
+  //     root:'企业与用户管理',
+  //     keepAlive:true,
+  //     refreshIndex:0,
+  //     notRequireAuth: true
+  //   }
+  // }
 ]
 
 export default registerAudit

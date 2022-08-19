@@ -46,7 +46,7 @@
       <zj-content-block>
         <zj-header title="操作用户信息" />
         <zj-content>
-          <zj-table :pager="false" :dataList="detailData.sysEntRegLogList">
+          <zj-table :pager="false" :dataList="detailData.entUserList">
             <zj-table-column
               field="roleId"
               title="操作员类型"
