@@ -50,49 +50,42 @@
             </el-col>
             <el-col :span="8">
               <el-form-item label="阶段性协议开始日：" prop="agreementStartDate">
-                <zj-date-picker :date.sync="form.agreementStartDate"  :format="'yyyy年MM月dd日'" :disabled="row.isAgreementOnline === '0'"/>
+                <zj-date-picker :date.sync="form.agreementStartDate" :format="'yyyy年MM月dd日'" :disabled="row.isAgreementOnline === '0'"/>
               </el-form-item>
             </el-col>
             <el-col :span="8">
               <el-form-item label="阶段性协议预计到期日：" prop="agreementEstimateEndDate">
-                <zj-date-picker :date.sync="form.agreementEstimateEndDate"  :format="'yyyy年MM月dd日'" :disabled="row.isAgreementOnline === '0'"/>
+                <zj-date-picker :date.sync="form.agreementEstimateEndDate" :format="'yyyy年MM月dd日'" :overNow="true"/>
               </el-form-item>
             </el-col>
           </el-row>
           <el-row>
             <el-col :span="8">
-              <el-form-item label="协议数量：">
+              <el-form-item label="协议数量："  prop="agreementNumber">
                 <zj-number-input
                   :precision="0"
                   v-model="form.agreementNumber"
-                  :disabled="row.isAgreementOnline === '0'"
                 />
               </el-form-item>
             </el-col>
             <el-col :span="8">
-              <el-form-item label="单位：">
-                <el-input v-model="form.unit" :disabled="row.isAgreementOnline === '0'">
-<!--                  <template slot="append">元</template>-->
-                </el-input>
+              <el-form-item label="单位："  prop="unit">
+                <el-input v-model="form.unit" />
               </el-form-item>
             </el-col>
             <el-col :span="8">
-              <el-form-item label="单价：">
+              <el-form-item label="单价："  prop="price">
                 <zj-number-input
                   :precision="2"
                   v-model="form.price"
-                  :disabled="row.isAgreementOnline === '0'"
                 />
               </el-form-item>
             </el-col>
           </el-row>
           <el-row>
             <el-col :span="8">
-              <el-form-item label="计价单位：">
-                <el-input v-model="form.price"
-                          :disabled="row.isAgreementOnline === '0'">
-<!--                  <template slot="append">元</template>-->
-                </el-input>
+              <el-form-item label="计价单位："  prop="priceUnits">
+                <el-input v-model="form.priceUnits"/>
               </el-form-item>
             </el-col>
             <el-col :span="8">
@@ -100,7 +93,6 @@
                 <zj-number-input :precision="0"
                                  v-model="form.agreementEstimatedPrice"
                                  placeholder="请输入协议预估总价"
-                                 :disabled="row.isAgreementOnline === '0'"
                 />
                 <div>{{form.agreementEstimatedPrice?digitUp(form.agreementEstimatedPrice):''}}</div>
               </el-form-item>
@@ -111,7 +103,6 @@
                            placeholder="请选择"
                            clearable
                            :popper-append-to-body="false"
-                           :disabled="row.isAgreementOnline === '0'"
                 >
                   <el-option
                     v-for="item in dictionary.agreementStateList"
@@ -126,7 +117,7 @@
           <el-row>
             <el-col :span="24">
               <el-form-item label="请上传合同附件：" prop="fileName">
-                <zj-upload class="zj-inline" ref="upload" :httpRequest="attaUpload" v-if="row.isAgreementOnline !== '0'">
+                <zj-upload class="zj-inline" ref="upload" :httpRequest="attaUpload">
                   <zj-button slot="trigger">选择文件</zj-button>
                 </zj-upload>
                 <span class="zj-m-l-10">{{ form.fileName?form.fileName:'未选择任何文件' }}</span>
@@ -168,8 +159,9 @@ export default {
         executeNumber: '',
         unit: '',
         price: '',
+        priceUnits: '',
         agreementEstimatedPrice: '',
-        agreementStatus: '',
+        agreementStatus: '0',
         fileId: '',
         fileName: '',
       },
@@ -190,7 +182,69 @@ export default {
           { required: true, message: '请选择阶段性协议开始日', trigger: 'blur'},
         ],
         agreementEstimateEndDate: [
-          { required: true, message: '请选择阶段性协议到期日', trigger: 'blur'},
+          { message: '请选择阶段性协议到期日', trigger: 'blur'},
+          { validator:(rule, value, callback)=>{
+              // 协议类型为时间型则必填,0-时间型，1-数量型
+              rule.required = this.form.agreementType == '0'? true:false
+              if (!value && rule.required) {
+                callback(new Error('请选择阶段性协议到期日'))
+              } else {
+                callback()
+              }
+            },
+            trigger: ['blur']},
+        ],
+        agreementNumber: [
+          { message: '请输入阶段性协议数量', trigger: 'blur'},
+          { validator:(rule, value, callback)=>{
+              // 若为数量型，则必填，若为时间型，则选填,0-时间型，1-数量型
+              rule.required = this.form.agreementType == '1'? true:false
+              if (!value && rule.required) {
+                callback(new Error('请输入阶段性协议数量'))
+              } else {
+                callback()
+              }
+            },
+            trigger: ['blur']},
+        ],
+        unit: [
+          { message: '请输入单位', trigger: 'blur'},
+          { validator:(rule, value, callback)=>{
+              // 若为数量型，则必填，若为时间型，则选填,0-时间型，1-数量型
+              rule.required = this.form.agreementType == '1'? true:false
+              if (!value && rule.required) {
+                callback(new Error('请输入单位'))
+              } else {
+                callback()
+              }
+            },
+            trigger: ['blur']},
+        ],
+        price: [
+          { message: '请输入价格', trigger: 'blur'},
+          { validator:(rule, value, callback)=>{
+              // 若为数量型，则必填，若为时间型，则选填,0-时间型，1-数量型
+              rule.required = this.form.agreementType == '1'? true:false
+              if (!value && rule.required) {
+                callback(new Error('请输入价格'))
+              } else {
+                callback()
+              }
+            },
+            trigger: ['blur']},
+        ],
+        priceUnits: [
+          { message: '请输入计价单位', trigger: 'blur'},
+          { validator:(rule, value, callback)=>{
+              // 若为数量型，则必填，若为时间型，则选填,0-时间型，1-数量型
+              rule.required = this.form.agreementType == '1'? true:false
+              if (!value && rule.required) {
+                callback(new Error('请输入计价单位'))
+              } else {
+                callback()
+              }
+            },
+            trigger: ['blur']},
         ],
         agreementStatus: [
           { required: true, message: '请选择状态', trigger: 'blur'},

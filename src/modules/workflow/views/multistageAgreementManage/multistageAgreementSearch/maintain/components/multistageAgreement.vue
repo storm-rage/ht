@@ -18,11 +18,11 @@
         <zj-table-column field="agreementStartDate" title="协议签订日期" :formatter="date"/>
         <zj-table-column field="agreementEstimateEndDate" title="协议预计到期日" :formatter="date"/>
         <zj-table-column field="agreementNumber" title="协议数量"/>
+        <zj-table-column field="unit" title="单位"/>
         <zj-table-column field="price" title="单价"/>
+        <zj-table-column field="priceUnits" title="计价单位"/>
         <zj-table-column field="agreementEstimatedPrice" title="协议预估总价" :formatter="money"/>
         <zj-table-column field="fileName" title="协议附件"/>
-        <zj-table-column field="isStartExecute" title="是否已开始执行"/>
-        <zj-table-column field="executeNumber" title="已开始执行数量"/>
         <zj-table-column field="agreementStatus" title="状态" :formatter="obj=>typeMap(dictionary.agreementStateList,obj.cellValue)"/>
         <zj-table-column field="isAgreementOnline" title="数据来源" :formatter="obj=>typeMap(dictionary.onlineList,obj.cellValue)"/>
         <zj-table-column title="操作" fixed="right">
@@ -60,8 +60,9 @@ export default {
     addEditAgreement(row,flag){
       this.$refs.addOrEdit.show(row, flag, this.tableData.tradeRelationModelList)
     },
-    agreementUpdate() {
-      this.$emit('handleAgreementList')
+    agreementUpdate(val) {
+      // this.tableData.phasedAgreementList.splice(0,1,val)
+      this.$emit('handleAgreementList', val)
     },
     //删除协议附件
     attaDelete(row) {
