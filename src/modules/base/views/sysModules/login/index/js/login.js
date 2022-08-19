@@ -49,15 +49,26 @@ export default {
     },
     // 获取手机验证码
     getSmsCode() {
-      this.zjControl.sendMobileCaptcha(this.userData).then(() => {
-        // 获取成功时---显示提示
-        this.$message.success({
-          message: '手机验证码发送成功，请注意查收！',
-          duration: 2000,
-        });
-        // 调用定时器
-        this.smsCodeTime(60)
-      })
+      if (this.userData.loginName) {
+        this.zjControl.sendMobileCaptcha({
+          phone: this.userData.loginName
+        }).then(() => {
+          // 获取成功时---显示提示
+          this.$message.success({
+            message: '手机验证码发送成功，请注意查收！',
+            duration: 2000,
+          });
+          // 调用定时器
+          this.smsCodeTime(60)
+        })
+      }else {
+        this.$message.warning({
+          message: '请输入手机号码',
+          duration: 1500,
+          offset: 200
+        })
+      }
+
     },
 
     //  my登录
@@ -71,7 +82,9 @@ export default {
 
           // 发送登录请求 --- md5加密
           let params = JSON.parse(JSON.stringify(this.userData))
-          params.password = md5(params.password).toUpperCase()
+          if (params.password) {
+            params.password = md5(params.password).toUpperCase();
+          }
           if (typeof (epFlag) === 'boolean' && epFlag) {
             params.loginChannel = '4'
           }
@@ -88,11 +101,11 @@ export default {
               this.clearForm()
             }
             // 当为第一次登录时
-            else if (loginRes.oneLoginFlag&&this.userData.pwdVerifyMode==='1') {
+            else if (loginRes.loggedState==='0'&&this.userData.pwdVerifyMode==='1') {
               // 不带手机验证码
               if (this.loginCount === 0) {
                 this.loginCount++ // 将登录次数递增--限制卡死在第一次登录上
-                this.isOneLogin = loginRes.oneLoginFlag // 显示手机验证码填入框
+                this.isOneLogin = true // 显示手机验证码填入框
                 this.$message.warning({
                   message: '请输入手机验证码',
                   duration: 1500,
@@ -107,6 +120,15 @@ export default {
                 this.$refs.editPassword.dialogVisible = true
                 this.oneLoginFlag = false
               }
+            }else if (loginRes.loggedState==='0'&&this.userData.pwdVerifyMode==='2') {
+              this.$messageBox({
+                type: 'warning',
+                content: '首次登录请通过账号登录！',
+                title: '提示',
+                showConfirmButton: true,
+                center: true
+              })
+              return;
             }
             // 需要签 协议
             else if (loginRes.faceCheck || loginRes.userServiceAgreementFlag === '1') {
@@ -135,7 +157,10 @@ export default {
       this.userData.password = newInfo.newPassword //更新密码
       this.isOneLogin = false //隐藏手机输入框
       this.loginCount = 0 //重置登录次数
-      this.submitForm(true)
+      this.userData.smsCode = ''
+      this.userData.captcha = ''
+      this.getCaptcha() // 重新请求验证码
+      // this.submitForm(true)
     },
     // 重置页面状态
     resetState() {

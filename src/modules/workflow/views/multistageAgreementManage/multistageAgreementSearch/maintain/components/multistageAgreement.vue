@@ -10,11 +10,11 @@
       <zj-table ref="agreementTable"
                 :dataList="tableData.phasedAgreementList"
       >
-        <zj-table-column type="checkbox" width="40px" fixed="left"></zj-table-column>
+        <zj-table-column type="checkbox" width="40px" fixed="left"/>
         <zj-table-column field="srmAgreementNo" title="SRM阶段性协议编号"/>
         <zj-table-column field="agreementNo" title="阶段性协议编号"/>
         <zj-table-column field="agreementName" title="阶段性协议名称"/>
-        <zj-table-column field="agreementType" title="协议类型"/>
+        <zj-table-column field="agreementType" title="协议类型" :formatter="obj=>typeMap(dictionary.agreementTypeList,obj.cellValue)"/>
         <zj-table-column field="agreementStartDate" title="协议签订日期" :formatter="date"/>
         <zj-table-column field="agreementEstimateEndDate" title="协议预计到期日" :formatter="date"/>
         <zj-table-column field="agreementNumber" title="协议数量"/>
@@ -23,8 +23,8 @@
         <zj-table-column field="fileName" title="协议附件"/>
         <zj-table-column field="isStartExecute" title="是否已开始执行"/>
         <zj-table-column field="executeNumber" title="已开始执行数量"/>
-        <zj-table-column field="agreementStatus" title="状态"/>
-        <zj-table-column field="isAgreementOnline" title="数据来源"/>
+        <zj-table-column field="agreementStatus" title="状态" :formatter="obj=>typeMap(dictionary.agreementStateList,obj.cellValue)"/>
+        <zj-table-column field="isAgreementOnline" title="数据来源" :formatter="obj=>typeMap(dictionary.onlineList,obj.cellValue)"/>
         <zj-table-column title="操作" fixed="right">
           <template v-slot="{row}">
             <zj-button type="text" @click="addEditAgreement(row,'维护')" :api="zjControl.savePhasedAgree">维护</zj-button>

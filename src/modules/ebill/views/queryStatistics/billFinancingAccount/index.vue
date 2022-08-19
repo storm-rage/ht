@@ -85,7 +85,7 @@ export default {
         checkBillStatus: '',
         billSource: '',
         isSettle: '',
-      },
+      }, 
       list: [
         {
           field1: 'scm00001',

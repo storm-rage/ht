@@ -2,7 +2,7 @@
   <zj-content-container>
     <!--  阶段性协议维护  -->
     <zj-content-block>
-      <zj-header title="贸易关系"></zj-header>
+      <zj-header title="贸易关系"/>
       <zj-table ref="tradeRelationTable" :pager="false"
                 :api="zjControl.getTradeRelationList"
                 @after-load="handleDataChange"
@@ -12,7 +12,7 @@
         <zj-table-column type="radio" width="60"/>
         <zj-table-column field="buyerName" title="买方企业名称"/>
         <zj-table-column field="isFactoringCredit" title="是否已有订单保理额度" />
-        <zj-table-column field="totalCreditAmount	" title="额度总额" :formatter="money"/>
+        <zj-table-column field="totalCreditAmount" title="额度总额" :formatter="money"/>
         <zj-table-column field="availableCreditAmount" title="可用额度" :formatter="money"/>
       </zj-table>
       <div class="explain-text zj-m-l-10 zj-m-t-10">
@@ -24,7 +24,7 @@
       </div>
     </zj-content-block>
     <zj-content-block>
-      <zj-header title="阶段性协议信息"></zj-header>
+      <zj-header title="阶段性协议信息"/>
       <zj-table ref="searchTable" :dataList="agreementList" >
         <zj-table-column field="coreCompanyName" title="买方企业名称"/>
         <zj-table-column field="agreementNo" title="阶段性协议编号"/>
@@ -36,7 +36,7 @@
       </zj-table>
     </zj-content-block>
     <zj-content-block>
-      <zj-header title="请上传贸易合同附件"></zj-header>
+      <zj-header title="请上传贸易合同附件"/>
       <div class="explain-text">
         <div>注：</div>
         <ol class="explain-content">
@@ -47,6 +47,7 @@
       <zj-table ref="attaTable" :pager="false"
                 :dataList="contractInfoList" keep-source
                 :edit-config="{trigger: 'manual', mode: 'row', icon:'-', autoClear: false, showStatus: true}"
+                v-if="attaTableShow"
       >
         <zj-table-column type="index" title="序号" width="60"/>
         <zj-table-column field="fileName" title="合同附件" />
@@ -74,13 +75,14 @@
   </zj-content-container>
 </template>
 <script>
+import {OperateFlag} from '@modules/constant.js';
 export default {
   name:'multistageAgreementMaintain',
   components: {},
   props: {
-    zjControl: {},
-    dictionary: {},
-    mBtn: {},
+    zjControl: Object,
+    dictionary: Object,
+    mBtn: Object,
   },
   data() {
     return {
@@ -92,6 +94,7 @@ export default {
         entName: '',
       },
       agreementParams: {},//阶段性协议信息查询的参数
+      businessApplyInfo: {},//申请信息
       agreementList: [],//协议列表
       contractInfoList: [],//合同附件列表
       attaTableShow: true,
@@ -106,26 +109,25 @@ export default {
       }
     },
     handleRadioChange({row}) {
-      console.log(row)
       this.agreementParams = row
-      this.agreementParams.coreCompanyName = row.buyerName
+      this.agreementParams.coreCompanyName = row.buyerName || row.coreCompanyName
       let params = {
         busTradeId : row.busTradeId,
-        coreCompanyName : row.buyerName,
+        coreCompanyName : row.buyerName || row.coreCompanyName,
         tradeId : row.tradeId,
       }
       //获取阶段性协议列表和贸易合同附件列表
       this.zjControl.queryPhasedAgreePage(params).then(res=>{
+        this.businessApplyInfo = res.data.businessApplyInfo
         this.agreementList = res.data.phasedAgreeInfoList
-        if(res.data.contractInfoList) {
-          this.contractInfoList = res.data.contractInfoList
-          let params = {
-            contractInfoList : this.contractInfoList,
-            ...this.agreementParams,
-          }
-          console.log(params)
-          this.$emit('update',params)
+        this.contractInfoList = res.data.contractInfoList || []
+        let params = {
+          recordId : res.data.businessApplyInfo ? res.data.businessApplyInfo.recordId || '' : '',
+          contractInfoList : this.contractInfoList,
+          ...this.agreementParams,
         }
+        console.log(params)
+        this.$emit('update',params)
       })
     },
     //下载合同附件
@@ -134,6 +136,9 @@ export default {
     },
     //删除合同附件
     attaDelete(row) {
+      if(this.businessApplyInfo.recordId) {
+        return this.$message.error('提交审核中，不能删除合同附件！')
+      }
       let params = {
         attachId : row.attachId,
         fileId : row.fileId,
@@ -147,23 +152,28 @@ export default {
         //刷新当前贸易关系下的合同附件列表
         this.zjControl.queryPhasedAgreePage(this.agreementParams).then(res=>{
           this.agreementList = res.data.phasedAgreeInfoList
-          if(res.data.contractInfoList) {
-            this.contractInfoList = res.data.contractInfoList
-            this.$refs.attaTable.iRefresh(true)
-            let params = {
-              contractInfoList : this.contractInfoList,
-              ...this.agreementParams,
-            }
-            console.log(params)
-            this.$emit('update',params)
-            this.$message.success('删除附件成功！')
-            this.$refs.attaTable.clearActived()
+          this.attaTableShow = false
+          this.contractInfoList = res.data.contractInfoList || []
+          this.$nextTick(()=>{
+            this.attaTableShow = true
+          })
+          let params = {
+            recordId : res.data.businessApplyInfo ? res.data.businessApplyInfo.recordId || '' : '',
+            contractInfoList : this.contractInfoList,
+            ...this.agreementParams,
           }
+          console.log(params)
+          this.$emit('update',params)
+          this.$message.success('删除附件成功！')
+          this.$refs.attaTable.clearActived()
         })
       })
     },
     //新增合同附件
     addAtta() {
+      if(this.businessApplyInfo.recordId) {
+        return this.$message.error('提交审核中，不能新增合同附件！')
+      }
       if(!this.tableEditReport(["attaTable"])){return}
       let item = {attachId:'', fileId:'', fileName:'', fileRemark:'',}
       this.contractInfoList.push(item)
@@ -183,12 +193,13 @@ export default {
       if(!row.fileName){ return this.$messageBox({type:'info',content:'请上传附件!'}) }
       if(!row.fileRemark){ return this.$messageBox({type:'info',content:'请输入附件说明!'}) }
       //合同附件信息
+      let flag = row.fileId ? OperateFlag.UPDATE : OperateFlag.ADD
       let params = {
         attachId : '',
         fileId : row.fileId,
         fileName : row.fileName,
         fileRemark : row.fileRemark,
-        phasedOperateFlag : row.fileId ? OperateFlag.UPDATE : OperateFlag.ADD,
+        phasedOperateFlag : flag,
         recordId : row.recordId || '',
         tradeId : this.agreementParams.tradeId || '',
       }
@@ -198,17 +209,15 @@ export default {
           this.agreementList = res.data.phasedAgreeInfoList
           if(res.data.contractInfoList) {
             this.contractInfoList = res.data.contractInfoList
-            this.$refs.attaTable.iRefresh(true)
-            let params = {
-              recordId : res.data.businessApplyInfo.recordId,
-              contractInfoList : this.contractInfoList,
-              ...this.agreementParams,
-            }
-            console.log(params)
-            this.$emit('update',params)
-            this.$message.success('保存成功！')
-            this.$refs.attaTable.clearActived()
           }
+          let params = {
+            recordId : res.data.businessApplyInfo ? res.data.businessApplyInfo.recordId || '' : '',
+            contractInfoList : this.contractInfoList,
+            ...this.agreementParams,
+          }
+          this.$emit('update',params)
+          this.$message.success('保存成功！')
+          this.$refs.attaTable.clearActived()
         })
       })
     },

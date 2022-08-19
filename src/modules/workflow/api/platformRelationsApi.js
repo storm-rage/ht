@@ -10,7 +10,7 @@ const platformRelations = {
   },
    //审核详情 
    auditDetail: (params) => {
-    return request.get('​/trade-relation-platform​/get-trade-relation-todo-detail', { params })
+    return request.get('/trade-relation-platform/get-trade-relation-todo-detail', { params })
   },
    //已办结详情 
    alreadyDetail: (params) => {

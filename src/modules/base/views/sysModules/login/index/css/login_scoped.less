@@ -5,7 +5,7 @@
     height: 100%;
     position: relative;
     box-sizing: content-box;
-    min-height: 770px;
+    min-height: 761px;
     background: url("~@assets/img/login/bg1.png") no-repeat;
     background-size: 70% 100%;
     .right-content{
@@ -18,7 +18,7 @@
       min-width: 370px;
       .main-content {
         height: calc(100% - 105px);
-        padding: 35px 10%;
+        padding: 2px 10%;
         display: flex;
         flex-direction: column;
         justify-content: center;
@@ -31,7 +31,22 @@
         }
         .login-form {
           margin-top: 50px;
-          overflow: hidden;
+        }
+        .login-btn-form {
+          margin-top: 14%;
+        }
+      }
+      // 首次登录情况样式
+      &.is-one-login {
+        @media only screen and (max-height: 1080px) {
+          .main-content {
+            .login-form {
+              margin-top: 30px;
+            }
+            .login-btn-form {
+              margin-top: 1%;
+            }
+          }
         }
       }
       .el-form-item,.el-input,.loginBtn{
@@ -125,7 +140,7 @@
         }
       }
       .login_pass{
-        margin-top: 2px;
+        margin-top: 0px;
       }
       .right-text {
         cursor: pointer;
