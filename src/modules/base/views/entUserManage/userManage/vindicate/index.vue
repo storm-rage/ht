@@ -73,9 +73,9 @@
             <zj-table-column title="操作" fixed="right" width="240px" v-if="pageType !== 'detail'">
               <template v-slot="{ row }">
                 <zj-button type="text" @click="makeCertKey(row)">制key</zj-button>
-                <zj-button type="text" @click="freezeUser(row)"  v-if="row.userState === '1'">冻结</zj-button>
+                <zj-button type="text" @click="freezeUser(row)" v-if="row.userState === '1'">冻结</zj-button>
                 <zj-button type="text" @click="unfreezeUser(row)" v-if="row.userState === '5'">解冻</zj-button>
-                <zj-button type="text" @click="cancelUser(row)"  v-if="row.userState === '1' || row.userState === '5'">注销</zj-button>
+                <zj-button type="text" @click="cancelUser(row)" v-if="row.userState === '1' || row.userState === '5'">注销</zj-button>
               </template>
             </zj-table-column>
           </zj-table>
@@ -122,11 +122,11 @@ export default {
       this.$messageBox({
         type: "confirm",
         title: `制key确认`,
-        content: `${"是否确认为用户" + row.userName + "  -  制作key"}`,
+        content: `${"是否确认为用户" + this.detailData.userName + "  -  制作key"}`,
         messageResolve: () => {
           // if (row.certType === "1") {
           let paramsKey = {
-            userId: row.id,
+            userId: this.detailData.id,
             p10: "",
           };
           this.zjControl.makeCertKey(paramsKey).then(() => {
@@ -156,7 +156,7 @@ export default {
         content: `是否确认冻结该用户？`,
         showCancelButton: true,
         messageResolve: () => {
-          this.zjControl.freezeUser({ id: row.id }).then(() => {
+          this.zjControl.freezeUser({ id: this.detailData.id }).then(() => {
             this.getNewUserInfo(true);
             this.$message.success("冻结账户成功！");
           });
@@ -171,7 +171,7 @@ export default {
         content: `是否确认解冻该用户？`,
         showCancelButton: true,
         messageResolve: () => {
-          this.zjControl.unfreezeUser({ id: row.id }).then(() => {
+          this.zjControl.unfreezeUser({ id: this.detailData.id }).then(() => {
             this.getNewUserInfo(true);
             this.$message.success("解冻账户成功！");
           });
@@ -186,7 +186,7 @@ export default {
         content: `是否确认注销该用户？`,
         showCancelButton: true,
         messageResolve: () => {
-          this.zjControl.cancelUser({ id: row.id }).then(() => {
+          this.zjControl.cancelUser({ id: this.detailData.id }).then(() => {
             this.getNewUserInfo(true);
             this.$message.success("注销账户成功！");
           });
