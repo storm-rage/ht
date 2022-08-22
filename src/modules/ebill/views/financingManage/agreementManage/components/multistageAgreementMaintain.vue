@@ -126,13 +126,13 @@ export default {
           contractInfoList : this.contractInfoList,
           ...this.agreementParams,
         }
-        console.log(params)
+        // console.log(params)
         this.$emit('update',params)
       })
     },
     //下载合同附件
     attaDownload(row) {
-      this.zjControl.downloadFile(row.fileId)
+      this.zjControl.downloadFile(row)
     },
     //删除合同附件
     attaDelete(row) {

@@ -3,7 +3,7 @@ const agreementManageRouter = [
   {
     path: '/frontPhasedAgreeManage',
     name: 'frontPhasedAgreeManage',
-    component: () => import('../views/financingManage/agreementManage'),
+    component: () => import('../views/financingManage/agreementManage/index.vue'),
     meta:{
       title:`阶段性协议管理`,
       root: '融资管理',
