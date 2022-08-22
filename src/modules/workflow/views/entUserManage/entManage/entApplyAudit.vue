@@ -4,7 +4,7 @@
     <!--  交易信息  -->
     <trade-info :detailData="detailData" />
     <!--  企业基础信息 -->
-    <ent-info-edit ref="entInfoedit" />
+    <ent-info-edit ref="entInfoedit" :detailData="detailData" />
 
     <!--  审批意见  -->
     <audit-remark ref="auditRemark" v-if="$route.name === 'entApplyAudit'"></audit-remark>
@@ -39,25 +39,23 @@ export default {
       rejectLoading: {}
     };
   },
-  mounted() {
-    setTimeout(() => {
-      try {
-        let data = this.$refs.entInfoEdit.$data // 获取组件data
-        this.detailData = data.form // 详情
-        this.dictionary = data.dictionary // 字典
-        console.log(this.$refs.entInfoedit)
-      } catch (err) {
-        console.error(err)
-      }
-    }, 1000)
+  created() {
+    this.getRow()
+    this.getDetail()
   },
   methods: {
+    getDetail() {
+      this.zjControl.getTodoEnterprise({ serialNo: this.row.serialNo }).then(res => {
+        this.detailData = res.data
+      })
+    },
     toPass() {
       this.$refs.auditRemark.getForm().clearValidate();
       const { notes } = this.$refs.auditRemark.getData()
       this.passLoading = true;
-      this.zjControl.recheckContractRenewal({
-        id: this.row.id,
+      this.zjControl.todoEnterpriseSubmit({
+        flag: '1',
+        ...this.row,
         notes,
       }).then(res => {
         this.passLoading = false;
@@ -76,7 +74,8 @@ export default {
           const { notes } = this.$refs.auditRemark.getData()
           this.rejectLoading = true;
           this.zjControl.recheckContractRenewal({
-            id: this.row.id,
+            flag: '2',
+            ...this.row,
             notes,
           }).then(res => {
             this.rejectLoading = false;

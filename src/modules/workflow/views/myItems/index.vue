@@ -42,14 +42,14 @@
         <zj-table-column field="busTypeDesc" title="业务类型" />
         <zj-table-column field="applyTypeDesc" title="申请类型" v-if="tabAtive === 'agenda'" />
         <zj-table-column field="operateType" title="操作类型" v-else />
-        <zj-table-column field="startObjectDesc" title="发起方" />
+        <zj-table-column field="startObject" title="发起方" :formatter="(obj) => typeMap(dictionary.startObjectList, obj.cellValue)" />
         <zj-table-column field="startTime" title="接收时间" v-if="tabAtive === 'agenda'" />
         <zj-table-column field="endTime" title="处理时间" v-else />
         <zj-table-column field="workflowStateDesc" title="申请状态" />
         <zj-table-column title="操作" fixed="right" v-if="tabAtive === 'agenda'">
           <template v-slot="{ row }">
             <zj-button type="text" @click="toHandle(row)">处理</zj-button>
-            <zj-button type="text" @click="toCancellation(row.id)">作废</zj-button>
+            <zj-button type="text" @click="toCancellation(row)">作废</zj-button>
           </template>
         </zj-table-column>
       </zj-table>
@@ -108,16 +108,24 @@ export default {
       }
     },
     // 作废
-    toCancellation() {
+    toCancellation(row) {
       this.$confirm("是否确认提作废该条数据?", "温馨提示", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
         type: "warning",
       }).then(() => {
-        this.$message({
-          type: "success",
-          message: "废除成功!",
-        });
+        let params = {
+          serialNo: row.serialNo,
+          workflowState: row.workflowState
+        }
+        this.zjControl.invalidateFlowable(params).then(res => {
+          this.$message({
+            type: "success",
+            message: "废除成功!",
+          });
+          this.search()
+        })
+
       });
     },
   },
