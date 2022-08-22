@@ -52,6 +52,7 @@ export default {
   },
   methods: {
     submit() {
+      console.log(JSON.stringify(this.contractInfo))
       let params = {
         busTradeId : this.contractInfo.busTradeId,
         buyerId : this.contractInfo.buyerId,
@@ -66,6 +67,8 @@ export default {
           busTradeId : this.contractInfo.busTradeId,
           coreCompanyName : this.contractInfo.buyerName,
           tradeId : this.contractInfo.tradeId,
+          buyerId : this.contractInfo.buyerId,
+          buyerName : this.contractInfo.buyerName,
         }
         this.$refs.mulAgreeMaintain.handleRadioChange({row: {...rowParams}})
       })

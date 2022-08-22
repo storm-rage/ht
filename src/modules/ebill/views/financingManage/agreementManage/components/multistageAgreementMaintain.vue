@@ -111,6 +111,7 @@ export default {
     handleRadioChange({row}) {
       this.agreementParams = row
       this.agreementParams.coreCompanyName = row.buyerName || row.coreCompanyName
+      console.log(`凭证参数~~~~`+JSON.stringify(this.agreementParams))
       let params = {
         busTradeId : row.busTradeId,
         coreCompanyName : row.buyerName || row.coreCompanyName,
@@ -126,13 +127,16 @@ export default {
           contractInfoList : this.contractInfoList,
           ...this.agreementParams,
         }
-        console.log(params)
+        console.log(`更新合同信息=`+JSON.stringify(params))
         this.$emit('update',params)
       })
     },
     //下载合同附件
     attaDownload(row) {
-      this.zjControl.downloadFile(row.fileId)
+      this.zjControl.downloadFile({
+        fileUrl:row.fileId,
+        fileName:row.fileName,
+      })
     },
     //删除合同附件
     attaDelete(row) {

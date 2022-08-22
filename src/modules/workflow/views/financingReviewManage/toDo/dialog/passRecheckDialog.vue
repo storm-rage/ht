@@ -10,7 +10,8 @@
       <p>业务完成，进入盖章环节，请及时联系印章保管员处理！</p>
     </div>
     <div slot="footer" class="dialog-footer">
-      <zj-button type="primary" @click="onConfirm">确认</zj-button>
+      <zj-button type="primary" @click="onConfirm(titleInfo === '复核通过'? '1':'2')" :api="zjBtn.submitFirstAudit">确认</zj-button>
+      <zj-button type="primary" @click="reviewConfirm(titleInfo === '复核通过'? '3':'4')" :api="zjBtn.submitReviewAudit">复核确认</zj-button>
       <zj-button status="primary" @click="cancel">取消</zj-button>
     </div>
   </el-dialog>
@@ -20,9 +21,7 @@
 export default {
   name: "passRecheckDialog",
   props: {
-    show: { type: Boolean, default: false},
-    form: {},
-
+    zjControl: Object,
   },
   data() {
     return {
@@ -32,19 +31,46 @@ export default {
     }
   },
   methods: {
-    onConfirm() {
-      // this.zjControl.xxx(this.form)
-      this.dialogShow = false
-      this.goParent()
-
+    //初审
+    onConfirm(flag) {
+      let params = {
+        attachList: this.dialogForm.attachList,
+        creditId: this.dialogForm.creditId,
+        id: this.dialogForm.id,
+        isRiskFlag: this.dialogForm.isRiskFlag,
+        operateFlag: flag,//融资审核操作标志：1-保理公司初审通过 2-保理公司初审驳回 3-保理公司复审通过 4-保理公司复审驳回上一级
+        remark: this.dialogForm.remark,
+        voucherId: this.dialogForm.voucherId,
+      }
+      this.zjControl.submitFirstAudit(params).then(res=>{
+        this.$message.success(res.msg)
+        this.dialogShow = false
+      })
+    },
+    //复审
+    reviewConfirm(flag) {
+      let params = {
+        attachList: this.dialogForm.attachList,
+        creditId: this.dialogForm.creditId,
+        id: this.dialogForm.id,
+        isRiskFlag: this.dialogForm.isRiskFlag,
+        operateFlag: flag,//融资审核操作标志：1-保理公司初审通过 2-保理公司初审驳回 3-保理公司复审通过 4-保理公司复审驳回上一级
+        remark: this.dialogForm.remark,
+        voucherId: this.dialogForm.voucherId,
+      }
+      this.zjControl.submitReviewAudit(params).then(res=>{
+        this.$message.success(res.msg)
+        this.dialogShow = false
+      })
     },
     cancel() {
       this.dialogShow = false
     },
-    open(flag,Boolean) {
+    open(flag,form) {
       this.dialogShow = true
       this.titleInfo = flag
-      console.log(form)
+      this.dialogForm = form
+      console.log(this.dialogForm)
     },
   },
 }
