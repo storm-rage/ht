@@ -1,7 +1,7 @@
 <template>
   <zj-content-container>
     <zj-top-header>新增用户申请</zj-top-header>
-    <el-form ref="form" label-width="160px">
+    <el-form ref="form" :rules="rules" label-width="160px">
       <zj-content-block>
         <zj-header title="企业信息"></zj-header>
         <zj-content>
@@ -9,12 +9,7 @@
             <el-col :span="24">
               <el-form-item label="企业名称：">
                 <el-input v-model="detailData.name" style="width: 200px" />
-                <zj-button
-                  class="zj-m-l-20"
-                  type="primary"
-                  @click="getEnterpriseConfirm"
-                  >确认</zj-button
-                >
+                <zj-button class="zj-m-l-20" type="primary" @click="getEnterpriseConfirm">确认</zj-button>
               </el-form-item>
             </el-col>
             <el-col :span="8">
@@ -44,44 +39,30 @@
         <zj-content>
           <el-row>
             <el-col :span="8">
-              <el-form-item label="用户姓名：">
+              <el-form-item label="用户姓名：" prop="userName">
                 <el-input v-model="form.userName" />
               </el-form-item>
             </el-col>
             <el-col :span="8">
-              <el-form-item label="证件类型：">
-                <el-select
-                  v-model="form.certType"
-                  filterable
-                  placeholder="请选择"
-                  :popper-append-to-body="false"
-                >
-                  <el-option
-                    v-for="item in dictionary.certType"
-                    :key="item.code"
-                    :label="item.desc"
-                    :value="item.code"
-                  >
+              <el-form-item label="证件类型：" prop="certType">
+                <el-select v-model="form.certType" filterable placeholder="请选择" :popper-append-to-body="false">
+                  <el-option v-for="item in dictionary.certType" :key="item.code" :label="item.desc" :value="item.code">
                   </el-option>
                 </el-select>
               </el-form-item>
             </el-col>
             <el-col :span="8">
-              <el-form-item label="证件号码：">
+              <el-form-item label="证件号码：" prop="certNo">
                 <el-input v-model="form.certNo" />
               </el-form-item>
             </el-col>
             <el-col :span="8">
               <el-form-item label="证件有效期：">
-                <zj-date-range-picker
-                  class="el-form-item__regExpire"
-                  :startDate.sync="form.certStartDate"
-                  :endDate.sync="form.certEndDate"
-                />
+                <zj-date-range-picker class="el-form-item__regExpire" :startDate.sync="form.certStartDate" :endDate.sync="form.certEndDate" />
               </el-form-item>
             </el-col>
             <el-col :span="8">
-              <el-form-item label="手机号码/用户名：">
+              <el-form-item label="手机号码/用户名：" prop="mobileNo">
                 <el-input v-model="form.mobileNo" />
               </el-form-item>
             </el-col>
@@ -95,47 +76,29 @@
                 <el-input v-model="form.htSysCode" />
               </el-form-item>
             </el-col>
-            <el-col :span="24">
-              <el-form-item label="用户角色：">
-                <el-select
-                  v-model="form.roles.roleId"
-                  filterable
-                  placeholder="请选择"
-                  :popper-append-to-body="false"
-                  multipl
-                >
-                  <el-option
-                    v-for="item in dictionary.sysRoleList"
-                    :key="item.code"
-                    :label="item.desc"
-                    :value="item.code"
-                  >
-                  </el-option>
-                </el-select>
-              </el-form-item>
-            </el-col>
-            <el-col :span="8">
-              <el-form-item
-                label="请选择开凭证对账单类型权限："
-                label-width="280px"
-              >
-                <el-select
-                  v-model="form.roles.statementAccountType"
-                  filterable
-                  placeholder="请选择"
-                  :popper-append-to-body="false"
-                  multiple
-                >
-                  <el-option
-                    v-for="item in dictionary.statementAccountTypeList"
-                    :key="item.code"
-                    :label="item.desc"
-                    :value="item.code"
-                  >
-                  </el-option>
-                </el-select>
-              </el-form-item>
-            </el-col>
+          </el-row>
+          <el-row v-for="(item, index) in form.roles" :key="item.key">
+            <zj-content>
+              <el-col span="auto">
+                <el-form-item label="用户角色：">
+                  <el-select v-model="form.roles[index].roleId" filterable placeholder="请选择" :popper-append-to-body="false" multipl>
+                    <el-option v-for="item in dictionary.sysRoleList" :key="item.code" :label="item.desc" :value="item.code">
+                    </el-option>
+                  </el-select>
+                  <el-button @click="addDomRole" class="zj-m-l-20" v-if="form.roles.length < 2">新增</el-button>
+                  <el-button @click="deleteDomRole(index)" class="zj-m-l-20" v-if="index>0">删除</el-button>
+                </el-form-item>
+              </el-col>
+              <el-col span="auto">
+                <el-form-item label="请选择开凭证对账单类型权限：" label-width="280px">
+                  <el-select v-model="form.roles[index].statementAccountType" filterable placeholder="请选择" :popper-append-to-body="false" multiple>
+                    <el-option v-for="item in dictionary.statementAccountTypeList" :key="item.code" :label="item.desc" :value="item.code">
+                    </el-option>
+                  </el-select>
+                </el-form-item>
+              </el-col>
+            </zj-content>
+
           </el-row>
           <zj-collapse title="身份证">
             <zj-table :pager="false" ref="attach" :dataList="attachInfo">
@@ -144,20 +107,14 @@
               <zj-table-column field="fileName" title="附件" />
               <zj-table-column title="操作" fixed="right">
                 <template v-slot="{ row }">
-                  <zj-upload
-                    :httpRequest="handleFileUpload"
-                    :data="{ row }"
-                    class="zj-inline"
-                  >
+                  <zj-upload :httpRequest="handleFileUpload" :data="{ row }" class="zj-inline">
                     <zj-button type="text">上传</zj-button>
                   </zj-upload>
                 </template>
               </zj-table-column>
             </zj-table>
             <zj-content>
-              <zj-content-tip
-                text="1.上传的身份证影像件请加盖公司公章。2.支持上传的文档格式：PDF。3.将身份证正、反面完整放在同一页上。请确保身份证在有效期内。 "
-              ></zj-content-tip>
+              <zj-content-tip text="1.上传的身份证影像件请加盖公司公章。2.支持上传的文档格式：PDF。3.将身份证正、反面完整放在同一页上。请确保身份证在有效期内。 "></zj-content-tip>
             </zj-content>
           </zj-collapse>
         </zj-content>
@@ -170,18 +127,64 @@
   </zj-content-container>
 </template>
 <script>
+import { validateIdCard, newValidateFixedPhone, validateBankAcct } from "@utils/rules";
+
 export default {
   components: {},
-
   data() {
     return {
       zjControl: this.$api.userInfoManage,
       form: {
-        roles: {},
+        roles: [
+          {
+            roleId: '',
+            statementAccountType: '',
+            key: Date.now()
+          }
+        ],
       },
       detailData: {},
       dictionary: {},
       attachInfo: [{ fileId: "", type: "身份证影印件", fileName: "" }],
+      rules: {
+        userName: [
+          {
+            required: true,
+            message: "请输入用户姓名",
+            trigger: ["blur"],
+          },
+        ],
+        certType: [
+          {
+            required: true,
+            message: "请输入证件类型",
+            trigger: ["blur"],
+          },
+        ],
+        certNo: [
+          {
+            required: true,
+            message: "请输入证件号码",
+            trigger: ["blur"],
+          },
+          { validator: validateIdCard, trigger: ["blur"] },
+        ],
+        mobileNo: [
+          {
+            required: true,
+            message: "请输入手机号码/用户名",
+            trigger: ["blur"],
+          },
+          { validator: newValidateFixedPhone, trigger: ["blur"] },
+        ],
+        email: [
+          {
+            type: "email",
+            message: "请输入正确的邮箱",
+            trigger: ["blur"],
+          },
+        ],
+      },
     };
   },
   created() {
@@ -223,6 +226,18 @@ export default {
         this.goParent();
       });
     },
+    // 新增角色
+    addDomRole() {
+      this.form.roles.push({
+        roleId: '',
+        statementAccountType: '',
+        key: Date.now()
+      });
+    },
+    // 删除新增角色
+    deleteDomRole(index) {
+      this.form.roles.splice(index, 1)
+    }
   },
 };
 </script>

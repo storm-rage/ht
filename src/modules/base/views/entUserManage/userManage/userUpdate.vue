@@ -18,7 +18,9 @@
             </el-col>
             <el-col :span="8">
               <el-form-item label="证件类型：">
-                <span>{{ form.certType | value }}</span>
+                {{
+                    typeMap(this.dictionary.certType, form.certType)
+                  }}
               </el-form-item>
             </el-col>
             <el-col :span="8">
@@ -168,7 +170,6 @@ export default {
     submit() {
       this.form.attachName = this.attachInfo[0].fileName;
       this.form.fileId = this.attachInfo[0].fileName;
-      this.form.id = this.attachInfo[0].id;
       this.zjControl.updateUser(this.form).then((res) => {
         this.$message.success("修改用户成功！");
         this.goParent();
