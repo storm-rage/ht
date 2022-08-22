@@ -28,8 +28,23 @@ export const myItemsPath = {
 
   // 产品开通申请
   CPKT: {
-    auditPath: 'productApplyAudit',
-    detailPath: ''
+    // 初审状态（apply）
+    'C002': {
+      auditPath: 'businessFirstAudit',
+      detailPath: 'businessFirstAuditDetail'
+    },
+    // 复审状态
+    'C003': {
+      auditPath: 'businessReviewAudit',
+      detailPath: 'businessReviewAuditDetail'
+    },
+    // 复核驳回状态
+    'c006': {
+      auditPath: 'businessFirstBackAudit',
+      detailPath: 'businessFirstBackAuditDetail'
+    },
+    // 已办和办结状态
+    doneDetailPath: '',
   },
 
   // 业务管理

@@ -28,7 +28,7 @@
             </template>
           </zj-table-column>
         </zj-table>
-        <div>
+        <div v-if="isDDBL">
           <zj-collapse title="供应商业务联系人"  class="zj-m-t-10">
             <el-row>
               <el-col :span="8">
@@ -110,6 +110,7 @@
 </template>
 <script>
 import {newValidateFixedPhone,validateBankAcct} from "@utils/rules";
+import {ProductType} from '@modules/constant.js';
 export default {
   props: {
     // 标题
@@ -136,6 +137,11 @@ export default {
         this.form = this.params;
         this.customList = [this.params];
       }
+    }
+  },
+  computed: {
+    isDDBL () {
+      return this.params.productType&&this.params.productType.indexOf(ProductType.DDBL)>=0
     }
   },
   data () {

@@ -33,8 +33,7 @@ const login = {
   },
   // 人脸识别结果-查询
   queryFaceResult:() => {
-    // return request.post('/login/face-check-query', {}, { unlock: true })
-    return request.post('/login/face-check-query', { unlock: true })
+    return request.post('/login/face-check-query', null,{ isUnLock: true })
   },
 
   // 用户服务协议-查询
