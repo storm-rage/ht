@@ -1,13 +1,13 @@
 import request from '@common/axios/request'
 export default {
-  //=============================数据驾驶舱======================================
+  //============================= 消息 ======================================
   /**
    * 首页-消息未读数量
    * @param params
    * @returns {Promise<AxiosResponse<any>>}
    */
    getMessageReadCount(params) {
-    return request.get('/platform-home/get-message-station-read-count', { params })
+    return request.get('/platform-home/get-message-station-read-count', { params, data: {unlock: true} })
   },
 
   //=============================数据驾驶舱======================================

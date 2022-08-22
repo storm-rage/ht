@@ -60,7 +60,7 @@ export default {
           this.loading = false
           let dataType = {
             orderFinancing: 'orderFinancingAmtMonths', // 订单融资总额
-            myBill: 'loanAmtMonths' // 我的凭证
+            myBill: 'myBills' // 我的凭证
           }
           this.dataList = res.data[dataType[this.currentComp]] || []
         })

@@ -124,7 +124,7 @@ export default {
       console.log(event, jsEvent, 'eventSelected')
     },
     viewRender(view, element) {
-      console.log(view, element, 'viewRender')
+      // console.log(view, element, 'viewRender')
       this.events = []
       this.startDate = formatDate(view.start._d, 'yyyy-MM-dd').replace(/-/g, '')
       this.endDate = formatDate(view.end._d, 'yyyy-MM-dd').replace(/-/g, '')

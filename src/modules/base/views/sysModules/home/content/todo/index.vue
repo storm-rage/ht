@@ -52,7 +52,9 @@ export default {
     }
   },
   methods: {
-    toMore () {}
+    toMore () {
+      this.$router.push({name: 'myTodo'})
+    }
   }
 }
 </script>

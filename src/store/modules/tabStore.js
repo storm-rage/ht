@@ -16,10 +16,13 @@ const state = {
 const mutations = {
   //添加-单
   tabAdd(state,rItem) {
-    const boo = state.tabTagList.some(item => item.name === rItem.name)
-    if (boo) { // 存在则选择
+    // const boo = state.tabTagList.some(item => item.name === rItem.name)
+    const boo = state.tabTagList.findIndex(item => item.name === rItem.name)
+    if (boo != -1) { // 存在则选择
       //设置选中
       state.tabActive = rItem.name
+      // rItem里的params和query,fullPath需要更新，否则params和query固定为初次添加进tabTagList时的数据
+      state.tabTagList[boo] = rItem
       if(rItem.params && rItem.params.boo){
         //强制刷新
         // const routes = router.getRoutes();
