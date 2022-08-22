@@ -101,11 +101,8 @@
           :formatter="date"
         />
         <zj-table-column
-          field="state"
+          field="stateDesc"
           title="凭证状态"
-          :formatter="
-            (obj) => typeMap(dictionary.enterpriseStateList, obj.cellValue)
-          "
         />
         <zj-table-column title="操作" fixed="right">
           <template v-slot="{ row }">

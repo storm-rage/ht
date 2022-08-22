@@ -10,22 +10,13 @@
             <el-form-item label="企业名称：" prop="name">
               <template>
                 <el-input v-model="form.name" :disabled="isDetail || isEdit" />
-                <zj-button
-                  class="zj-m-l-10"
-                  v-if="isAdd"
-                  type="primary"
-                  @click="getEnterpriseConfirm"
-                  >确定</zj-button
-                >
+                <zj-button class="zj-m-l-10" v-if="isAdd" type="primary" @click="getEnterpriseConfirm">确定</zj-button>
               </template>
             </el-form-item>
           </el-col>
           <el-col :span="8">
             <el-form-item label="企业简称：" prop="shortName">
-              <el-input
-                v-model="form.shortName"
-                :disabled="isDetail || isEdit"
-              />
+              <el-input v-model="form.shortName" :disabled="isDetail || isEdit" />
             </el-form-item>
           </el-col>
           <el-col :span="8">
@@ -42,99 +33,58 @@
           <el-col :span="24">
             <el-form-item label="平台客户类型：" prop="entType">
               <el-radio-group v-model="form.entType" @change="entTypeChange">
-                <el-radio
-                  v-for="item in [
+                <el-radio v-for="item in [
                     { code: 'B', desc: '核心企业' },
                     { code: 'BL', desc: '保理公司' },
-                  ]"
-                  :key="item.code"
-                  :label="item.code"
-                  :disabled="isDetail || isEdit"
-                  >{{ item.desc }}</el-radio
-                >
+                  ]" :key="item.code" :label="item.code" :disabled="isDetail || isEdit">{{ item.desc }}</el-radio>
               </el-radio-group>
             </el-form-item>
           </el-col>
           <el-col :span="24" v-show="form.entType === 'B'">
             <el-form-item label="是否海天集团：" prop="isHtEnterprise">
               <el-radio-group v-model="form.isHtEnterprise">
-                <el-radio
-                  v-for="item in [
+                <el-radio v-for="item in [
                     { code: '1', desc: '是' },
                     { code: '0', desc: '否' },
-                  ]"
-                  :key="item.code"
-                  :label="item.code"
-                  :disabled="isDetail || isEdit || item.code === '0'"
-                  >{{ item.desc }}</el-radio
-                >
+                  ]" :key="item.code" :label="item.code" :disabled="isDetail || isEdit || item.code === '0'">{{ item.desc }}</el-radio>
               </el-radio-group>
             </el-form-item>
           </el-col>
-          <el-col
-            :span="24"
-            v-if="form.isHtEnterprise === '1' && form.entType === 'B'"
-          >
+          <el-col :span="24" v-if="form.isHtEnterprise === '1' && form.entType === 'B'">
             <el-form-item label="是否双岗：" prop="isDoublePost">
               <el-radio-group v-model="form.isDoublePost">
-                <el-radio
-                  v-for="item in [
+                <el-radio v-for="item in [
                     { code: '1', desc: '是' },
                     { code: '0', desc: '否' },
-                  ]"
-                  :key="item.code"
-                  :label="item.code"
-                  :disabled="isDetail || isEdit"
-                  >{{ item.desc }}</el-radio
-                >
+                  ]" :key="item.code" :label="item.code" :disabled="isDetail || isEdit">{{ item.desc }}</el-radio>
               </el-radio-group>
             </el-form-item>
           </el-col>
           <el-col :span="8">
-            <el-form-item
-              label="统一社会信用代码："
-              prop="bizLicence"
-              class="bizLicence"
-            >
+            <el-form-item label="统一社会信用代码：" prop="bizLicence" class="bizLicence">
               <template>
-                <el-input
-                  v-model="form.bizLicence"
-                  :maxLength="18"
-                  :disabled="isDetail || isEdit"
-                />
+                <el-input v-model="form.bizLicence" :maxLength="18" :disabled="isDetail || isEdit" />
               </template>
             </el-form-item>
           </el-col>
           <el-col :span="8">
             <el-form-item label="纳税人识别号：" prop="invoiceTaxpayerId">
-              <el-input
-                v-model="form.invoiceTaxpayerId"
-                :disabled="isDetail || isEdit"
-              />
+              <el-input v-model="form.invoiceTaxpayerId" :disabled="isDetail || isEdit" />
             </el-form-item>
           </el-col>
           <el-col :span="8">
             <el-form-item label="成立日期：" prop="registerStartDate">
-              <zj-date-picker
-                :date.sync="form.registerStartDate"
-                :disabled="isDetail || isEdit"
-              />
+              <zj-date-picker :date.sync="form.registerStartDate" :disabled="isDetail || isEdit" />
             </el-form-item>
           </el-col>
           <el-col :span="8">
             <el-form-item label="注册资本：" prop="registerCapital">
-              <el-input
-                v-model="form.registerCapital"
-                :disabled="isDetail || isEdit"
-              />
+              <el-input v-model="form.registerCapital" :disabled="isDetail || isEdit" />
             </el-form-item>
           </el-col>
           <el-col :span="8">
             <el-form-item label="企业工商有效期：" prop="registerEndDate">
-              <zj-date-picker
-                :date.sync="form.registerEndDate"
-                :disabled="isDetail || isEdit"
-              />
+              <zj-date-picker :date.sync="form.registerEndDate" :disabled="isDetail || isEdit" />
             </el-form-item>
           </el-col>
           <el-col :span="8">
@@ -145,12 +95,7 @@
           <el-col :span="8">
             <el-form-item label="企业经营类型：" prop="custType">
               <el-select v-model="form.custType" :disabled="isDetail">
-                <el-option
-                  v-for="(item, index) in dictionary.custTypeList"
-                  :key="index"
-                  :value="item.code"
-                  :label="item.desc"
-                ></el-option>
+                <el-option v-for="(item, index) in dictionary.custTypeList" :key="index" :value="item.code" :label="item.desc"></el-option>
               </el-select>
             </el-form-item>
           </el-col>
@@ -182,10 +127,7 @@
           <h4 class="bl zj-m-l-20 mb-10">法人信息</h4>
           <el-col :span="8">
             <el-form-item label="法定代表人姓名：" prop="legalPersonName">
-              <el-input
-                v-model="form.legalPersonName"
-                :disabled="isDetail || isEdit"
-              />
+              <el-input v-model="form.legalPersonName" :disabled="isDetail || isEdit" />
             </el-form-item>
           </el-col>
 
@@ -195,19 +137,8 @@
             </el-form-item>
           </el-col>
           <el-col :span="8">
-            <el-form-item
-              label="法人身份证有效期："
-              prop="legalCertRegDate"
-              class="col-right"
-            >
-              <zj-date-range-picker
-                :clearable="false"
-                :startDate.sync="form.legalCertRegDate"
-                @startChange="valueChange('legalCertRegDate')"
-                :endDate.sync="form.legalCertExpireDate"
-                @endChange="valueChange('legalCertExpireDate')"
-                :disabled="isDetail"
-              />
+            <el-form-item label="法人身份证有效期：" prop="legalCertRegDate" class="col-right">
+              <zj-date-range-picker :clearable="false" :startDate.sync="form.legalCertRegDate" @startChange="valueChange('legalCertRegDate')" :endDate.sync="form.legalCertExpireDate" @endChange="valueChange('legalCertExpireDate')" :disabled="isDetail" />
             </el-form-item>
           </el-col>
         </el-row>
@@ -235,17 +166,8 @@
           </el-col>
           <el-col :span="8">
             <el-form-item label="银行类型：" prop="bankType">
-              <el-select
-                v-model="form.bankType"
-                :popper-append-to-body="false"
-                :disabled="isDetail"
-              >
-                <el-option
-                  v-for="(item, index) in dictionary.bankTypeList"
-                  :key="index"
-                  :value="item.code"
-                  :label="item.desc"
-                />
+              <el-select v-model="form.bankType" :popper-append-to-body="false" :disabled="isDetail">
+                <el-option v-for="(item, index) in dictionary.bankTypeList" :key="index" :value="item.code" :label="item.desc" />
               </el-select>
             </el-form-item>
           </el-col>
@@ -264,20 +186,8 @@
             </el-form-item>
           </el-col>
           <el-col :span="8">
-            <el-form-item
-              label="控制人身份证有效期："
-              prop="legalCertRegDate"
-              class="el-form-item__regExpire"
-            >
-              <zj-date-range-picker
-                class="no-icon legalDates"
-                :clearable="false"
-                :startDate.sync="form.controllerCertRegDate"
-                @startChange="valueChange('legalCertRegDate')"
-                :endDate.sync="form.controllerCertExpireDate"
-                @endChange="valueChange('legalCertExpireDate')"
-                :disabled="isDetail"
-              />
+            <el-form-item label="控制人身份证有效期：" prop="legalCertRegDate" class="el-form-item__regExpire">
+              <zj-date-range-picker class="no-icon legalDates" :clearable="false" :startDate.sync="form.controllerCertRegDate" @startChange="valueChange('legalCertRegDate')" :endDate.sync="form.controllerCertExpireDate" @endChange="valueChange('legalCertExpireDate')" :disabled="isDetail" />
               <el-form-item prop="legalCertExpireDate" />
             </el-form-item>
           </el-col>
@@ -287,83 +197,37 @@
       <zj-content-block v-if="isAdd">
         <zj-header title="企业操作员" />
         <zj-content>
-          <zj-button class="append zj-m-b-10" type="primary" @click="sysUserAdd"
-            >新增</zj-button
-          >
-          <zj-table
-            ref="sysUser"
-            :dataList="form.sysUserList"
-            :pager="false"
-            keep-source
-            auto-resize
-            :edit-config="{
+          <zj-button class="append zj-m-b-10" type="primary" @click="sysUserAdd">新增</zj-button>
+          <zj-table ref="sysUser" :dataList="form.sysUserList" :pager="false" keep-source auto-resize :edit-config="{
               trigger: 'manual',
               mode: 'row',
               icon: '-',
               autoClear: false,
               showStatus: true,
-            }"
-            class="sysUserAdd"
-          >
-            <zj-table-column
-              field="userName"
-              title="姓名"
-              :edit-render="{ name: '$input' }"
-            />
-            <zj-table-column
-              field="certNo"
-              title="身份证号码"
-              :edit-render="{ name: '$input' }"
-            />
-            <zj-table-column
-              field="mobileNo"
-              title="手机号码"
-              :edit-render="{ name: '$input' }"
-            />
-            <zj-table-column
-              field="email"
-              title="邮箱"
-              :edit-render="{ name: '$input' }"
-            />
-            <zj-table-column
-              field="htSysCode"
-              title="内部系统账号"
-              :edit-render="{ name: '$input' }"
-            />
-            <zj-table-column
-              field="roleId"
-              title="操作员角色"
-              :edit-render="{
+            }" class="sysUserAdd">
+            <zj-table-column field="userName" title="姓名" :edit-render="{ name: '$input' }" />
+            <zj-table-column field="certNo" title="身份证号码" :edit-render="{ name: '$input' }" />
+            <zj-table-column field="mobileNo" title="手机号码" :edit-render="{ name: '$input' }" />
+            <zj-table-column field="email" title="邮箱" :edit-render="{ name: '$input' }" />
+            <zj-table-column field="htSysCode" title="内部系统账号" :edit-render="{ name: '$input' }" />
+            <zj-table-column field="roleId" title="操作员角色" :edit-render="{
                 name: '$select',
                 options: statementAccountTypeTable,
-              }"
-            />
-            <zj-table-column
-              field="statementAccountType"
-              title="开凭证对账单类型权限"
-              :edit-render="{
+              }" />
+            <zj-table-column field="statementAccountType" title="开凭证对账单类型权限" :edit-render="{
                 name: '$select',
                 props: { multiple: true },
                 options: dictionary.statementAccountTypeListTable,
-              }"
-            />
+              }" />
             <zj-table-column title="操作">
               <template v-slot="{ row, rowIndex }">
                 <template v-if="!$refs.sysUser.isActiveByRow(row)">
-                  <zj-button type="text" @click="sysUserEdit(row)"
-                    >修改</zj-button
-                  >
-                  <zj-button type="text" @click="sysUserDel(rowIndex)"
-                    >删除</zj-button
-                  >
+                  <zj-button type="text" @click="sysUserEdit(row)">修改</zj-button>
+                  <zj-button type="text" @click="sysUserDel(rowIndex)">删除</zj-button>
                 </template>
                 <template v-if="$refs.sysUser.isActiveByRow(row)">
-                  <zj-button type="text" @click="sysUserSave(row, rowIndex)"
-                    >保存</zj-button
-                  >
-                  <zj-button type="text" @click="sysUserCancel(row, rowIndex)"
-                    >取消</zj-button
-                  >
+                  <zj-button type="text" @click="sysUserSave(row, rowIndex)">保存</zj-button>
+                  <zj-button type="text" @click="sysUserCancel(row, rowIndex)">取消</zj-button>
                 </template>
               </template>
             </zj-table-column>
@@ -374,13 +238,7 @@
       <zj-content-block>
         <zj-header title="企业附件" />
         <el-row class="zj-p-x-20">
-          <zj-table
-            ref="pubAttach"
-            :dataList="form.pubAttachList"
-            :pager="false"
-            keep-source
-            auto-resize
-          >
+          <zj-table ref="pubAttach" :dataList="form.pubAttachList" :pager="false" keep-source auto-resize>
             <zj-table-column title="附件类型">
               <template v-slot="{ row }">
                 {{ typeMap(dictionary.busTypeList, row.busType) }}
@@ -396,12 +254,7 @@
                   v-if="row.fileId"
                   >下载</zj-button
                 > -->
-                <zj-upload
-                  :httpRequest="pubAttachUpload"
-                  :data="{ row }"
-                  class="zj-inline"
-                  v-if="!isDetail"
-                >
+                <zj-upload :httpRequest="pubAttachUpload" :data="{ row }" class="zj-inline" v-if="!isDetail">
                   <zj-button type="text">上传</zj-button>
                 </zj-upload>
               </template>
@@ -420,64 +273,39 @@
           </el-col>
           <el-col :span="8">
             <el-form-item label="电话：" prop="invoicePhone">
-              <el-input
-                v-model="form.invoicePhone"
-                @input="invoiceOneAndAll"
-                :disabled="isDetail"
-              />
+              <el-input v-model="form.invoicePhone" @input="invoiceOneAndAll" :disabled="isDetail" />
             </el-form-item>
           </el-col>
           <el-col :span="8">
             <el-form-item label="电子邮箱：" prop="invoiceEmail">
-              <el-input
-                v-model="form.invoiceEmail"
-                @input="invoiceOneAndAll"
-                :disabled="isDetail"
-              />
+              <el-input v-model="form.invoiceEmail" @input="invoiceOneAndAll" :disabled="isDetail" />
             </el-form-item>
           </el-col>
         </el-row>
         <el-row class="el-row__twoAddress">
           <el-col :span="16">
             <el-form-item label="地址：" prop="invoiceAddress">
-              <el-input
-                style="width: 100%"
-                v-model="form.invoiceAddress"
-                @input="invoiceOneAndAll"
-                :disabled="isDetail"
-              />
+              <el-input style="width: 100%" v-model="form.invoiceAddress" @input="invoiceOneAndAll" :disabled="isDetail" />
             </el-form-item>
           </el-col>
         </el-row>
         <el-row>
           <el-col :span="8">
             <el-form-item label="开户行：" prop="invoiceBankInfo">
-              <el-input
-                v-model="form.invoiceBankInfo"
-                @input="invoiceOneAndAll"
-                :disabled="isDetail"
-              />
+              <el-input v-model="form.invoiceBankInfo" @input="invoiceOneAndAll" :disabled="isDetail" />
             </el-form-item>
           </el-col>
           <el-col :span="8">
             <el-form-item label="银行账号：" prop="invoiceBankAccno">
-              <el-input
-                v-model="form.invoiceBankAccno"
-                @input="invoiceOneAndAll"
-                :disabled="isDetail"
-              />
+              <el-input v-model="form.invoiceBankAccno" @input="invoiceOneAndAll" :disabled="isDetail" />
             </el-form-item>
           </el-col>
         </el-row>
       </zj-content-block>
       <!--  其他附件    -->
-      <other-file-setting ref="ofileSetting" isEdit></other-file-setting>
+      <other-file-setting ref="ofileSetting" isEdit v-if="!isDetail"></other-file-setting>
       <!--  操作记录  -->
-      <operate-log
-        ref="operateLog"
-        :logList="logList"
-        v-if="!isAdd"
-      ></operate-log>
+      <operate-log ref="operateLog" :logList="logList" v-if="!isAdd"></operate-log>
     </el-form>
   </zj-content-block>
 </template>
