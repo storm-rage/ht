@@ -34,7 +34,7 @@ export default {
   methods: {
     downLoad(row) {
       this.$api.baseCommon.downloadFile({
-        fileId:row.fileId,
+        fileUrl:row.fileId,
         fileName:row.fileName,
       })
     }

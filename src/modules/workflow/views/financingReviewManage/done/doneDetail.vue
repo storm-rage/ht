@@ -211,17 +211,7 @@ export default {
       zjControl: {},
       uDictionary:{},
       mDictionary:{},
-      list: [
-        {
-          field1: 'scm00001',
-          field2: '某某产品一号',
-          field3: '上游',
-          field4: '订单保理',
-          field5: '2022.09.08 11:18:19',
-          field6: '生效',
-          field7: '是'
-        }
-      ],
+
 
     }
   },
@@ -238,39 +228,6 @@ export default {
 </script>
 
 <style scoped lang="less">
-.quota-manage {
-  height: 40px;
-  line-height:40px;
-  text-align: right;
-  margin-bottom: 20px;
-  color: #e6a23c;
-  background-color: #fdf6ec;
-}
-.financingForm {
-  margin-top: 20px;
-}
-.explain-text {
-  display: flex;
-  padding-bottom: 20px;
-  background-color: rgba(2, 167, 240, 0);
-  .explain-item {
-    color: #555;
-    font-size: 14px;
-    margin-left: 20px;
-  }
-}
-.hd-row {
-  position: relative;
-  &:after {
-    position: absolute;
-    top: 36px;
-    left: 0;
-    content: '';
-    display: block;
-    width: 100%;
-    height: 1px;
-    border-bottom: 1px dashed #cbcbcb;
-  }
-}
+
 
 </style>

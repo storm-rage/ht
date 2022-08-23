@@ -71,6 +71,14 @@ export const myItemsPath = {
     detailPath: ''
   },
 
+  // 融资审核
+  RZCS: {
+    auditPath: 'financingReviewToDoReview',
+    detailPath: 'financingReviewToDoDetail',
+    // 已办和办结状态
+    doneDetailPath: '',
+  },
+
   // 清算申请
   QSSQ: {
     auditPath: '',

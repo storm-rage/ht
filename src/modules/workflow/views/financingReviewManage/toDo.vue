@@ -51,7 +51,8 @@
 </template>
 <script>
 export default {
-  components: {
+  props: {
+    zjControl: Object,
 
   },
   data() {
