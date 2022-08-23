@@ -43,7 +43,7 @@ const financingAuditManageRouter = [
   {
     path: '/financingReviewDoneDetail',
     name: 'financingReviewDoneDetail',
-    component: () => import('../views/financingReviewManage/done/doneDetail'),
+    component: () => import('../views/financingReviewManage/done/doneDetail.vue'),
     meta: {
       isMock: true,
       title: '融资交易详情',
