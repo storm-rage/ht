@@ -6,7 +6,7 @@ import request from '@common/axios/request';
 const financingAuditManageWorkflow = {
   //融资审核-数据字典
   getAuditDirectory: (params) => {
-    return request.post('/financing-audit/get-audit-directory',params)
+    return request.get('/financing-audit/get-audit-directory', {params})
   },
   //融资审核-待办详情-根据凭证信息获取对账单信息
   getWaitAccountBillDetail(params) {
@@ -27,6 +27,18 @@ const financingAuditManageWorkflow = {
   //融资审核-保理公司复审提交
   submitReviewAudit(params) {
     return request.post('/financing-audit/submit-review-audit', params)
+  },
+  //附件维护
+  maintainAttach(params) {
+    return request.post('/financing-audit/maintain-attach', params)
+  },
+  //融资审核-保理公司重新推送
+  againPush(params) {
+    return request.post('/financing-audit/again-push', params)
+  },
+  //融资审核-保理公司直接作废
+  auditAbort(params) {
+    return request.post('/financing-audit/audit-abort', params)
   },
 
 }

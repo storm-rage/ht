@@ -1,5 +1,5 @@
 <template>
-  <home-content-block class="home-content-todo">
+  <!-- <home-content-block class="home-content-todo">
     <zj-header title="待办任务">
       <template slot="right">
         <right-more-btn @click="toMore"></right-more-btn>
@@ -12,16 +12,37 @@
         :key="`${index}todo`"
         :class="[index === 0 ? 'yw' : index === 1 ? 'ht' : 'rz']"
       >
-        <!-- <div class="logo">
+        <div class="logo">
           <img v-if="index === 0" src="~@assets/img/home/todo/yw_bg.png" />
           <img v-if="index === 1" src="~@assets/img/home/todo/ht_bg.png" />
           <img v-if="index === 2" src="~@assets/img/home/todo/rz_bg.png" />
-        </div> -->
+        </div>
         <div class="todo-info">
           <div class="num">{{ item.num }}</div>
           <div class="title">{{ item.title }}</div>
         </div>
       </div>
+    </div>
+  </home-content-block> -->
+  <home-content-block class="home-content-todo">
+    <zj-header title="待办任务">
+      <template slot="right">
+        <right-more-btn @click.native="toMore"></right-more-btn>
+      </template>
+    </zj-header>
+    <div
+      class="todo-block-item yw"
+      v-for="(item, index) in list"
+      :key="`${index}todo`"
+      :class="[index === 0 ? 'yw' : index === 1 ? 'ht' : 'rz']"
+    >
+      <div class="logo">
+        <img v-if="index === 0" src="~@assets/img/home/todo/yw_bg.png" />
+        <img v-if="index === 1" src="~@assets/img/home/todo/ht_bg.png" />
+        <img v-if="index === 2" src="~@assets/img/home/todo/rz_bg.png" />
+      </div>
+      <div class="title">{{ item.title }}</div>
+      <div class="num">{{ item.num }}</div>
     </div>
   </home-content-block>
 </template>
@@ -53,13 +74,14 @@ export default {
   },
   methods: {
     toMore () {
-      this.$router.push({name: 'myTodo'})
+      this.$router.push({ name: 'myTodo' })
     }
   }
 }
 </script>
 <style lang="less" scoped>
-.home-content-todo {
+// 新的样式
+/* .home-content-todo {
   height: 100%;
   .todo-block {
     display: flex;
@@ -120,5 +142,56 @@ export default {
   // .todo-block-item + .todo-block-item {
   //   margin-top: 12px;
   // }
+} */
+
+// 原样式
+.home-content-todo {
+  height: 100%;
+  .todo-block-item {
+    position: relative;
+    cursor: pointer;
+    border-radius: 4px;
+    height: 80px;
+    display: flex;
+    align-items: center;
+    padding-left: 20px;
+    padding-right: 20px;
+    font-weight: bold;
+    // 业务管理
+    &.yw {
+      background-color: #fff6ed;
+      .num {
+        color: #ffa958;
+      }
+    }
+    // 合同管理
+    &.ht {
+      background-color: #ffefef;
+      .num {
+        color: #ff6d6d;
+      }
+    }
+    // 融资审核
+    &.rz {
+      background-color: #e6faff;
+      .num {
+        color: #1ec5a3;
+      }
+    }
+    .title {
+      margin-left: 15px;
+      font-size: 16px;
+      color: #303133;
+    }
+    .num {
+      width: 100px;
+      text-align: right;
+      flex: auto;
+      font-size: 30px;
+    }
+  }
+  .todo-block-item + .todo-block-item {
+    margin-top: 12px;
+  }
 }
 </style>

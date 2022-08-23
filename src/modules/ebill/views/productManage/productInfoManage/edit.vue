@@ -380,6 +380,7 @@ export default {
         } else {
           let params = {
             ...this.infoForm,
+            lowRdFinancingMonthRate: Number(this.infoForm.lowRdFinancingMonthRate).toFixed(2)
           }
           if(this.row.id) {
               params.id = this.row.id

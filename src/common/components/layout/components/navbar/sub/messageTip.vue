@@ -29,7 +29,8 @@ export default {
 @import "~@assets/less/variables";
 .navbar-message-tip {
   cursor: pointer;
-  width: 106px;
+  // width: 106px;
+  margin-right: 30px;
   .message-tip-badge {
     background-color: @danger-color;
     border-radius: 10px;

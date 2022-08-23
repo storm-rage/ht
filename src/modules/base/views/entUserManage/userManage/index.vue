@@ -18,7 +18,7 @@
           <el-form-item label="用户状态：">
             <el-select v-model="searchForm.state">
               <el-option
-                v-for="(item, index) in dictionary.entTypeList"
+                v-for="(item, index) in dictionary.userState"
                 :key="index"
                 :value="item.code"
                 :label="item.desc"

@@ -12,7 +12,7 @@
             <el-form-item label="申请时间：">{{form.receiveDatetime}}</el-form-item>
           </el-col>
           <el-col :span="8">
-            <el-form-item label="申请状态：">{{typeMap(dictionary.agreementStateList,form.applyStatus)}}</el-form-item>
+            <el-form-item label="申请状态：">{{typeMap(dictionary.applyStatusList,form.applyStatus)}}</el-form-item>
           </el-col>
         </el-row>
         <el-row>

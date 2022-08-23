@@ -117,7 +117,10 @@ export default {
       this.queryMyPhasedAgreePage({'coreCompanyName': coreComName})
     },
     attaDownload(row) {
-      this.zjControl.downloadFile(row.fileId)
+      this.zjControl.downloadFile({
+        fileUrl:row.fileId,
+        fileName:row.fileName,
+      })
     },
     //贸易关系列表
     getMyTradeRelationList() {

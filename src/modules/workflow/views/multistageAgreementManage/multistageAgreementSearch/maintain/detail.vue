@@ -26,6 +26,7 @@ export default {
     return {
       zjControl: {
         getBackPhasedAgreeInfo:this.$api.multistageAgreementManageWorkflow.getBackPhasedAgreeInfo,//运营端-阶段性协议维护-详情
+        downLoadFile:this.$api.baseCommon.downloadFile,
       },
       detailData: {},
     }
@@ -37,7 +38,7 @@ export default {
         busTradeId: this.row.busTradeId,
         buyerId: this.row.buyerId,
         buyerName: this.row.buyerName,
-        maintainType: '0',//0-待办维护 1-保理公司直接维护
+        maintainType: this.row.maintainType?this.row.maintainType:'0',//0-待办维护 1-保理公司直接维护
         sellerId: this.row.sellerId,
         sellerName: this.row.sellerName,
         serialNo: this.row.serialNo,

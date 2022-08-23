@@ -19,6 +19,7 @@
 import toDo from "./toDo";
 import done from "./done";
 import settle from "./settle";
+import financingAuditManageWorkflow from "../../api/financingAuditManageWorkflowApi";
 export default {
   name: "financingAuditManage",
   components: {
@@ -26,28 +27,17 @@ export default {
   },
   data() {
     return {
-      searchForm: {
-        productName: '',
-        businessType: '',
-        productType: '',
-        productNo: '',
-        productState: '',
+      zjControl: {
+        getAuditDirectory:this.$api.financingAuditManageWorkflow.getAuditDirectory,//数据字典
+        getWaitAccountBillDetail:this.$api.financingAuditManageWorkflow.getWaitAccountBillDetail,//待办详情-根据凭证信息获取对账单信息
+        getWaitFinancingDetail:this.$api.financingAuditManageWorkflow.getWaitFinancingDetail,//待办详情-申请信息
+        getWaitVoucherDetail:this.$api.financingAuditManageWorkflow.getWaitVoucherDetail,//待办详情-融资凭证信息
+        submitFirstAudit:this.$api.financingAuditManageWorkflow.submitFirstAudit,//待办详情-保理公司初审提交
+        submitReviewAudit:this.$api.financingAuditManageWorkflow.submitReviewAudit,//待办详情-保理公司复审提交
       },
-      list: [
-        {
-          field1: 'scm00001',
-          field2: '某某产品一号',
-          field3: '上游',
-          field4: '订单保理',
-          field5: '2022.09.08 11:18:19',
-          field6: '生效',
-          field7: '是'
-        }
-      ],
       tradeList: [],
       tabs:'toDo',
       tabAtive:'',
-      zjControl: {},
       uDictionary:{},
       mDictionary:{}
 
