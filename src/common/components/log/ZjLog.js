@@ -18,9 +18,9 @@ ZjLog.unLock = (force) => {
   zjLoadingCount--
   if ((zjLoadingCount <= 0 && zjLoadingInstance) || force) {
     zjLoadingInstance.close()
-    zjLoadingCount = 0
     zjLoadingInstance = null
   }
+  zjLoadingCount = Math.max(0,zjLoadingCount)
 }
 
 ZjLog.messageBox = (options) => {

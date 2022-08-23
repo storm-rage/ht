@@ -27,6 +27,7 @@ export default {};
     span{
       font-size: 16px;
       color:#303133;
+      cursor: pointer;
     }
     div{
       color: #DCDFE6;

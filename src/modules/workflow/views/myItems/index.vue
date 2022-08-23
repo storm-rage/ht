@@ -97,14 +97,28 @@ export default {
     },
     // 跳转对应的详情
     toDetail(row) {
-      if (myItemsPath[row.busType].detailPath) {
-        this.goChild(myItemsPath[row.busType].detailPath, row);
+      if (this.tabAtive === 'agenda') {
+        // 代办
+        if (myItemsPath[row.busType].detailPath) {
+          this.goChild(myItemsPath[row.busType].detailPath, row);
+        }else if (myItemsPath[row.busType][row.applyType][row.workflowState].detailPath) {
+          this.goChild(myItemsPath[row.busType][row.applyType][row.workflowState].detailPath, row);
+        }
+      }else {
+        // 已办和已办结
+        this.goChild(myItemsPath[row.busType][row.applyType].doneDetailPath, row);
       }
+
     },
     // 跳转对应的审核
     toHandle(row) {
-      if (myItemsPath[row.busType].auditPath) {
-        this.goChild(myItemsPath[row.busType].auditPath, row);
+      if (this.tabAtive === 'agenda') {
+        // 代办
+        if (myItemsPath[row.busType].auditPath) {
+          this.goChild(myItemsPath[row.busType].auditPath, row);
+        }else if (myItemsPath[row.busType][row.applyType][row.workflowState].auditPath) {
+          this.goChild(myItemsPath[row.busType][row.applyType][row.workflowState].auditPath, row);
+        }
       }
     },
     // 作废

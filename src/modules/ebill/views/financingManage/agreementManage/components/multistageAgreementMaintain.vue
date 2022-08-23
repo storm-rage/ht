@@ -49,7 +49,7 @@
                 :edit-config="{trigger: 'manual', mode: 'row', icon:'-', autoClear: false, showStatus: true}"
                 v-if="attaTableShow"
       >
-        <zj-table-column type="index" title="序号" width="60"/>
+        <zj-table-column type="seq" title="序号" width="60"/>
         <zj-table-column field="fileName" title="合同附件" />
         <zj-table-column field="fileRemark" title="附件说明" :edit-render="{name: '$input'}"/>
         <zj-table-column title="操作">
@@ -111,6 +111,7 @@ export default {
     handleRadioChange({row}) {
       this.agreementParams = row
       this.agreementParams.coreCompanyName = row.buyerName || row.coreCompanyName
+      console.log(`凭证参数~~~~`+JSON.stringify(this.agreementParams))
       let params = {
         busTradeId : row.busTradeId,
         coreCompanyName : row.buyerName || row.coreCompanyName,
@@ -132,7 +133,10 @@ export default {
     },
     //下载合同附件
     attaDownload(row) {
-      this.zjControl.downloadFile(row)
+      this.zjControl.downloadFile({
+        fileUrl:row.fileId,
+        fileName:row.fileName,
+      })
     },
     //删除合同附件
     attaDelete(row) {
