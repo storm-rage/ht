@@ -1,8 +1,8 @@
 const registerManageRouter = [
   {
-    path: '/registerManage',
-    name: 'registerManage',
-    component: () => import('../views/registerManage/index'),
+    path: '/zhongdengManage',
+    name: 'zhongdengManage',
+    component: () => import('../views/registerManage/index.vue'),
     meta: {
       isMock: true,
       title: '中登登记管理',
@@ -13,9 +13,9 @@ const registerManageRouter = [
     }
   },
   {
-    path: '/registerManageDetail',
-    name: 'registerManageDetail',
-    component: () => import('../views/productManage/productInfoManage/detail'),
+    path: '/zhongdengManageDetail',
+    name: 'zhongdengManageDetail',
+    component: () => import('../views/productManage/productInfoManage/detail.vue'),
     meta: {
       isMock: true,
       title: '产品详情',
@@ -26,6 +26,5 @@ const registerManageRouter = [
       notRequireAuth: true
     }
   },
-
 ]
 export default registerManageRouter
