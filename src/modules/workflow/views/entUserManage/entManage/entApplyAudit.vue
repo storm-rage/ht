@@ -2,9 +2,9 @@
   <zj-content-container>
     <zj-top-header :title="$route.name === 'entApplyAudit' ? '复核企业信息申请' : '企业信息申请交易详情'"></zj-top-header>
     <!--  交易信息  -->
-    <trade-info :detailData="detailData" />
+    <trade-info :detailData="detailData" :dictionary="dictionary" />
     <!--  企业基础信息 -->
-    <ent-info-edit ref="entInfoedit" :detailData="detailData" />
+    <ent-info-edit ref="entInfoedit" :form="detailData" @getDictionary="getDictionary" />
 
     <!--  审批意见  -->
     <audit-remark ref="auditRemark" v-if="$route.name === 'entApplyAudit'"></audit-remark>
@@ -44,6 +44,10 @@ export default {
     this.getDetail()
   },
   methods: {
+    getDictionary(data) {
+      this.dictionary = data
+      console.log('dic', data)
+    },
     getDetail() {
       this.zjControl.getTodoEnterprise({ serialNo: this.row.serialNo }).then(res => {
         this.detailData = res.data
@@ -73,7 +77,7 @@ export default {
         if (valid) {
           const { notes } = this.$refs.auditRemark.getData()
           this.rejectLoading = true;
-          this.zjControl.recheckContractRenewal({
+          this.zjControl.todoEnterpriseSubmit({
             flag: '2',
             ...this.row,
             notes,
