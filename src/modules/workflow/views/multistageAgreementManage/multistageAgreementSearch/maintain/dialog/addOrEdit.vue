@@ -142,7 +142,12 @@ export default {
   name: 'addOrEdit',
   props: {
     zjControl: Object,
-    dictionary: Object,
+    dictionary: {
+      type: Object,
+      default: ()=>{
+        return {}
+      }
+    },
   },
   data () {
     return {
@@ -292,17 +297,19 @@ export default {
     },
     //新增或维护协议
     submit() {
-      console.log(this.title)
+      // console.log(this.title)
       this.$refs.form.validate((valid) => {
         if (valid) {
           let params = {
             ...this.form,
             phasedId: this.row.phasedId,
             attachId: this.form.attachId,
+            buyerId: this.rows[0].buyerId,
+            supplierId: this.rows[0].sellerId,
           }
           //新增保存
           if(this.title === '新增') {
-            console.log(params)
+            // console.log(params)
             this.zjControl.savePhasedAgree(params).then(res=>{
               //...
               this.$emit('agreementUpdate', params)

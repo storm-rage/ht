@@ -39,7 +39,7 @@ export default {
         queryBackPhasedAgreePage:this.$api.multistageAgreementManageWorkflow.queryBackPhasedAgreePage,//运营端-阶段性协议-列表查询
         savePhasedAgree:this.$api.multistageAgreementManageWorkflow.savePhasedAgree,//运营端-阶段性协议维护-阶段性协议-保存
         submitBackPhasedAgree:this.$api.multistageAgreementManageWorkflow.submitBackPhasedAgree,//运营端-阶段性协议维护-阶段性协议-确认提交
-
+        downLoadFile:this.$api.baseCommon.downloadFile,
         getBackPhasedAgreeDirectory:this.$api.multistageAgreementManageWorkflow.getBackPhasedAgreeDirectory,//阶段性协议管理-数据字典
         uploadFile:this.$api.baseCommon.uploadFile,
       },

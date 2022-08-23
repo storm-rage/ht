@@ -1,28 +1,29 @@
 <template>
   <zj-content-container>
-    <!--  阶段性协议管理  -->
+    <!--  阶段性协议查询  -->
     <el-tabs v-model="tabs" class="zj-tabs-card zj-p-l-16 zj-p-r-16">
       <el-tab-pane label="阶段性协议查询" name="multistageAgreementSearch" >
         <multistage-agreement-search :zjControl="zjControl" :uDictionary="uDictionary" :uBtn="zjBtn"/>
       </el-tab-pane>
-      <el-tab-pane label="待办" name="toDo" >
+      <!-- <el-tab-pane label="待办" name="toDo" >
         <to-do :zjControl="zjControl" :mDictionary="mDictionary" :mBtn="zjBtn"/>
       </el-tab-pane>
       <el-tab-pane label="已办结" name="done" >
         <done :zjControl="zjControl" :mDictionary="mDictionary" :mBtn="zjBtn"/>
-      </el-tab-pane>
+      </el-tab-pane> -->
     </el-tabs>
 
   </zj-content-container>
 </template>
 <script>
 import multistageAgreementSearch from "./multistageAgreementSearch/multistageAgreementSearch";
-import toDo from "./multistageAgreementSearch/toDo";
-import done from "./multistageAgreementSearch/done";
+// import toDo from "./multistageAgreementSearch/toDo";
+// import done from "./multistageAgreementSearch/done";
 export default {
   name: "multistageAgreementManage",
   components: {
-    multistageAgreementSearch,toDo,done
+    multistageAgreementSearch,
+    // toDo,done
   },
   data() {
     return {
