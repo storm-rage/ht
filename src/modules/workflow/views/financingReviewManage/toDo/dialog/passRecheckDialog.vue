@@ -12,11 +12,11 @@
     <div slot="footer" class="dialog-footer">
       <zj-button type="primary" @click="onConfirm(titleInfo === '复核通过'? '1':'2')"
                  :api="zjBtn.submitFirstAudit"
-                 v-if="dialogForm.transinfo.workflowState === 'F002'"
+                 v-if="dialogForm.transInfo.workflowState === 'F002'"
       >确认</zj-button>
       <zj-button type="primary" @click="reviewConfirm(titleInfo === '复核通过'? '3':'4')"
                  :api="zjBtn.submitReviewAudit"
-                 v-if="dialogForm.transinfo.workflowState === 'F003'"
+                 v-if="dialogForm.transInfo.workflowState === 'F003'"
       >确认</zj-button>
       <zj-button status="primary" @click="cancel">取消</zj-button>
     </div>
@@ -33,9 +33,10 @@ export default {
     return {
       dialogShow:false,
       dialogForm: {
-        transinfo: {},
+        transInfo: {},
       },
       titleInfo: '',
+      bizId: '',
     }
   },
   methods: {
@@ -48,7 +49,7 @@ export default {
         operateFlag: flag,//融资审核操作标志：1-保理公司初审通过 2-保理公司初审驳回 3-保理公司复审通过 4-保理公司复审驳回上一级
         remark: this.dialogForm.rejectReason,
         voucherId: this.dialogForm.voucherCreditInfo.voucherId,
-        bizId: this.$route.query.bizId,
+        bizId: this.bizId,
       }
       this.zjControl.submitFirstAudit(params).then(res=>{
         this.$message.success(res.msg)
@@ -64,7 +65,7 @@ export default {
         operateFlag: flag,//融资审核操作标志：1-保理公司初审通过 2-保理公司初审驳回 3-保理公司复审通过 4-保理公司复审驳回上一级
         remark: this.dialogForm.rejectReason,
         voucherId: this.dialogForm.voucherCreditInfo.voucherId,
-        bizId: this.$route.query.bizId,
+        bizId: this.bizId,
       }
       this.zjControl.submitReviewAudit(params).then(res=>{
         this.$message.success(res.msg)
@@ -74,9 +75,10 @@ export default {
     cancel() {
       this.dialogShow = false
     },
-    open(flag,form) {
+    open(flag,form,bizId) {
       this.dialogShow = true
       this.titleInfo = flag
+      this.bizId = bizId
       this.dialogForm = form
       console.log(this.dialogForm)
     },
