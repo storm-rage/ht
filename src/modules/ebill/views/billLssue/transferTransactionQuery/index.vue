@@ -40,7 +40,7 @@
                 <zj-table-column field="tranNumber" title="转让凭证总数"/>
                 <zj-table-column field="tranAmt" title="转让总金额" :formatter="money"/>
                 <zj-table-column field="applyDate" title="转让申请时间" :formatter="date"/>
-                <zj-table-column field="workflowState" title="申请状态" :formatter="obj=>typeMap(dictionary,obj.cellValue)"/>
+                <zj-table-column field="workflowState" title="申请状态" :formatter="obj=>typeMap(dictionary.workflowState,obj.cellValue)"/>
               </zj-table>
             </zj-list-layout>
           </div>

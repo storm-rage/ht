@@ -6,7 +6,7 @@
         <orderFinancing :zjControl="zjControl" :dictionary="dictionary" :uBtn="zjBtn" @nextStepParams="handelNextStepParams"/>
       </el-tab-pane>
       <el-tab-pane label="入库融资/凭证融资" name="voucherFinancing" v-if="tabInfo.billTab || tabInfo.warehouseTab">
-        <voucherFinancing :zjControl="zjControl" :dictionary="dictionary" :mBtn="zjBtn"/>
+        <voucherFinancing :zjControl="zjControl" :dictionary="dictionary" :mBtn="zjBtn" @nextStepParams="handelNextStepParams"/>
       </el-tab-pane>
     </el-tabs>
     <zj-content-footer>
@@ -71,7 +71,7 @@ export default {
         this.goChild('orderFinancingDetail', {buyerId: this.nextStepParams.buyerId})
       }
       if(this.tabs === 'voucherFinancing') {
-        this.goChild('voucherFinancingDetail', this.nextStepParams)
+        this.goChild('voucherFinancingDetail', {...this.nextStepParams})
       }
     },
     handelNextStepParams(val) {

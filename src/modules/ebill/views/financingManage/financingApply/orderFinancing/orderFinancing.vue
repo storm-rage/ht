@@ -13,7 +13,7 @@
           >
             <zj-table-column type="radio" width="40"/>
             <zj-table-column field="buyerName" title="买方企业名称"/>
-            <zj-table-column field="isFactoringCredit" title="是否已有订单保理额度" :formatter="obj=>typeMap(dictionary,obj.cellValue)"/>
+            <zj-table-column field="isFactoringCredit" title="是否已有订单保理额度" :formatter="obj=>typeMap(dictionary.isFactoringCredit,obj.cellValue)"/>
             <zj-table-column field="totalCreditAmount" title="额度总额" :formatter="money"/>
             <zj-table-column field="availableCreditAmount" title="剩余可用额度" :formatter="money"/>
           </zj-table>
@@ -92,7 +92,7 @@ export default {
         ...row
       }
       this.zjControl.getPhasedAgreement(params).then(res=>{
-        this.agreementList = res.data
+        this.agreementList = res.data.rows
       })
     },
     toDetail (row) {
