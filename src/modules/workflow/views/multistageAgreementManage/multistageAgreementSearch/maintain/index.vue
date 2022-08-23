@@ -2,16 +2,16 @@
   <zj-content-container>
     <zj-top-header title="阶段性协议维护"></zj-top-header>
     <!--  业务申请信息  -->
-    <biz-apply-info :formData="detailData.businessApplyInfo" :dictionary="dictionary"/>
+    <biz-apply-info v-if="!row.maintainType||row.maintainType!='1'" :formData="detailData.businessApplyInfo" :dictionary="dictionary"/>
     <!--  具体业务信息  -->
-    <business-audit :formData="detailData"/>
+    <business-audit :rowData="row" :formData="detailData"/>
     <!--  阶段性协议信息  -->
     <multistage-agreement :tableData="detailData" :dictionary="dictionary" :zjControl="zjControl" @handleAgreementList="agreementChange"/>
      <!--  审批意见  -->
     <audit-remark @reject="reject"/>
     <zj-content-footer>
       <zj-button type="primary" @click="submit('提交')">确认提交</zj-button>
-      <zj-button type="primary" @click="submit('拒绝')">拒绝</zj-button>
+      <zj-button type="primary" v-if="!row.maintainType||row.maintainType!='1'" @click="submit('拒绝')">拒绝</zj-button>
       <zj-button @click="goParent">返回</zj-button>
     </zj-content-footer>
   </zj-content-container>
@@ -60,7 +60,7 @@ export default {
         busTradeId: this.row.busTradeId,
         buyerId: this.row.buyerId,
         buyerName: this.row.buyerName,
-        maintainType: '0',//0-待办维护 1-保理公司直接维护
+        maintainType: this.row.maintainType?this.row.maintainType:'0',//0-待办维护 1-保理公司直接维护,现仅阶段性维护跳转给row加maintainType
         sellerId: this.row.sellerId,
         sellerName: this.row.sellerName,
         serialNo: this.row.serialNo,

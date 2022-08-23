@@ -32,6 +32,15 @@ const multistageAgreementWorkflow = {
   queryBackPhasedAgreePage(params) {
     return request.get('/phased-agreement/query-back-phased-agree-page', {params})
   },
+  
+  /**
+   * 阶段性协议-是否能维护
+   */
+   checkBackPhasedAgreeParam(params) {
+    return request.post('/phased-agreement/check-back-phased-agree-param', params)
+  },
+
+  
   /**
    * 运营端-阶段性协议维护-阶段性协议-保存
    */

@@ -12,7 +12,7 @@ export default {
   name: "ZjTabs",
 }
 </script>
-<style lang="less">
+<style lang="less" scope>
 @import "~@assets/less/variables";
 .zj-tabs-card {
   &.el-tabs{

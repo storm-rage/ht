@@ -187,7 +187,7 @@ export default {
           { required: true, message: '请选择阶段性协议开始日', trigger: 'blur'},
         ],
         agreementEstimateEndDate: [
-          { message: '请选择阶段性协议到期日', trigger: 'blur'},
+          // { message: '请选择阶段性协议到期日', trigger: 'blur'},
           { validator:(rule, value, callback)=>{
               // 协议类型为时间型则必填,0-时间型，1-数量型
               rule.required = this.form.agreementType == '0'? true:false
@@ -200,7 +200,6 @@ export default {
             trigger: ['blur']},
         ],
         agreementNumber: [
-          { message: '请输入阶段性协议数量', trigger: 'blur'},
           { validator:(rule, value, callback)=>{
               // 若为数量型，则必填，若为时间型，则选填,0-时间型，1-数量型
               rule.required = this.form.agreementType == '1'? true:false
@@ -213,7 +212,6 @@ export default {
             trigger: ['blur']},
         ],
         unit: [
-          { message: '请输入单位', trigger: 'blur'},
           { validator:(rule, value, callback)=>{
               // 若为数量型，则必填，若为时间型，则选填,0-时间型，1-数量型
               rule.required = this.form.agreementType == '1'? true:false
@@ -226,7 +224,7 @@ export default {
             trigger: ['blur']},
         ],
         price: [
-          { message: '请输入价格', trigger: 'blur'},
+          // { message: '请输入价格', trigger: 'blur'},
           { validator:(rule, value, callback)=>{
               // 若为数量型，则必填，若为时间型，则选填,0-时间型，1-数量型
               rule.required = this.form.agreementType == '1'? true:false
@@ -239,7 +237,7 @@ export default {
             trigger: ['blur']},
         ],
         priceUnits: [
-          { message: '请输入计价单位', trigger: 'blur'},
+          // { message: '请输入计价单位', trigger: 'blur'},
           { validator:(rule, value, callback)=>{
               // 若为数量型，则必填，若为时间型，则选填,0-时间型，1-数量型
               rule.required = this.form.agreementType == '1'? true:false

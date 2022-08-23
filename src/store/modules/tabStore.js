@@ -22,7 +22,7 @@ const mutations = {
       //设置选中
       state.tabActive = rItem.name
       // rItem里的params和query,fullPath需要更新，否则params和query固定为初次添加进tabTagList时的数据
-      state.tabTagList[boo] = rItem
+      state.tabTagList[boo] = JSON.parse(JSON.stringify(rItem))
       if(rItem.params && rItem.params.boo){
         //强制刷新
         // const routes = router.getRoutes();

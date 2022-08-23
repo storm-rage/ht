@@ -50,7 +50,8 @@ export default {
       if(item.name === 'billSign'){
         title = `${this.$store.getters['project/productName']}签收`
       }
-      return title.replace(new RegExp("\\{0\\}","g"), this.$store.getters['project/productName'])
+      // 经常性发生meta里title丢失的情况，直接报错
+      return title && title.replace(new RegExp("\\{0\\}","g"), this.$store.getters['project/productName'])
     },
     //删除
     deleteClick(item){

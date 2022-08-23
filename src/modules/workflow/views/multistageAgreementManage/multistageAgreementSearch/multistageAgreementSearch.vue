@@ -51,6 +51,7 @@ export default {
     return {
       zjControl :{
         queryBackPhasedAgreePage:this.$api.multistageAgreementManageWorkflow.queryBackPhasedAgreePage,//运营端-阶段性协议-列表查询
+        checkBackPhasedAgreeParam:this.$api.multistageAgreementManageWorkflow.checkBackPhasedAgreeParam,//运营端-阶段性协议是否能维护
       },
       searchForm: {
         sellerNameLike: '',
@@ -91,10 +92,18 @@ export default {
       })
     },
     maintain(row) {
-      this.goChild('multistageAgreementMaintain', row)
+      this.zjControl.checkBackPhasedAgreeParam({serialNo: row.serialNo}).then(res=>{
+        if(res.code == 200) {
+          let data = {...row,maintainType: '1'}
+          this.goChild('multistageAgreementMaintain', data)
+        }
+      }).catch(()=>{
+
+      })
     },
     toDetail(row) {
-      this.goChild('multistageAgreementDetail', row)
+      let data = {...row,maintainType: '1'} 
+      this.goChild('multistageAgreementDetail', data)
     },
   }
 };

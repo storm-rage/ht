@@ -98,3 +98,8 @@ export default {
   }
 };
 </script>
+<style lang="less" scope>
+  .el-tabs__active-bar {
+    display: none;
+  }
+</style>
