@@ -275,7 +275,6 @@ export default {
     change (event) {
 
       let val = event.target.value.trim();
-
       const len = 14;
       if(val.indexOf('.')>-1){
         let newV = '';

@@ -127,7 +127,7 @@ export default {
           contractInfoList : this.contractInfoList,
           ...this.agreementParams,
         }
-        console.log(`更新合同信息=`+JSON.stringify(params))
+        // console.log(params)
         this.$emit('update',params)
       })
     },

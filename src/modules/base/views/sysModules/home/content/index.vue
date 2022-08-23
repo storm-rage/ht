@@ -1,38 +1,39 @@
 <template>
   <div class="home-content">
     <el-row :gutter="15" type="flex">
-      <el-col :span="14">
-        <!-- <home-banner></home-banner> -->
-        <home-charts></home-charts>
+      <el-col :span="16">
+        <home-banner></home-banner>
+        <!-- <home-charts></home-charts> -->
       </el-col>
-      <el-col :span="10">
+      <el-col :span="8">
         <home-notice class="home-content-notice"></home-notice>
-        <!-- <home-message class="home-content-message" style="margin-top: 15px"></home-message> -->
+        <home-message class="home-content-message" style="margin-top: 15px"></home-message>
       </el-col>
     </el-row>
-    <el-row :gutter="15" type="flex" style="margin-top: 15px;">
-      <el-col :span="14">
+    <!-- <el-row :gutter="15" type="flex" style="margin-top: 15px;">
+      <el-col :span="16">
         <home-todo></home-todo>
       </el-col>
-      <el-col :span="10">
+      <el-col :span="8">
         <home-message class="home-content-message"></home-message>
       </el-col>
-    </el-row>
-    <!-- <el-row class="zj-m-t-15" :gutter="15" type="flex">
-      <el-col :span="8">
+    </el-row> -->
+    <el-row class="zj-m-t-15" :gutter="15" type="flex">
+      <!-- <el-col :span="8">
         <data-driver></data-driver>
-      </el-col>
-      <el-col :span="8">
+      </el-col> -->
+      <!-- 去除数据仓 span 调整为16，原8 -->
+      <el-col :span="16"> 
         <home-charts></home-charts>
       </el-col>
       <el-col :span="8">
         <home-todo></home-todo>
       </el-col>
-    </el-row> -->
+    </el-row>
   </div>
 </template>
 <script>
-import DataDriver from './dataDriver/index'
+// import DataDriver from './dataDriver/index'
 import HomeNotice from './notice';
 import HomeTodo from './todo';
 import HomeMessage from './message'
@@ -44,7 +45,7 @@ export default {
     HomeNotice,
     HomeTodo,
     HomeMessage,
-    // HomeBanner,
+    HomeBanner,
     HomeCharts
   }
 }
@@ -54,31 +55,30 @@ export default {
   padding: 15px 20px;
 }
 .home-content-notice,.home-content-message {
-  // max-height: 206px;
-  height: 100%;
+  max-height: 206px;
+  // height: 100%;
   display: flex;
   flex-direction: column;
   overflow: hidden;
 }
-// 取消轮播图和图表后首页一屏了
-// @media screen and (max-height: 1080px) {
-//     .home-content-notice,.home-content-message {
-//         max-height: 206px; // 250 -44
-//     }
-// }
-// @media screen and (max-height: 1050px) {
-//     .home-content-notice,.home-content-message {
-//         max-height: 190px;  // 234 - 44
-//     }
-// }
-// @media screen and (max-height: 900px) {
-//     .home-content-notice,.home-content-message {
-//         max-height: 116px; // 160 - 44
-//     }
-// }
-// @media screen and (max-height: 768px) {
-//     .home-content-notice,.home-content-message {
-//         max-height: 132px;
-//     }
-// }
+@media screen and (max-height: 1080px) {
+    .home-content-notice,.home-content-message {
+        max-height: 206px; // 250 -44
+    }
+}
+@media screen and (max-height: 1050px) {
+    .home-content-notice,.home-content-message {
+        max-height: 190px;  // 234 - 44
+    }
+}
+@media screen and (max-height: 900px) {
+    .home-content-notice,.home-content-message {
+        max-height: 116px; // 160 - 44
+    }
+}
+@media screen and (max-height: 768px) {
+    .home-content-notice,.home-content-message {
+        max-height: 132px;
+    }
+}
 </style>

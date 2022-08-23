@@ -5,7 +5,7 @@
     <!-- 贸易关系   -->
     <trade-list :tableData="formData.tradeRelationModelList"/>
     <!-- 贸易合同附件   -->
-    <trade-contract-atta :tableData="formData.contractInfoList"/>
+    <trade-contract-atta v-if="!rowData.maintainType||rowData.maintainType!='1'" :tableData="formData.contractInfoList"/>
   </div>
 </template>
 <script>
@@ -15,6 +15,7 @@ import tradeContractAtta from '../components/tradeContractAtta';
 export default {
   props: {
     formData: Object,
+    rowData: Object,
   },
   components: {
     SupplierBaseInfo,

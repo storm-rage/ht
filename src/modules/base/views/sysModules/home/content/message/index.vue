@@ -77,10 +77,10 @@ export default {
 </script>
 <style lang="less" scoped>
 .home-content-message {
-  // .message-list-block {
-  //   overflow: auto;
-  //   margin: 0 -20px -20px;
-  //   padding: 0 20px 20px;
-  // }
+  .message-list-block {
+    overflow: auto;
+    margin: 0 -20px -20px;
+    padding: 0 20px 20px;
+  }
 }
 </style>

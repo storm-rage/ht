@@ -136,8 +136,8 @@ export const myItemsPath = {
 
   // 阶段性协议维护
   JDXXY: {
-    auditPath: '',
-    detailPath: ''
+    auditPath: 'multistageAgreementMaintain',
+    detailPath: 'multistageAgreementDetailToDo'
   },
 
   // 融资审核

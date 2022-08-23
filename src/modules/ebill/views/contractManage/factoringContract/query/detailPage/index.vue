@@ -1,6 +1,6 @@
 <template>
   <div>
-    <detail-page ref="detailPage"
+    <detail-page v-loading="loading" ref="detailPage"
                  :detail-info="detailInfo"
                  :dictionary="dictionary"
                  title="合同签约申请"></detail-page>
@@ -16,6 +16,7 @@ export default {
   components: {DetailPage},
   data() {
     return {
+      loading: false,
       zjControl: {
         getEbContractDirectory: this.$api.factoringContract.getEbContractDirectory,
         queryMyEbContractDetail: this.$api.factoringContract.queryMyEbContractDetail
@@ -40,9 +41,13 @@ export default {
       });
     },
     getDetail() {
+      this.loading = true
       this.zjControl.queryMyEbContractDetail({serialNo: this.row.serialNo}).then(res => {
         this.detailInfo = res.data;
-      });
+        this.loading = false
+      }).catch(()=>{
+        this.loading = false
+      })
     }
   },
 };
