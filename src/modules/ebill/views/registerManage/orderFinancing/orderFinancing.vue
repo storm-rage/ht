@@ -80,7 +80,7 @@
         <zj-table ref="searchTable" class="zj-search-table" :dataList="financingInfoList" :pager="false">
           <zj-table-column type="seq" title="序号" />
           <zj-table-column field="type" title="附件类型" />
-          <zj-table-column field="remarks" title="补充说明" />
+          <zj-table-column field="remark" title="补充说明" />
           <zj-table-column field="name" title="附件名称" />
           <zj-table-column field="date" title="上传日期" />
           <zj-table-column title="操作">
@@ -146,12 +146,13 @@ export default {
       tradeList: [],
       idlist: [],
       baseInfoList: [],//客户基本信息集合
-      financingInfoList: [{
-        type: "application/pdf",
-        remarks: "死数据",
-        name: "贸易关系(1).pdf",
-        date: "Tue Aug 23 2022 18:56:33 GMT+0800(中国标准时间)"
-      }],//融资基本信息集合（列表显示的）
+      financingInfoList: [],//融资基本信息集合（列表显示的）
+      // {
+      //   type: "application/pdf",
+      //   remarks: "死数据",
+      //   name: "贸易关系(1).pdf",
+      //   date: "Tue Aug 23 2022 18:56:33 GMT+0800(中国标准时间)"
+      // }
       zdAttachList: [],//需要上传的附件（不显示列表中）
       filemsg:{}
     };
@@ -174,20 +175,24 @@ export default {
       console.log(file);
       let files1 = {
         type: file.raw.type,
-        remarks: file.raw.type,
         name: file.raw.name,
-        date: file.raw.lastModifiedDate
-      }
-      this.financingInfoList.push(files1)
-      let files2 = {
+        date: file.raw.lastModifiedDate,
         busType:this.filemsg.fileType,
         createDatetime: "",
         fileId: this.filemsg.fileId,
         fileName: this.filemsg.fileName,
         remark: ""
       }
-      this.zdAttachList.push(files2)
-      console.log(this.zdAttachList,"上传的");
+      this.financingInfoList.push(files1)
+      // let files2 = {
+      //   busType:this.filemsg.fileType,
+      //   createDatetime: "",
+      //   fileId: this.filemsg.fileId,
+      //   fileName: this.filemsg.fileName,
+      //   remark: ""
+      // }
+      // this.zdAttachList.push(files2)
+      // console.log(this.zdAttachList,"上传的");
     },
     openDialog() {
       console.log(this.idlist);
