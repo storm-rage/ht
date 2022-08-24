@@ -52,7 +52,7 @@ export default {
   },
   methods: {
     getDetail() {
-      this.zjControl.detailApi({id: this.bizId}).then(res => {
+      this.detailApi({id: this.bizId}).then(res => {
         this.businessParamModel = res.data.businessParamModel;
         this.tradeRelationModelList = res.data.tradeRelationModelList;
         this.prodInfo = {

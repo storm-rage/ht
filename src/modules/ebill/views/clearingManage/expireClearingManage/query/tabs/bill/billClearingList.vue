@@ -126,11 +126,11 @@
       </zj-table>
     </zj-list-layout>
     <zj-content-footer
-      v-if="showBottomBtn"
       style="position: fixed"
       :style="{ left: bottomBtnLeft + 'px' }"
     >
       <zj-button
+        :disabled="!showBottomBtn"
         type="primary"
         @click="batchClearingApply"
         :api="zjBtn.submitClearApply"

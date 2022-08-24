@@ -41,7 +41,7 @@ export const myItemsPath = {
         detailPath: 'businessReviewAuditDetail'
       },
       // 复核驳回状态
-      'c006': {
+      'C006': {
         auditPath: 'businessFirstBackAudit',
         detailPath: 'businessFirstBackAuditDetail'
       },
@@ -59,7 +59,7 @@ export const myItemsPath = {
         detailPath: 'contractReSignReviewAuditDetail'
       },
       // 复核驳回状态
-      'c006': {
+      'C006': {
         auditPath: 'contractReSignBackAudit',
         detailPath: 'contractReSignBackAuditDetail'
       },
@@ -74,7 +74,7 @@ export const myItemsPath = {
         detailPath: 'tradeChangeReviewAuditDetail'
       },
       // 复核驳回状态
-      'c006': {
+      'C006': {
         auditPath: 'tradeChangeBackAudit',
         detailPath: 'tradeChangeBackAuditDetail'
       },
@@ -89,7 +89,7 @@ export const myItemsPath = {
         detailPath: 'quotaChangeReviewAuditDetail'
       },
       // 复核驳回状态
-      'c006': {
+      'C006': {
         auditPath: 'quotaChangeBackAudit',
         detailPath: 'quotaChangeBackAuditDetail'
       },
