@@ -14,6 +14,7 @@
         <zj-table-column
           field="operDatetime"
           title="处理时间"
+          formatter="formatDateTime"
         />
         <zj-table-column field="operResult" title="审核结果"/>
         <zj-table-column field="notes" title="审核意见"/>

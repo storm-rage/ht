@@ -1,6 +1,7 @@
 <template>
   <el-dialog
     :title="title"
+    top="1vh"
     :visible.sync="dialogVisible"
     width="80%"
     @close="close">
@@ -30,7 +31,7 @@
                           {required: true,message: '请选择保理标识',trigger: ['change','blur']}
                         ]">
                 <el-select :disabled="!isEditCactoringLogo||!isEdit" v-model="form.cactoringLogo" @change="handleCactoringLogoChange">
-                  <el-option v-for="(item,index) in dic.cactoringLogo"
+                  <el-option v-for="(item,index) in cactoringLogoList"
                              :key="`${index}cactoringLogo`"
                              :label="item.desc"
                              :value="item.code"></el-option>
@@ -132,14 +133,12 @@ export default {
     cactoringLogoList () {
       if (this.dic.cactoringLogo) {
         return this.dic.cactoringLogo.filter((item) => {
-          if (this.isRD&&this.isDDBL) {
-            return true;
-          }else if(this.isRD&&!this.isDDBL) {
-            //若开通凭证保理产品，则只能维护为“凭证保理”
-            return item.code!=='3'
-          }else if(!this.isRD&&this.isDDBL) {
+          if(this.isDDBL) {
             //若开通订单保理产品，则只能维护为“订单保理”
-            return item.code!=='1'
+            return item.code!==CactoringLogo.BILLBL
+          }else if(this.isRD) {
+            //若开通凭证保理产品，则只能维护为“凭证保理”
+            return item.code!==CactoringLogo.ORDERBL
           }
           return false;
         });

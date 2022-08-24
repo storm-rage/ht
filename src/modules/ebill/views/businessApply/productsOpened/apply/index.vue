@@ -27,7 +27,7 @@
       </zj-content>
     </el-form>
     <zj-content-footer>
-      <zj-button type="primary" :disabled="loading" @click="submit" :api="zjBtn.openApply">确认申请</zj-button>
+      <zj-button type="primary" :loading="loading" :disabled="loading" @click="submit" :api="zjBtn.openApply">确认申请</zj-button>
       <zj-button @click="goParent">返回</zj-button>
     </zj-content-footer>
   </div>

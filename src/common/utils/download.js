@@ -68,8 +68,7 @@ function download (url, params = {}, type, method = 'get') {
         let reader = new FileReader()
         reader.onload = e => {
           if (e.target.readyState === 2) {
-            let result = {}
-            result = JSON.parse(e.target.result)
+            const result = JSON.parse(e.target.result)
             if (result.code === 403) {
               ZjLog.error(result.msg || '未登录或者登录已超时，请重新登录', () => {
                 router.replace({
@@ -83,8 +82,6 @@ function download (url, params = {}, type, method = 'get') {
         }
         reader.readAsText(res.data)
       }
-    }).catch(() => {
-      ZjLog.error('下载时出现错误')
     })
   })
 }

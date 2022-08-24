@@ -80,6 +80,27 @@ const actions = {
 
     })
   },
+  // 处理yami流程引擎自动登录处理业务
+  ymEngineSsoLoin({commit, state, dispatch}, ssoToken) {
+    return new Promise((resolve,reject) => {
+      loginApi.ymEngineSso({token: ssoToken}).then((res) => {
+        const result = {isSuccess: true,model: null}
+        if (res.data) {
+          const loginRes = res.data;
+          if (loginRes.faceCheck || loginRes.userServiceAgreementFlag === '1') {
+            result.isSuccess = false;
+          }else {
+            dispatch('user/saveUserInfo', loginRes,{root: true});
+          }
+        }else {
+          result.isSuccess = false;
+        }
+        resolve(result);
+      }).catch(() => {
+        reject(false)
+      })
+    })
+  },
   // 退出登录清除相关信息
   logoutToClearUserInfo() {
     //清除local存储的信息

@@ -5,13 +5,13 @@
       <!--  业务申请信息  -->
       <biz-apply-info :biz-info="applyModel"></biz-apply-info>
       <!--  具体业务信息  -->
-      <business-review-detail :biz-id="row.id"></business-review-detail>
+      <business-review-detail :biz-id="row.bizId"></business-review-detail>
       <!--  操作记录  -->
       <operate-log :log-list="operateLogList"></operate-log>
       <!--  审批意见  -->
       <audit-remark ref="auditRemark"></audit-remark>
     </div>
-    <zj-ht-approval processInstanceId="aef4c2ce-191f-11ed-a9f6-0242ac110016" :snapshotConfigs="[{type: 'ref',value: 'imageWrapper'}]"></zj-ht-approval>
+<!--    <zj-ht-approval processInstanceId="aef4c2ce-191f-11ed-a9f6-0242ac110016" :snapshotConfigs="[{type: 'ref',value: 'imageWrapper'}]"></zj-ht-approval>-->
     <zj-content-footer>
       <zj-button type="primary" :disabled="rejectLoading" :loading="passLoading" :api="zjBtn.submitRecheck" @click="toPass">审核通过</zj-button>
       <zj-button type="primary" :disabled="passLoading" :loading="rejectLoading" :api="zjBtn.submitRecheck" @click="toReject">驳回</zj-button>
@@ -57,7 +57,7 @@ export default {
       const {notes} = this.$refs.auditRemark.getData()
       this.passLoading = true;
       this.zjControl.submitRecheck({
-        id: this.row.id,
+        id: this.row.bizId,
         notes,
         operResult: OperResult.PASS
       }).then(res => {
@@ -77,7 +77,7 @@ export default {
           const {notes} = this.$refs.auditRemark.getData()
           this.rejectLoading = true;
           this.zjControl.submitRecheck({
-            id: this.row.id,
+            id: this.row.bizId,
             notes,
             operResult: OperResult.BACK
           }).then(res => {

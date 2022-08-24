@@ -4,7 +4,7 @@
     <!--  业务申请信息  -->
     <biz-apply-info :biz-info="applyModel"></biz-apply-info>
     <!--  具体业务信息  -->
-    <contract-re-sign-back-audit ref="bizInfoRef" :biz-id="row.id"></contract-re-sign-back-audit>
+    <contract-re-sign-back-audit ref="bizInfoRef" :biz-id="row.bizId"></contract-re-sign-back-audit>
     <!--  操作记录  -->
     <operate-log :log-list="operateLogList"></operate-log>
     <!--  审批意见  -->
@@ -55,7 +55,7 @@ export default {
       if (tradeRelationParamModelList.length) {
         this.passLoading = true;
         this.zjControl.submitContractRenewalRebut({
-          id: this.row.id,
+          id: this.row.bizId,
           notes,
           operResult: OperResult.PASS,
           tradeRelationParamModelList
@@ -82,7 +82,7 @@ export default {
           const {notes} = this.$refs.auditRemark.getData()
           this.rejectLoading = true;
           this.zjControl.submitContractRenewalRebut({
-            id: this.row.id,
+            id: this.row.bizId,
             notes,
             operResult: OperResult.REJECT
           }).then(res => {
