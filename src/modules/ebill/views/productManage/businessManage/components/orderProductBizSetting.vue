@@ -10,7 +10,7 @@
                           :rules="[
                           {required: true,message: '请选择保理追索方式',trigger: ['change','blur']}
                         ]">
-              <el-select v-model="form.factoringRecourse" disabled>
+              <el-select v-model="form.factoringRecourse">
                 <el-option v-for="(item,index) in dic.factoringRecourse"
                            :key="`${index}factoringRecourse`"
                            :label="item.desc"
@@ -24,7 +24,7 @@
                           :rules="[
                           {required: true,message: '请选择保理融资形式',trigger: ['change','blur']}
                         ]">
-              <el-select v-model="form.factoringFinancingForm" disabled>
+              <el-select v-model="form.factoringFinancingForm">
                 <el-option v-for="(item,index) in dic.factoringFinancingForm"
                            :key="`${index}factoringFinancingForm`"
                            :label="item.desc"

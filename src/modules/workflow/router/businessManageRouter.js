@@ -81,11 +81,33 @@ const businessManageRouter = [
     }
   },
   {
+    path: '/tradeChangeReviewAuditDetail',
+    name: 'tradeChangeReviewAuditDetail',
+    component: () => import('../views/businessManage/tradeChange/review/detail.vue'),
+    meta: {
+      title: '供应商业务申请交易详情',
+      parent: 'myTodo',
+      keepAlive: true,
+      refreshIndex: 0
+    }
+  },
+  {
     path: '/tradeChangeBackAudit',
     name: 'tradeChangeBackAudit',
     component: () => import('../views/businessManage/tradeChange/back/audit.vue'),
     meta: {
       title: '供应商业务申请驳回维护',
+      parent: 'myTodo',
+      keepAlive: true,
+      refreshIndex: 0
+    }
+  },
+  {
+    path: '/tradeChangeBackAuditDetail',
+    name: 'tradeChangeBackAuditDetail',
+    component: () => import('../views/businessManage/tradeChange/back/detail.vue'),
+    meta: {
+      title: '供应商业务申请交易详情',
       parent: 'myTodo',
       keepAlive: true,
       refreshIndex: 0

@@ -21,7 +21,7 @@
             title="保理标识"
             :formatter="(obj) => typeMap(dic.cactoringLogo, obj.cellValue)"
           />
-          <zj-table-column field="settlementCycle" title="结算周期"/>
+          <zj-table-column field="settlementCycle" title="结算周期" :formatter="(obj) => typeMap(dic.settlementCycle, obj.cellValue)"/>
           <zj-table-column field="totalCreditAmount" title="供应商总额度" :formatter="money"/>
           <zj-table-column field="estimatedAnnualProcurementAmount" title="预计年采购金额" :formatter="money"/>
           <zj-table-column field="state" title="贸易关系状态" :formatter="(obj) => typeMap(dic.state, obj.cellValue)"/>
@@ -57,22 +57,22 @@
               </el-col>
               <el-col :span="12">
                 <el-form-item label="订单保理额度开始日：">
-                  <el-date-picker v-model="currentTrade.orderFactoringModel.factoringCreditStartDate" disabled></el-date-picker>
+                  <el-date-picker v-model="currentTrade.orderFactoringModel.factoringCreditStartDate" value-format="yyyyMMdd" disabled></el-date-picker>
                 </el-form-item>
               </el-col>
               <el-col :span="12">
                 <el-form-item label="订单保理额度到期日：">
-                  <el-date-picker v-model="currentTrade.orderFactoringModel.factoringCreditEndDate" disabled></el-date-picker>
+                  <el-date-picker v-model="currentTrade.orderFactoringModel.factoringCreditEndDate" value-format="yyyyMMdd" disabled></el-date-picker>
                 </el-form-item>
               </el-col>
               <el-col :span="12">
                 <el-form-item label="受让应收账款开始日：">
-                  <el-date-picker v-model="currentTrade.orderFactoringModel.accountStartDate" disabled></el-date-picker>
+                  <el-date-picker v-model="currentTrade.orderFactoringModel.accountStartDate" value-format="yyyyMMdd" disabled></el-date-picker>
                 </el-form-item>
               </el-col>
               <el-col :span="12">
                 <el-form-item label="受让应收账款结束日：">
-                  <el-date-picker v-model="currentTrade.orderFactoringModel.accountEndDate" disabled></el-date-picker>&nbsp;共{{cacluateAccountDays}}天
+                  <el-date-picker v-model="currentTrade.orderFactoringModel.accountEndDate" value-format="yyyyMMdd"  disabled></el-date-picker>&nbsp;共{{cacluateAccountDays}}天
                 </el-form-item>
               </el-col>
               <el-col :span="24">
@@ -141,10 +141,12 @@ export default {
     dic: Object,
   },
   watch: {
-    tradeList () {
-      if (this.tradeList&& this.tradeList.length) {
-        this.defaultSelectRowId = this.tradeList[0].tradeId
-        this.handleRadioChange({row: this.tradeList[0]})
+    tradeList: {
+      deep: true,
+      handler() {
+        if (this.tradeList&& this.tradeList.length) {
+          this.setFirstRow(this.tradeList[0])
+        }
       }
     }
   },
@@ -158,7 +160,7 @@ export default {
       return this.prodInfo.productTypes.includes(ProductType.DDBL);
     },
     cacluateAccountDays () {
-      return this.$moment(this.currentTrade.orderFactoringModel.accountStartDate).diff(this.currentTrade.orderFactoringModel.accountEndDate, 'days');
+      return Math.max(0,this.$moment(this.currentTrade.orderFactoringModel.accountEndDate).diff(this.currentTrade.orderFactoringModel.accountStartDate, 'days'));
     }
   },
   components: {
@@ -174,6 +176,14 @@ export default {
     };
   },
   methods: {
+    /**
+     * 默认选中第一行
+     * @param row
+     */
+    setFirstRow(row) {
+      this.$refs.tradeTable.setRadioRow(row);
+      this.handleRadioChange({row});
+    },
     handleRadioChange({row}) {
       this.currentTrade = row;
     }

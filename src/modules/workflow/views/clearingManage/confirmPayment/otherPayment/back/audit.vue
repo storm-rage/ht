@@ -62,7 +62,7 @@ export default {
       });
     },
     getDetail() {
-      this.zjControl.getNoBillReceiptPendingDetail({id: this.row.id}).then(res => {
+      this.zjControl.getNoBillReceiptPendingDetail({id: this.row.bizId}).then(res => {
         this.detailInfo = res.data;
       });
     },
@@ -79,7 +79,7 @@ export default {
             const bizData = this.$refs.bizInfo.getData()
             this.passLoading = true;
             this.zjControl.noBillReceiptPending({
-              id: this.row.id,
+              id: this.row.bizId,
               notes,
               operResult: OperResult.PASS,
               attachModelList: bizData.fileData.list,
@@ -106,7 +106,7 @@ export default {
           const {notes} = this.$refs.auditRemark.getData()
           this.rejectLoading = true;
           this.zjControl.noBillReceiptPending({
-            id: this.row.id,
+            id: this.row.bizId,
             notes,
             operResult: OperResult.REJECT
           }).then(res => {

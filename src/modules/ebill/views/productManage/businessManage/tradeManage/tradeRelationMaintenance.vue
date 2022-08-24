@@ -137,24 +137,17 @@ export default {
   },
   computed: {
     cactoringLogoList () {
-      if (this.dictionary.cactoringLogo && this.form.cactoringLogo) {
-        if (this.form.cactoringLogo===CactoringLogo.NOTBL) {
-          // 非保理只能改成非保理和选择的产品类型
-          if (this.businessParamModel.productType.indexOf(ProductType.DDBL)>=0) {
-            return this.dictionary.cactoringLogo.filter((item) => {
-              return item.code===CactoringLogo.NOTBL||item.code === CactoringLogo.ORDERBL
-            })
-          }else if(this.businessParamModel.productType.indexOf(ProductType.RD)>=0){
-            return this.dictionary.cactoringLogo.filter((item) => {
-              return item.code===CactoringLogo.NOTBL||item.code === CactoringLogo.BILLBL
-            })
+      if (this.dictionary.cactoringLogo) {
+        return this.dictionary.cactoringLogo.filter((item) => {
+          if (this.productType.indexOf(ProductType.DDBL)>=0) {
+            //若开通订单保理产品，则只能维护为“订单保理”
+            return item.code!==CactoringLogo.BILLBL
+          }else if(this.productType.indexOf(ProductType.RD)>=0){
+            //若开通凭证保理产品，则只能维护为“凭证保理”
+            return item.code!==CactoringLogo.ORDERBL
           }
-        }else {
-          // 只能选非保理和当前保理之间切换
-          return this.dictionary.cactoringLogo.filter((item) => {
-            return item.code===CactoringLogo.NOTBL||item.code === String(this.form.cactoringLogo)
-          });
-        }
+          return false;
+        })
       }
       return [];
     },
