@@ -75,6 +75,11 @@ export default {
     getDic() {
       this.zjControl.getDirectory().then((res) => {
         this.dictionary = res.data
+        this.$nextTick(() => {
+          if (this.$refs.searchTable) {
+            this.$refs.searchTable.refreshColumn();
+          }
+        })
       });
     },
     toSubmitPayment (row) {
