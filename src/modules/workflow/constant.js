@@ -130,8 +130,8 @@ export const myItemsPath = {
 
   // 合同管理
   HTGL: {
-    auditPath: '',
-    detailPath: ''
+    auditPath: 'factoringContractAudit',
+    detailPath: 'factoringContractApplyDetail'
   },
 
   // 阶段性协议维护

@@ -64,7 +64,7 @@
               minWidth="100"
               title="发票代码"
             />
-            <zj-table-column field="invoiceType" width="100" title="发票类型" />
+            <zj-table-column field="invoiceType" width="120" title="发票类型" />
             <zj-table-column field="seller" width="120" title="销售方" />
             <zj-table-column field="buyer" width="120" title="购买方" />
             <zj-table-column
@@ -85,7 +85,7 @@
               :formatter="date"
               title="发票日期"
             />
-            <zj-table-column field="verifyCode" width="100" title="验证码" />
+            <zj-table-column field="verifyCode" width="80" title="验证码" />
             <zj-table-column
               field="validateFlag"
               width="120"
