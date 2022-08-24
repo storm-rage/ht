@@ -15,7 +15,7 @@ const voucherFinancingAccountRouter = [
   {
     path: '/rdFactoringLedgerDetail',
     name: 'rdFactoringLedgerDetail',
-    component: () => import('../views/queryStatistics/voucherFinancingAccount/detail'),
+    component: () => import('../views/queryStatistics/voucherFinancingAccount/detail.vue'),
     meta: {
       isMock: true,
       title: '凭证融资详情',

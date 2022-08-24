@@ -151,6 +151,6 @@ export default {
    * @returns {Promise<AxiosResponse<any>>}
    */
   getOperateList(params) {
-    return request.get('/business-manage/get-trade-rebut-detail',{params})
+    return request.get('/business-manage/get-operate-list',{params})
   }
 }
