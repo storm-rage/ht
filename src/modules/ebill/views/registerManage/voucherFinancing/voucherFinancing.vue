@@ -21,7 +21,7 @@
             </el-form-item>
           </el-form>
         </template>
-        <zj-table ref="searchTable" :dataList="list1" :params="searchForm" keep-source @checkbox-change="checkChange"
+        <zj-table ref="searchTable" :api="zjControl.pzrzList" :params="searchForm" keep-source @checkbox-change="checkChange"
           @checkbox-all="checkChange" :edit-config="{
             trigger: 'manual',
             mode: 'row',
@@ -29,9 +29,13 @@
             autoClear: false,
             showStatus: true
           }">
-          <!-- :api="zjControl.pzrzList" -->
+          <!--   :dataList="list1"-->
           <zj-table-column type="checkbox" width="40" />
-          <zj-table-column field="serialNo" title="融资流水号" />
+          <zj-table-column  title="融资流水号" >
+            <template v-slot="{ row }">
+               <zj-button type="text" @click="toEdit(row)">{{row.serialNo}}</zj-button>
+            </template>
+          </zj-table-column>
           <zj-table-column field="fromEntName" title="融资企业" />
           <zj-table-column field="financingProductType" title="融资产品名称" />
           <zj-table-column field="tranAmt" title="融资申请金额" />
@@ -67,13 +71,14 @@ export default {
         registStatus: '',
       },
       zjControl: {
-        pzrzList: this.$api.zhongdengManage.pzrzList, //订单保理列表
+        pzrzList: this.$api.zhongdengManage.pzrzList, //凭证融资列表
         getDictionary: this.$api.zhongdengManage.getDictionary,//字典
         confirmLoan: this.$api.zhongdengManage.confirmLoan,//确认放款
       },
       dictionary: {},
       list1: [
         {
+          id:"1",
           serialNo: 'scm00001',
           fromEntName: '某某产品一号',
           financingProductType: '上游',
@@ -118,6 +123,9 @@ export default {
     this.getDetail();
   },
   methods: {
+    toEdit(row) {
+      this.goChild('zhongdengManageDetailpz', row)
+    },
     checkChange() {
       let checkArr = this.$refs.searchTable.getCheckboxRecords()
       console.log(checkArr, '勾选的值11111')
@@ -159,9 +167,7 @@ export default {
     toDetail(row) {
       this.goChild('productInfoManageDetail', row)
     },
-    toEdit(row) {
-      this.goChild('productInfoManageEdit', row)
-    },
+
     toEditQuota(row) { },
     zdRegister() { },
     applyLoan() { },
