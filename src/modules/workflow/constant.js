@@ -41,7 +41,7 @@ export const myItemsPath = {
         detailPath: 'businessReviewAuditDetail'
       },
       // 复核驳回状态
-      'c006': {
+      'C006': {
         auditPath: 'businessFirstBackAudit',
         detailPath: 'businessFirstBackAuditDetail'
       },
@@ -59,7 +59,7 @@ export const myItemsPath = {
         detailPath: 'contractReSignReviewAuditDetail'
       },
       // 复核驳回状态
-      'c006': {
+      'C006': {
         auditPath: 'contractReSignBackAudit',
         detailPath: 'contractReSignBackAuditDetail'
       },
@@ -74,7 +74,7 @@ export const myItemsPath = {
         detailPath: 'tradeChangeReviewAuditDetail'
       },
       // 复核驳回状态
-      'c006': {
+      'C006': {
         auditPath: 'tradeChangeBackAudit',
         detailPath: 'tradeChangeBackAuditDetail'
       },
@@ -89,7 +89,7 @@ export const myItemsPath = {
         detailPath: 'quotaChangeReviewAuditDetail'
       },
       // 复核驳回状态
-      'c006': {
+      'C006': {
         auditPath: 'quotaChangeBackAudit',
         detailPath: 'quotaChangeBackAuditDetail'
       },
@@ -106,32 +106,36 @@ export const myItemsPath = {
         auditPath: 'billConfirmPaymentAudit',
         detailPath: 'billConfirmPaymentDetail'
       },
+      // 驳回待处理
       'A003': {
-        auditPath: 'quotaChangeBackAudit',
-        detailPath: 'quotaChangeBackAuditDetail'
+        auditPath: 'billConfirmPaymentBackAudit',
+        detailPath: 'billConfirmPaymentBackDetail'
       },
       // 已办和办结状态
-      doneDetailPath: 'quotaChangeReviewAuditDetail',
+      doneDetailPath: 'billConfirmPaymentDetail',
     },
     // 非凭证收款
     '01': {
+      // 待保理公司复审
       'A002': {
-        auditPath: 'quotaChangeBackAudit',
-        detailPath: 'quotaChangeBackAuditDetail'
+        auditPath: 'otherConfirmPaymentAudit',
+        detailPath: 'otherConfirmPaymentDetail'
       },
+      // 驳回待处理
       'A003': {
-        auditPath: 'quotaChangeBackAudit',
-        detailPath: 'quotaChangeBackAuditDetail'
+        auditPath: 'otherConfirmPaymentBackAudit',
+        detailPath: 'otherConfirmPaymentBackDetail'
       },
       // 已办和办结状态
-      doneDetailPath: 'quotaChangeReviewAuditDetail',
+      doneDetailPath: 'otherConfirmPaymentDetail',
     }
   },
-
   // 合同管理
   HTGL: {
-    auditPath: '',
-    detailPath: ''
+    auditPath: 'factoringContractAudit',
+    detailPath: 'factoringContractApplyDetail',
+    // 已办和办结状态
+    doneDetailPath: 'factoringContractApplyDetail',
   },
 
   // 阶段性协议维护
@@ -150,8 +154,66 @@ export const myItemsPath = {
 
   // 清算申请
   QSSQ: {
-    auditPath: '',
-    detailPath: ''
+    //凭证清算申请
+    'PZQSSQ': {
+      //待保理公司复审
+      'S002': {
+        auditPath: 'billClearingAudit',
+        detailPath: 'billClearingDetail'
+      },
+      // 驳回待处理
+      'S003': {
+        auditPath: 'billClearingBackAudit',
+        detailPath: 'billClearingDetail'
+      },
+      // 已办和办结状态
+      doneDetailPath: 'billClearingDetail',
+    },
+    //凭证尾款清算申请
+    'PZWKQSSQ': {
+      //待保理公司复审
+      'S002': {
+        auditPath: 'billBalanceClearingAudit',
+        detailPath: 'billBalanceClearingDetail'
+      },
+      // 驳回待处理
+      'S003': {
+        auditPath: 'billBalanceClearingBackAudit',
+        detailPath: 'billBalanceClearingDetail'
+      },
+      // 已办和办结状态
+      doneDetailPath: 'billBalanceClearingDetail',
+    },
+    //订单清算申请
+    'DDQSSQ': {
+      //待保理公司复审
+      'S002': {
+        auditPath: 'orderClearingAudit',
+        detailPath: 'orderClearingDetail'
+      },
+      // 驳回待处理
+      'S003': {
+        auditPath: 'orderClearingBackAudit',
+        detailPath: 'orderClearingDetail'
+      },
+      // 已办和办结状态
+      doneDetailPath: 'orderClearingDetail',
+    },
+    //订单尾款清算申请
+    'DDWKQSSQ': {
+      //待保理公司复审
+      'S002': {
+        auditPath: 'orderBalanceClearingAudit',
+        detailPath: 'orderBalanceClearingDetail'
+      },
+      // 驳回待处理
+      'S003': {
+        auditPath: 'orderBalanceClearingBackAudit',
+        detailPath: 'orderBalanceClearingDetail'
+      },
+      // 已办和办结状态
+      doneDetailPath: 'orderBalanceClearingDetail',
+    }
   },
 
   // 贸易关系管理

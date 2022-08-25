@@ -130,11 +130,13 @@ export default {
       deep: true,
       handler () {
         this.form = this.params||{};
+        this.initData();
       }
     }
   },
   mounted() {
     this.form = this.params||{}
+    this.initData();
   },
   data () {
     return {
@@ -180,6 +182,14 @@ export default {
     };
   },
   methods: {
+    initData() {
+      if (!this.form.factoringRecourse) {
+        this.form.factoringRecourse = '1'
+      }
+      if (!this.form.factoringFinancingForm) {
+        this.form.factoringFinancingForm = '1'
+      }
+    },
     getForm () {
       return this.$refs.form;
     },

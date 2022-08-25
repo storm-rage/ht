@@ -7,7 +7,7 @@
     <trade-change-back-audit
       ref="tradeInfo"
       :is-edit="true"
-      :biz-id="row.id"></trade-change-back-audit>
+      :biz-id="row.bizId"></trade-change-back-audit>
     <!--  操作记录  -->
     <operate-log :log-list="operateLogList"></operate-log>
     <!--  审批意见  -->
@@ -56,7 +56,7 @@ export default {
           const tradeRelationParamModel = this.$refs.tradeInfo.getData();
           this.passLoading = true;
           this.zjControl.submitTradeRecheck({
-            id: this.row.id,
+            id: this.row.bizId,
             notes,
             operResult: OperResult.PASS,
             tradeRelationParamModel
@@ -79,7 +79,7 @@ export default {
           const {notes} = this.$refs.auditRemark.getData()
           this.rejectLoading = true;
           this.zjControl.submitTradeRecheck({
-            id: this.row.id,
+            id: this.row.bizId,
             notes,
             operResult: OperResult.REJECT
           }).then(res => {

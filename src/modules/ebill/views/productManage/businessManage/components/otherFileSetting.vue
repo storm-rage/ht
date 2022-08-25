@@ -73,6 +73,10 @@ export default {
       this.form.remark = this.remark
     }
   },
+  created() {
+    this.fileList = this.attachList;
+    this.form.remark = this.remark
+  },
   data() {
     return {
       zjControl: {
@@ -80,7 +84,9 @@ export default {
         uploadApi: this.$api.baseCommon.uploadFile
       },
       // 表单
-      form: {},
+      form: {
+        remark: ''
+      },
       // 列表
       fileList: this.attachList,
       // 当前编辑行

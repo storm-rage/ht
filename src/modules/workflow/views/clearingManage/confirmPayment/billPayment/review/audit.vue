@@ -61,7 +61,7 @@ export default {
       });
     },
     getDetail() {
-      this.zjControl.getBillReceiptReviewDetail({id: this.row.id}).then(res => {
+      this.zjControl.getBillReceiptReviewDetail({id: this.row.bizId}).then(res => {
         this.detailInfo = res.data;
       });
     },
@@ -75,7 +75,7 @@ export default {
         const {notes} = this.$refs.auditRemark.getData()
         this.passLoading = true;
         this.zjControl.billReceiptReview({
-          id: this.row.id,
+          id: this.row.bizId,
           notes,
           operResult: OperResult.PASS
         }).then(res => {
@@ -96,7 +96,7 @@ export default {
           const {notes} = this.$refs.auditRemark.getData()
           this.rejectLoading = true;
           this.zjControl.billReceiptReview({
-            id: this.row.id,
+            id: this.row.bizId,
             notes,
             operResult: OperResult.BACK
           }).then(res => {

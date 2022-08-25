@@ -62,8 +62,8 @@
         </div>
       </zj-table>
     </zj-list-layout>
-    <zj-content-footer v-if="showBottomBtn"  style="position: fixed" :style="{'left': bottomBtnLeft+'px'}">
-      <zj-button type="primary" @click="batchClearingApply" :api="zjBtn.submitClearApply">清算申请</zj-button>
+    <zj-content-footer  style="position: fixed" :style="{'left': bottomBtnLeft+'px'}">
+      <zj-button type="primary" :disabled="!showBottomBtn" @click="batchClearingApply" :api="zjBtn.submitClearApply">清算申请</zj-button>
     </zj-content-footer>
   </div>
 </template>

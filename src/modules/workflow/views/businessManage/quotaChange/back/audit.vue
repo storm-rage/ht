@@ -7,7 +7,7 @@
     <quota-change-audit
       ref="tradeInfo"
       :is-edit="true"
-      :biz-id="row.id"></quota-change-audit>
+      :biz-id="row.bizId"></quota-change-audit>
     <!--  操作记录  -->
     <operate-log :log-list="operateLogList"></operate-log>
     <!--  审批意见  -->
@@ -54,7 +54,7 @@ export default {
       if (tradeRelationParamModel) {
         this.passLoading = true;
         this.zjControl.submitLimitRebut({
-          id: this.row.id,
+          id: this.row.bizId,
           notes,
           operResult: OperResult.PASS,
           tradeRelationParamModel
@@ -76,7 +76,7 @@ export default {
           const {notes} = this.$refs.auditRemark.getData()
           this.rejectLoading = true;
           this.zjControl.submitLimitRebut({
-            id: this.row.id,
+            id: this.row.bizId,
             notes,
             operResult: OperResult.REJECT
           }).then(res => {
