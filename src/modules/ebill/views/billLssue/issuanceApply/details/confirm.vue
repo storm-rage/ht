@@ -90,7 +90,7 @@ export default {
   computed: {
     allPayableAmt () {
       return this.row.list
-        ? this.row.list.reduce((all, item) => (all += +item.payableAmt), 0)
+        ? this.row.list.reduce((all, item) => (all += +item.totalOpenAmt), 0)
         : 0
     }
   },
@@ -100,7 +100,7 @@ export default {
   methods: {
     confirmSubmit () {
       this.$confirm(
-        '<p>您确定将所选中的数据提交复核吗？</p><p>注：确认后进入盖章环节，如有需要，请及时联系签章人员！</p>',
+        '<p>您确定将所选中的数据提交签发申请吗？</p><p>注：确认后进入盖章环节，如有需要，请及时联系签章人员！</p>',
         '温馨提示',
         {
           dangerouslyUseHTMLString: true,
@@ -122,13 +122,14 @@ export default {
                 this.toParent()
                 this.$message.success('提交成功!')
               }
-            })
+            }).catch(()=>{})
         }
       })
     },
     //取消
     toParent () {
       this.agreeCheck = false
+      this.tabDel()
       this.$router.push('/openBillApply')
     },
     // 开单确认书

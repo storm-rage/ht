@@ -156,7 +156,7 @@ export default {
 }
 form {
   /deep/.el-input__inner {
-    width: 300px;
+    width: 220px;
   }
 }
 
