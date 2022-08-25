@@ -84,13 +84,17 @@ export default {
       }
       //判断是否有一条协议状态为可融资
       let isHaveFinancingAgreement = this.detailData.phasedAgreementList?this.detailData.phasedAgreementList.some(i=>{return i.agreementStatus === '1'}):false
+      if(flag=='1' && !this.rejectReason) {
+        this.$message.error('请填写审核意见')
+      }
       if(isHaveFinancingAgreement) {
         let params = {
-          applyId: this.detailData.businessApplyInfo.applyId,//申请记录id：保理公司直接维护时不需要传
+          busTradeId: this.row.busTradeId,
+          applyId: this.detailData.businessApplyInfo?.applyId,//申请记录id：保理公司直接维护时不需要传
           operateFlag: flag==='提交'?'0':'1',//0-确认提交 1-拒绝
           phasedIdList: [...idList],
           rejectReason: this.rejectReason,
-          serialNo: this.detailData.businessApplyInfo.serialNo,//申请流水号：保理公司直接维护时不需要传
+          serialNo: this.detailData.businessApplyInfo?.serialNo,//申请流水号：保理公司直接维护时不需要传
         }
         this.$messageBox({
           type:'info',
@@ -101,6 +105,7 @@ export default {
             this.zjControl.submitBackPhasedAgree(params).then(res=>{
               this.getDetail()
               this.$message.success(res.msg)
+              this.goParent()
             })
           }
         })
