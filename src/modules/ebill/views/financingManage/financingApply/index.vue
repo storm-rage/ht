@@ -67,10 +67,12 @@ export default {
     toNext() {
       console.log(JSON.stringify(this.nextStepParams))
       if(this.tabs === 'orderFinancing') {
-
         this.goChild('orderFinancingDetail', {buyerId: this.nextStepParams.buyerId})
       }
       if(this.tabs === 'voucherFinancing') {
+        if(this.nextStepParams.nextFlag) {
+          return this.$message.error('请选择到期日为同一天的凭证！')
+        }
         this.goChild('voucherFinancingDetail', {...this.nextStepParams})
       }
     },

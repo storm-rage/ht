@@ -102,7 +102,10 @@ export default {
       this.goChild('productInfoManageEdit', row)
     },
     download(row) {
-      this.zjControl.downloadFile(row.fileId)
+      this.zjControl.downloadFile({
+        fileUrl: row.fileId,
+        fileName: row.fileName,
+      })
     },
   }
 };

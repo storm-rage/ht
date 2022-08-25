@@ -19,7 +19,8 @@
           </div>
           <!-- 协议 -->
           <agreement v-if="showAgreement"
-                     :entId="userInfos.loginRes.entId"
+                     :entId="userInfos.loginRes.entInfoList[0].entId"
+                     :userServiceAgreementFlag="userInfos.loginRes.userServiceAgreementFlag"
                      :is-only-agreement="showAgreement&&!showFace"
                      @setIsSuccess="setIsSuccess"
                      @done="handleDone"></agreement>
@@ -43,7 +44,11 @@ export default {
       required: true,
       default:() => {
         return {
-          loginRes: {}
+          loginRes: {
+            entInfoList: [
+              {entId:''}
+            ],
+          }
         }
       }
     }

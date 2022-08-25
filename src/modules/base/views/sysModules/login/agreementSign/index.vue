@@ -24,9 +24,12 @@ export default {
       userInfos: {},
     }
   },
+  created() {
+    this.userInfos = Object.assign({},this.row,this.$route.params.rowData)
+  },
   mounted() {
     this.getRow()
-    this.userInfos = Object.assign({},this.row)
+    //this.userInfos = Object.assign({},this.row,this.$route.params.rowData)
   },
   beforeRouteLeave(to,from,next){
     if(to.name !== 'signAgreement'){
