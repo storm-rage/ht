@@ -5,15 +5,18 @@
       <!--  业务信息  -->
       <business-review-detail :biz-id="row.businessKey"></business-review-detail>
     </div>
-    <zj-ht-approval></zj-ht-approval>
+    <zj-ht-approval v-if="false"></zj-ht-approval>
   </zj-content-container>
 </template>
 <script>
 /**
  * 亚米流程引擎页面
  */
+import businessReviewDetail from '@modules/ebill/views/productManage/businessManage/workflow/biz/review/detail.vue';
 export default {
-  components: {},
+  components: {
+    businessReviewDetail
+  },
 
   created() {
     this.getRow();
