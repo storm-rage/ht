@@ -49,7 +49,7 @@
                 :edit-config="{trigger: 'manual', mode: 'row', icon:'-', autoClear: false, showStatus: true}"
                 v-if="attaTableShow"
       >
-        <zj-table-column type="index" title="序号" width="60"/>
+        <zj-table-column type="seq" title="序号" width="60"/>
         <zj-table-column field="fileName" title="合同附件" />
         <zj-table-column field="fileRemark" title="附件说明" :edit-render="{name: '$input'}"/>
         <zj-table-column title="操作">
@@ -127,7 +127,7 @@ export default {
           contractInfoList : this.contractInfoList,
           ...this.agreementParams,
         }
-        console.log(`更新合同信息=`+JSON.stringify(params))
+        // console.log(params)
         this.$emit('update',params)
       })
     },

@@ -31,6 +31,7 @@
         <zj-header title="电子债权凭证信息"/>
         <zj-table ref="searchTable" class="zj-search-table"
                   :api="zjControl.queryBillRecordPage"
+                  :params="{id: row.id}"
         >
           <zj-table-column field="rootCode" title="原始凭证编号" />
           <zj-table-column field="ebillCode" title="凭证编号" />

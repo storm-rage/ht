@@ -13,14 +13,14 @@ export default {
       operateLogList: []
     }
   },
-  created() {
+  beforeMount() {
     this.getWorkflowDetail();
   },
   methods: {
     getWorkflowDetail() {
-      this.zjControl.getOperateList({id: this.row.id}).then(res => {
+      this.zjControl.getOperateList({id: this.row.bizId}).then(res => {
         this.applyModel = res.data.applyModel;
-        this.operateLogList = res.data.operateLogList;
+        this.operateLogList = res.data.operateLogList||[];
       });
     },
   }

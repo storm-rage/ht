@@ -31,12 +31,20 @@ const zhongdengManage = {
   getDictionary: (params) => {
     return request.get('/zhongdeng-manage/get-dictionary', {params} )
   },
+  //中登-手工登记详情
+  registerDetails: (params) => {
+    return request.get('/zhongdeng-manage/get-manual-register-info', {params} )
+  },
+  //中登-手工登记提交
+  registerSubmit: (params) => {
+    return request.post('/zhongdeng-manage/submit-manual-register-info', params )
+  },
   //中登-融资详情凭证信息
   detailspz: (params) => {
     return request.get('/zhongdeng-manage/get-financing-bill-infos', {params} )
   },
-  //中登-融资详情交易信息
-  detailsjy: (params) => {
+  //中登-融资详情申请信息
+  detailssq: (params) => {
     return request.get('/zhongdeng-manage/get-financing-trans-detail', {params} )
   },
   //中登-订单保理详情

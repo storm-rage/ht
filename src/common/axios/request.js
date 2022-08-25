@@ -22,9 +22,7 @@ service.interceptors.request.use(config => {
   if (config.isMock) {
     config.baseURL = `/mock${config.baseURL}`
   }
-  if(config.isUnLock){
-    ZjLog.unLock()
-  }else{
+  if(!config.isUnLock){
     ZjLog.lock()
   }
   // 不允许同一个浏览器登录多个账号打开
@@ -75,7 +73,6 @@ const errorHandle = (status,response) => {
 }
 
 service.interceptors.response.use(response => {
-  ZjLog.unLock()
   if (response.config.isMock) {
     return Promise.resolve(response.data)
   }

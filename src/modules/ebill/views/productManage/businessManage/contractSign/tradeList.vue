@@ -32,7 +32,7 @@
     <trade-edit-detail ref="tradeEditDetail"
                        :dic="dic"
                        :bizId="bizId"
-                       :is-edit-cactoringLogo="isEditCactoringLogo"
+                       :is-edit-cactoring-logo="isEditCactoringLogo"
                        @done="handleTradeEdit"></trade-edit-detail>
   </div>
 </template>

@@ -8,7 +8,7 @@
     <trade-list
     ref="tradeInfo"
     :tradeList="tradeRelationModelList"
-    :is-edit-cactoringLogo="true"
+    :is-edit-cactoring-logo="true"
     :bizId="bizId"
     :dic="dictionary"></trade-list>
   </div>

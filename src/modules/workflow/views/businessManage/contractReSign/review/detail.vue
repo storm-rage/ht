@@ -4,7 +4,7 @@
     <!--  业务申请信息  -->
     <biz-apply-info :biz-info="applyModel"></biz-apply-info>
     <!--  具体业务信息  -->
-    <contract-re-sign-review-audit :biz-id="row.id"></contract-re-sign-review-audit>
+    <contract-re-sign-review-audit :biz-id="row.bizId"></contract-re-sign-review-audit>
     <!--  操作记录  -->
     <operate-log :log-list="operateLogList"></operate-log>
     <zj-content-footer>

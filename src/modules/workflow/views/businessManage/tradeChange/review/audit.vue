@@ -6,7 +6,7 @@
     <!--  具体业务信息  -->
     <trade-change-review-audit
       :is-edit="false"
-      :biz-id="row.id"></trade-change-review-audit>
+      :biz-id="row.bizId"></trade-change-review-audit>
     <!--  操作记录  -->
     <operate-log :log-list="operateLogList"></operate-log>
     <!--  审批意见  -->
@@ -52,7 +52,7 @@ export default {
       const {notes} = this.$refs.auditRemark.getData()
       this.passLoading = true;
       this.zjControl.submitTradeRecheck({
-        id: this.row.id,
+        id: this.row.bizId,
         notes,
         controlFlag: '1',// 风控标识
         operResult: OperResult.PASS
@@ -73,7 +73,7 @@ export default {
           const {notes} = this.$refs.auditRemark.getData()
           this.rejectLoading = true;
           this.zjControl.submitTradeRecheck({
-            id: this.row.id,
+            id: this.row.bizId,
             notes,
             controlFlag: '1',//风控标识
             operResult: OperResult.BACK

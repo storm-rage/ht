@@ -5,44 +5,66 @@
       <zj-content-block v-if="workflow === 'sqxx'">
           <el-form :model="form" ref="form" label-width="200px" class="zj-m-t-20">
             <trans-info :form="form.transInfo" :dictionary="dictionary"/>
-            <financing-apply-info :form="form.financingApplyInfo" :voucherList="form.voucherList" :proType="form.transInfo.financingProductType"/>
+            <financing-apply-info :form="form.financingApplyInfo"
+                                  :voucherList="form.voucherList"
+                                  :proType="form.transInfo.financingProductType"
+                                  :phasedAgreementList="form.phasedAgreementList"
+            />
             <agreement-info-list :dataList="form.agreementInfoList"/>
 
-            <zj-content-block>
+            <zj-content-block v-if="form.transInfo.financingProductType === '0' || form.transInfo.financingProductType === '1'">
               <zj-header title="保理合同信息"/>
               <el-row>
                 <el-col :span="8">
-                  <el-form-item label="保理合同编号：">{{form.contractNo}}</el-form-item>
+                  <el-form-item label="保理合同编号：">{{form.blContractInfo?form.blContractInfo.contractNo:''}}</el-form-item>
                 </el-col>
-                <el-col :span="8">
-                  <el-form-item label="保理类型：">{{form.factorType}}</el-form-item>
+                <el-col :span="8" v-if="form.transInfo.financingProductType !== '0'">
+                  <el-form-item label="保理类型：">{{form.blContractInfo?form.blContractInfo.factorType:''}}</el-form-item>
                 </el-col>
-                <el-col :span="8">
-                  <el-form-item label="合同金额：">{{form.contractAmt}}</el-form-item>
+                <el-col :span="8" v-if="form.transInfo.financingProductType !== '0'">
+                  <el-form-item label="合同金额：">{{form.blContractInfo?form.blContractInfo.contractAmt:''}}</el-form-item>
+                </el-col>
+                <el-col :span="8" v-if="form.transInfo.financingProductType === '0'">
+                  <el-form-item label="总额度：">{{form.blContractInfo?form.blContractInfo.adjustCreditAmount:''}}</el-form-item>
+                </el-col>
+                <el-col :span="8" v-if="form.transInfo.financingProductType === '0'">
+                  <el-form-item label="剩余可用金额：">{{form.blContractInfo?form.blContractInfo.availableCreditAmount:''}}</el-form-item>
                 </el-col>
               </el-row>
               <el-row>
-                <el-col :span="8">
-                  <el-form-item label="剩余可用金额：">{{form.availableCreditAmount}}</el-form-item>
+                <el-col :span="8" v-if="form.transInfo.financingProductType === '0'">
+                  <el-form-item label="额度有效期：">
+                    {{form.blContractInfo?form.blContractInfo.contractEndDateDays:''}}
+                    {{form.blContractInfo.contractEndDateDays?`至${form.blContractInfo.contractEndDateDays}`:''}}
+                  </el-form-item>
                 </el-col>
-                <el-col :span="8">
-                  <el-form-item label="保理合同到期日：">{{form.contractEndDateDays}}</el-form-item>
+                <el-col :span="8" v-if="form.transInfo.financingProductType !== '0'">
+                  <el-form-item label="剩余可用金额：">{{form.blContractInfo?form.blContractInfo.availableCreditAmount:''}}</el-form-item>
+                </el-col>
+                <el-col :span="8" v-if="form.transInfo.financingProductType !== '0'">
+                  <el-form-item label="保理合同到期日：">{{form.blContractInfo?form.blContractInfo.contractEndDateDays:''}}</el-form-item>
                 </el-col>
               </el-row>
             </zj-content-block>
-            <zj-content-block>
+            <zj-content-block v-if="form.transInfo.financingProductType === '2'">
               <zj-header title="总控额度信息"/>
               <el-row>
                 <el-col :span="8">
-                  <el-form-item label="供应商总控额度：">{{form.totalCreditAmount}}</el-form-item>
+                  <el-form-item label="供应商总控额度：">{{form.voucherCreditInfo.totalCreditAmount}}</el-form-item>
                 </el-col>
                 <el-col :span="8">
-                  <el-form-item label="剩余可用额度：">{{form.availableCreditAmount}}</el-form-item>
+                  <el-form-item label="剩余可用额度：">{{form.voucherCreditInfo.availableCreditAmount}}</el-form-item>
                 </el-col>
               </el-row>
             </zj-content-block>
             <!--  附件  -->
-            <other-attach-list :dataList="form.otherAttachList" :proType="form.transInfo.financingProductType" :dictionary="dictionary" :zjControl="zjControl" v-if="comShow"/>
+            <other-attach-list :dataList="form.otherAttachList"
+                               :proType="form.transInfo.financingProductType"
+                               :ope-type="false"
+                               :dictionary="dictionary"
+                               :zjControl="zjControl"
+                               v-if="comShow"
+            />
             <!--  操作记录  -->
             <operate-record-list :log-list="form.operateRecordList?form.operateRecordList:[]"/>
           </el-form>
@@ -146,19 +168,21 @@ export default {
     return {
       zjControl: {
         getAuditDirectory:this.$api.financingAuditManageWorkflow.getAuditDirectory,//数据字典
-        getWaitAccountBillDetail:this.$api.financingAuditManageWorkflow.getWaitAccountBillDetail,//待办详情-根据凭证信息获取对账单信息
-        getWaitFinancingDetail:this.$api.financingAuditManageWorkflow.getWaitFinancingDetail,//待办详情-申请信息
-        getWaitVoucherDetail:this.$api.financingAuditManageWorkflow.getWaitVoucherDetail,//待办详情-融资凭证信息
-        submitFirstAudit:this.$api.financingAuditManageWorkflow.submitFirstAudit,//待办详情-保理公司初审提交
-        submitReviewAudit:this.$api.financingAuditManageWorkflow.submitReviewAudit,//待办详情-保理公司复审提交
-        againPush:this.$api.financingAuditManageWorkflow.againPush,//待办详情-保理公司重新推送
-        auditAbort:this.$api.financingAuditManageWorkflow.auditAbort,//待办详情-保理公司直接作废
+        getWaitAccountBillDetail:this.$api.financingAuditManageWorkflow.getWaitAccountBillDetail,//融资审核-根据凭证信息获取对账单信息
+        getWaitFinancingDetail:this.$api.financingAuditManageWorkflow.getWaitFinancingDetail,//融资审核-申请信息
+        getWaitVoucherDetail:this.$api.financingAuditManageWorkflow.getWaitVoucherDetail,//融资审核-融资凭证信息
+        submitFirstAudit:this.$api.financingAuditManageWorkflow.submitFirstAudit,//融资审核-保理公司初审提交
+        submitReviewAudit:this.$api.financingAuditManageWorkflow.submitReviewAudit,//融资审核-保理公司复审提交
+        againPush:this.$api.financingAuditManageWorkflow.againPush,//融资审核-保理公司重新推送
+        auditAbort:this.$api.financingAuditManageWorkflow.auditAbort,//融资审核-保理公司直接作废
       },
       form:{
         transInfo: {},
         financingApplyInfo: {},
         voucherList: [],
+        phasedAgreementList: [],
         agreementInfoList: [],
+        blContractInfo: {},
       },
       tabs:'tradeContract',
       dictionary:{},
@@ -173,14 +197,21 @@ export default {
   methods: {
     getDic() {
       this.zjControl.getAuditDirectory().then(res=>{
-        this.dictionary = res.data
+        let dic = {
+          attachTypesTable:JSON.parse(
+            JSON.stringify(res.data.attachTypes)
+              .replace(/code/g,'status')
+              .replace(/desc/g,'label')
+          )
+        }
+        this.dictionary = Object.assign(dic,res.data)
         this.comShow = true
       })
     },
     getPageDetail() {
       let params = {
-        bizId: this.$route.query.bizId,//融资记录id
-        serialNo: this.$route.query.serialNo,//融资记录流水号
+        bizId: this.row.bizId,//融资记录id
+        serialNo: this.row.serialNo,//融资记录流水号
       }
       if(this.workflow === 'sqxx') {
         //待办详情-申请信息
@@ -199,8 +230,8 @@ export default {
       //待办详情-根据凭证信息获取对账单信息,贸易背景资料
       this.ebillParams = row
       let params = {
-        serialNo: this.$route.query.serialNo,
-        bizId: row.id,
+        serialNo: this.row.serialNo,
+        bizId: this.row.bizId,
         ebillCode : row.ebillCode,
       }
       this.zjControl.getWaitAccountBillDetail(params).then(res=>{
@@ -213,7 +244,7 @@ export default {
   },
   created() {
     this.getApi()
-    // this.getRow()
+    this.getRow()
     this.getDic()
     this.getPageDetail()
   }

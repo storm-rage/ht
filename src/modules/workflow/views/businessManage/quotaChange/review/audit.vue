@@ -6,7 +6,7 @@
     <!--  具体业务信息  -->
     <quota-change-audit
       :is-edit="false"
-      :biz-id="row.id"></quota-change-audit>
+      :biz-id="row.bizId"></quota-change-audit>
     <!--  操作记录  -->
     <operate-log :log-list="operateLogList"></operate-log>
     <!--  审批意见  -->
@@ -52,7 +52,7 @@ export default {
       const {notes} = this.$refs.auditRemark.getData()
       this.passLoading = true;
       this.zjControl.recheckLimit({
-        id: this.row.id,
+        id: this.row.bizId,
         notes,
         busTradeId: '1',
         operResult: OperResult.PASS
@@ -73,7 +73,7 @@ export default {
           const {notes} = this.$refs.auditRemark.getData()
           this.rejectLoading = true;
           this.zjControl.recheckLimit({
-            id: this.row.id,
+            id: this.row.bizId,
             notes,
             busTradeId: '1',
             operResult: OperResult.BACK

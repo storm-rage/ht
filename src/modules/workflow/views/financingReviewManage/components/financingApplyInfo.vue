@@ -7,10 +7,10 @@
           <el-form-item label="融资企业：">{{form.fromEntName}}</el-form-item>
         </el-col>
         <el-col :span="8">
-          <el-form-item label="申请转让金额：">{{form.entName}}</el-form-item>
+          <el-form-item label="申请转让金额：">{{form.tranferAmt}}</el-form-item>
         </el-col>
         <el-col :span="8">
-          <el-form-item label="融资比例：">{{form.entName}}</el-form-item>
+          <el-form-item label="融资比例：">{{ form.discountRate?`${form.discountRate}%`:'-'}}</el-form-item>
         </el-col>
       </el-row>
       <el-row>
@@ -25,10 +25,10 @@
         <el-col :span="8">
           <el-form-item label="融资月利率：">{{form.interestRate}}</el-form-item>
         </el-col>
-        <el-col :span="8" v-if="proType === '1'">
+        <el-col :span="8" v-if="proType === '0'">
           <el-form-item label="融资开始日：">{{form.loanDate}}</el-form-item>
         </el-col>
-        <el-col :span="8" v-if="proType === '2'">
+        <el-col :span="8" v-if="proType !== '0'">
           <el-form-item label="预计融资期限：">
             {{date(form.estimateTimeStart)}}
             {{`至${date(form.estimateTimeEnd)}`}}
@@ -37,7 +37,7 @@
         </el-col>
       </el-row>
       <el-row>
-        <el-col :span="8" v-if="proType === '1'">
+        <el-col :span="8" v-if="proType === '0'">
           <el-form-item label="预计融资期限：">
             {{date(form.estimateTimeStart)}}
             {{`至${date(form.estimateTimeEnd)}`}}
@@ -73,18 +73,18 @@
       </zj-collapse>
       <zj-content-block v-if="proType === '0'">
         <zj-table ref="searchTable" class="zj-search-table"
-                  :dataList="voucherList"
+                  :dataList="phasedAgreementList"
                   :pager="false"
         >
-          <zj-table-column field="ebillCode" title="阶段性协议编号" />
-          <zj-table-column field="rootCode" title="阶段性协议名称" />
-          <zj-table-column field="writerName" title="协议签订日期" />
-          <zj-table-column field="transferName" title="协议到期日" />
-          <zj-table-column field="ebillAmt" title="数量"/>
-          <zj-table-column field="holderDate" title="单价" :formatter="money"/>
-          <zj-table-column field="holderDate" title="协议预估总价" :formatter="money"/>
-          <zj-table-column field="holderDate" title="状态" />
-          <zj-table-column field="holderDate" title="附件" />
+          <zj-table-column field="agreementNo" title="阶段性协议编号" />
+          <zj-table-column field="agreementName" title="阶段性协议名称" />
+          <zj-table-column field="agreementStartDate" title="协议签订日期" :formatter="date"/>
+          <zj-table-column field="agreementEstimateEndDate" title="协议到期日" :formatter="date"/>
+          <zj-table-column field="agreementNumber" title="数量"/>
+          <zj-table-column field="price" title="单价" :formatter="money"/>
+          <zj-table-column field="agreementEstimatedPrice" title="协议预估总价" :formatter="money"/>
+          <zj-table-column field="agreementStatus" title="状态" />
+          <zj-table-column field="fileName" title="附件" />
           <zj-table-column title="操作">
             <template v-slot="{row}">
               <zi-button type="text" @click="downLoad(row)">下载</zi-button>
@@ -123,6 +123,7 @@ export default {
   props: {
     form: Object,
     voucherList: Array,
+    phasedAgreementList: Array,
     proType: String,
   },
   computed: {

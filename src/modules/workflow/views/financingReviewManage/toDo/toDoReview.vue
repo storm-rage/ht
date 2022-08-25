@@ -3,63 +3,89 @@
       <!--  融资审核  -->
       <zj-top-header title="融资审核"/>
       <zj-content-block v-if="workflow === 'sqxx'">
-          <el-form :model="form" ref="form" :rules="rules" label-width="200px" class="financingForm">
-            <trans-info :form="form.transInfo"/>
+          <el-form :model="form" ref="form" :rules="rules" label-width="200px" class="zj-m-t-20">
+            <trans-info :form="form.transInfo" :dictionary="dictionary"/>
             <financing-apply-info :form="form.financingApplyInfo" :voucherList="form.voucherList" :proType="form.transInfo.financingProductType"/>
             <agreement-info-list :dataList="form.agreementInfoList"/>
 
-            <zj-content-block>
+            <zj-content-block v-if="form.transInfo.financingProductType !== '2'">
               <zj-header title="保理合同信息"/>
               <el-row>
                 <el-col :span="8">
                   <el-form-item label="保理合同编号：">{{form.contractNo}}</el-form-item>
                 </el-col>
-                <el-col :span="8">
-                  <el-form-item label="总额度：">{{form.contractNo}}</el-form-item>
+                <el-col :span="8" v-if="form.transInfo.financingProductType !== '0'">
+                  <el-form-item label="保理类型：">{{form.factorType}}</el-form-item>
                 </el-col>
                 <el-col :span="8">
-                  <el-form-item label="剩余可用金额：">{{form.contractNo}}</el-form-item>
+                  <el-form-item label="总额度：">{{form.adjustCreditAmount}}</el-form-item>
+                </el-col>
+                <el-col :span="8" v-if="form.transInfo.financingProductType === '0'">
+                  <el-form-item label="剩余可用金额：">{{form.availableCreditAmount}}</el-form-item>
                 </el-col>
               </el-row>
               <el-row>
-                <el-col :span="8">
-                  <el-form-item label="剩余可用金额：">{{form.contractNo}}</el-form-item>
-                </el-col>
-                <el-col :span="8">
+                <el-col :span="8" v-if="form.transInfo.financingProductType === '0'">
                   <el-form-item label="额度有效期：">
                     {{date(form.contractNo)}}
                     {{form.contractNo?`至${date(form.contractNo)}`:''}}
                   </el-form-item>
                 </el-col>
+                <el-col :span="8" v-if="form.transInfo.financingProductType !== '0'">
+                  <el-form-item label="剩余可用金额：">{{form.contractNo}}</el-form-item>
+                </el-col>
+                <el-col :span="8" v-if="form.transInfo.financingProductType !== '0'">
+                  <el-form-item label="保理合同到期日：">
+                    {{date(form.contractNo)}}
+                  </el-form-item>
+                </el-col>
+              </el-row>
+            </zj-content-block>
+            <zj-content-block v-if="form.transInfo.financingProductType !== '0'">
+              <zj-header title="总控额度信息"/>
+              <el-row>
+                <el-col :span="8">
+                  <el-form-item label="供应商总控额度：">{{form.totalCreditAmount}}</el-form-item>
+                </el-col>
+                <el-col :span="8">
+                  <el-form-item label="剩余可用额度：">{{form.availableCreditAmount}}</el-form-item>
+                </el-col>
               </el-row>
             </zj-content-block>
             <!--  操作记录  -->
-            <operate-record-list :log-list="form.operateRecordList"/>
+            <operate-record-list :log-list="form.operateRecordList?form.operateRecordList:[]"/>
             <!--  附件  -->
-            <other-attach-list :dataList="form.otherAttachList" :pro-type="form.transInfo.financingProductType" :dictionary="dictionary"/>
+            <other-attach-list :dataList="form.otherAttachList"
+                               :pro-type="form.transInfo.financingProductType"
+                               :dictionary="dictionary"
+                               :zjControl="zjControl"
+                               :ope-type="true"
+                               :biz-id="row.bizId"
+            />
             <!--  审核意见  -->
             <zj-content-block>
               <zj-header title="审核意见"/>
               <el-form-item label="是否提交风控处理：" prop="opinion">
                 <el-radio-group v-model="form.opinion">
-                  <el-radio label="1">是</el-radio>
-                  <el-radio label="0">否</el-radio>
+                  <el-radio label="是"></el-radio>
+                  <el-radio label="否"></el-radio>
                 </el-radio-group>
               </el-form-item>
               <el-form-item label="审核意见：">
-                <el-input type="textarea" placeholder="审批拒绝时，审批意见必填" v-model="form.rejectReason"></el-input>
+                <el-input type="textarea" placeholder="审批拒绝时，审批意见必填" v-model="form.remark"></el-input>
               </el-form-item>
             </zj-content-block>
           </el-form>
       </zj-content-block>
 
       <zj-content-block v-if="workflow === 'pzxx'">
-        <el-content-block>
+        <zj-content-block>
           <zj-header title="凭证信息"/>
           <zj-table ref="searchTable" class="zj-search-table"
                     :dataList="form.voucherList"
                     @radio-change="handleRadioChange"
                     :radio-config="{highlight: true}"
+                    :pager="false"
           >
             <zj-table-column type="radio" width="40"/>
             <zj-table-column field="ebillCode" title="海e单编号" />
@@ -70,10 +96,12 @@
             <zj-table-column field="ebillAmt" title="海e单金额" :formatter="money"/>
             <zj-table-column field="expireDate" title="海e单到期日" :formatter="date"/>
           </zj-table>
-        </el-content-block>
-        <el-content-block>
-          <zj-header :title="`对账单信息-${ebillParams.ebillCode}`"/>
-          <zj-table ref="searchTable" :dataList="[{...form.accountBillInner}]" >
+        </zj-content-block>
+        <zj-content-block>
+          <zj-header :title="`对账单信息-${ebillParams.ebillCode?ebillParams.ebillCode:''}`"/>
+          <zj-table ref="searchTable" :dataList="[{...form.accountBillInner}]"
+                    :pager="false"
+          >
             <zj-table-column field="acctBillCode" title="对账单编号"/>
             <zj-table-column field="companyName" title="买方名称"/>
             <zj-table-column field="supplierCode" title="供应商业务系统编码"/>
@@ -86,8 +114,8 @@
             <zj-table-column field="checkBillPerson" title="对账人" />
             <zj-table-column field="billSource" title="对账单来源" />
           </zj-table>
-        </el-content-block>
-        <el-content-block>
+        </zj-content-block>
+        <zj-content-block>
           <zj-header :title="`贸易背景资料（资产编号：${form.accountBillInner?form.accountBillInner.acctBillCode:''}）`"/>
           <el-tabs v-model="tabs" class="zj-tabs-card">
             <el-tab-pane label="贸易合同信息" name="tradeContract" >
@@ -100,7 +128,7 @@
               <attaList :dataList="form.otherAttachs"/>
             </el-tab-pane>
           </el-tabs>
-        </el-content-block>
+        </zj-content-block>
       </zj-content-block>
 
       <!-- 底部工作流状态 -->
@@ -116,6 +144,8 @@
       </zj-workflow>
       <!--   融资产品类型：0-订单融资 1-入库融资 2-凭证融资   -->
       <zj-content-footer v-if="form.transInfo.financingProductType === '0'">
+        <zj-button type="primary" @click="recheck('复核通过')">审核通过</zj-button>
+        <zj-button class="btn-warning" @click="recheck('复核拒绝')">审核拒绝</zj-button>
         <zj-button class="back" @click="goParent">返回</zj-button>
       </zj-content-footer>
 
@@ -145,14 +175,14 @@ export default {
     return {
       zjControl: {
         getAuditDirectory:this.$api.financingAuditManageWorkflow.getAuditDirectory,//数据字典
-        getWaitAccountBillDetail:this.$api.financingAuditManageWorkflow.getWaitAccountBillDetail,//待办详情-根据凭证信息获取对账单信息
-        getWaitFinancingDetail:this.$api.financingAuditManageWorkflow.getWaitFinancingDetail,//待办详情-申请信息
-        getWaitVoucherDetail:this.$api.financingAuditManageWorkflow.getWaitVoucherDetail,//待办详情-融资凭证信息
-        submitFirstAudit:this.$api.financingAuditManageWorkflow.submitFirstAudit,//待办详情-保理公司初审提交
-        submitReviewAudit:this.$api.financingAuditManageWorkflow.submitReviewAudit,//待办详情-保理公司复审提交
-        againPush:this.$api.financingAuditManageWorkflow.againPush,//待办详情-保理公司重新推送
-        auditAbort:this.$api.financingAuditManageWorkflow.auditAbort,//待办详情-保理公司直接作废
-        maintainAttach:this.$api.financingAuditManageWorkflow.maintainAttach,//附件维护
+        getWaitAccountBillDetail:this.$api.financingAuditManageWorkflow.getWaitAccountBillDetail,//融资审核-根据凭证信息获取对账单信息
+        getWaitFinancingDetail:this.$api.financingAuditManageWorkflow.getWaitFinancingDetail,//融资审核-申请信息
+        getWaitVoucherDetail:this.$api.financingAuditManageWorkflow.getWaitVoucherDetail,//融资审核-融资凭证信息
+        submitFirstAudit:this.$api.financingAuditManageWorkflow.submitFirstAudit,//融资审核-保理公司初审提交
+        submitReviewAudit:this.$api.financingAuditManageWorkflow.submitReviewAudit,//融资审核-保理公司复审提交
+        maintainAttach:this.$api.financingAuditManageWorkflow.maintainAttach,//融资审核-保理公司初审-附件维护
+        againPush:this.$api.financingAuditManageWorkflow.againPush,//融资审核-保理公司重新推送
+        auditAbort:this.$api.financingAuditManageWorkflow.auditAbort,//融资审核-保理公司直接作废
       },
       form:{
         transInfo: {},
@@ -160,11 +190,11 @@ export default {
         voucherList: [],
         agreementInfoList: [],
         opinion:'',
-        rejectReason:'',
+        remark:'',
       },
       rules: {
         opinion: [
-          { required:true,message:'请选择是否提交风控处理！',trigger:'change'},
+          { required:true,message:'请选择是否提交风控处理！',trigger:'blur'},
         ]
       },
       detail:{},
@@ -180,12 +210,20 @@ export default {
   methods: {
     getDic() {
       this.zjControl.getAuditDirectory().then(res=>{
-        this.dictionary = res.data
+        let dic = {
+          attachTypesTable:JSON.parse(
+            JSON.stringify(res.data.attachTypes)
+              .replace(/code/g,'status')
+              .replace(/desc/g,'label')
+          )
+        }
+        this.dictionary = Object.assign(dic,res.data)
       })
     },
     getPageDetail() {
       let params = {
-        bizId: this.row.bizId,//融资记录id
+        bizId: this.row.bizId,
+        serialNo: this.row.serialNo,
       }
       if(this.workflow === 'sqxx') {
         //待办详情-申请信息
@@ -204,8 +242,9 @@ export default {
       //待办详情-根据凭证信息获取对账单信息,贸易背景资料
       this.ebillParams = row
       let params = {
-        ebillCode: row.ebillCode,
-        id: row.id,
+        serialNo: this.row.serialNo,
+        bizId: this.row.bizId,
+        ebillCode : row.ebillCode,
       }
       this.zjControl.getWaitAccountBillDetail(params).then(res=>{
         this.form = {
@@ -218,17 +257,17 @@ export default {
       console.log(flag)
       this.$refs.form.validate(boo=>{
         if(boo) {
-          if(flag === '复核拒绝' && !this.form.rejectReason) {
+          if(flag === '复核拒绝' && !this.form.remark) {
             return this.$message.error('审批拒绝时，审批意见必填！')
           }
-          this.$refs.passRecheckDialog.open(flag,this.form)
+          this.$refs.passRecheckDialog.open(flag,this.form,this.row.bizId)
         }
       })
     },
   },
   created() {
     this.getApi()
-    // this.getRow()
+    this.getRow()
     this.getDic()
     this.getPageDetail()
   }
@@ -236,39 +275,5 @@ export default {
 </script>
 
 <style scoped lang="less">
-.quota-manage {
-  height: 40px;
-  line-height:40px;
-  text-align: right;
-  margin-bottom: 20px;
-  color: #e6a23c;
-  background-color: #fdf6ec;
-}
-.financingForm {
-  margin-top: 20px;
-}
-.explain-text {
-  display: flex;
-  padding-bottom: 20px;
-  background-color: rgba(2, 167, 240, 0);
-  .explain-item {
-    color: #555;
-    font-size: 14px;
-    margin-left: 20px;
-  }
-}
-.hd-row {
-  position: relative;
-  &:after {
-    position: absolute;
-    top: 36px;
-    left: 0;
-    content: '';
-    display: block;
-    width: 100%;
-    height: 1px;
-    border-bottom: 1px dashed #cbcbcb;
-  }
-}
 
 </style>

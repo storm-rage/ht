@@ -15,12 +15,14 @@ const login = {
   ssoLogin: (params) => {
     return request.get('/login/sso',{params})
   },
+  // 亚米流程引擎自动登录
+  ymEngineSso: (params) => {
+    return request.get('/login/ymEngineSso',{params})
+  },
   //登出
   logout: (params) => {
     return request.post('/login/logout',params)
   },
-
-
   // 首次登录修改密码
   upDatePassword:(params) => {
     return request.post('/login/save-new-password',params)

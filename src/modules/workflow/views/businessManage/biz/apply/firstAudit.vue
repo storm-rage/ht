@@ -4,7 +4,7 @@
     <!--  业务申请信息  -->
     <biz-apply-info :biz-info="applyModel"></biz-apply-info>
     <!--  具体业务信息  -->
-    <business-first-audit :biz-id="row.id" ref="bizInfoRef"></business-first-audit>
+    <business-first-audit :biz-id="row.bizId" ref="bizInfoRef"></business-first-audit>
     <!--  操作记录  -->
     <operate-log :log-list="operateLogList"></operate-log>
     <!--  审批意见  -->
@@ -63,7 +63,7 @@ export default {
       if (tradeRelationParamModelList.length) {
         this.passLoading = true;
         this.zjControl.submitFirstAudit({
-          id: this.row.id,
+          id: this.row.bizId,
           notes,
           tradeRelationParamModelList,
           operResult: OperResult.PASS
@@ -92,7 +92,7 @@ export default {
           const {notes} = this.$refs.auditRemark.getData()
           this.rejectLoading = true;
           this.zjControl.submitFirstAudit({
-            id: this.row.id,
+            id: this.row.bizId,
             notes,
             tradeRelationParamModelList,
             operResult: OperResult.REJECT

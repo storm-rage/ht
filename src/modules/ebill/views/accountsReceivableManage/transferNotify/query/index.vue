@@ -38,8 +38,8 @@
         </zj-table-column>
         <zj-table-column field="fromEntName" title="转出方" />
         <zj-table-column field="toEntName" title="签收方/资金方" />
-        <zj-table-column field="tranferDate" title="转让日期" :formatter="date" />
-        <zj-table-column field="receiveDate" title="签署回执日期" :formatter="date" />
+        <zj-table-column field="tranferDate" title="转让日期" formatter="formatDate" />
+        <zj-table-column field="receiveDate" title="签署回执日期" formatter="formatDate" />
         <zj-table-column field="contractNo" title="保理合同编号" />
       </zj-table>
     </zj-list-layout>

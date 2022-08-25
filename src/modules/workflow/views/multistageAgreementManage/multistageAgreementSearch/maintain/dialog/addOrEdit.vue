@@ -142,7 +142,12 @@ export default {
   name: 'addOrEdit',
   props: {
     zjControl: Object,
-    dictionary: Object,
+    dictionary: {
+      type: Object,
+      default: ()=>{
+        return {}
+      }
+    },
   },
   data () {
     return {
@@ -182,7 +187,7 @@ export default {
           { required: true, message: '请选择阶段性协议开始日', trigger: 'blur'},
         ],
         agreementEstimateEndDate: [
-          { message: '请选择阶段性协议到期日', trigger: 'blur'},
+          // { message: '请选择阶段性协议到期日', trigger: 'blur'},
           { validator:(rule, value, callback)=>{
               // 协议类型为时间型则必填,0-时间型，1-数量型
               rule.required = this.form.agreementType == '0'? true:false
@@ -195,7 +200,6 @@ export default {
             trigger: ['blur']},
         ],
         agreementNumber: [
-          { message: '请输入阶段性协议数量', trigger: 'blur'},
           { validator:(rule, value, callback)=>{
               // 若为数量型，则必填，若为时间型，则选填,0-时间型，1-数量型
               rule.required = this.form.agreementType == '1'? true:false
@@ -208,7 +212,6 @@ export default {
             trigger: ['blur']},
         ],
         unit: [
-          { message: '请输入单位', trigger: 'blur'},
           { validator:(rule, value, callback)=>{
               // 若为数量型，则必填，若为时间型，则选填,0-时间型，1-数量型
               rule.required = this.form.agreementType == '1'? true:false
@@ -221,7 +224,7 @@ export default {
             trigger: ['blur']},
         ],
         price: [
-          { message: '请输入价格', trigger: 'blur'},
+          // { message: '请输入价格', trigger: 'blur'},
           { validator:(rule, value, callback)=>{
               // 若为数量型，则必填，若为时间型，则选填,0-时间型，1-数量型
               rule.required = this.form.agreementType == '1'? true:false
@@ -234,7 +237,7 @@ export default {
             trigger: ['blur']},
         ],
         priceUnits: [
-          { message: '请输入计价单位', trigger: 'blur'},
+          // { message: '请输入计价单位', trigger: 'blur'},
           { validator:(rule, value, callback)=>{
               // 若为数量型，则必填，若为时间型，则选填,0-时间型，1-数量型
               rule.required = this.form.agreementType == '1'? true:false
@@ -292,17 +295,19 @@ export default {
     },
     //新增或维护协议
     submit() {
-      console.log(this.title)
+      // console.log(this.title)
       this.$refs.form.validate((valid) => {
         if (valid) {
           let params = {
             ...this.form,
             phasedId: this.row.phasedId,
             attachId: this.form.attachId,
+            buyerId: this.rows[0].buyerId,
+            supplierId: this.rows[0].sellerId,
           }
           //新增保存
           if(this.title === '新增') {
-            console.log(params)
+            // console.log(params)
             this.zjControl.savePhasedAgree(params).then(res=>{
               //...
               this.$emit('agreementUpdate', params)

@@ -21,7 +21,7 @@ const financingAuditManageRouter = [
       title: '融资交易详情',
       root: '融资管理',
       keepAlive: true,
-      parent:'financingReviewManage',
+      parent: 'myTodo',
       refreshIndex: 0,
       notRequireAuth: true
     }
@@ -43,7 +43,7 @@ const financingAuditManageRouter = [
   {
     path: '/financingReviewDoneDetail',
     name: 'financingReviewDoneDetail',
-    component: () => import('../views/financingReviewManage/done/doneDetail'),
+    component: () => import('../views/financingReviewManage/done/doneDetail.vue'),
     meta: {
       isMock: true,
       title: '融资交易详情',

@@ -83,7 +83,9 @@ export default {
       this.$refs.addOrEdit.show(row,flag)
     },
     attaDelete(row) {},
-    attaDownload(row) {},
+    attaDownload(row) {
+      this.zjControl.downLoadFile({...row,fileUrl: row.fileId})
+    },
 
   }
 }

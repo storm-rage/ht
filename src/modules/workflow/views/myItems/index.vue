@@ -101,12 +101,12 @@ export default {
         // 代办
         if (myItemsPath[row.busType].detailPath) {
           this.goChild(myItemsPath[row.busType].detailPath, row);
-        }else if (myItemsPath[row.busType][row.workflowState].detailPath) {
-          this.goChild(myItemsPath[row.busType][row.workflowState].detailPath, row);
+        }else if (myItemsPath[row.busType][row.applyType][row.workflowState].detailPath) {
+          this.goChild(myItemsPath[row.busType][row.applyType][row.workflowState].detailPath, row);
         }
       }else {
         // 已办和已办结
-        this.goChild(myItemsPath[row.busType].doneDetailPath, row);
+        this.goChild(myItemsPath[row.busType][row.applyType].doneDetailPath, row);
       }
 
     },
@@ -116,8 +116,8 @@ export default {
         // 代办
         if (myItemsPath[row.busType].auditPath) {
           this.goChild(myItemsPath[row.busType].auditPath, row);
-        }else if (myItemsPath[row.busType][row.workflowState].auditPath) {
-          this.goChild(myItemsPath[row.busType][row.workflowState].auditPath, row);
+        }else if (myItemsPath[row.busType][row.applyType][row.workflowState].auditPath) {
+          this.goChild(myItemsPath[row.busType][row.applyType][row.workflowState].auditPath, row);
         }
       }
     },

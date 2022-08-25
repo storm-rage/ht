@@ -16,7 +16,7 @@ const financingTransactionQueryRouter = [
   {
     path: '/financingTransactionQueryDetail',
     name: 'financingTransactionQueryDetail',
-    component: () => import('../views/queryStatistics/financingTransactionQuery/detail'),
+    component: () => import('../views/queryStatistics/financingTransactionQuery/detail.vue'),
     meta: {
       isMock: true,
       title: '融资交易查询详情',
