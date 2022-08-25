@@ -194,6 +194,9 @@
       title="温馨提示"
       :visible.sync="dialogVisible"
       width="400px" center
+      :show-close="false"
+      :close-on-click-modal="false"
+      :close-on-press-escape="false"
     >
       <div>
         <p>提交成功！请您将上传影像件对应的的纸质版文件邮寄至平台方对应地址，谢谢！</p>

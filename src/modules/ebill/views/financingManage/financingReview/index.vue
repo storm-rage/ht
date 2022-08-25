@@ -34,7 +34,7 @@
                         :params="searchForm"
               >
                 <zj-table-column field="serialNo" title="融资流水号"/>
-                <zj-table-column field="financingProductType" title="融资产品名称"/>
+                <zj-table-column field="financingProductType" title="融资产品名称" :formatter="obj=>typeMap(dictionary.financingProductType,obj.cellValue)"/>
                 <zj-table-column field="fromEntName" title="融资企业名称"/>
                 <zj-table-column field="tranAmt" title="融资申请金额" :formatter="money"/>
                 <zj-table-column field="applyDatetime" title="融资申请日期" :formatter="date"/>
