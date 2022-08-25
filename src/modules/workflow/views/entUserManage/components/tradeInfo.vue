@@ -8,16 +8,16 @@
             <el-form-item label="申请流水号：">{{detailData.serialNo}}</el-form-item>
           </el-col>
           <el-col :span="8">
-            <el-form-item label="维护类型：">{{detailData.applyType}}</el-form-item>
+            <el-form-item label="维护类型：">{{typeMap(dictionary.applyTypeList,detailData.applyType) }}</el-form-item>
           </el-col>
           <el-col :span="8">
             <el-form-item label="申请时间：">{{detailData.applyDatetime}}</el-form-item>
           </el-col>
           <el-col :span="8">
-            <el-form-item label="发起方："> {{detailData.startObject}} </el-form-item>
+            <el-form-item label="发起方："> {{typeMap(dictionary.startObjectList,detailData.startObject)}} </el-form-item>
           </el-col>
           <el-col :span="8">
-            <el-form-item label="申请状态：">{{detailData.applyStatus}}</el-form-item>
+            <el-form-item label="申请状态：">{{typeMap(dictionary.applyStatusList,detailData.applyStatus)}}</el-form-item>
           </el-col>
         </el-row>
       </el-form>
@@ -31,6 +31,16 @@ export default {
     detailData: {
       type: Object,
       default: () => { }
+    },
+    dictionary: {
+      type: Object,
+      default: () => {
+        return {
+          applyTypeList: [],
+          startObjectList: [],
+          applyStatusList: []
+        }
+      }
     }
   },
   data() {

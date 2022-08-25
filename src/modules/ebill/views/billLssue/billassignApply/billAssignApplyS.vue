@@ -32,7 +32,7 @@
           <el-col :span="8">
             <el-form-item label="被转让人名称：" prop="holderName">
               <el-select v-model="form.holderName">
-                <el-option v-for="item in dictionary.roleId" :key="item.code" :label="item.desc" :value="item.code" />
+                <el-option v-for="(item,index) in entityList" :key="item.code" :label="item.sellerEntName" :value="index" />
               </el-select>
             </el-form-item>
           </el-col>
@@ -96,6 +96,7 @@ export default {
       dataList: [],
       ids: [],
       dictionary: {},
+      entityList: [],
       rules: {
         holderName: [
           { required: true, message: "请输入被转让人名称", trigger: "blur" },
@@ -131,11 +132,17 @@ export default {
     this.getRow();
     this.dataList = this.row.paramsDataList;
     this.dataList.forEach((item) => {
-      this.form.ebillAmt += parseFloat(item.ebillAmt);
       this.ids.push(item.ebillCode);
     });
+    this.getTradeRalation()
   },
   methods: {
+    // 获取当前企业贸易关系
+    getTradeRalation() {
+      this.zjControl.getTradeRalation({ ids: [...this.ids] }).then(res => {
+        this.entityList = res.data.entityList
+      })
+    },
     // 提交申请
     toApply() {
       this.$refs.form.validate((valid) => {

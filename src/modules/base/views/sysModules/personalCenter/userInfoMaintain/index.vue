@@ -8,114 +8,58 @@
           <el-row>
             <el-col :span="24" v-if="pageType !== 2">
               <el-form-item label="角色：">
-                <el-select
-                  v-model="roleId"
-                  filterable
-                  placeholder="请选择"
-                  :popper-append-to-body="false"
-                  @change="getPersonalInfo"
-                >
-                  <el-option
-                    v-for="item in dictionary.roleId"
-                    :key="item.code"
-                    :label="item.desc"
-                    :value="item.code"
-                  />
+                <el-select v-model="roleId" filterable placeholder="请选择" :popper-append-to-body="false" @change="getPersonalInfo">
+                  <el-option v-for="item in dictionary.roleId" :key="item.code" :label="item.desc" :value="item.code" />
                 </el-select>
               </el-form-item>
             </el-col>
             <el-col :span="8">
               <el-form-item label="用户姓名：" prop="userName">
-                <el-input
-                  v-model.trim="form.userName"
-                  :disabled="pageType !== 3"
-                />
+                <el-input v-model.trim="form.userName" :disabled="pageType !== 3" />
               </el-form-item>
             </el-col>
             <el-col :span="8">
               <el-form-item label="角色：" v-if="pageType === 2">
-                <el-select
-                  v-model="roleId"
-                  filterable
-                  placeholder="请选择"
-                  :popper-append-to-body="false"
-                  @change="getPersonalInfo"
-                  :disabled="pageType === 2"
-                >
-                  <el-option
-                    v-for="item in dictionary.roleId"
-                    :key="item.code"
-                    :label="item.desc"
-                    :value="item.code"
-                  />
+                <el-select v-model="roleId" filterable placeholder="请选择" :popper-append-to-body="false" @change="getPersonalInfo" :disabled="pageType === 2">
+                  <el-option v-for="item in dictionary.roleId" :key="item.code" :label="item.desc" :value="item.code" />
                 </el-select>
               </el-form-item>
             </el-col>
             <el-col :span="8">
               <el-form-item label="海天业务系统账号：" prop="htSysCode">
-                <el-input
-                  v-model.trim="form.htSysCode"
-                  :disabled="pageType === 1"
-                />
+                <el-input v-model.trim="form.htSysCode" :disabled="pageType === 1" />
               </el-form-item>
             </el-col>
             <el-col :span="8">
               <el-form-item label="证件类型：" prop="certType">
-                <el-select
-                  v-model="form.certType"
-                  filterable
-                  placeholder="请选择"
-                  :popper-append-to-body="false"
-                  :disabled="pageType !== 3"
-                >
-                  <el-option
-                    v-for="item in dictionary.legalCertType"
-                    :key="item.code"
-                    :label="item.desc"
-                    :value="item.code"
-                  />
+                <el-select v-model="form.certType" filterable placeholder="请选择" :popper-append-to-body="false" :disabled="pageType !== 3">
+                  <el-option v-for="item in dictionary.legalCertType" :key="item.code" :label="item.desc" :value="item.code" />
                 </el-select>
               </el-form-item>
             </el-col>
             <el-col :span="8">
               <el-form-item label="证件号码：" prop="certNo">
-                <el-input
-                  v-model.trim="form.certNo"
-                  :disabled="pageType !== 3"
-                />
+                <el-input v-model.trim="form.certNo" :disabled="pageType !== 3" />
               </el-form-item>
             </el-col>
             <el-col :span="8">
               <el-form-item label="证件有效期：" prop="certStartDate">
-                <zj-date-range-picker
-                  :startDate.sync="form.certStartDate"
-                  :endDate.sync="form.certEndDate"
-                  :disabled="pageType === 1"
-                />
+                <zj-date-range-picker :startDate.sync="form.certStartDate" :endDate.sync="form.certEndDate" :disabled="pageType === 1" />
               </el-form-item>
             </el-col>
             <el-col :span="8">
               <el-form-item label="手机号码/用户名：" prop="mobileNo">
-                <el-input
-                  v-model.trim="form.mobileNo"
-                  :disabled="pageType === 1"
-                />
+                <el-input v-model.trim="form.mobileNo" :disabled="pageType === 1" />
               </el-form-item>
             </el-col>
             <el-col :span="8">
               <el-form-item label="邮箱：" prop="email">
-                <el-input
-                  v-model.trim="form.email"
-                  :disabled="pageType === 1"
-                />
+                <el-input v-model.trim="form.email" :disabled="pageType === 1" />
               </el-form-item>
             </el-col>
             <el-col :span="8">
               <el-form-item label="银行卡号：" prop="bankAcctNo">
-                <el-input
-                  v-model.trim="form.bankAcctNo"
-                  :disabled="pageType === 1"
-                />
+                <el-input v-model.trim="form.bankAcctNo" :disabled="pageType === 1" />
               </el-form-item>
             </el-col>
           </el-row>
@@ -131,31 +75,19 @@
           <zj-table-column field="fileName" title="附件" />
           <zj-table-column title="操作" fixed="right">
             <template v-slot="{ row }">
-              <zj-upload
-                :httpRequest="handleFileUpload"
-                :data="{ row }"
-                class="zj-inline"
-                v-if="pageType !== 1"
-              >
+              <zj-upload :httpRequest="handleFileUpload" :data="{ row }" class="zj-inline" v-if="pageType !== 1">
                 <zj-button type="text">上传</zj-button>
               </zj-upload>
-              <zj-button v-if="row.fileId" type="text" @click="toDownload(row)"
-                >下载</zj-button
-              >
+              <zj-button v-if="row.fileId" type="text" @click="toDownload(row)">下载</zj-button>
             </template>
           </zj-table-column>
         </zj-table>
         <zj-content v-show="pageType !== 1">
-          <zj-content-tip
-            text="注：1.请将身份证正、反面完整放在同一页上，并加盖企业公章。请确保身份证在有效期内。"
-          ></zj-content-tip>
+          <zj-content-tip text="注：1.请将身份证正、反面完整放在同一页上，并加盖企业公章。请确保身份证在有效期内。"></zj-content-tip>
           <br />
           <zj-content-tip text="2.支持上传的文档格式：PDF。"></zj-content-tip>
           <br />
-          <zj-content-tip
-            v-show="pageType === 3"
-            text=" 3.委托授权书请下载，加盖公司公章后上传。"
-          ></zj-content-tip>
+          <zj-content-tip v-show="pageType === 3" text=" 3.委托授权书请下载，加盖公司公章后上传。"></zj-content-tip>
         </zj-content>
       </zj-content>
     </zj-content-block>
@@ -186,24 +118,15 @@
       </zj-content>
     </zj-content-block>
     <zj-content-footer>
-      <zj-button type="primary" @click="pageType = 2" v-show="pageType == 1"
-        >维护本人信息</zj-button
-      >
-      <zj-button type="primary" @click="pageType = 3" v-show="pageType === 1"
-        >更换操作人员</zj-button
-      >
-      <zj-button
-        type="primary"
-        @click="submit"
-        v-show="pageType === 2 || pageType === 3"
-        >确认提交</zj-button
-      >
+      <zj-button type="primary" @click="pageType = 2" v-show="pageType == 1">维护本人信息</zj-button>
+      <zj-button type="primary" @click="pageType = 3" v-show="pageType === 1">更换操作人员</zj-button>
+      <zj-button type="primary" @click="submit" v-show="pageType === 2 || pageType === 3">确认提交</zj-button>
       <zj-button class="back" @click="back">返回</zj-button>
     </zj-content-footer>
   </zj-content-container>
 </template>
 <script>
-import { validateIdCard,newValidateFixedPhone,validateBankAcct } from "@utils/rules";
+import { validateIdCard, newValidateFixedPhone, validateBankAcct } from "@utils/rules";
 export default {
   components: {},
 
@@ -268,12 +191,13 @@ export default {
             trigger: ["blur"],
           },
         ],
-        bankAcctNo:  { validator: validateBankAcct, trigger: ["blur"] }
+        bankAcctNo: { validator: validateBankAcct, trigger: ["blur"] }
       },
     };
   },
   created() {
-    this.roleId = this.$route.params.id;
+    this.getRow()
+    this.roleId = this.row.roleIds[0];
     this.getDirectory();
   },
   methods: {
@@ -316,8 +240,8 @@ export default {
           this.form.identitycardFileId = this.attachInfo[0].fileId;
           this.form.identitycardFileName = this.attachInfo[0].fileName;
           this.zjControl.updatePersonalInfo(this.form).then((res) => {
-            this.getPersonalInfo();
             this.$message.success("修改成功!");
+            this.goParent()
           });
         }
       });
@@ -349,7 +273,7 @@ export default {
       });
     },
     //下载附件
-    toDownload() {},
+    toDownload() { },
     back() {
       if (this.pageType === 1) {
         this.$router.push("/personalCenter");

@@ -126,12 +126,13 @@ export default {
         messageResolve: () => {
           // if (row.certType === "1") {
           let paramsKey = {
-            userId: this.detailData.id,
             p10: "",
+            userId: this.detailData.id,
+            code: row.code
           };
           this.zjControl.makeCertKey(paramsKey).then(() => {
             this.$Message.success(`已为用户：${row.userName}  -  制Key成功`);
-            this.search(false);
+            this.getUserInformation();
           });
           // } else if (row.certType === "2") {
           //   let paramsClound = {
@@ -156,8 +157,13 @@ export default {
         content: `是否确认冻结该用户？`,
         showCancelButton: true,
         messageResolve: () => {
-          this.zjControl.freezeUser({ id: this.detailData.id }).then(() => {
-            this.getNewUserInfo(true);
+          let params = {
+            entId: row.entId,
+            roleId: row.roleId,
+            userId: this.detailData.id,
+          }
+          this.zjControl.freezeUser(params).then(() => {
+            this.getUserInformation();
             this.$message.success("冻结账户成功！");
           });
         },
@@ -171,8 +177,13 @@ export default {
         content: `是否确认解冻该用户？`,
         showCancelButton: true,
         messageResolve: () => {
-          this.zjControl.unfreezeUser({ id: this.detailData.id }).then(() => {
-            this.getNewUserInfo(true);
+          let params = {
+            entId: row.entId,
+            roleId: row.roleId,
+            userId: this.detailData.id,
+          }
+          this.zjControl.unfreezeUser(params).then(() => {
+            this.getUserInformation();
             this.$message.success("解冻账户成功！");
           });
         },
@@ -186,8 +197,13 @@ export default {
         content: `是否确认注销该用户？`,
         showCancelButton: true,
         messageResolve: () => {
-          this.zjControl.cancelUser({ id: this.detailData.id }).then(() => {
-            this.getNewUserInfo(true);
+          let params = {
+            entId: row.entId,
+            roleId: row.roleId,
+            userId: this.detailData.id,
+          }
+          this.zjControl.cancelUser(params).then(() => {
+            this.getUserInformation();
             this.$message.success("注销账户成功！");
           });
         },

@@ -89,7 +89,7 @@
           </el-col>
           <el-col :span="8">
             <el-form-item label="企业规模：" prop="scale">
-              <el-input v-model="form.scale" />
+              <el-input v-model="form.scale" :disabled="isDetail || isEdit" />
             </el-form-item>
           </el-col>
           <el-col :span="8">
@@ -238,7 +238,7 @@
       <zj-content-block>
         <zj-header title="企业附件" />
         <el-row class="zj-p-x-20">
-          <zj-table ref="pubAttach" :dataList="form.pubAttachList" :pager="false" keep-source auto-resize>
+          <zj-table ref="pubAttach" :dataList="form.pubAttachList" :pager="false" keep-soursce auto-resize>
             <zj-table-column title="附件类型">
               <template v-slot="{ row }">
                 {{ typeMap(dictionary.busTypeList, row.busType) }}
@@ -303,7 +303,7 @@
         </el-row>
       </zj-content-block>
       <!--  其他附件    -->
-      <other-file-setting ref="ofileSetting" isEdit v-if="!isDetail"></other-file-setting>
+      <other-file-setting ref="ofileSetting" isEdit></other-file-setting>
       <!--  操作记录  -->
       <operate-log ref="operateLog" :logList="logList" v-if="!isAdd"></operate-log>
     </el-form>

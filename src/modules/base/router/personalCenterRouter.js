@@ -17,11 +17,12 @@ const personalCenterRouter = [
     }
   },
   {
-    path: '/entInfoMaintain/:id',
+    path: '/entInfoMaintain',
     name: 'entInfoMaintain',
     component: () => import('../views/sysModules/personalCenter/entInfoMaintain'),
     meta:{
       title:'企业信息维护',
+      parent: 'personalCenter',
       root:'个人中心',
       keepAlive:true,
       refreshIndex:0,
@@ -30,11 +31,12 @@ const personalCenterRouter = [
     }
   },
   {
-    path: '/userInfoMaintain/:id',
+    path: '/userInfoMaintain',
     name: 'userInfoMaintain',
     component: () => import('../views/sysModules/personalCenter/userInfoMaintain'),
     meta:{
       title:'个人信息维护',
+      parent: 'personalCenter',
       root:'个人中心',
       keepAlive:true,
       refreshIndex:0,
