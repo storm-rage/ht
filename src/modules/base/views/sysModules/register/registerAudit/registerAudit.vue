@@ -18,8 +18,7 @@
                   <span>
                     {{
                       typeMap(dictionary.applyTypeList, detailData.applyType)
-                    }}</span
-                  >
+                    }}</span>
                 </el-form-item>
               </el-col>
               <el-col :span="8">
@@ -30,8 +29,7 @@
                         dictionary.applyStatusList,
                         detailData.applyStatus
                       )
-                    }}</span
-                  >
+                    }}</span>
                 </el-form-item>
               </el-col>
               <el-col :span="8">
@@ -46,7 +44,7 @@
         <ent-info ref="entInfo">
           <template slot="entInfo">
             <zj-collapse title="企业信息">
-              <el-form ref="form" label-width="160px">
+              <el-form label-width="160px">
                 <el-row>
                   <el-col :span="8">
                     <el-form-item label="企业名称：">
@@ -106,51 +104,26 @@
         <!--操作记录 -->
         <operate-log :logList="detailData.entRegLogList || []"></operate-log>
         <!--审核信息 -->
-        <el-form
-          label-width="170px"
-          :model="form"
-          :rules="rules"
-          ref="form"
-          :disabled="detailData.applyStatus === 'E002'"
-        >
+        <el-form label-width="170px" :model="form" :rules="rules" ref="auditForm" :disabled="detailData.applyStatus === 'E002'">
           <zj-content>
             <zj-collapse title="审核信息">
               <el-form-item label="平台客户类型：" prop="entType">
                 <el-radio-group v-model="form.entType">
-                  <el-radio
-                    v-for="item in dictionary.platFormAuditEntTypeList"
-                    :key="item.code"
-                    :label="item.code"
-                    >{{ item.desc }}</el-radio
-                  >
+                  <el-radio v-for="item in dictionary.platFormAuditEntTypeList" :key="item.code" :label="item.code">{{ item.desc }}</el-radio>
                 </el-radio-group>
               </el-form-item>
               <el-form-item label="是否海天集团：" prop="isHtEnterprise">
                 <el-radio-group v-model="form.isHtEnterprise">
-                  <el-radio
-                    v-for="item in [
+                  <el-radio v-for="item in [
                       { code: '1', desc: '是' },
                       { code: '0', desc: '否' },
-                    ]"
-                    :key="item.code"
-                    :label="item.code"
-                    >{{ item.desc }}</el-radio
-                  >
+                    ]" :key="item.code" :label="item.code">{{ item.desc }}</el-radio>
                 </el-radio-group>
               </el-form-item>
 
-              <el-form-item
-                label="供应商类型："
-                prop="supplierType"
-                v-if="form.entType === 'S'"
-              >
+              <el-form-item label="供应商类型：" prop="supplierType" v-if="form.entType === 'S'">
                 <el-radio-group v-model="form.supplierType">
-                  <el-radio
-                    v-for="item in dictionary.supplierTypeList"
-                    :key="item.code"
-                    :label="item.code"
-                    >{{ item.desc }}</el-radio
-                  >
+                  <el-radio v-for="item in dictionary.supplierTypeList" :key="item.code" :label="item.code">{{ item.desc }}</el-radio>
                 </el-radio-group>
               </el-form-item>
               <el-form-item label="注册企业名称：" prop="name">
@@ -158,32 +131,17 @@
               </el-form-item>
 
               <el-form-item label="注册企业简称：" prop="shortName">
-                <el-input
-                  v-model.trim="form.shortName"
-                  :maxlength="101"
-                  placeholder="请填写企业简称"
-                />
+                <el-input v-model.trim="form.shortName" :maxlength="101" placeholder="请填写企业简称" />
               </el-form-item>
               <el-form-item label="注册企业曾用名：" prop="beforeName">
-                <el-input
-                  v-model.trim="form.beforeName"
-                  placeholder="如有多个，使用逗号分隔"
-                  :maxlength="200"
-                />
+                <el-input v-model.trim="form.beforeName" placeholder="如有多个，使用逗号分隔" :maxlength="200" />
               </el-form-item>
               <el-form-item label="买方企业名称：" prop="myBuyers">
                 {{ detailData.myBuyers }}
               </el-form-item>
               <el-form-item label="客户业务系统编码：" prop="customCode">
-                <el-input
-                  v-model.trim="form.customCode"
-                  :maxlength="21"
-                  placeholder="请填写客户编码"
-                />
-                <zj-content-tip
-                  class="zj-m-l-10"
-                  text="注：供应商在核心企业业务系统的编码，选填。"
-                ></zj-content-tip>
+                <el-input v-model.trim="form.customCode" :maxlength="21" placeholder="请填写客户编码" />
+                <zj-content-tip class="zj-m-l-10" text="注：供应商在核心企业业务系统的编码，选填。"></zj-content-tip>
               </el-form-item>
             </zj-collapse>
           </zj-content>
@@ -198,38 +156,17 @@
       <!-- 审核时 -->
       <el-row slot="right" v-if="$route.name === 'registerAuditApplyAudit'">
         <span v-show="workflow === 'spxx'">
-          <zj-button
-            type="primary"
-            @click="submitAudit('1')"
-            v-if="detailData.applyStatus === 'E001'"
-            >暂存</zj-button
-          >
-          <zj-button type="primary" @click="submitAudit('2')"
-            >审核通过</zj-button
-          >
-          <zj-button
-            @click="submitAudit('3')"
-            v-if="detailData.applyStatus === 'E002'"
-            >审核驳回</zj-button
-          >
-          <zj-button
-            @click="submitAudit('4')"
-            v-if="detailData.applyStatus === 'E001'"
-            >注册拒绝</zj-button
-          >
+          <zj-button type="primary" @click="submitAudit('1')" v-if="detailData.applyStatus === 'E001'">暂存</zj-button>
+          <zj-button type="primary" @click="submitAudit('2')">审核通过</zj-button>
+          <zj-button @click="submitAudit('3')" v-if="detailData.applyStatus === 'E002'">审核驳回</zj-button>
+          <zj-button @click="submitAudit('4')" v-if="detailData.applyStatus === 'E001'">注册拒绝</zj-button>
         </span>
         <zj-button class="back zj-m-l-15" @click="goParent">返回</zj-button>
       </el-row>
     </zj-workflow>
 
     <!--   查看器 -->
-    <zj-preview
-      :visible.sync="viewShow"
-      :fileUrl="viewUrl"
-      :showFooter="false"
-      :fileType="viewType"
-      @close="viewShow = false"
-    />
+    <zj-preview :visible.sync="viewShow" :fileUrl="viewUrl" :showFooter="false" :fileType="viewType" @close="viewShow = false" />
   </zj-content-container>
 </template>
 
@@ -324,7 +261,7 @@ export default {
     },
     // 提交表单 1-暂存 2-审核通过 3-审核驳回 4-审核拒绝
     submitAudit(type) {
-      this.$refs.form.validate((valid) => {
+      this.$refs.auditForm.validate((valid) => {
         if (valid) {
           // if (
           //   !this.form.notes ||
