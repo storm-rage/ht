@@ -59,6 +59,7 @@ export default {
     isOnlyAgreement: Boolean,
     // 企业ID,请求协议
     entId:String,
+    userServiceAgreementFlag:String,
     // 是否使用云证书
     isUseYunCert: {
       type: Boolean,
@@ -87,7 +88,10 @@ export default {
   },
   methods: {
     getAgreement() {
-      this.zjControl.queryUserProtocol({entId: this.entId}).then(res=>{
+      this.zjControl.queryUserProtocol({
+        entId: this.entId,
+        userServiceAgreementFlag: this.userServiceAgreementFlag,
+      }).then(res=>{
         this.$emit('setIsSuccess',true);
         this.isMultipleEnt = false //显示下拉列表
         res.data.protocolList.forEach((item) => {

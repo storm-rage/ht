@@ -50,7 +50,8 @@
           <zj-table ref="searchTable"
                     :api="searchForm.entId?zjControl.queryFinancingApplyBillPage:''"
                     :params="searchForm.entId?searchForm:{}"
-                    @radio-change="handleRadioChange"
+                    @checkbox-change="checkChange"
+                    @checkbox-all="checkChange"
                     :radio-config="{highlight: true}"
           >
             <zj-table-column type="checkbox" width="40"/>
@@ -59,9 +60,9 @@
             <zj-table-column field="writerName" title="凭证签发人"/>
             <zj-table-column field="transferName" title="转让企业"/>
             <zj-table-column field="ebillAmt" title="凭证金额" :formatter="money"/>
-            <zj-table-column field="field5" title="剩余可用金额" :formatter="money"/>
+            <zj-table-column field="availableAmt" title="剩余可用金额" :formatter="money"/>
             <zj-table-column field="holderDate" title="凭证持有日期" :formatter="date"/>
-            <zj-table-column field="field7" title="凭证到期日" :formatter="date"/>
+            <zj-table-column field="expireDate" title="凭证到期日" :formatter="date"/>
             <el-row slot="pager-left" class="slotRows" >
               凭证金额合计：{{moneyNoSynbol(detail.totalAmount)}}
               <span class="zj-m-l-10">已勾选凭证金额合计：{{moneyNoSynbol(' ')}}</span>
@@ -91,18 +92,10 @@ export default {
         ebillCodeLike: '',
       },
       detail: {},
+      nextParams: {},// 下一步需要的参数
     };
   },
   methods: {
-    toContractDetail(row) {
-      console.error(row);
-      this.$router.push({name: 'businessDetail'});
-    },
-    getDetail(){
-      let params = {
-
-      }
-    },
     entChange(val) {
       let params = {
         ...this.searchForm,
@@ -111,18 +104,39 @@ export default {
         rows: 10,
       }
       this.zjControl.queryFinancingApplyBillPage(params).then(res=>{
-        console.log('billlist')
+        this.nextParams = {
+          entId: params.entId,
+        }
       })
     },
-    handleRadioChange({row}) {
-
+    checkChange() {
+      let checkArr = this.$refs.searchTable.getCheckboxRecords()
+      console.log(`~`+JSON.stringify(checkArr))
+      //勾选多个凭证时，遍历数组查看选中的凭证是否为同一个到期日
+      let flag = false
+      if(checkArr.length > 1) {
+        let expDate = checkArr[0].expireDate
+        for(let i of checkArr) {
+          if(i.expireDate !== expDate.expireDate) {
+            flag = true
+            return this.$message.error('请选择到期日为同一天的凭证！')
+          }
+        }
+      }
+      //勾选的凭证的id合集
+      let selectBillId = checkArr.map(item=>item.id)
+      this.nextParams = {
+        ...this.nextParams,
+        idList: selectBillId,
+        nextFlag: flag,
+      }
+      this.$emit('nextStepParams',this.nextParams)
     },
     toNext() {},
     toEditQuota (row) {},
     applyLoan () {},
   },
   created() {
-    this.getApi()
   }
 };
 </script>

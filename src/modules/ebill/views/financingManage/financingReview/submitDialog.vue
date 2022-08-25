@@ -31,7 +31,7 @@ export default {
   methods: {
     onConfirm() {
       let params = {
-        agreementList: this.dialogForm.agreementList,
+        agreementList: this.dialogForm.phasedAgreements,
         flag: '1',//1-通过 2-拒绝
         id: this.financingId,
         reason: '',

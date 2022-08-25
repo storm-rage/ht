@@ -149,7 +149,6 @@ export default {
         getDirectory:this.$api.financingApply.getDirectory,//数据字典
         downloadFinancAgreeTemplate:this.$api.financingApply.downloadFinancAgreeTemplate,//下载融资协议
         submitFinancingOrderApply:this.$api.financingApply.submitFinancingOrderApply,//订单融资提交
-
         downloadFile:this.$api.baseCommon.downloadFile,//文件下载
       },
       form: {},
