@@ -10,7 +10,8 @@
     <audit-remark ref="auditRemark" v-if="$route.name === 'entApplyAudit'"></audit-remark>
     <zj-content-footer>
       <zj-button type="primary" @click="toPass">复核通过</zj-button>
-      <zj-button @click="toReject">驳回上一级</zj-button>
+      <zj-button @click="toReject" v-if="row.workflowState === 'E005'">拒绝</zj-button>
+      <zj-button @click="toReject" v-else>驳回上一级</zj-button>
       <zj-button @click="goParent">返回</zj-button>
     </zj-content-footer>
   </zj-content-container>
@@ -42,11 +43,14 @@ export default {
   created() {
     this.getRow()
     this.getDetail()
+    // 驳回待处理可修改
+    if (this.row.workflowState === 'E005') {
+      this.$route.meta.pageType = 'edit'
+    }
   },
   methods: {
     getDictionary(data) {
       this.dictionary = data
-      console.log('dic', data)
     },
     getDetail() {
       this.zjControl.getTodoEnterprise({ serialNo: this.row.serialNo }).then(res => {
@@ -56,10 +60,11 @@ export default {
     toPass() {
       this.$refs.auditRemark.getForm().clearValidate();
       const { notes } = this.$refs.auditRemark.getData()
+      const entFrom = this.$refs.entInfoedit.getData()
       this.passLoading = true;
       this.zjControl.todoEnterpriseSubmit({
         flag: '1',
-        ...this.row,
+        ...entFrom,
         notes,
       }).then(res => {
         this.passLoading = false;
@@ -76,10 +81,11 @@ export default {
       this.$refs.auditRemark.getForm().validate((valid) => {
         if (valid) {
           const { notes } = this.$refs.auditRemark.getData()
+          const entFrom = this.$refs.entInfoedit.getData()
           this.rejectLoading = true;
           this.zjControl.todoEnterpriseSubmit({
             flag: '2',
-            ...this.row,
+            ...entFrom,
             notes,
           }).then(res => {
             this.rejectLoading = false;

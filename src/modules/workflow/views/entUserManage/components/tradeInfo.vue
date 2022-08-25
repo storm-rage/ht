@@ -34,7 +34,13 @@ export default {
     },
     dictionary: {
       type: Object,
-      default: () => { }
+      default: () => {
+        return {
+          applyTypeList: [],
+          startObjectList: [],
+          applyStatusList: []
+        }
+      }
     }
   },
   data() {
