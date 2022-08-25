@@ -60,57 +60,24 @@
     <zj-workflow v-model="workflow">
       <el-row slot="right">
         <!-- <zj-button @click="toIssuance" >中登登记</zj-button>  
-          <zj-button @click="toIssuance" >手工登记</zj-button> -->
-        <zj-button>中登登记</zj-button>
-        <zj-button @click="openDialog">手工登记</zj-button>
+          <zj-button @click="toIssuance" >手工登记</zj-button> 
+          this.$refs.frozenDialog.open(loginRes.frozenPhone)-->
+        <zj-button @click="zdlogin">中登登记</zj-button>
+        <zj-button @click="dialog">打开登录弹框</zj-button>
+        <zj-button @click="openDialog1">打开手工登记弹框</zj-button>
       </el-row>
     </zj-workflow>
-    <!-- <artRegister :dialogVisible="this.dialogVisible" /> -->
-    <el-dialog :visible.sync="dialogVisible" center width="80vw" title="中登手工登记" top="6vh">
-      <zj-content-block>
-        <zj-header title="客户基本信息" />
-        <zj-table ref="searchTable" class="zj-search-table" :dataList="baseInfoList" :pager="false">
-          <zj-table-column field="sellerName" title="供应商名称" />
-          <zj-table-column field="buyerName" title="核心企业名称" />
-          <zj-table-column field="cactoringLogo" title="保理标识" />
-        </zj-table>
-      </zj-content-block>
-      <zj-content-block>
-        <zj-header title="中登附件" />
-        <zj-table ref="searchTable" class="zj-search-table" :dataList="financingInfoList" :pager="false">
-          <zj-table-column type="seq" title="序号" />
-          <zj-table-column field="type" title="附件类型" />
-          <zj-table-column field="remark" title="补充说明" />
-          <zj-table-column field="name" title="附件名称" />
-          <zj-table-column field="date" title="上传日期" />
-          <zj-table-column title="操作">
-            <template v-slot="{ row, rowIndex }">
-
-              <zj-button type="text" @click="deletefile(rowIndex)">删除</zj-button>
-              <zj-button type="text" @click="attaDownLoad(row.fileId)">下载</zj-button>
-            </template>
-          </zj-table-column>
-        </zj-table>
-      </zj-content-block>
-      <p>注：若上传中登登记证明文件，只支持上传PDF格式。</p>
-
-      <el-row slot="footer" class="dialog-footer">
-        <zj-upload class="zj-inline" :httpRequest="handleFileUpload" :data="{ row }" :autoUpload="true"
-          :onChange="handleFileChange">
-          <zj-button slot="trigger" type="text">上传资料</zj-button>
-        </zj-upload>
-      </el-row>
-      <br><br><br>
-      <el-row slot="footer" class="dialog-footer">
-        <zj-button status="primary" @click="save">保存</zj-button>
-        <zj-button class="back" @click="dialogVisibleTo">取消</zj-button>
-      </el-row>
-    </el-dialog>
+<loginDialog ref="loginDialog"></loginDialog>
+<artRegister ref="artRegister" :idlist="this.idlist"></artRegister>
   </zj-content-container>
 </template>
 <script>
+import loginDialog from "../components/loginDialog";
+import artRegister from "../components/artRegister";
 export default {
   components: {
+    loginDialog,
+    artRegister
   },
 
   data() {
@@ -127,9 +94,14 @@ export default {
         registerDetails: this.$api.zhongdengManage.registerDetails,//手工登记详情
         uploadFile: this.$api.baseCommon.uploadFile,//手工登记详情
         registerSubmit: this.$api.zhongdengManage.registerSubmit,//手工登记提交
+        checkLogin: this.$api.zhongdengManage.checkLogin,//校验登录
+        getCode: this.$api.zhongdengManage.getCode,//获取验证码
+        getPictureCode: this.$api.zhongdengManage.getPictureCode,//获取图形验证码
+        zdLongin: this.$api.zhongdengManage.zdLongin,//登录中登
       },
       dictionary: {},
       dialogVisible: false,
+      dialogVisible1: false,
       list1: [
         {
           id: "1",
@@ -154,7 +126,8 @@ export default {
       //   date: "Tue Aug 23 2022 18:56:33 GMT+0800(中国标准时间)"
       // }
       zdAttachList: [],//需要上传的附件（不显示列表中）
-      filemsg:{}
+      filemsg: {},
+
     };
   },
   created() {
@@ -162,70 +135,28 @@ export default {
     this.getDetail();
   },
   methods: {
-    // 手工登记----------------
-    handleFileUpload({ file }) {
-      let formData = new FormData();
-      formData.append("file", file);
-      this.zjControl.uploadFile(formData).then((res) => {
-        this.filemsg = res.data
+    openDialog1(){
+      this.$refs.artRegister.open()
+    },
+    dialog(){
+      this.$refs.loginDialog.open()
+    },
+    // --------中登登记
+    zdlogin() {
+      this.zjControl.checkLogin().then(res => {
         console.log(res.data);
-      });
-    },
-    handleFileChange(file) {
-      console.log(file);
-      let files1 = {
-        type: file.raw.type,
-        name: file.raw.name,
-        date: file.raw.lastModifiedDate,
-        busType:this.filemsg.fileType,
-        createDatetime: "",
-        fileId: this.filemsg.fileId,
-        fileName: this.filemsg.fileName,
-        remark: ""
-      }
-      this.financingInfoList.push(files1)
-      // let files2 = {
-      //   busType:this.filemsg.fileType,
-      //   createDatetime: "",
-      //   fileId: this.filemsg.fileId,
-      //   fileName: this.filemsg.fileName,
-      //   remark: ""
-      // }
-      // this.zdAttachList.push(files2)
-      // console.log(this.zdAttachList,"上传的");
-    },
-    openDialog() {
-      console.log(this.idlist);
-      let params = {
-        idList: this.idlist,
-        bizType: "01"
-      }
-      this.zjControl.registerDetails(params).then(res => {
-        this.baseInfoList = res.data.baseInfoList
-        // this.financingInfoList=res.data.financingInfoList
+        if (res.data.login == true) {
+          // console.log("已经登录");
+          let row = res.data
+          this.goLogin(row)
+        } else {
+          this.dialogVisible1 = true;
+        }
       })
-      this.dialogVisible = true;
     },
-    dialogVisibleTo() {
-      this.dialogVisible = false;
-    },
-    save() {
-      let params = {
-        idList: this.idlist,
-        bizType: "01",
-        zdAttachList: this.zdAttachList
-      }
-      this.zjControl.registerSubmit(params).then(res => {
-        // this.dialogVisible = false;
-        console.log("提交成功");
-      })
 
-    },
-    deletefile(rowIndex) {
-      // console.log(rowIndex);
-      this.financingInfoList.splice(rowIndex, 1);
-    },
-    // ---------------------------
+
+    // -------------------
     checkChange() {
       this.idlist = []
       let checkArr = this.$refs.searchTable.getCheckboxRecords()
@@ -268,6 +199,9 @@ export default {
       this.goChild('zhongdengManageDetaildd', row)
     },
     toEditQuota(row) { },
+    goLogin(row) {
+      this.goChild('zhongdengManagexq1', row)
+    },
   }
 };
 </script>

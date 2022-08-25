@@ -9,20 +9,26 @@ export default {
   name: "enterpriseManage",
   // mixins: [project],
   components: { OperateLog, OtherFileSetting },
+  props: {
+    form: {
+      type: Object,
+      default: () => {
+        return {
+          isHtEnterprise: '1', // 是否海天集团
+          isDoublePost: '1', // 是否双岗
+          sysUserList: [], // 企业操作员信息
+          pubAttachList: [] // 企业附件
+        }
+      }
+    },
+  },
   data() {
     return {
-      isEdit: false,
       zjControl: this.$api.entInfoManage,
       pageType: this.$route.meta.pageType,
       dictionary: {},
       old_projectInfoList: [],
       statementAccountTypeTable: [],
-      form: {
-        isHtEnterprise: '1', // 是否海天集团
-        isDoublePost: '1', // 是否双岗
-        sysUserList: [], // 企业操作员信息
-        pubAttachList: [] // 企业附件
-      },
       rules: {
         //企业基本信息
         name: [
@@ -187,11 +193,32 @@ export default {
     //修改页判断
     this.isEdit = this.$route.meta.pageType === 'edit'
     this.queryEntDictionary()
+    // 查询操作记录
     if (!this.isAdd) {
       this.getEbBusinessParamLog()
     }
+    //   // 新增时
+    if (this.isAdd) {  //设置企业附件
+      this.dictionary.busTypeList.map(item => {
+        this.form.pubAttachList.push({
+          busType: item.code,
+          fileId: '',
+          fileName: ''
+        })
+      })
+    }
+    //修改时
+    else {
+      this.detailsHandle()
+    }
   },
   methods: {
+    getForm() {
+      return this.$refs.form
+    },
+    getData() {
+      return this.form;
+    },
     queryEntDictionary() {
       this.zjControl.queryEntDictionary().then(res => {
         let tableDic = {
@@ -201,30 +228,13 @@ export default {
           blSysRoleListTable: JSON.parse(JSON.stringify(res.data.blSysRoleList).replace(/code/g, 'value').replace(/desc/g, 'label')),
         }
         this.dictionary = Object.assign(tableDic, res.data)
-        console.log(this.dictionary)
         this.projectInfoList = this.dictionary.projectInfoList
-        //   // 新增时
-        if (this.isAdd) {  //设置企业附件
-          this.dictionary.busTypeList.map(item => {
-            this.form.pubAttachList.push({
-              busType: item.code,
-              fileId: '',
-              fileName: ''
-            })
-          })
-        }
-        //修改时
-        else {
-          this.zjControl.getEnterprise({ id: this.row.id }).then(res => {
-            this.detailsChange(res)
-          })
-        }
+        this.$emit('getDictionary', this.dictionary)
       })
     },
 
     //获取详情处理
-    detailsChange(res) {
-      this.form = res.data
+    detailsHandle() {
       this.form.pubAttachList = this.form.pubAttachList || []
       this.dictionary.busTypeList.map(item => {
         //   this.form.pubAttachList.map(j => {
@@ -238,18 +248,6 @@ export default {
           fileName: ''
         })
       })
-
-
-      //公司类型
-      // if (this.form.companyType) {
-      //   let boo = this.dictionary.companyTypeList.some(item => item.code === this.form.companyType)
-      //   if (!boo) {
-      //     this.dictionary.companyTypeList.push({
-      //       code: this.form.companyType,
-      //       desc: this.form.companyType
-      //     })
-      //   }
-      // }
       this.$nextTick(() => {
         this.$refs.form.clearValidate()
       })
@@ -330,37 +328,6 @@ export default {
         this.statementAccountTypeTable = this.dictionary.blSysRoleListTable
       }
     },
-    //隶属企业发生改变
-    // parentEntIdChange(id, boo) {
-    //   // 当boo存在时视为初始化---修改、详情页 第一次进入时获取数据时用到
-    //   if (!boo) {
-    //     this.form.sealEntId = ''
-    //   }
-    //   if (!id) {
-    //     this.sealEntSelect = [{
-    //       sealEntId: this.form.id || '0',
-    //       sealEntName: this.form.name
-    //     }]
-    //     return
-    //   }
-    //   //获取新的签章企业
-    //   let sealEntItem = this.dictionary.sysEnterpriseList.find(item => item.id === id)
-    //   this.sealEntSelect[1] = {
-    //     sealEntId: sealEntItem.sealEntId,
-    //     sealEntName: sealEntItem.sealEntName
-    //   }
-    // },
-
-    //所属项目校验
-    // projectValidator(rule, value, callback) {
-    //   if (rule.required && !value && rule.item.operationFlag !== 'D') {
-    //     callback(new Error('请选择所属项目'));
-    //   } else if (rule.required && rule.item.operationFlag !== 'D' && this.form.projectInfoList[rule.index].selectProductList.length <= 0) {
-    //     callback(new Error('请选择产品'));
-    //   } else {
-    //     callback()
-    //   }
-    // },
 
     //企业开票一填必填
     invoiceOneAndAll() {
@@ -396,7 +363,6 @@ export default {
         userName: '',//用户名
         roleId: '',//操作员角色
         userName: '',//姓名
-        certType: '',//证件类型
         certNo: '',//证件号码
         mobileNo: '',//手机号码
         email: '',//电子邮箱
@@ -492,51 +458,49 @@ export default {
     async save() {
       let params = JSON.parse(JSON.stringify(this.form))
       //1.校验表单
-      let verify = false
       this.$refs.form.validate(boo => {
-        verify = boo
         if (boo) {
-          // if (this.isAdd) {
-          //   //企业操作员校验
-          //   if (this.sysUserIng()) { return }
-          //   let codeArr = []
-          //   let sysUserList = params.sysUserList
-          //   sysUserList.forEach(item => {
-          //     codeArr.push(item.roleId)
-          //   })
-          //   if (this.form.entType === 'B') {
-          //     if (this.form.isDoublePost === '1') {
-          //       //核心企业是海天集团双岗，必须录入经办员、复核员和风险接收人
-          //       if (!codeArr.includes('2') || !codeArr.includes('3') || !codeArr.includes('4') || !sysUserList.length) {
-          //         return this.$messageBox({
-          //           type: 'warning',
-          //           content: `心企业是海天集团双岗，必须录入经办员、复核员和风险接收人！`
-          //         })
-          //       }
-          //     }
-          //     if (this.form.isDoublePost === '0') {
-          //       //核心企业是海天集团单岗，必须录入经办员、复核员和风险接收人
-          //       if (!codeArr.includes('2') || !codeArr.includes('4') || !sysUserList.length) {
-          //         return this.$messageBox({
-          //           type: 'warning',
-          //           content: `心企业是海天集团单岗，必须录入经办员、风险接收人！`
-          //         })
-          //       }
-          //     }
-          //   }
+          if (this.isAdd) {
+            //企业操作员校验
+            if (this.sysUserIng()) { return }
+            let codeArr = []
+            let sysUserList = params.sysUserList
+            sysUserList.forEach(item => {
+              codeArr.push(item.roleId)
+            })
+            if (this.form.entType === 'B') {
+              if (this.form.isDoublePost === '1') {
+                //核心企业是海天集团双岗，必须录入经办员、复核员和风险接收人
+                if (!codeArr.includes('8') || !codeArr.includes('9') || !codeArr.includes('10') || !sysUserList.length) {
+                  return this.$messageBox({
+                    type: 'warning',
+                    content: `心企业是海天集团双岗，必须录入经办员、复核员和风险接收人！`
+                  })
+                }
+              }
+              if (this.form.isDoublePost === '0') {
+                //核心企业是海天集团单岗，必须录入经办员、风险接收人
+                if (!codeArr.includes('8') || !codeArr.includes('10') || !sysUserList.length) {
+                  return this.$messageBox({
+                    type: 'warning',
+                    content: `心企业是海天集团单岗，必须录入经办员、风险接收人！`
+                  })
+                }
+              }
+            }
 
-          //   if (this.form.entType === 'BL') {
-          //     //核心企业是海天集团双岗，必须录入经办员、复核员和风险接收人
-          //     if (!codeArr.includes('2') || !codeArr.includes('3') || !codeArr.includes('4') || !sysUserList.length) {
-          //       return this.$messageBox({
-          //         type: 'warning',
-          //         content: `保理公司，必须录入经办员、复核员和风险接收人！`
-          //       })
-          //     }
-          //   }
-          // }
+            if (this.form.entType === 'BL') {
+              //保理公司必须录入经办员、复核员和风险接收人
+              if (!codeArr.includes('11') || !codeArr.includes('12') || !codeArr.includes('13') || !sysUserList.length) {
+                return this.$messageBox({
+                  type: 'warning',
+                  content: `保理公司，必须录入经办员、复核员和风险接收人！`
+                })
+              }
+            }
+          }
           // 其他附件
-          this.form.pubOtherAttachList = this.$refs.ofileSetting.getData()
+          params.pubOtherAttachList = this.$refs.ofileSetting.getData()
           // 企业操作员
           if (params.sysUserList) {
             params.sysUserList.forEach(item => {
@@ -551,32 +515,7 @@ export default {
               return !!item.fileName
             })
           }
-          if (this.isAdd) {
-            this.$messageBox({
-              title: '新增确认',
-              type: 'confirm',
-              content: '确认后将新增企业！',
-              messageResolve: () => {
-                this.zjControl.addEnterprise(params).then(() => {
-                  this.$message.success('企业新增成功！')
-                  this.goParent()
-                })
-              }
-            })
-          }
-          else if (this.isEdit) {
-            this.$messageBox({
-              title: '修改确认',
-              type: 'confirm',
-              content: '确认后将更新企业信息！',
-              messageResolve: () => {
-                this.zjControl.updateEnterprise(params).then(() => {
-                  this.$message.success('企业信息修改成功！')
-                  this.goParent()
-                })
-              }
-            })
-          }
+          this.$emit('formPass', params)
         } else {
           return this.$messageBox({
             type: 'warning',
@@ -584,11 +523,14 @@ export default {
           })
         }
       })
-      // if (!verify) return
     },
     // 获取操作记录
     getEbBusinessParamLog() {
-      this.zjControl.getEbBusinessParamLog({ id: this.row.id }).then((res) => {
+      let params = {
+        id: this.row.id,
+        serialNo: this.row.serialNo
+      }
+      this.zjControl.getEbBusinessParamLog(params).then((res) => {
         this.logList = res.data.sysEntRegLogList;
       });
     },

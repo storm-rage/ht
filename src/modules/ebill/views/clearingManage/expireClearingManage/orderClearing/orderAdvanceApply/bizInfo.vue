@@ -171,7 +171,7 @@ export default {
       }
     }
   },
-  beforeCreate() {
+  created() {
     this.getDic();
   },
   data () {

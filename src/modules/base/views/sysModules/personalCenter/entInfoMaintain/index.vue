@@ -35,11 +35,7 @@
             </el-form-item>
           </el-col>
           <el-col :span="8">
-            <el-form-item
-              label="统一社会信用代码："
-              prop="bizLicence"
-              class="bizLicence"
-            >
+            <el-form-item label="统一社会信用代码：" prop="bizLicence" class="bizLicence">
               {{ form.bizLicence | value }}
             </el-form-item>
           </el-col>
@@ -55,10 +51,7 @@
           </el-col>
           <el-col :span="8">
             <el-form-item label="注册资本：" prop="registerCapital">
-              <el-input
-                v-model.trim="form.registerCapital"
-                :disabled="isDetail"
-              />
+              <el-input v-model.trim="form.registerCapital" :disabled="isDetail" />
             </el-form-item>
           </el-col>
           <el-col :span="8">
@@ -91,42 +84,30 @@
           </el-col>
           <el-col :span="8">
             <el-form-item label="企业联系人手机号：" prop="fastMailPhone">
-              <el-input
-                v-model.trim="form.fastMailPhone"
-                :disabled="isDetail"
-              />
+              <el-input v-model.trim="form.fastMailPhone" :disabled="isDetail" />
             </el-form-item>
           </el-col>
         </el-row>
         <el-row>
           <el-form-item label="企业联系地址：" prop="fastMailAddress">
-            <el-input
-              v-model.trim="form.fastMailAddress"
-              :disabled="isDetail"
-            />
+            <el-input v-model.trim="form.fastMailAddress" :disabled="isDetail" />
           </el-form-item>
         </el-row>
         <h4 class="bl zj-m-l-20 mb-10">法人信息</h4>
         <el-row>
           <el-col :span="8">
             <el-form-item label="法定代表人姓名：" prop="legalPersonName">
-              <el-input
-                v-model.trim="form.legalPersonName"
-                :disabled="isDetail"
-              />
+              <el-input v-model.trim="form.legalPersonName" :disabled="isDetail" />
             </el-form-item>
           </el-col>
           <el-col :span="8">
             <el-form-item label="法定代表人手机号码：" prop="legalPersonName">
-              <el-input
-                v-model.trim="form.registerPhone"
-                :disabled="isDetail"
-              />
+              <el-input v-model.trim="form.registerPhone" :disabled="isDetail" />
             </el-form-item>
           </el-col>
           <el-col :span="8">
             <el-form-item label="法定代表人证件类型：" prop="legalPersonName">
-              <span>{{ this.form.legalCertType | value }}</span>
+              {{ typeMap(dictionary.legalCertType, this.form.legalCertType) }}
             </el-form-item>
           </el-col>
         </el-row>
@@ -137,19 +118,8 @@
             </el-form-item>
           </el-col>
           <el-col :span="8">
-            <el-form-item
-              label="法人身份证有效期："
-              prop="legalCertRegDate"
-              class="col-right"
-            >
-              <zj-date-range-picker
-                :clearable="false"
-                :startDate.sync="form.legalCertRegDate"
-                @startChange="valueChange('legalCertRegDate')"
-                :endDate.sync="form.legalCertExpireDate"
-                @endChange="valueChange('legalCertExpireDate')"
-                :disabled="isDetail"
-              />
+            <el-form-item label="法人身份证有效期：" prop="legalCertRegDate" class="col-right">
+              <zj-date-range-picker :clearable="false" :startDate.sync="form.legalCertRegDate" @startChange="valueChange('legalCertRegDate')" :endDate.sync="form.legalCertExpireDate" @endChange="valueChange('legalCertExpireDate')" :disabled="isDetail" />
             </el-form-item>
           </el-col>
         </el-row>
@@ -158,59 +128,26 @@
       <zj-content-block>
         <h4 class="bl zj-m-l-20 mb-10">银行账户信息</h4>
         <zj-content>
-          <zj-button
-            class="append zj-m-b-10 zj-m-l-10"
-            type="primary"
-            v-if="entData.supplierType === '1'"
-            @click="openBankDialog(entData.entBankInfos)"
-            >更换银行账户</zj-button
-          >
-          <zj-table
-            ref="bank"
-            :dataList="form.entBankInfo"
-            :pager="false"
-            keep-source
-            auto-resize
-            :edit-config="{
+          <zj-button class="append zj-m-b-10 zj-m-l-10" type="primary" v-if="entData.supplierType === '1'" @click="openBankDialog(entData.entBankInfos)">更换银行账户</zj-button>
+          <zj-table ref="bank" :dataList="form.entBankInfo" :pager="false" keep-source auto-resize :edit-config="{
               trigger: 'manual',
               mode: 'row',
               icon: '-',
               autoClear: false,
               showStatus: true,
-            }"
-          >
-            <zj-table-column
-              field="bankAccname"
-              title="银行账户名称"
-              :edit-render="{ name: '$input' }"
-            />
-            <zj-table-column
-              field="bankAccno"
-              title="银行账号"
-              :edit-render="{ name: '$input' }"
-            />
-            <zj-table-column
-              field="bankName"
-              title="银行账户开户行"
-              :edit-render="{ name: '$input' }"
-            />
-            <zj-table-column
-              field="bankNo"
-              title="银行联行号"
-              :edit-render="{ name: '$input' }"
-            />
+            }">
+            <zj-table-column field="bankAccname" title="银行账户名称" :edit-render="{ name: '$input' }" />
+            <zj-table-column field="bankAccno" title="银行账号" :edit-render="{ name: '$input' }" />
+            <zj-table-column field="bankName" title="银行账户开户行" :edit-render="{ name: '$input' }" />
+            <zj-table-column field="bankNo" title="银行联行号" :edit-render="{ name: '$input' }" />
             <zj-table-column title="操作" v-if="entData.supplierType !== '1'">
               <template v-slot="{ row, rowIndex }">
                 <template v-if="!$refs.bank.isActiveByRow(row)">
                   <zj-button type="text" @click="bankEdit(row)">修改</zj-button>
                 </template>
                 <template v-if="$refs.bank.isActiveByRow(row)">
-                  <zj-button type="text" @click="bankSave(row, rowIndex)"
-                    >保存</zj-button
-                  >
-                  <zj-button type="text" @click="bankCancel(row, rowIndex)"
-                    >取消</zj-button
-                  >
+                  <zj-button type="text" @click="bankSave(row, rowIndex)">保存</zj-button>
+                  <zj-button type="text" @click="bankCancel(row, rowIndex)">取消</zj-button>
                 </template>
               </template>
             </zj-table-column>
@@ -221,50 +158,33 @@
       <zj-content-block>
         <zj-header title="企业附件" />
         <zj-content>
-          <zj-table
-            ref="attach"
-            :dataList="attachInfo"
-            :pager="false"
-            auto-resize
-          >
+          <zj-table ref="attach" :dataList="attachInfo" :pager="false" auto-resize>
             <zj-table-column type="seq" title="序号" width="50" />
             <zj-table-column field="type" title="附件类型" />
             <zj-table-column field="fileName" title="附件名称" />
             <zj-table-column title="操作">
               <template v-slot="{ row }">
-                <zj-upload
-                  :httpRequest="handleFileUpload"
-                  :data="{ row }"
-                  class="zj-inline"
-                  v-if="!isDetail"
-                >
+                <zj-upload :httpRequest="handleFileUpload" :data="{ row }" class="zj-inline" v-if="!isDetail">
                   <zj-button type="text">上传</zj-button>
                 </zj-upload>
               </template>
             </zj-table-column>
           </zj-table>
           <zj-content>
-            <zj-content-tip
-              text="注：1.以上上传的影像件请全部加盖公司公章。"
-            ></zj-content-tip>
+            <zj-content-tip text="注：1.以上上传的影像件请全部加盖公司公章。"></zj-content-tip>
             <br />
             <zj-content-tip text="2.支持上传的文档格式：PDF。"></zj-content-tip>
             <br />
-            <zj-content-tip
-              text="3.若上传身份证，请将身份证正、反面完整放在同一页上。请确保身份证在有效期内。 "
-            ></zj-content-tip>
+            <zj-content-tip text="3.若上传身份证，请将身份证正、反面完整放在同一页上。请确保身份证在有效期内。 "></zj-content-tip>
             <br />
-            <zj-content-tip
-              text=" 4.若上传营业执照，请确保营业执照为最新版本。 "
-            ></zj-content-tip>
+            <zj-content-tip text=" 4.若上传营业执照，请确保营业执照为最新版本。 "></zj-content-tip>
           </zj-content>
         </zj-content>
       </zj-content-block>
     </el-form>
 
     <zj-content-footer>
-      <el-checkbox v-model="agreeCheck" :disabled="!isAgreeCheck"
-        >我已阅读并同意
+      <el-checkbox v-model="agreeCheck" :disabled="!isAgreeCheck">我已阅读并同意
         <zj-button type="text">《银行账户变更通知》</zj-button>
       </el-checkbox>
       <zj-button type="primary" @click="updateUserInfo">确认提交</zj-button>
@@ -360,6 +280,7 @@ export default {
     };
   },
   created() {
+    this.getRow()
     this.getDirectory();
     this.getEntInfo();
   },
@@ -372,7 +293,7 @@ export default {
     },
     // 获取企业信息
     getEntInfo() {
-      let params = { entId: this.$route.params.id };
+      let params = { entId: this.row.id };
       this.zjControl.getEntInfo(params).then((res) => {
         this.entData = res.data;
         let basicEntInfo = res.data.basicEntInfo;
@@ -397,8 +318,8 @@ export default {
             this.form.qyfrzjFileId = this.attachInfo[1].fileId;
             this.form.qyfrzjAttachName = this.attachInfo[1].fileName;
             this.zjControl.updateUserInfo(this.form).then((res) => {
-              this.getEntInfo();
               this.$message.success("修改成功!");
+              this.goParent()
             });
           }
         });

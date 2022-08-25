@@ -120,7 +120,7 @@
       <!--  其他附件    -->
       <other-file-setting
         :attachList="currentTrade.attachModelList"
-        :remark="currentTrade.currentTrade"></other-file-setting>
+        :remark="currentTrade.remark"></other-file-setting>
     </div>
   </el-form>
 </template>

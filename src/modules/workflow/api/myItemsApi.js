@@ -16,6 +16,10 @@ const myItems = {
   //字典
   getDirectory: (params) => {
     return request.get('/my-todo/get-all-enums', { params })
+  },
+  //作废
+  invalidateFlowable: (params) => {
+    return request.post('/my-todo/invalidate-flowable', params )
   }
 }
 export default myItems

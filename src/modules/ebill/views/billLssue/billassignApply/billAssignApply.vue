@@ -50,94 +50,40 @@
               <span>{{ detailData.remark | value }}</span>
             </el-form-item>
           </el-col>
-          <el-button class="zj-f-r zj-m-r-20" type="primary"
-            >贸易背景</el-button
-          >
+          <el-button class="zj-f-r zj-m-r-20" type="primary">贸易背景</el-button>
         </el-row>
       </el-form>
     </zj-content-block>
 
     <zj-content-block>
       <zj-header>转让信息</zj-header>
-      <zj-button type="primary" class="zj-m-l-20 zj-m-b-10" @click="sysUserAdd"
-        >新增被转让人</zj-button
-      >
-      <zj-table
-        ref="sysUser"
-        :dataList="billInfoList"
-        :edit-config="{
+      <zj-button type="primary" class="zj-m-l-20 zj-m-b-10" @click="sysUserAdd">新增被转让人</zj-button>
+      <zj-table ref="sysUser" :dataList="billInfoList" :edit-config="{
           trigger: 'manual',
           mode: 'row',
           icon: '-',
           autoClear: false,
           showStatus: true,
-        }"
-      >
-        <zj-table-column
-          field="holderName"
-          title="被转让人名称"
-          :edit-render="{ name: '$select' }"
-        />
-        <zj-table-column
-          field="ebillAmt"
-          title="转让金额"
-          :formatter="money"
-          :edit-render="{ name: '$input' }"
-        />
-        <zj-table-column
-          field="bankAccount"
-          title="收款账号"
-          :edit-render="{ name: '$input' }"
-        />
-        <zj-table-column
-          field="bankAccname"
-          title="收款银行账户名称"
-          :edit-render="{ name: '$input' }"
-        />
-        <zj-table-column
-          field="bankNo"
-          title="收款银行联行号"
-          :edit-render="{ name: '$input' }"
-        />
-        <zj-table-column
-          field="bankName"
-          title="收款账户开户行"
-          :edit-render="{ name: '$input' }"
-        />
-        <zj-table-column
-          field="remark"
-          title="备注"
-          :edit-render="{ name: '$input' }"
-        />
+        }">
+        <zj-table-column field="sellerEntName" title="被转让人名称" :edit-render="{
+           name: '$select', options: entityList, optionProps: {value: 'index', label: 'sellerEntName'},events:{change:selectChange}
+        }" />
+        <zj-table-column field="ebillAmt" title="转让金额" :formatter="money" :edit-render="{ name: '$input' }" />
+        <zj-table-column field="bankAccount" title="收款账号" :edit-render="{ name: '$input' }" />
+        <zj-table-column field="bankAccname" title="收款银行账户名称" :edit-render="{ name: '$input' }" />
+        <zj-table-column field="bankNo" title="收款银行联行号" :edit-render="{ name: '$input' }" />
+        <zj-table-column field="bankName" title="收款账户开户行" :edit-render="{ name: '$input' }" />
+        <zj-table-column field="remark" title="备注" :edit-render="{ name: '$input' }" />
         <zj-table-column title="操作" fixed="right" width="250px">
           <template v-slot="{ row, rowIndex }">
             <template v-if="!$refs.sysUser.isActiveByRow(row)">
-              <zj-button
-                type="text"
-                @click="goChild('entManageDetail', row)"
-                :api="zjBtn.getEnterprise"
-                >相关协议</zj-button
-              >
-              <zj-button
-                type="text"
-                @click="sysUserEdit(row)"
-                :api="zjBtn.getEnterprise"
-                >修改</zj-button
-              >
-              <zj-button
-                type="text"
-                @click="sysUserDel(rowIndex)"
-                :api="zjBtn.getEnterprise"
-                >删除</zj-button
-              >
+              <zj-button type="text" @click="goChild('entManageDetail', row)" :api="zjBtn.getEnterprise">相关协议</zj-button>
+              <zj-button type="text" @click="sysUserEdit(row)" :api="zjBtn.getEnterprise">修改</zj-button>
+              <zj-button type="text" @click="sysUserDel(rowIndex)" :api="zjBtn.getEnterprise">删除</zj-button>
             </template>
             <template v-if="$refs.sysUser.isActiveByRow(row)">
-              <zj-button type="text" @click="sysUserSave(row, rowIndex)"
-                >保存</zj-button
-              >
-              <zj-button type="text" @click="sysUserCancel(row, rowIndex)"
-                >取消</zj-button
-              >
+              <zj-button type="text" @click="sysUserSave(row, rowIndex)">保存</zj-button>
+              <zj-button type="text" @click="sysUserCancel(row, rowIndex)">取消</zj-button>
             </template>
           </template>
         </zj-table-column>
@@ -158,13 +104,31 @@ export default {
       zjControl: this.$api.billAssignApply,
       detailData: {},
       billInfoList: [],
+      entityList: [],
+      currentEditIndex: 0
     };
   },
   created() {
     this.getRow();
     this.detailData = this.row;
+    this.getTradeRalation()
   },
   methods: {
+    selectChange(data, $event) {
+      console.log(data, $event)
+      let row = this.entityList[$event]
+      this.$set(this.billInfoList, this.currentEditIndex, Object.assign(this.billInfoList[this.currentEditIndex], row));
+    },
+    // 获取当前企业贸易关系
+    getTradeRalation() {
+      this.zjControl.getTradeRalation({ ids: [this.row.id] }).then(res => {
+        this.entityList = res.data.entityList
+        this.entityList.forEach((item, index) => {
+          item.index = index
+        })
+        console.log(this.entityList)
+      })
+    },
     // 提交申请
     toApply() {
       this.$confirm(
@@ -178,7 +142,7 @@ export default {
         }
       ).then(() => {
         let params = {
-          ids: [this.row.ebillCode],
+          ids: [this.row.id],
           billInfoList: this.billInfoList
         };
         this.zjControl.submitEbBillOneToMany(params).then((res) => {
@@ -203,13 +167,24 @@ export default {
       if (this.sysUserIng()) {
         return;
       }
-      let item = {};
+      let item = {
+        sellerEntName: '',
+        ebillAmt: 0.00,
+        bankAccount: '',
+        bankAccname: '',
+        bankNo: '',
+        bankName: '',
+        remark: ''
+      };
       this.billInfoList.push(item);
       this.$refs.sysUser.setActiveRow(item);
+      this.currentEditIndex = this.billInfoList.length - 1;
     },
     //保存新增被转让人
     sysUserSave(row, rowIndex) {
+      console.log(row, rowIndex)
       row.save = true;
+      this.$set(this.billInfoList, rowIndex, Object.assign({}, row));
       this.$refs.sysUser.clearActived();
     },
     //取消新增被转让人
@@ -218,11 +193,12 @@ export default {
       this.$refs.sysUser.clearActived();
     },
     //修改新增被转让人
-    sysUserEdit(row) {
+    sysUserEdit(row, index) {
       if (this.sysUserIng()) {
         return;
       }
       this.$refs.sysUser.setActiveRow(row);
+      this.currentEditIndex = index;
     },
     //删除新增被转让人
     sysUserDel(rowIndex) {

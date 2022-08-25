@@ -57,8 +57,8 @@
       </zj-table>
     </zj-list-layout>
     <confirm-payment-maintenance ref="confirmPaymentMaintenance" :biz-id="bizId" @done="handleDone"></confirm-payment-maintenance>
-    <zj-content-footer v-if="showBottomBtn&&zjBtn.billConfirmReceiptApply" style="position: fixed" :style="{'left': bottomBtnLeft+'px'}">
-      <zj-button type="primary" @click="batchSubmitApply" :api="zjBtn.billConfirmReceiptApply">提交申请</zj-button>
+    <zj-content-footer v-if="zjBtn.billConfirmReceiptApply" style="position: fixed" :style="{'left': bottomBtnLeft+'px'}">
+      <zj-button type="primary" :disabled="!showBottomBtn" @click="batchSubmitApply" :api="zjBtn.billConfirmReceiptApply">提交申请</zj-button>
     </zj-content-footer>
   </div>
 </template>
