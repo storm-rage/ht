@@ -26,6 +26,7 @@ export default {
     return {
       zjControl: {
         getBackPhasedAgreeInfo:this.$api.multistageAgreementManageWorkflow.getBackPhasedAgreeInfo,//运营端-阶段性协议维护-详情
+        getBackPhasedAgreeDirectory:this.$api.multistageAgreementManageWorkflow.getBackPhasedAgreeDirectory,//运营端-阶段性协议维护数据字典
         downLoadFile:this.$api.baseCommon.downloadFile,
       },
       detailData: {},

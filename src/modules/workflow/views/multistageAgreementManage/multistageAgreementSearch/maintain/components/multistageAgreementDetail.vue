@@ -14,6 +14,7 @@
             <el-form-item label="状态：">
               <el-select v-model="searchForm.state">
                 <el-option label="全部" value=""/>
+                <el-option v-for="(item, index) in dictionary.agreementStateList" :key="index" :value="item.code" :label="item.desc"></el-option>
               </el-select>
             </el-form-item>
             <el-form-item label="协议签订日期：">
@@ -28,6 +29,7 @@
             <el-form-item label="协议类型：">
               <el-select v-model="searchForm.type">
                 <el-option label="全部" value=""/>
+                <el-option v-for="(item, index) in dictionary.agreementTypeList" :key="index" :value="item.code" :label="item.desc"></el-option>
               </el-select>
             </el-form-item>
           </el-form>
@@ -76,7 +78,11 @@ export default {
       agreementList: [
         {}
       ],
+      dictionary: {}
     };
+  },
+  created() {
+    this.getBackPhasedAgreeDirectory()
   },
   methods: {
     addEditAgreement(row,flag){
@@ -86,7 +92,11 @@ export default {
     attaDownload(row) {
       this.zjControl.downLoadFile({...row,fileUrl: row.fileId})
     },
-
+    getBackPhasedAgreeDirectory() {
+      this.zjControl.getBackPhasedAgreeDirectory && this.zjControl.getBackPhasedAgreeDirectory().then(res=>{
+        this.dictionary = res.data
+      })
+    }
   }
 }
 </script>
