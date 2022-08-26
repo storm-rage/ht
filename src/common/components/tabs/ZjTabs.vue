@@ -20,6 +20,9 @@ export default {
       border: none;
       .el-tabs__nav{
         border: none;
+        .el-tabs__active-bar {
+          display: none;
+        }
         .el-tabs__item{
           border-top: none;
           border-left: none;

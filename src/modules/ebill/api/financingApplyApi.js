@@ -29,7 +29,7 @@ const financingApply = {
   },
   //融资申请-获取阶段性协议列表
   getPhasedAgreement: (params) => {
-    return request.get('/financing-apply/get-phased_agreement', {params} )
+    return request.get('/financing-apply/get-phased-agreement', {params} )
   },
   //融资申请-获取入库融资/凭证融资列表
   queryFinancingApplyBillPage: (params) => {

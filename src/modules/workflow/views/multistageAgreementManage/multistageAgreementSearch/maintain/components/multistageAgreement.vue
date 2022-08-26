@@ -10,7 +10,7 @@
       <zj-table ref="agreementTable"
                 :dataList="tableData.phasedAgreementList"
       >
-        <zj-table-column type="checkbox" width="40px" fixed="left"/>
+        <!-- <zj-table-column type="checkbox" width="40px" fixed="left"/> -->
         <zj-table-column field="srmAgreementNo" title="SRM阶段性协议编号"/>
         <zj-table-column field="agreementNo" title="阶段性协议编号"/>
         <zj-table-column field="agreementName" title="阶段性协议名称"/>

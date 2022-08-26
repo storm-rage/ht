@@ -151,7 +151,7 @@ export default {
   },
   methods: {
     toDownload(row) {
-      this.zjControl.downApi(row);
+      this.zjControl.downApi({...row, fileUrl: row.fileId});
     },
   }
 };
