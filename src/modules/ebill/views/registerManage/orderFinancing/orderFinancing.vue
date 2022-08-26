@@ -64,9 +64,10 @@
           this.$refs.frozenDialog.open(loginRes.frozenPhone)-->
         <zj-button @click="zdlogin">中登登记</zj-button>
         <zj-button @click="dialog">打开登录弹框</zj-button>
-        <zj-button @click="openDialog1">打开手工登记弹框</zj-button>
+        <zj-button @click="getmsg()">获取登录信息</zj-button>
       </el-row>
     </zj-workflow>
+<!-- <loginDialog ref="loginDialog" :checkLogin="this.checkLogin" :idlist="this.idlist"></loginDialog> -->
 <loginDialog ref="loginDialog"></loginDialog>
 <artRegister ref="artRegister" :idlist="this.idlist"></artRegister>
   </zj-content-container>
@@ -116,7 +117,7 @@ export default {
       ],
       list: [],
       tradeList: [],
-      idlist: [],
+      idlist: [1],
       baseInfoList: [],//客户基本信息集合
       financingInfoList: [],//融资基本信息集合（列表显示的）
       // {
@@ -127,6 +128,7 @@ export default {
       // }
       zdAttachList: [],//需要上传的附件（不显示列表中）
       filemsg: {},
+      checkLogin:{}
 
     };
   },
@@ -135,22 +137,29 @@ export default {
     this.getDetail();
   },
   methods: {
+    getmsg(){
+      console.log(this.userData);
+    },
     openDialog1(){
       this.$refs.artRegister.open()
     },
-    dialog(){
-      this.$refs.loginDialog.open()
+    dialog(row){
+      this.$refs.loginDialog.open(row)
     },
     // --------中登登记
     zdlogin() {
       this.zjControl.checkLogin().then(res => {
         console.log(res.data);
+        let row = {
+            checkLogin:res.data,
+            idlist:this.idlist,
+            bizType :"01"
+          }
+        this.checkLogin=res.data
         if (res.data.login == true) {
-          // console.log("已经登录");
-          let row = res.data
           this.goLogin(row)
         } else {
-          this.dialogVisible1 = true;
+          this.dialog(row)
         }
       })
     },

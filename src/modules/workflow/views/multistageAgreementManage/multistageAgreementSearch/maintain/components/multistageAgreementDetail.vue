@@ -90,7 +90,7 @@ export default {
     },
     attaDelete(row) {},
     attaDownload(row) {
-      this.zjControl.downLoadFile({...row,fileUrl: row.fileId})
+      this.zjControl.downLoadFile({...row,fileUrl: row.fileId,fileId: row.fileId})
     },
     getBackPhasedAgreeDirectory() {
       this.zjControl.getBackPhasedAgreeDirectory && this.zjControl.getBackPhasedAgreeDirectory().then(res=>{

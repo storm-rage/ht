@@ -199,7 +199,7 @@ export default {
     }
     //   // 新增时
     if (this.isAdd) {  //设置企业附件
-      this.dictionary.busTypeList.map(item => {
+      this.dictionary.sysAttachTypeList.map(item => {
         this.form.pubAttachList.push({
           busType: item.code,
           fileId: '',
@@ -236,18 +236,18 @@ export default {
     //获取详情处理
     detailsHandle() {
       this.form.pubAttachList = this.form.pubAttachList || []
-      this.dictionary.busTypeList.map(item => {
-        //   this.form.pubAttachList.map(j => {
-        //     if (item.code === j.code) {
-        //       item = Object.assign(j, item)
-        //     }
-        //   })
-        this.form.pubAttachList.push({
-          busType: item.code,
-          fileId: '',
-          fileName: ''
-        })
-      })
+      // this.dictionary.sysAttachTypeList.forEach(item => {
+      //   // this.form.pubAttachList.map(j => {
+      //   //   if (item.code === j.code) {
+      //   //     item = Object.assign(j, item)
+      //   //   }
+      //   // })
+      //   this.form.pubAttachList.push({
+      //     busType: item.code,
+      //     fileId: '',
+      //     fileName: ''
+      //   })
+      // })
       this.$nextTick(() => {
         this.$refs.form.clearValidate()
       })
@@ -547,7 +547,7 @@ export default {
         this.form = res.data
         this.form.sysUserList = [] // 企业操作员
         this.form.pubAttachList = [] // 企业附件
-        this.dictionary.busTypeList.map(item => {
+        this.dictionary.sysAttachTypeList.map(item => {
           this.form.pubAttachList.push({
             busType: item.code,
             fileId: '',

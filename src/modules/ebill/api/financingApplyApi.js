@@ -5,7 +5,7 @@ import download from "@utils/download";
 const financingApply = {
   //融资申请-下载融资协议
   downloadFinancAgreeTemplate: (params) => {
-    return download('/financing-apply/download-financ-agree-template',   params, 1, 'get')
+    return download('/financing-apply/download-financ-agree-template', params, 1, 'post')
   },
   //融资申请-数据字典
   getDirectory: (params) => {

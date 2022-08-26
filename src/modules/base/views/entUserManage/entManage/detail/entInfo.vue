@@ -213,7 +213,10 @@ export default {
   },
   data() {
     return {
-      zjControl: {},
+      zjControl: {
+        downloadFile: this.$api.registerAudit.downloadFile,
+        downloadFlow: this.$api.registerAudit.downloadFlow
+      },
       detailData: {},
       dictionary: {},
       dataList: [],
@@ -244,7 +247,11 @@ export default {
   },
   created() {
     this.getRow()
-    this.initAttchInfo()
+  },
+  watch: {
+    detailData() {
+      this.initAttchInfo()
+    }
   },
   methods: {
     //一键获取天眼查信息
@@ -278,10 +285,11 @@ export default {
     //相关附件资料------------------------------------------------------
     //相关附件资料初始化
     initAttchInfo() {
+      console.log(this.detailData)
       this.infoBar = ['营业执照', '法定代表人身份证', '操作用户经办员', '操作用户复核员', '风险信息接收人', '委托授权书']
-      let jb = this.detailData.entUserList.find(item => item.roleId == '2') || {}
-      let fh = this.detailData.entUserList.find(item => item.roleId == '3') || {}
-      let fx = this.detailData.entUserList.find(item => item.roleId == '4') || {}
+      let jb = this.detailData.entUserList.find(item => item.roleId == '5') || {}
+      let fh = this.detailData.entUserList.find(item => item.roleId == '6') || {}
+      let fx = this.detailData.entUserList.find(item => item.roleId == '7') || {}
       this.infoList = [
         {
           oneLabel: '统一社会信用代码：', oneValue: this.detailData.bizLicence,
@@ -296,29 +304,32 @@ export default {
           fiveValue: this.date(this.detailData.legalCertExpireDate)
         },
         {
-          oneLabel: '操作用户经办员：', oneValue: jb.userName, twoLabel: '证件类型：', twoValue: jb.certType, threeLabel: '证件号码：', threeValue: jb.certNo,
-          fourLabel: '证件有效期：', fourValue: this.date(jb.certStartDate), fiveValue: this.date(jb.certEndDate)
+          oneLabel: '经办员姓名:', oneValue: jb.userName,
+          twoLabel: '经办员身份证号码：', twoValue: jb.certNo,
+          threeLabel: '证件有效期：', threeValue: this.date(jb.certStartDate), fiveValue: this.date(jb.certEndDate)
         },
         {
-          oneLabel: '操作用户复核员：', oneValue: fh.userName, twoLabel: '证件类型：', twoValue: fh.certType, threeLabel: '证件号码：', threeValue: fh.certNo,
-          fourLabel: '证件有效期：', fourValue: this.date(fh.certStartDate), fiveValue: this.date(fh.certEndDate)
+          oneLabel: '操作用户复核员：', oneValue: fh.userName,
+          twoLabel: '证件号码：', twoValue: fh.certNo,
+          threeLabel: '证件有效期：', threeValue: this.date(fh.certStartDate), fiveValue: this.date(fh.certEndDate)
         },
         {
-          oneLabel: '风险信息接收人：', oneValue: fx.userName, twoLabel: '证件类型：', twoValue: fx.certType, threeLabel: '证件号码：', threeValue: fx.certNo,
-          fourLabel: '证件有效期：', fourValue: this.date(fx.certStartDate), fiveValue: this.date(fx.certEndDate)
+          oneLabel: '风险信息接收人：', oneValue: fx.userName,
+          twoLabel: '证件号码：', twoLabel: fx.certNo,
+          threeLabel: '证件有效期：', threeValue: this.date(fx.certStartDate), fiveValue: this.date(fx.certEndDate)
         },
       ]
       //是否开通天眼查
-      if (this.detailData.isOpenTyc === '1') {
-        // threeLabel:'天眼查核准日期',threeValue:''
-        this.infoList[0].threeLabel = '天眼查核准日期：'
-        if (this.detailData.approvedTime) {
-          this.infoList[0].threeValue = this.tycDates(this.detailData.approvedTime)
-        } else {
-          this.infoList[0].threeValue = '--'
-        }
+      // if (this.detailData.isOpenTyc === '1') {
+      //   // threeLabel:'天眼查核准日期',threeValue:''
+      //   this.infoList[0].threeLabel = '天眼查核准日期：'
+      //   if (this.detailData.approvedTime) {
+      //     this.infoList[0].threeValue = this.tycDates(this.detailData.approvedTime)
+      //   } else {
+      //     this.infoList[0].threeValue = '--'
+      //   }
 
-      }
+      // }
       this.infoViewList = [
         { fileId: this.detailData.qyyzFileId, fileName: this.detailData.qyyzAttachName },
         { fileId: this.detailData.qyfrzjFileId, fileName: this.detailData.qyfrzjAttachName },
@@ -332,10 +343,11 @@ export default {
     infoBarChange(index) {
       this.infoItem = this.infoList[index]
       this.infoBarActive = index
-
       //查看
       this.infoViewitem = this.infoViewList[index]
-
+      if (!this.infoViewitem.fileId) {
+        return
+      }
       //判断类型
       if (this.isImg(this.infoViewitem.fileName) || this.isImg(this.infoViewitem.attachName)) {
         this.viewItemType = 'image'
@@ -369,6 +381,20 @@ export default {
         }
       })
 
+    },
+    //判断是否是pdf
+    checkPdf(fileName) {
+      return /^\.pdf$/i.test(this.extension(fileName))
+    },
+    //判断是否是img
+    isImg(fileName) {
+      return /^\.(jpg|jpeg|png|gif|svg|bmp)$/i.test(this.extension(fileName))
+    },
+    extension(fileName) {
+      if (typeof fileName !== 'string') {
+        fileName = String(fileName || '')
+      }
+      return ((fileName.match(/\.[^\\./]+$/ig) || '')[0] || '').toLowerCase()
     },
     //内容
     prevnext(tag) {

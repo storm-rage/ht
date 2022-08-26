@@ -27,6 +27,7 @@ export default {
     downs(row){
       this.$api.baseCommon.downloadFile({
         fileUrl: row.fileId,
+        fileId: row.fileId,
         fileName: row.fileName,
       })
     },

@@ -126,6 +126,7 @@ export default {
     downstuff(row) {
       let params = {
         fileUrl:row.mygxzmclFileId,
+        fileId:row.mygxzmclFileId,
         fileName:row.mygxzmclFileName
       }
       this.zjControl.downloadFile(params).then((res) => {
@@ -134,6 +135,7 @@ export default {
     downsagreement(row) {
       let params = {
         fileUrl:row.mygxqrhFileId,
+        fileId:row.mygxqrhFileId,
         fileName:row.mygxqrhFileName
       }
       this.zjControl.downloadFile(params).then((res) => {

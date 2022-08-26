@@ -172,6 +172,11 @@ export default {
     this.getApi();
     this.zjControl.getDataDirectory().then(res => {
       this.dictionary = res.data
+      this.$nextTick(() => {
+        if (this.$refs.searchContractTable) {
+          this.$refs.searchContractTable.refreshColumn();
+        }
+      })
     })
   },
   methods: {

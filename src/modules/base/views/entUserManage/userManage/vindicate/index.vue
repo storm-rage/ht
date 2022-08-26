@@ -69,7 +69,12 @@
             <zj-table-column field="entState" title="企业状态" :formatter="(obj) => typeMap(dictionary.enterpriseStateList, obj.cellValue)" />
             <zj-table-column field="roleId" title="角色" :formatter="(obj) => typeMap(dictionary.sysRoleList, obj.cellValue)" />
             <zj-table-column field="userState" title="状态" :formatter="(obj) => typeMap(dictionary.userState, obj.cellValue)" />
-            <zj-table-column field="field3" title="支持开立债权凭证的对账单类型" v-if="pageType !== 'detail'" />
+            <zj-table-column field="statementAccountType" title="支持开立债权凭证的对账单类型" v-if="pageType !== 'detail'">
+              <template v-slot="{ row }">
+                {{handleStatementAccountType
+                (row.statementAccountType)}}
+              </template>
+            </zj-table-column>
             <zj-table-column title="操作" fixed="right" width="240px" v-if="pageType !== 'detail'">
               <template v-slot="{ row }">
                 <zj-button type="text" @click="makeCertKey(row)">制key</zj-button>
@@ -122,30 +127,17 @@ export default {
       this.$messageBox({
         type: "confirm",
         title: `制key确认`,
-        content: `${"是否确认为用户" + this.detailData.userName + "  -  制作key"}`,
+        content: `${"是否确认为用户" + this.detailData.userName + "  -  绑定云证书？"}`,
         messageResolve: () => {
-          // if (row.certType === "1") {
-          let paramsKey = {
+          let params = {
             p10: "",
             userId: this.detailData.id,
             code: row.code
           };
-          this.zjControl.makeCertKey(paramsKey).then(() => {
-            this.$Message.success(`已为用户：${row.userName}  -  制Key成功`);
+          this.zjControl.bindCloudCerUser(params).then(() => {
+            this.$Message.success(`已为用户：${row.userName}  -  绑定云证书成功！`);
             this.getUserInformation();
           });
-          // } else if (row.certType === "2") {
-          //   let paramsClound = {
-          //     entId: row.entId,
-          //     userId: row.id,
-          //   };
-          //   this.zjControl.bindCloudCerUser(paramsClound).then(() => {
-          //     this.$Message.success(
-          //       `已为用户：${row.userName}  -  绑定云证书成功！`
-          //     );
-          //     this.search(false);
-          //   });
-          // }
         },
       });
     },
@@ -209,6 +201,19 @@ export default {
         },
       });
     },
+    //对账单类型转码
+    handleStatementAccountType(data) {
+      if (!!data) {
+        let arr = data.split(',')
+        if (Array.isArray(arr) && data.length) {
+          arr.forEach((item, i) => {
+            console.log(this.typeMap(this.dictionary.statementAccountTypeList, item))
+            arr[i] = this.typeMap(this.dictionary.statementAccountTypeList, item)
+          })
+          return arr.join(',')
+        }
+      }
+    }
   },
 };
 </script>

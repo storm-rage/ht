@@ -12,99 +12,104 @@
           <el-row class="hd-row">
             <el-row>
               <el-col :span="12" v-if="row.financingProductType === '0'">
-                <el-form-item label="买方企业名称：" >{{form.buyerEntName}}</el-form-item>
+                <el-form-item label="买方企业名称：" >{{form.baseFinancingInfo.buyerEntName}}</el-form-item>
               </el-col>
               <el-col :span="12">
-                <el-form-item label="融资企业：" >{{form.fromEntName}}</el-form-item>
+                <el-form-item label="融资企业：" >{{form.baseFinancingInfo.fromEntName}}</el-form-item>
               </el-col>
             </el-row>
           </el-row>
           <el-row>
             <el-col :span="12">
-              <el-form-item label="融资合同编号：">{{form.contractNo}}</el-form-item>
+              <el-form-item label="融资合同编号：">{{form.baseFinancingInfo.contractNo}}</el-form-item>
             </el-col>
             <el-col :span="12">
               <el-form-item label="融资合同期限：">
-                {{form.contractTimeStart}}
-                {{form.contractTimeEnd?`至${form.contractTimeEnd}`:''}}
+                {{date(form.baseFinancingInfo.contractTimeStart)}}
+                {{form.baseFinancingInfo.contractTimeEnd?`至${date(form.baseFinancingInfo.contractTimeEnd)}`:''}}
               </el-form-item>
             </el-col>
           </el-row>
           <el-row>
             <el-col :span="12" v-if="row.financingProductType === '0'">
               <el-form-item label="应收账款金额：">
-                <zj-number-input :precision="2" v-model="form.transferAmt" disabled>
+                <zj-number-input :precision="2" v-model="form.baseFinancingInfo.transferAmt" disabled>
                   <template slot="append">元</template>
                 </zj-number-input>
-                <div>{{form.transferAmt?digitUp(form.transferAmt):''}}</div>
+                <div>{{form.baseFinancingInfo.transferAmt?digitUp(form.baseFinancingInfo.transferAmt):''}}</div>
               </el-form-item>
             </el-col>
             <el-col :span="12" v-if="row.financingProductType === '0'">
               <el-form-item label="应收账款转让比例：">
-                <zj-number-input :precision="2" v-model="form.discountRate" disabled>
+                <zj-number-input :precision="2" v-model="form.baseFinancingInfo.discountRate" disabled>
                   <template slot="append">%</template>
                 </zj-number-input>
               </el-form-item>
             </el-col>
             <el-col :span="12" v-if="row.financingProductType !== '0'">
               <el-form-item label="申请转让金额：">
-                <zj-number-input :precision="2" v-model="form.transferAmt" disabled>
+                <zj-number-input :precision="2" v-model="form.baseFinancingInfo.transferAmt" disabled>
                   <template slot="append">元</template>
                 </zj-number-input>
-                <div>{{form.transferAmt?digitUp(form.transferAmt):''}}</div>
+                <div>{{form.baseFinancingInfo.transferAmt?digitUp(form.baseFinancingInfo.transferAmt):''}}</div>
               </el-form-item>
             </el-col>
             <el-col :span="12" v-if="row.financingProductType !== '0'">
               <el-form-item label="融资比例：">
-                {{form.discountRate?`${form.discountRate}%`:''}}
+                {{form.baseFinancingInfo.discountRate?`${form.baseFinancingInfo.discountRate}%`:''}}
               </el-form-item>
             </el-col>
           </el-row>
           <el-row>
             <el-col :span="12">
               <el-form-item label="融资申请金额：" >
-                {{form.tranAmt? `${form.tranAmt}元`:''}}{{form.tranAmt?digitUp(form.tranAmt):''}}
-                <zj-content-tip text="（融资申请金额= 应收账款金额*应收账款转让比例）"/>
+                {{form.baseFinancingInfo.tranAmt? `${form.baseFinancingInfo.tranAmt}元`:''}}
+                {{form.baseFinancingInfo.tranAmt?digitUp(form.baseFinancingInfo.tranAmt):''}}
+                <div>
+                  <zj-content-tip text="（融资申请金额= 应收账款金额*应收账款转让比例）"/>
+                </div>
               </el-form-item>
             </el-col>
             <el-col :span="12" v-if="row.financingProductType === '0'">
-              <el-form-item label="融资月利率：">{{form.interestRate}}</el-form-item>
+              <el-form-item label="融资月利率：">{{form.baseFinancingInfo.interestRate}}</el-form-item>
             </el-col>
             <el-col :span="12" v-if="row.financingProductType !== '0'">
               <el-form-item label="融资开始日：">
-                <zj-date-picker placeholder="年/月/日" :date.sync="form.contractTimeStart" disabled ></zj-date-picker>
+                <zj-date-picker placeholder="年/月/日" :date.sync="form.baseFinancingInfo.contractTimeStart" disabled ></zj-date-picker>
               </el-form-item>
             </el-col>
           </el-row>
           <el-row>
             <el-col :span="12">
               <el-form-item label="预计融资期限：">
-                {{form.estimateTimeStart}}
-                {{form.estimateTimeEnd?`至${form.estimateTimeEnd}`:''}}
-                {{form.estimateDays?`共${form.estimateDays}天`:''}}
+                {{date(form.baseFinancingInfo.estimateTimeStart)}}
+                {{form.baseFinancingInfo.estimateTimeEnd?`至${date(form.baseFinancingInfo.estimateTimeEnd)}`:''}}
+                {{form.baseFinancingInfo.estimateDays?`共${form.baseFinancingInfo.estimateDays}天`:''}}
               </el-form-item>
             </el-col>
             <el-col :span="12" v-if="row.financingProductType !== '0'">
               <el-form-item label="融资月利率：">
-                {{form.interestRate?money(form.interestRate):''}}
+                {{form.baseFinancingInfo.interestRate?money(form.baseFinancingInfo.interestRate):''}}
               </el-form-item>
             </el-col>
             <el-col :span="12" v-if="row.financingProductType === '0'">
               <el-form-item label="预计利息：">
-                {{form.interestAmt?money(form.interestAmt):''}}
-                <zj-content-tip text="（预计利息 = 融资申请金额*融资月利率/30*预计融资天数）"/>
+                {{form.baseFinancingInfo.interestAmt?money(form.baseFinancingInfo.interestAmt):''}}
+                <div>
+                  <zj-content-tip text="（预计利息 = 融资申请金额*融资月利率/30*预计融资天数）"/>
+                </div>
               </el-form-item>
             </el-col>
           </el-row>
           <el-row>
             <el-col :span="12" v-if="row.financingProductType !== '0'">
               <el-form-item label="预计利息：">
-                {{form.interestAmt?money(form.interestAmt):''}}
+                {{form.baseFinancingInfo.interestAmt?money(form.baseFinancingInfo.interestAmt):''}}
                 <zj-content-tip text="（预计利息 = 融资申请金额*融资月利率/30*预计融资天数）"/>
               </el-form-item>
             </el-col>
             <el-col :span="12">
-              <el-form-item label="收款银行账号：">{{form.receiptAcctNo}}</el-form-item>
+              <el-form-item label="收款银行账号：">{{form.baseFinancingInfo.receiptAcctNo}}</el-form-item>
             </el-col>
           </el-row>
         </el-form>
@@ -117,7 +122,7 @@
             <zj-table-column field="agreementName" title="阶段性协议名称" />
             <zj-table-column field="agreementStartDate" title="协议签订日期" :formatter="date"/>
             <zj-table-column field="agreementEstimateEndDate" title="协议预计到期日" :formatter="date"/>
-            <zj-table-column field="agreementStatus" title="状态" :formatter="(obj)=>typeMap(dictionary.states,obj.cellValue)"/>
+            <zj-table-column field="agreementStatus" title="状态" :formatter="(obj)=>typeMap(dictionary.agreementStatus,obj.cellValue)"/>
             <zj-table-column field="fileName" title="附件" />
             <zj-table-column title="操作" fixed="right">
               <template v-slot="{row}">
@@ -193,7 +198,9 @@ export default {
         submitFinancingReview: this.$api.financingReview.submitFinancingReview,//提交
         downloadTemplate:this.$api.financingReview.downloadTemplate,//下载协议模板
       },
-      form: {},
+      form: {
+        baseFinancingInfo: {},
+      },
       dictionary: {},
       checked: false,
     }
@@ -214,7 +221,10 @@ export default {
       })
     },
     attaDownLoad(row) {
-      this.zjControl.downloadFile(row.fileId)
+      this.$api.baseCommon.downloadFile({
+        fileUrl: row.fileId,
+        fileName: row.fileName,
+      })
     },
     reject() {
       if(!this.checked) {

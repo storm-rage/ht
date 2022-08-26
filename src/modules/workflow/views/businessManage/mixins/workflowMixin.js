@@ -9,7 +9,7 @@ export default {
       },
       // 业务申请信息
       applyModel: {},
-      // 操作记录
+      // 操作记录z'j
       operateLogList: []
     }
   },
