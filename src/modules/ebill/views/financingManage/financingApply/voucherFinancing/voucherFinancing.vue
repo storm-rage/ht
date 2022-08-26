@@ -48,8 +48,7 @@
             </el-form>
           </template>
           <zj-table ref="searchTable"
-                    :api="searchForm.entId?zjControl.queryFinancingApplyBillPage:''"
-                    :params="searchForm.entId?searchForm:{}"
+                    :dataList="billList"
                     @checkbox-change="checkChange"
                     @checkbox-all="checkChange"
                     :radio-config="{highlight: true}"
@@ -64,8 +63,8 @@
             <zj-table-column field="holderDate" title="凭证持有日期" :formatter="date"/>
             <zj-table-column field="expireDate" title="凭证到期日" :formatter="date"/>
             <el-row slot="pager-left" class="slotRows" >
-              凭证金额合计：{{moneyNoSynbol(detail.totalAmount)}}
-              <span class="zj-m-l-10">已勾选凭证金额合计：{{moneyNoSynbol(' ')}}</span>
+              海e单金额合计：{{moneyNoSynbol(totalAmount)}}
+              <span class="zj-m-l-10">已勾选凭证金额合计：{{moneyNoSynbol(checkedTotalAmount)}}</span>
             </el-row>
           </zj-table>
         </zj-list-layout>
@@ -79,6 +78,9 @@ export default {
     zjControl: Object,
     dictionary: Object,
   },
+  computed: {
+
+  },
   data() {
     return {
       searchForm: {
@@ -91,7 +93,9 @@ export default {
         ebillAmtEnd: '',
         ebillCodeLike: '',
       },
-      detail: {},
+      billList: [],
+      totalAmount: '',
+      checkedTotalAmount: 0,
       nextParams: {},// 下一步需要的参数
     };
   },
@@ -107,19 +111,31 @@ export default {
         this.nextParams = {
           entId: params.entId,
         }
+        this.billList = res.data.rows
+        this.totalAmount = res.data.totalAmount
       })
     },
     checkChange() {
       let checkArr = this.$refs.searchTable.getCheckboxRecords()
+      if(checkArr.length > 1 ) {
+        this.checkedTotalAmount = checkArr.reduce((a,b)=>{
+          return Number(a.ebillAmt)+Number(b.ebillAmt)
+        })
+      } else if(checkArr.length === 1) {
+        this.checkedTotalAmount = checkArr[0].ebillAmt
+      } else {
+        this.checkedTotalAmount = 0
+      }
       console.log(`~`+JSON.stringify(checkArr))
+      let nextStepFlag = false
       //勾选多个凭证时，遍历数组查看选中的凭证是否为同一个到期日
-      let flag = false
       if(checkArr.length > 1) {
         let expDate = checkArr[0].expireDate
         for(let i of checkArr) {
           if(i.expireDate !== expDate.expireDate) {
-            flag = true
-            return this.$message.error('请选择到期日为同一天的凭证！')
+            nextStepFlag = true
+            this.$message.error('请选择到期日为同一天的凭证！')
+            break
           }
         }
       }
@@ -128,7 +144,7 @@ export default {
       this.nextParams = {
         ...this.nextParams,
         idList: selectBillId,
-        nextFlag: flag,
+        nextFlag: nextStepFlag,
       }
       this.$emit('nextStepParams',this.nextParams)
     },
