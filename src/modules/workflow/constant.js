@@ -162,7 +162,7 @@ export const myItemsPath = {
         detailPath: 'billClearingDetail'
       },
       // 驳回待处理
-      'S003': {
+      'S004': {
         auditPath: 'billClearingBackAudit',
         detailPath: 'billClearingDetail'
       },
@@ -177,7 +177,7 @@ export const myItemsPath = {
         detailPath: 'billBalanceClearingDetail'
       },
       // 驳回待处理
-      'S003': {
+      'S004': {
         auditPath: 'billBalanceClearingBackAudit',
         detailPath: 'billBalanceClearingDetail'
       },
@@ -192,7 +192,7 @@ export const myItemsPath = {
         detailPath: 'orderClearingDetail'
       },
       // 驳回待处理
-      'S003': {
+      'S004': {
         auditPath: 'orderClearingBackAudit',
         detailPath: 'orderClearingDetail'
       },
@@ -207,7 +207,7 @@ export const myItemsPath = {
         detailPath: 'orderBalanceClearingDetail'
       },
       // 驳回待处理
-      'S003': {
+      'S004': {
         auditPath: 'orderBalanceClearingBackAudit',
         detailPath: 'orderBalanceClearingDetail'
       },

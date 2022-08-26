@@ -169,6 +169,7 @@ export default {
     downstuff(row) {
       let params = {
         fileUrl: row.fileId,
+        fileId: row.fileId,
         fileName: row.fileName
         //后端字段取反，等会改完再看看
       }

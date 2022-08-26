@@ -96,7 +96,7 @@
           plain:this.plain,
           round:this.round,
           circle:this.circle,
-          loding:this.loading,
+          loading:this.loading,
           disabled:this.disabled,
           icon:this.icon,
           autofocus:this.autofocus,

@@ -16,7 +16,12 @@ export default {
       // 操作记录
       operateRecordList: [],
       // 业务信息
-      bizInfo:{}
+      bizInfo:{
+        attachInfoList:[],
+        basicInfo: {},
+        financeInfo: {},
+        waitClearInfoList: []
+      }
     }
   },
   created() {
@@ -81,7 +86,7 @@ export default {
               return item.id
             });
             this.rejectLoading = true;
-            this.zjControl.billReceiptReview({
+            this.zjControl.clearReview({
               operateFlag: OperResult.BACK,
               reviewOpinion: notes,
               serialNo: this.row.serialNo,
@@ -120,8 +125,8 @@ export default {
           opinion: notes,
           serialNo: this.row.serialNo,
           clearIds,
-          attachInfoList: bizData.fileData.list,
-          bizDesc: bizData.fileData.busDesc
+          attachInfoList: bizData.list,
+          bizDesc: bizData.busDesc
         }).then(res => {
           this.passLoading = false;
           //成功，关闭
