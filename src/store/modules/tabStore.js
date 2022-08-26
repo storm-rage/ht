@@ -25,9 +25,9 @@ const mutations = {
       state.tabTagList[boo] = JSON.parse(JSON.stringify(rItem))
       if(rItem.params && rItem.params.boo){
         //强制刷新
-        // const routes = router.getRoutes();
-        // const route = routes.find((item) => {return item.name === rItem.name})
-        const route = router.currentRoute
+        const routes = router.getRoutes();
+        const route = routes.find((item) => {return item.name === rItem.name})
+        // const route = router.currentRoute
         if (route != null && route.meta) {
           route.meta.refreshIndex !== undefined ? route.meta.refreshIndex += 1 : route.meta.refreshIndex =0
           rItem.meta = {refreshIndex: route.meta.refreshIndex};
