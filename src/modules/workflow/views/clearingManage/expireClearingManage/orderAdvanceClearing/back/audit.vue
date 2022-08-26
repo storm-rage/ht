@@ -4,7 +4,7 @@
     <!--  业务申请信息  -->
     <biz-apply-info :biz-info="tranInfo"></biz-apply-info>
     <!--  具体业务信息  -->
-    <order-advance-clearing-info :biz-info="bizInfo" isEdit></order-advance-clearing-info>
+    <order-advance-clearing-info ref="bizInfo" :biz-info="bizInfo" isEdit></order-advance-clearing-info>
     <!--  操作记录  -->
     <operate-log :log-list="operateRecordList"></operate-log>
     <!--  审批意见  -->

@@ -151,7 +151,8 @@ export default {
     downloadFile(){
       let downFile = {
         fileName:this.fileName,
-        fileUrl:this.filePath
+        fileUrl:this.filePath,
+        fileId:this.filePath
       }
       this.download(
               '/common/download-file',
