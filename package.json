@@ -28,7 +28,6 @@
     "postcss-px2rem": "^0.3.0",
     "v-charts": "^1.19.0",
     "v-viewer": "^1.6.3",
-    "versions": "^9.3.0",
     "vue": "^2.6.11",
     "vue-i18n": "^8.0.0",
     "vue-pdf": "4.0.7",
