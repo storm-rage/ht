@@ -82,7 +82,7 @@
               <el-col>
                 <el-form-item label="用户角色：">
                   <el-select v-model="form.roles[index].roleId" filterable placeholder="请选择" :popper-append-to-body="false" multipl @change="roleChange">
-                    <el-option v-for="item in dictionary.autoRoleList" :key="item.code" :label="item.desc" :value="item.code">
+                    <el-option v-for="item in dictionary.autoRoleList" :key="item.code" :label="item.desc" :value="item.code" :disabled="item.disabled">
                     </el-option>
                   </el-select>
                   <el-button @click="addDomRole" class="zj-m-l-20" v-if="form.roles.length < 2">新增</el-button>
@@ -205,7 +205,7 @@ export default {
           item.disabled = true
         }
       });
-      console.log(val)
+      console.log(this.dictionary.autoRoleList)
     },
     //获取字典
     getDictionary() {
