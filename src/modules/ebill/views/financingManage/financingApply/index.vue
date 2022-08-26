@@ -71,9 +71,12 @@ export default {
       }
       if(this.tabs === 'voucherFinancing') {
         if(this.nextStepParams.nextFlag) {
-          return this.$message.error('请选择到期日为同一天的凭证！')
+          this.$message.error('请选择到期日为同一天的凭证！')
+          return
         }
-        this.goChild('voucherFinancingDetail', {...this.nextStepParams})
+        if(!this.nextStepParams.nextFlag) {
+          this.goChild('voucherFinancingDetail', {...this.nextStepParams})
+        }
       }
     },
     handelNextStepParams(val) {

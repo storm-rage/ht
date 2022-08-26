@@ -27,7 +27,7 @@
           <el-input v-model="form.registerCapital" :disabled="form.isHtEnterprise == '1'"/>
         </el-form-item>
         <el-form-item label="企业工商有效期：" prop="registerEndDate">
-          <el-input v-model="form.registerEndDate"/>
+          <zj-date-picker :date.sync="form.registerEndDate" :overNow="true" :format="'yyyy年MM月dd日'"/>
         </el-form-item>
         <!-- 企业 -->
         <el-form-item label="企业规模：" prop="scale" class="no-required entType">
@@ -579,11 +579,10 @@ export default {
       this.form.isSelectEntBankInfo = true
     },
     bankChange(val) {
-      console.log(val)
       for(let i of this.bankInfoList) {
         if(i.confirmBankId === val) {
           this.form.confirmBankName = i.confirmBankName
-          this.form.entBankInfo.bankName = i.confirmBankName
+          // this.form.entBankInfo.bankName = i.confirmBankName
           break
         }
       }
@@ -643,11 +642,7 @@ export default {
     cancel(row){
       if(row.bankAccId){
         this.form.entBankInfoList.splice(0,1,this.oldRowInfo)
-      }
-      // else if(!row.bankAccId && this.form.entBankInfoList.length == 1){
-      //   this.form.entBankInfoList.splice(0,1,this.oldRowInfo)
-      // }
-      else{
+      } else{
         this.form.entBankInfoList.splice(0,1)
       }
       this.$refs.bankAccnameTable.clearActived()
@@ -676,45 +671,59 @@ export default {
     //暂存form信息
     save(flag) {
       //----------------------非空校验-------------------------
-      let valiArr = []
-      let key = true
-      for(let nm in this.rules){
-        valiArr.push(nm)
+      // let valiArr = []
+      // let key = true
+      // for(let nm in this.rules){
+      //   valiArr.push(nm)
+      // }
+      // for(let i=0; i<valiArr.length; i++){
+      //   if(!key){break}
+      //   //非空且规则为必填
+      //   if(!this.form[valiArr[i]] && this.rules[valiArr[i]].required == true){
+      //     key = false
+      //     this.$message.error(this.rules[valiArr[i]][0])
+      //   }
+      // }
+      // if(!key){return}
+      // //------------------------------------------------------
+      // this.$refs.form.validate(boo=>{
+      //   if (!boo){
+      //     return
+      //   }else{
+      //     //银行账户校验
+      //     console.log(`----`+this.form.entBankInfoList)
+      //     if(this.form.entBankInfoList == null || [] && this.form.entBankInfoList.length === 0){
+      //       this.$message.error('银行账户不能为空！')
+      //       console.log(this.form.entBankInfoList)
+      //       return
+      //     }
+      //     if(this.form.isHtEnterprise === '0') {
+      //       this.form.entBankInfo = this.form.entBankInfoList[0]
+      //     }
+      //     this.form.registerOperateFlag = flag
+      //     this.form.legalCertType = this.entInfoObj.form.legalCertType
+      //     this.zjControl.saveEntInfo(this.form).then(res => {
+      //       this.$message.success('提交企业资料成功！')
+      //       this.entInfoObj.form.id = res.data.id
+      //       let params = Object.assign({},this.entInfoObj)
+      //       params.form = params.form ? params.form : this.form
+      //       this.$emit('update:entInfoObj',params)
+      //     })
+      //   }
+      // })
+
+      //不校验保存注册信息
+      if(this.form.isHtEnterprise === '0') {
+        this.form.entBankInfo = this.form.entBankInfoList[0]
       }
-      for(let i=0; i<valiArr.length; i++){
-        if(!key){break}
-        //非空且规则为必填
-        if(!this.form[valiArr[i]] && this.rules[valiArr[i]].required == true){
-          key = false
-          this.$message.error(this.rules[valiArr[i]][0])
-        }
-      }
-      if(!key){return}
-      //------------------------------------------------------
-      this.$refs.form.validate(boo=>{
-        if (!boo){
-          return
-        }else{
-          //银行账户校验
-          console.log(`----`+this.form.entBankInfoList)
-          if(this.form.entBankInfoList == null || [] && this.form.entBankInfoList.length === 0){
-            this.$message.error('银行账户不能为空！')
-            console.log(this.form.entBankInfoList)
-            return
-          }
-          if(this.form.isHtEnterprise === '0') {
-            this.form.entBankInfo = this.form.entBankInfoList[0]
-          }
-          this.form.registerOperateFlag = flag
-          this.form.legalCertType = this.entInfoObj.form.legalCertType
-          this.zjControl.saveEntInfo(this.form).then(res => {
-            this.$message.success('提交企业资料成功！')
-            this.entInfoObj.form.id = res.data.id
-            let params = Object.assign({},this.entInfoObj)
-            params.form = params.form ? params.form : this.form
-            this.$emit('update:entInfoObj',params)
-          })
-        }
+      this.form.registerOperateFlag = flag
+      this.form.legalCertType = this.entInfoObj.form.legalCertType
+      this.zjControl.saveEntInfo(this.form).then(res => {
+        this.$message.success('提交企业资料成功！')
+        this.entInfoObj.form.id = res.data.id
+        let params = Object.assign({},this.entInfoObj)
+        params.form = params.form ? params.form : this.form
+        this.$emit('update:entInfoObj',params)
       })
     },
     //下一步按钮
@@ -807,6 +816,9 @@ export default {
   .register102-legalCertType{
     .el-select-dropdown.el-popper{
       width: 250px!important;
+    }
+    .el-input {
+      width: 260px;
     }
   }
 </style>
