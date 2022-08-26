@@ -142,6 +142,7 @@ export default {
   name: 'addOrEdit',
   props: {
     zjControl: Object,
+    rowData: Object,
     dictionary: {
       type: Object,
       default: ()=>{
@@ -305,10 +306,11 @@ export default {
             buyerId: this.rows[0].buyerId,
             supplierId: this.rows[0].sellerId,
           }
+          let requestUrl = this.rowData.maintainType=='1'?this.zjControl.savePhasedAgree:this.zjControl.saveWaitPhasedAgree
           //新增保存
           if(this.title === '新增') {
             // console.log(params)
-            this.zjControl.savePhasedAgree(params).then(res=>{
+            requestUrl(params).then(res=>{
               //...
               this.$emit('agreementUpdate', params)
               this.$message.success(res.msg)
@@ -318,7 +320,7 @@ export default {
           }
           //维护保存
           if(this.title === '维护') {
-            this.zjControl.savePhasedAgree(params).then(res=>{
+            requestUrl(params).then(res=>{
               //...
               this.$emit('agreementUpdate', params)
               this.$message.success(res.msg)
