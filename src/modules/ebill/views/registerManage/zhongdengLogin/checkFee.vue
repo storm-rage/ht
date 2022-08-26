@@ -47,26 +47,26 @@ export default {
     },
     created() {
         this.getApi()
-        this.getRow()
-        console.log(this.row);
+        // this.getRow()
+        // console.log(this.row);
         // this.getDictionary()
         // this.getDetail()
     },
     methods: {
-        submit(){
-            let row={
-                a:1,
-                b:2
-            }
-            this.goChild('zhongdengManagexq3',row)
-        },
-        next1(){
-            let row={
-                a:1,
-                b:2
-            }
-            this.goChild('zhongdengManagexq3',row)
-        }
+        // submit(){
+        //     let row={
+        //         a:1,
+        //         b:2
+        //     }
+        //     this.goChild('zhongdengManagexq3',row)
+        // },
+        // next1(){
+        //     let row={
+        //         a:1,
+        //         b:2
+        //     }
+        //     this.goChild('zhongdengManagexq3',row)
+        // }
         // getDictionary() {
         //     this.zjControl.getFinancingTransDirectory().then(res => {
         //         this.dictionary = Object.assign({}, res.data)
