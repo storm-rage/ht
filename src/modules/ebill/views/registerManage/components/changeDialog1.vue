@@ -76,7 +76,7 @@ export default {
                 mainContractCurrency: this.row.mainContractCurrency,
                 mainContractNo: this.row.mainContractNo,
                 mainContractSum: this.row.mainContractSum,
-                idList: [22],
+                idList: this.idList,
             }
             console.log(params);
             this.zjControl.changeManage(params).then(res => {

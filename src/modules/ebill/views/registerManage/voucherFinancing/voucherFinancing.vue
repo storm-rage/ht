@@ -21,8 +21,8 @@
             </el-form-item>
           </el-form>
         </template>
-        <zj-table ref="searchTable" :api="zjControl.pzrzList" :params="searchForm" keep-source @checkbox-change="checkChange"
-          @checkbox-all="checkChange" :edit-config="{
+        <zj-table ref="searchTable" :api="zjControl.pzrzList" :params="searchForm" keep-source
+          @checkbox-change="checkChange" @checkbox-all="checkChange" :edit-config="{
             trigger: 'manual',
             mode: 'row',
             icon: '-',
@@ -31,9 +31,9 @@
           }">
           <!--   :dataList="list1"-->
           <zj-table-column type="checkbox" width="40" />
-          <zj-table-column  title="融资流水号" >
+          <zj-table-column title="融资流水号">
             <template v-slot="{ row }">
-               <zj-button type="text" @click="toEdit(row)">{{row.serialNo}}</zj-button>
+              <zj-button type="text" @click="toEdit(row)">{{ row.serialNo }}</zj-button>
             </template>
           </zj-table-column>
           <zj-table-column field="fromEntName" title="融资企业" />
@@ -50,18 +50,23 @@
     </zj-content-container>
     <zj-workflow v-model="workflow">
       <el-row slot="right">
-        <!-- <zj-button @click="toIssuance" >中登登记</zj-button>  
-          <zj-button @click="toIssuance" >手工登记</zj-button> -->
-        <zj-button>中登登记</zj-button>
-        <zj-button>确认放款</zj-button>
-        <zj-button>手工登记</zj-button>
+        <zj-button @click="zdlogin">中登登记</zj-button>
+        <zj-button @click="openDialog1">手工登记</zj-button>
+        <zj-button  @click="daqian">确认放款</zj-button>
       </el-row>
     </zj-workflow>
+    <loginDialog ref="loginDialog"></loginDialog>
+    <artRegister ref="artRegister" :idlist="this.idlist"></artRegister>
   </div>
 </template>
 <script>
+import loginDialog from "../components/loginDialog";
+import artRegister from "../components/artRegister";
 export default {
-  components: {},
+  components: {
+    loginDialog,
+    artRegister
+  },
   data() {
     return {
       workflow: '',
@@ -74,48 +79,19 @@ export default {
         pzrzList: this.$api.zhongdengManage.pzrzList, //凭证融资列表
         getDictionary: this.$api.zhongdengManage.getDictionary,//字典
         confirmLoan: this.$api.zhongdengManage.confirmLoan,//确认放款
+        orderPage: this.$api.zhongdengManage.orderPage, //订单保理列表
+        registerDetails: this.$api.zhongdengManage.registerDetails,//手工登记详情
+        uploadFile: this.$api.baseCommon.uploadFile,//手工登记详情
+        registerSubmit: this.$api.zhongdengManage.registerSubmit,//手工登记提交
+        checkLogin: this.$api.zhongdengManage.checkLogin,//校验登录
+        getCode: this.$api.zhongdengManage.getCode,//获取验证码
+        getPictureCode: this.$api.zhongdengManage.getPictureCode,//获取图形验证码
+        zdLongin: this.$api.zhongdengManage.zdLongin,//登录中登
+        confirmLoan: this.$api.zhongdengManage.confirmLoan,//确认放款
       },
       dictionary: {},
-      list1: [
-        {
-          id:"1",
-          serialNo: 'scm00001',
-          fromEntName: '某某产品一号',
-          financingProductType: '上游',
-          field4: '订单保理',
-          field5: '2022.09.08 11:18:19',
-          field6: '生效',
-          state: '是'
-        },
-        {
-          serialNo: 'scm00001',
-          fromEntName: '某某产品一号',
-          financingProductType: '上游',
-          field4: '订单保理',
-          field5: '2022.09.08 11:18:19',
-          field6: '生效',
-          state: '是'
-        },
-        {
-          serialNo: 'scm00001',
-          fromEntName: '某某产品一号',
-          financingProductType: '上游',
-          field4: '订单保理',
-          field5: '2022.09.08 11:18:19',
-          field6: '生效',
-          state: '是'
-        },
-        {
-          serialNo: 'scm00001',
-          fromEntName: '某某产品一号',
-          financingProductType: '上游',
-          field4: '订单保理',
-          field5: '2022.09.08 11:18:19',
-          field6: '生效',
-          state: '是'
-        }
-      ],
-      tradeList: []
+      tradeList: [],
+      idlist: [],
     };
   },
   created() {
@@ -123,14 +99,80 @@ export default {
     this.getDetail();
   },
   methods: {
+    daqian(){
+      if (this.idlist.length == 0) {
+        this.$messageBox({
+          type: 'warning',
+          content: '请至少选择一条'
+        })
+      } else {
+        let params={
+          idList:this.idlist
+        }
+        this.zjControl.confirmLoan(params).then(res => {
+        this.$messageBox({
+          type: 'success',
+          content: '放款成功'
+        })
+      })
+      }
+    },
+    openDialog1() {
+      if (this.idlist.length == 0) {
+        this.$messageBox({
+          type: 'warning',
+          content: '请至少选择一条'
+        })
+      } else {
+        let bizType="00"
+        this.$refs.artRegister.open(bizType)
+      }
+
+    },
+    dialog(row) {
+      this.$refs.loginDialog.open(row)
+    },
+    // --------中登登记
+    zdlogin() {
+      if (this.idlist.length == 0) {
+        this.$messageBox({
+          type: 'warning',
+          content: '请至少选择一条'
+        })
+      } else {
+        this.zjControl.checkLogin().then(res => {
+          console.log(res.data);
+          let row = {
+            checkLogin: res.data,
+            idlist: this.idlist,
+            bizType: "00"
+          }
+          this.checkLogin = res.data
+          if (res.data.login == true) {
+            this.goLogin(row)
+          } else {
+            this.dialog(row)
+          }
+        })
+      }
+
+    },
+    goLogin(row) {
+      this.goChild('zhongdengManagexq1', row)
+    },
     toEdit(row) {
       this.goChild('zhongdengManageDetailpz', row)
     },
     checkChange() {
+      this.idlist = []
       let checkArr = this.$refs.searchTable.getCheckboxRecords()
-      console.log(checkArr, '勾选的值11111')
+      // console.log(checkArr, '勾选的值11111')
       this.list = checkArr
-      console.log(this.list, '勾选的值22222')
+      // console.log(this.list, '勾选的值22222')
+      this.list.forEach(e => {
+        this.idlist.push(e.id)
+      })
+      console.log(this.idlist);
     },
     getDetail() {
       this.zjControl.getDictionary().then(res => {
