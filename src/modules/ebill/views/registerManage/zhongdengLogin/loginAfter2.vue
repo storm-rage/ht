@@ -95,6 +95,7 @@ export default {
         this.getApi()
         this.getRow()
         console.log(this.row);
+
         // this.getDictionary()
         // this.getDetail()
     },
@@ -105,12 +106,15 @@ export default {
                 idList:this.row.idList,
                 initRegisterToken1:this.row.initRegisterToken1,
                 validateFlownNo:this.row.validateFlownNo
-                
             }
              this.zjControl.submitZd(params).then(res => {
                this.validateFlownNo=res.data.validateFlownNo
             })
-            this.goChild('zhongdengManagexq3')
+            let row={
+                validateFlownNo:this.row.validateFlownNo,
+                idList:this.row.idList,
+            }
+            this.goChild('zhongdengManagexq3',row)
         }
         // getDictionary() {
         //     this.zjControl.getFinancingTransDirectory().then(res => {
