@@ -5,7 +5,7 @@
     <!-- 贸易关系  -->
     <trade-list :tableData="formData.tradeRelationModelList"/>
     <!-- 阶段性协议信息   -->
-    <multistage-agreement-detail :tableData="formData.phasedAgreementList" :zjControl="zjControl"/>
+    <multistage-agreement-detail v-bind="$attrs" :tableData="formData.phasedAgreementList" :zjControl="zjControl"/>
   </div>
 </template>
 <script>
