@@ -30,7 +30,7 @@
         <el-row>
           <el-col :span="12">
             <el-form-item label="应收账款金额：" prop="tranAmt">
-              <zj-number-input :precision="2" v-model="form.tranferAmt" @change="handleChange">
+              <zj-number-input :precision="2" v-model="form.tranferAmt" @change="handleChange" :min="0.01">
                 <template slot="append">元</template>
               </zj-number-input>
               <div>{{form.tranferAmt?digitUp(form.tranferAmt):''}}</div>
@@ -111,9 +111,6 @@
                 <zj-button type="text" @click="attaDownLoad(row)">下载</zj-button>
               </template>
             </zj-table-column>
-            <el-row slot="pager-left" class="slotRows" >
-              凭证金额合计：{{moneyNoSynbol(' ')}}
-            </el-row>
           </zj-table>
         </zj-content-block>
       </el-form>

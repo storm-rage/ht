@@ -6,7 +6,7 @@
             剩余可用额度：<span>{{form.surplusQuota}}</span>
             总额度：<span>{{form.totalQuota}}</span>
           </div>
-          <zj-top-header title="入库融资申请/凭证融资申请"/>
+          <zj-top-header :title="`${titleInfo}申请`"/>
           <el-form :model="form" ref="form" :rules="rules" label-width="200px" class="zj-m-t-20">
             <el-row class="hd-row">
               <el-form-item label="融资企业：">{{form.sellerName}}</el-form-item>
@@ -27,7 +27,7 @@
                   <zj-number-input :precision="2" v-model="form.tranferAmt" @change="handleChange">
                     <template slot="append">元</template>
                   </zj-number-input>
-                  <div>{{form.tranAmt?digitUp(form.tranAmt):''}}</div>
+                  <div>{{form.tranferAmt?digitUp(form.tranferAmt):''}}</div>
                 </el-form-item>
               </el-col>
               <el-col :span="12">
@@ -41,7 +41,9 @@
                 <el-form-item label="融资申请金额：">
                   {{form.tranAmt?`${form.tranAmt}元`:''}}
                   {{form.tranAmt?digitUp(form.tranAmt):''}}
-                  <zj-content-tip text="（融资申请金额=申请转让金额*融资比例 ）"/>
+                  <div>
+                    <zj-content-tip text="（融资申请金额=申请转让金额*融资比例 ）"/>
+                  </div>
                 </el-form-item>
               </el-col>
               <el-col :span="12">
@@ -95,8 +97,8 @@
         <zj-content-block>
           <zj-header title="融资协议"/>
           <el-row class="button-row">
-            <zj-button type="text" @click="downloadAgreement('RKRZXY')">《入库融资协议》</zj-button>
-            <zj-button type="text" @click="downloadAgreement('PZRZXY')">《凭证融资协议》</zj-button>
+            <zj-button type="text" @click="downloadAgreement('RKRZXY')" v-if="form.financingFlag === '1'">《入库融资协议》</zj-button>
+            <zj-button type="text" @click="downloadAgreement('PZRZXY')" v-if="form.financingFlag === '2'">《凭证融资协议》</zj-button>
           </el-row>
           <div class="explain-text zj-m-l-10 zj-m-t-10">
             <div>注：</div>
@@ -131,6 +133,12 @@ export default {
   name: "billFinancingDetail",
   components: {
     submitDialog
+  },
+  computed: {
+    titleInfo() {
+      let res = this.typeMap(this.dictionary.financingProductType,this.form.financingFlag)
+      return res
+    }
   },
   data() {
     return {

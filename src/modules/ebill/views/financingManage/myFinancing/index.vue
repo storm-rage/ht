@@ -54,7 +54,7 @@
                   </template>
                 </zj-table-column>
                 <zj-table-column field="fromEntName" title="融资企业"/>
-                <zj-table-column field="financingProductType" title="融资产品名称"/>
+                <zj-table-column field="financingProductType" title="融资产品名称" :formatter="obj=>typeMap(dictionary.financingProductType,obj.cellValue)"/>
                 <zj-table-column field="createDatetime" title="融资申请日期" :formatter="date"/>
                 <zj-table-column field="tranAmt" title="融资金额" :formatter="money"/>
                 <zj-table-column field="interestRate" title="融资月利率" :formatter="rate"/>
