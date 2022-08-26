@@ -128,7 +128,7 @@
       <zj-content-block>
         <h4 class="bl zj-m-l-20 mb-10">银行账户信息</h4>
         <zj-content>
-          <zj-button class="append zj-m-b-10 zj-m-l-10" type="primary" v-if="entData.supplierType === '1'" @click="openBankDialog(entData.entBankInfos)">更换银行账户</zj-button>
+          <zj-button class="append zj-m-b-10 zj-m-l-10" type="primary" v-if="form.supplierType === '01'" @click="openBankDialog(entData.entBankInfos)">更换银行账户</zj-button>
           <zj-table ref="bank" :dataList="form.entBankInfo" :pager="false" keep-source auto-resize :edit-config="{
               trigger: 'manual',
               mode: 'row',
@@ -140,10 +140,10 @@
             <zj-table-column field="bankAccno" title="银行账号" :edit-render="{ name: '$input' }" />
             <zj-table-column field="bankName" title="银行账户开户行" :edit-render="{ name: '$input' }" />
             <zj-table-column field="bankNo" title="银行联行号" :edit-render="{ name: '$input' }" />
-            <zj-table-column title="操作" v-if="entData.supplierType !== '1'">
+            <zj-table-column title="操作" v-if="form.supplierType !== '01'">
               <template v-slot="{ row, rowIndex }">
                 <template v-if="!$refs.bank.isActiveByRow(row)">
-                  <zj-button type="text" @click="bankEdit(row)">修改</zj-button>
+                  <zj-button type="text" @click="bankEdit(row)" v-if="form.supplierType !== '01'">{{form.supplierType}}修改</zj-button>
                 </template>
                 <template v-if="$refs.bank.isActiveByRow(row)">
                   <zj-button type="text" @click="bankSave(row, rowIndex)">保存</zj-button>

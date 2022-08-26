@@ -241,7 +241,7 @@
           <zj-table ref="pubAttach" :dataList="form.pubAttachList" :pager="false" keep-soursce auto-resize>
             <zj-table-column title="附件类型">
               <template v-slot="{ row }">
-                {{ typeMap(dictionary.busTypeList, row.busType) }}
+                {{ typeMap(dictionary.sysAttachTypeList, row.busType) }}
               </template>
             </zj-table-column>
             <zj-table-column field="fileName" title="附件名称" />
