@@ -18,16 +18,33 @@
                             <el-input type="text" v-model="row.corporationName" name="loginName" size="medium" />
                         </el-form-item>
                         <el-form-item label="所属行业：">
-                            <el-input type="text" v-model="row.industryCode" name="loginName" size="medium" />
+                            <el-select v-model="row.industryCode" placeholder="请选择" clearable
+                                :popper-append-to-body="false">
+                                <el-option v-for="item in dictionary.industryCode" :key="item.code" :label="item.desc"
+                                    :value="item.code">
+                                </el-option>
+                            </el-select>
                         </el-form-item>
                         <el-form-item label="企业规模：">
-                            <el-input type="text" v-model="row.scale" name="loginName" size="medium" />
+                            <el-select v-model="row.scale" placeholder="请选择" clearable :popper-append-to-body="false">
+                                <el-option v-for="item in dictionary.entScale" :key="item.code" :label="item.desc"
+                                    :value="item.code">
+                                </el-option>
+                            </el-select>
                         </el-form-item>
+                        <!-- <el-select v-model="searchForm.state" placeholder="请选择" clearable
+                            :popper-append-to-body="false">
+                            <el-option value="" label="全部"></el-option>
+                            <el-option v-for="item in dictionary.state" :key="item.code" :label="item.desc"
+                                :value="item.code">
+                            </el-option>
+                        </el-select> 
+                        row.scale-->
                         <el-form-item label="住所：">
-                            无家可归
-                            <!-- <el-cascader size="large" :options="options" v-model="selectedOptions"
+
+                            <el-cascader size="large" :options="options" v-model="selectedOptions"
                                 @change="handleChange">
-                            </el-cascader> -->
+                            </el-cascader>
                         </el-form-item>
                         <el-form-item label="详细地址：">
                             <el-input type="textarea" v-model="row.address" name="loginName" :rows="3" />
@@ -46,14 +63,14 @@
 </template>
 
 <script>
-// import { provinceAndCityData } from 'element-china-area-data'
+import { provinceAndCityData } from 'element-china-area-data'
 export default {
     name: "frozenDialog",
-    // props: ["idlist"],
+    props: ["dictionary"],
     data() {
         return {
-            // options: provinceAndCityData,
-            // selectedOptions: [],
+            options: provinceAndCityData,
+            selectedOptions: [],
             mmdl: true,
             sjdl: false,
             show: false,
@@ -62,7 +79,9 @@ export default {
                 changePerson: this.$api.zhongdengManage.changePerson,//修改出让人
             },
             row: {},
-            idList:[]
+            idList: [],
+            city: "",
+            province: "",
         }
     },
     created() {
@@ -75,33 +94,42 @@ export default {
     methods: {
         handleChange(value) {
             console.log(value)
+            this.province = value[0]
+            this.city = value[1]
         },
         open(row, idList) {
 
-            console.log(row,idList);
+            console.log(row, idList);
             this.show = true
             this.row = row
-            this.idList=idList
+            this.idList = idList
+            console.log(this.dictionary);
         },
         save() {
 
             let params = {
-                address:this.row.address,
-                // city:this.row.city,
-                city:460100,
-                corporationName:this.row.corporationName,
-                debtorId:this.row.debtorId,
-                industryCode:this.row.industryCode,
-                organizationCode:this.row.organizationCode,
-                // province:this.row.province
-                province:460000,
-                scale:this.row.scale,
-                idList:[22],
+                address: this.row.address,
+                city: this.city,
+                // city:460100,
+                corporationName: this.row.corporationName,
+                debtorId: this.row.debtorId,
+                industryCode: this.row.industryCode,
+                organizationCode: this.row.organizationCode,
+                province: this.province,
+                // province:460000,
+                scale: this.row.scale,
+                idList: this.row.idList,
             }
             console.log(params);
             this.zjControl.changePerson(params).then(res => {
                 this.show = false
+
+                // this.getDetail()
             })
+            // this.$parent.getDetail();
+            // this.$emit('getDetail')
+            // console.log("试图调详情接口");
+            
         },
         close() {
             this.show = false
