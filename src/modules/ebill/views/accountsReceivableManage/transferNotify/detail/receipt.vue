@@ -69,7 +69,7 @@ export default {
       zjControl: {
         getNoticerRecordDetail: this.$api.transferNotifyManage.getAssignmentNoticeReceiptDetail,
         confirmAssignmentNoticeReceipt: this.$api.transferNotifyManage.confirmAssignmentNoticeReceipt,
-        downloadTemplate: this.$api.transferNotifyManage.downloadTemplate,
+        // downloadTemplate: this.$api.transferNotifyManage.downloadTemplate,
         downApi: this.$api.baseCommon.downloadFile
       },
       //详情信息
@@ -93,7 +93,7 @@ export default {
       this.zjControl.downApi(row);
     },
     toDownloadTemplate() {
-      this.zjControl.downloadTemplate(this.detailInfo);
+      this.zjControl.downApi({fileId: this.detailInfo.zrtzjqrhAgreement.agreementFileId, fileName: this.detailInfo.zrtzjqrhAgreement.agreementFileName});
     },
     toReceipt() {
       if (this.agreeCheck) {
