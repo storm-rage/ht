@@ -17,6 +17,10 @@ const factoringLedger = {
   rdDetailpzxx: (params) => {
     return request.get('/rd-factoring-ledger/voucher-detail', { params })
   },
+  //凭证保理融资台账-凭证信息切换列表数据
+  changeData: (params) => {
+    return request.get('/rd-factoring-ledger/voucher-other-detail', { params })
+  },
   //凭证保理融资台账-获取数据字典
   rdgetDirectory: (params) => {
     return request.get('/rd-factoring-ledger/directory', { params })

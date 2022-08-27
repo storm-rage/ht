@@ -48,8 +48,8 @@
             <zj-table-column field="tranferAmt" title="转让凭证金额" :formatter="money" />
             <zj-table-column field="discountRate" title="融资比例" :formatter="rate" />
             <zj-table-column field="tranAmt" title="融资本金" :formatter="money" />
-            <zj-table-column field="applyDatetime" title="起息日" :formatter="date" />
-            <zj-table-column field="expireDate" title="融资到期日" :formatter="date" />
+            <zj-table-column field="estimateTimeStart" title="起息日" :formatter="date" />
+            <zj-table-column field="estimateTimeEnd" title="融资到期日" :formatter="date" />
             <zj-table-column field="estimateDays" title="预计计息天数" />
             <zj-table-column field="interestRate" title="融资利率/月" :formatter="rate" />
             <zj-table-column field="interestAmt" title="预计利息" :formatter="money" />
