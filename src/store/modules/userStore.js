@@ -8,6 +8,7 @@ import homeApi from '@modules/base/api/homeApi';
 const state = {
   // 用户信息
   userInfo: {},
+  productName: '海e单',
   messageTipNum: ''
 }
 
@@ -138,6 +139,9 @@ const getters = {
       return state.userInfo&&state.userInfo.userName&&state.userInfo.token === windowCookie.get('XSRF-TOKEN')
     }
     return true;
+  },
+  productName: (state) => {
+    return state.productName;
   }
 }
 

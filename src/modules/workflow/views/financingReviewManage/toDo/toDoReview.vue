@@ -5,38 +5,40 @@
       <zj-content-block v-if="workflow === 'sqxx'">
           <el-form :model="form" ref="form" :rules="rules" label-width="200px" class="zj-m-t-20">
             <trans-info :form="form.transInfo" :dictionary="dictionary"/>
-            <financing-apply-info :form="form.financingApplyInfo" :voucherList="form.voucherList" :proType="form.transInfo.financingProductType"/>
+            <financing-apply-info :form="form.financingApplyInfo" :voucherList="form.voucherList"
+                                  :proType="form.transInfo.financingProductType" :phased-agreement-list="form.phasedAgreementList"
+            />
             <agreement-info-list :dataList="form.agreementInfoList"/>
 
             <zj-content-block v-if="form.transInfo.financingProductType !== '2'">
               <zj-header title="保理合同信息"/>
               <el-row>
                 <el-col :span="8">
-                  <el-form-item label="保理合同编号：">{{form.contractNo}}</el-form-item>
+                  <el-form-item label="保理合同编号：">{{form.blContractInfo.contractNo}}</el-form-item>
                 </el-col>
                 <el-col :span="8" v-if="form.transInfo.financingProductType !== '0'">
-                  <el-form-item label="保理类型：">{{form.factorType}}</el-form-item>
+                  <el-form-item label="保理类型：">{{form.blContractInfo.factorType}}</el-form-item>
                 </el-col>
                 <el-col :span="8">
-                  <el-form-item label="总额度：">{{form.adjustCreditAmount}}</el-form-item>
+                  <el-form-item label="总额度：">{{form.blContractInfo.adjustCreditAmount}}</el-form-item>
                 </el-col>
                 <el-col :span="8" v-if="form.transInfo.financingProductType === '0'">
-                  <el-form-item label="剩余可用金额：">{{form.availableCreditAmount}}</el-form-item>
+                  <el-form-item label="剩余可用金额：">{{form.blContractInfo.availableCreditAmount}}</el-form-item>
                 </el-col>
               </el-row>
               <el-row>
                 <el-col :span="8" v-if="form.transInfo.financingProductType === '0'">
                   <el-form-item label="额度有效期：">
-                    {{date(form.contractNo)}}
-                    {{form.contractNo?`至${date(form.contractNo)}`:''}}
+                    {{date(form.blContractInfo.factoringCreditStartDate)}}
+                    {{form.blContractInfo.factoringCreditEndDate?`至${date(form.blContractInfo.factoringCreditEndDate)}`:''}}
                   </el-form-item>
                 </el-col>
                 <el-col :span="8" v-if="form.transInfo.financingProductType !== '0'">
-                  <el-form-item label="剩余可用金额：">{{form.contractNo}}</el-form-item>
+                  <el-form-item label="剩余可用金额：">{{form.blContractInfo.availableCreditAmount}}</el-form-item>
                 </el-col>
                 <el-col :span="8" v-if="form.transInfo.financingProductType !== '0'">
                   <el-form-item label="保理合同到期日：">
-                    {{date(form.contractNo)}}
+                    {{date(form.blContractInfo.contractEndDateDays)}}
                   </el-form-item>
                 </el-col>
               </el-row>
@@ -45,10 +47,10 @@
               <zj-header title="总控额度信息"/>
               <el-row>
                 <el-col :span="8">
-                  <el-form-item label="供应商总控额度：">{{form.totalCreditAmount}}</el-form-item>
+                  <el-form-item label="供应商总控额度：">{{form.voucherCreditInfo.totalCreditAmount}}</el-form-item>
                 </el-col>
                 <el-col :span="8">
-                  <el-form-item label="剩余可用额度：">{{form.availableCreditAmount}}</el-form-item>
+                  <el-form-item label="剩余可用额度：">{{form.voucherCreditInfo.availableCreditAmount}}</el-form-item>
                 </el-col>
               </el-row>
             </zj-content-block>

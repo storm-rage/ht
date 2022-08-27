@@ -67,7 +67,12 @@
       </zj-content>
     </zj-content-block>
     <zj-content-block>
-      <zj-header title="身份证"></zj-header>
+      <zj-header v-show="pageType !== 3">身份证</zj-header>
+      <div v-show="pageType === 3">
+        <zj-header>附件信息</zj-header>
+        <zj-button type="text">点此下载《委托授权书模板》</zj-button>
+      </div>
+
       <zj-content>
         <zj-table :pager="false" ref="attach" :dataList="attachInfo">
           <zj-table-column type="seq" width="60" title="序号" />
@@ -118,7 +123,7 @@
       </zj-content>
     </zj-content-block>
     <zj-content-footer>
-      <zj-button type="primary" @click="pageType = 2" v-show="pageType == 1">维护本人信息</zj-button>
+      <zj-button type="primary" @click="pageType = 2" v-show="pageType === 1">维护本人信息</zj-button>
       <zj-button type="primary" @click="pageType = 3" v-show="pageType === 1">更换操作人员</zj-button>
       <zj-button type="primary" @click="submit" v-show="pageType === 2 || pageType === 3">确认提交</zj-button>
       <zj-button class="back" @click="back">返回</zj-button>
@@ -273,7 +278,9 @@ export default {
       });
     },
     //下载附件
-    toDownload() { },
+    toDownload(fileId, fileName) {
+      this.zjControl.downloadFile({ fileId, fileName })
+    },
     back() {
       if (this.pageType === 1) {
         this.$router.push("/personalCenter");

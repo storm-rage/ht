@@ -132,4 +132,12 @@ export default {
    postMessageRead(params) {
     return request.get('/platform-home/get-message-station-read-by-id', { params, isUnLock: true })
   },
+  //=============================待办======================================
+  /* /平台首页-待办任务
+   * @param params
+   * @returns {Promise<AxiosResponse<any>>}
+   */
+  queryBackLog(params) {
+    return request.get('/platform-home/query-back-log', { params, isUnLock: true })
+  },
 };

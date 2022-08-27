@@ -110,8 +110,9 @@ export default {
     toReview() {
       if (this.agreeCheck) {
         this.$confirm(
-          `您本次提前还款金额：<b style="font-size: 18px;">${this.detailData.applyAmt}</b>元，请确认。`,
-          "提前还款复核确认",
+          `您本次申请转让<b style="font-size: 18px;">${this.detailData.getEbBillTranferInfo.tranNumber}</b>笔电子债权凭证,共计：
+          <b style="font-size: 18px;">${this.detailData.getEbBillTranferInfo.tranAmt}</b>元，请确认`,
+          "转让复核确认",
           {
             dangerouslyUseHTMLString: true,
             confirmButtonText: "确定",

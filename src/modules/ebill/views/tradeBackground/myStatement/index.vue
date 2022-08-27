@@ -61,9 +61,8 @@
         </zj-table-column>
       </zj-table>
 
-      <!-- 工作流 -->
       <zj-content-footer>
-        <zj-button type="primary" @click="applyOpenVoucherBatch(ids)" :api="zjBtn.passBillSignBatch">申请开立凭证</zj-button>
+        <zj-button type="primary" @click="applyOpenVoucherBatch(ids)" :api="zjBtn.passBillSignBatch" :disabled="!ids.length">申请开立凭证</zj-button>
       </zj-content-footer>
     </zj-list-layout>
   </zj-content-container>

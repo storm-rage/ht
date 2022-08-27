@@ -46,12 +46,7 @@ export default {
     //标题
     tabTagTitle(item){
       let title = item.meta ? item.meta.title : ''
-      //融单签收
-      if(item.name === 'billSign'){
-        title = `${this.$store.getters['project/productName']}签收`
-      }
-      // 经常性发生meta里title丢失的情况，直接报错
-      return title && title.replace(new RegExp("\\{0\\}","g"), this.$store.getters['project/productName'])
+      return title && title.replace(new RegExp("\\{0\\}","g"), this.$store.getters['user/productName'])
     },
     //删除
     deleteClick(item){

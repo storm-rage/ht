@@ -131,16 +131,18 @@ export default {
       })
     },
     attaDownLoad(row) {
-      this.zjControl.downloadFile(row.fileId)
+      this.zjControl.downloadFile({
+        fileUrl: row.fileId,
+        fileName: row.fileName,
+      })
     },
 
   },
   created() {
-    // this.getApi()
-    // this.getRow()
-    // this.getDic()
-    // this.getDetail()
-    console.log(this.row)
+    this.getApi()
+    this.getRow()
+    this.getDic()
+    this.getDetail()
   }
 }
 </script>

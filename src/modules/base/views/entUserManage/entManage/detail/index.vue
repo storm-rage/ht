@@ -135,6 +135,15 @@ export default {
       let entInfoDom = this.$refs.entInfo;
       entInfoDom.detailData = data;
       // 银行账户
+      if (!data.entBanksList) {
+        data.entBanksList = [{
+          entBanksList: data.entBanksList,
+          bankAccno: data.bankAccno,
+          bankName: data.bankName,
+          bankNo: data.bankNo,
+          bankType: data.bankType,
+        }]
+      }
       entInfoDom.$refs.bankAccount.dataList = data.entBanksList;
     },
   },

@@ -4,7 +4,7 @@
     <!--  交易信息  -->
     <trade-info :detailData="detailData" @getDictionary="getDictionary" />
     <!--  用户信息  -->
-    <user-update ref="userUpdate" :form="detailData" :isEdit="false" @formPass="formPass" />
+    <user-update ref="userUpdate" :form="detailData" :isEdit="isEdit" @formPass="formPass" />
     <!--  操作记录  -->
     <operate-log ref="operateLog" :logList="logList"></operate-log>
     <!--  审核意见  -->
@@ -44,12 +44,17 @@ export default {
       rejectLoading: {},
       attachInfo: [{ fileId: "", type: "身份证影印件", fileName: "" }],
       logList: [],
-      state: 'pass'
+      state: 'pass',
+      isEdit: false
     };
   },
   created() {
     this.getRow()
     this.getDetail()
+    // 驳回待处理可修改
+    if (this.row.workflowState === 'E005') {
+      this.isEdit = true
+    }
   },
   methods: {
     //获取字典

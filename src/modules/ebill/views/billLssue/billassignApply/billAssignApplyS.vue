@@ -30,15 +30,15 @@
       <el-form ref="form" :model="form" :rules="rules" label-width="150px">
         <el-row>
           <el-col :span="8">
-            <el-form-item label="被转让人名称：" prop="holderName">
-              <el-select v-model="form.holderName">
+            <el-form-item label="被转让人名称：" prop="sellerEntName">
+              <el-select v-model="form.sellerEntName" @change="selectChange">
                 <el-option v-for="(item,index) in entityList" :key="item.code" :label="item.sellerEntName" :value="index" />
               </el-select>
             </el-form-item>
           </el-col>
           <el-col :span="8">
             <el-form-item label="转让金额：" prop="ebillAmt">
-              <el-input disabled v-model="form.ebillAmt" @keyup.enter.native="enterSearch" />
+              <el-input disabled v-model="ebillAmt" @keyup.enter.native="enterSearch" />
             </el-form-item>
           </el-col>
           <el-col :span="8">
@@ -97,8 +97,9 @@ export default {
       ids: [],
       dictionary: {},
       entityList: [],
+      ebillAmt: 0, // 转让金额
       rules: {
-        holderName: [
+        sellerEntName: [
           { required: true, message: "请输入被转让人名称", trigger: "blur" },
         ],
         bankAccname: [
@@ -132,7 +133,8 @@ export default {
     this.getRow();
     this.dataList = this.row.paramsDataList;
     this.dataList.forEach((item) => {
-      this.ids.push(item.ebillCode);
+      this.ids.push(item.id);
+      this.ebillAmt += parseInt(item.ebillAmt)
     });
     this.getTradeRalation()
   },
@@ -143,13 +145,17 @@ export default {
         this.entityList = res.data.entityList
       })
     },
+    selectChange(val) {
+      this.form = this.entityList[val]
+      console.log(this.form)
+    },
     // 提交申请
     toApply() {
       this.$refs.form.validate((valid) => {
         if (valid) {
           this.$confirm(
             `您本次申请转让<b style="font-size: 18px;">${this.dataList.length}</b>笔电子债权凭证，共计：<br/>
-        <b style="font-size: 18px;">${this.form.ebillAmt}</b>元请确认<br>`,
+        <b style="font-size: 18px;">${this.ebillAmt}</b>元请确认<br>`,
             "转让申请确认",
             {
               dangerouslyUseHTMLString: true,
@@ -157,6 +163,7 @@ export default {
               cancelButtonText: "取消",
             }
           ).then(() => {
+            this.form.ebillAmt = this.ebillAmt
             let params = {
               ids: this.ids,
               billInfoList: [this.form],

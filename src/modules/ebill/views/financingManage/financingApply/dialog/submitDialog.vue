@@ -33,15 +33,22 @@ export default {
       //订单融资提交
       if(this.zjControl.submitFinancingOrderApply) {
         console.log('订单融资')
-        this.zjControl.submitFinancingOrderApply(this.form)
+        this.zjControl.submitFinancingOrderApply(this.form).then(res=>{
+          this.$message.success(res.msg)
+          this.dialogShow = false
+          this.goParent()
+        })
       }
       //入库/凭证融资提交
       if(this.zjControl.submitFinancingBillApply) {
         console.log('入库/凭证融资提交')
-        this.zjControl.submitFinancingBillApply(this.form)
+        this.zjControl.submitFinancingBillApply(this.form).then(res=>{
+          this.$message.success(res.msg)
+          this.dialogShow = false
+          this.goParent()
+        })
       }
-      this.dialogShow = false
-      this.goParent()
+
     },
     cancel() {
       this.dialogShow = false

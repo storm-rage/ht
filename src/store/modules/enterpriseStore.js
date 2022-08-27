@@ -7,7 +7,7 @@ const state = {
   entList: []
 }
 /*
-* 设置项目名称
+* 设置企业名称
 * */
 const getters = {
   entName: (state) => {
