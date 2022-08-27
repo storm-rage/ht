@@ -17,7 +17,8 @@
               </el-col>
               <el-col :span="12">
                 <el-form-item label="融资合同期限：">
-                  {{form.contractStartDate}}{{form.contractEndDate?`至${form.contractEndDate}`:''}}
+                  {{form.contractStartDate?date(form.contractStartDate):''}}
+                  {{form.contractEndDate?`至${date(form.contractEndDate)}`:''}}
                 </el-form-item>
               </el-col>
             </el-row>
@@ -109,11 +110,37 @@
           </div>
         </zj-content-block>
         <zj-content-block>
-          <zj-header title="贸易背景"/>
+          <zj-header title="贸易背景">
+            <template #btn>
+              <zj-button type="danger" class="zj-m-l-10" :round="true" @click="toTradeBackground">维护</zj-button>
+            </template>
+          </zj-header>
           <!--    贸易背景      -->
-          <el-row class="button-row">
-            <zj-button type="primary" @click="toTradeBackground">贸易背景</zj-button>
+          <el-row>
+            <div class="zj-f-r zj-m-r-10">
+              <zj-button class="append" icon="el-icon-circle-plus-outline" @click="choiceInvoiceItem">选择发票</zj-button>
+            </div>
           </el-row>
+          <zj-content-block>
+            <zj-table ref="invoiceItemListsTable" class="zj-search-table"
+                      :dataList="form.invoiceItemLists"
+            >
+              <zj-table-column field="invoiceType" title="发票类型"/>
+              <zj-table-column field="invoiceCode" title="发票代码"/>
+              <zj-table-column field="invoiceNumber" title="发票号码"/>
+              <zj-table-column field="totalAmtLowcase" title="发票金额（含税）" :formatter="money"/>
+              <zj-table-column field="sellAmount" title="发票金额（不含税）" :formatter="money"/>
+              <zj-table-column field="userdAmt" title="发票使用金额"/>
+              <zj-table-column field="financingUsedAmtTotal" title="融资已占用金额"/>
+              <zj-table-column field="seller" title="本次融资"/>
+              <zj-table-column field="invoiceDate" title="发票日期" :formatter="date"/>
+              <zj-table-column field="fileName" title="发票附件"/>
+              <el-row slot="pager-left" class="slotRows" :gutter="40">
+                凭证金额合计：{{form.totalAmt?moneyNoSynbol(form.totalAmt):''}}
+              </el-row>
+            </zj-table>
+
+          </zj-content-block>
 
         </zj-content-block>
       </zj-content-block>
@@ -123,16 +150,18 @@
         <zj-button type="primary" @click="submit">提交申请</zj-button>
       </zj-content-footer>
       <submit-dialog ref="submitDialog" :zjControl="zjControl" :form="form"/>
+      <choice-invoice ref="choiceInvoice" :invoiceItemList="form.invoiceItemList" @handleInvoiceList="checkInvoice"/>
     </zj-content-container>
 </template>
 
 <script>
 import submitDialog from '../dialog/submitDialog'
+import choiceInvoice from './choiceInvoice'
 
 export default {
   name: "billFinancingDetail",
   components: {
-    submitDialog
+    submitDialog,choiceInvoice
   },
   computed: {
     titleInfo() {
@@ -147,10 +176,12 @@ export default {
         getDirectory:this.$api.financingApply.getDirectory,//数据字典
         downloadFinancAgreeTemplate:this.$api.financingApply.downloadFinancAgreeTemplate,//下载融资协议
         submitFinancingBillApply:this.$api.financingApply.submitFinancingBillApply,//入库/凭证融资提交
-
         downloadFile:this.$api.baseCommon.downloadFile,//文件下载
       },
-      form:{},
+      form:{
+        invoiceItemList: [],
+        invoiceItemLists: [],
+      },
       rules:{
         tranferAmt: [
           { required: true, message: '请输入申请转让金额', trigger: 'change'},
@@ -180,7 +211,6 @@ export default {
         idList: this.$route.params.rowData.idList,
         tranferAmt: this.form.tranferAmt,
       }
-      console.log(params)
       this.zjControl.getFinancingApplyBillDetail(params).then(res=>{
         this.form = res.data
       })
@@ -203,9 +233,17 @@ export default {
       this.zjControl.downloadFinancAgreeTemplate(params)
     },
     toTradeBackground() {
-      let testArr = [{a:1}, {b:2}, ]//测试数据
-      // this.goChild('tradeBackgroundMaintain', {ebBillModelList: [...testArr]})
       this.goChild('tradeBackgroundMaintain', {ebBillModelList: this.form.ebBillModelList})
+    },
+    choiceInvoiceItem() {
+      this.$refs.choiceInvoice.open({invoiceList: this.form.invoiceItemList})
+    },
+    checkInvoice(val) {
+      this.$nextTick(()=>{
+        this.form.invoiceItemLists = [...val]
+      })
+      console.log(this.form.invoiceItemLists)
+      this.$refs.invoiceItemListsTable.iRefresh()
     },
     submit(){
       this.$refs.form.validate(boo=>{

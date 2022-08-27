@@ -170,25 +170,9 @@
           >
             <zj-table-column field="bankAccname" title="银行账户名称" :edit-render="{name: '$input'}"/>
             <zj-table-column field="bankAccno" title="银行账号" :edit-render="{name: '$input'}"/>
-            <zj-table-column field="bankName" title="开户行" :edit-render="{name: '$input'}">
-<!--              <tempalte v-slot="{row}">-->
-<!--                {{row.bankName}}-->
-<!--              </tempalte>-->
-              <template v-slot="{row}">
-                <el-select v-model="row.bankName"
-                           filterable
-                           placeholder="请选择" class="sw-year-select"
-                           :popper-append-to-body="false"
-                           @change="bankChange"
-                >
-                  <el-option
-                    v-for="item in bankInfoList"
-                    :label="item.confirmBankName"
-                    :value="item.confirmBankId"
-                    :key="item.confirmBankId"
-                  />
-                </el-select>
-              </template>
+            <zj-table-column field="bankName" title="开户行"
+                             :edit-render="{name: '$select', options: bankInfoList ,optionProps: {value:'status', label:'label', key: 'status' }}"
+            >
             </zj-table-column>
             <zj-table-column field="bankNo" title="銀行联行号" :edit-render="{name: '$input'}"/>
             <zj-table-column title="操作" fixed="right">
@@ -214,9 +198,9 @@
             >
               <el-option
                 v-for="item in bankInfoList"
-                :label="item.confirmBankName"
-                :value="item.confirmBankId"
-                :key="item.confirmBankId"
+                :label="item.label"
+                :value="item.status"
+                :key="item.status"
               />
             </el-select>
           </el-form-item>
@@ -417,7 +401,12 @@ export default {
     //企业注册-获取开户行信息
     getOpenBankInfo() {
       this.zjControl.getOpenBankInfo().then(res=>{
-        this.bankInfoList = res.data.bankInfoList
+        let bankInfoObj = {
+          bankInfo: JSON.parse(
+            JSON.stringify(res.data.bankInfoList).replace(/confirmBankId/g,'status').replace(/confirmBankName/g,'label')
+          )
+        }
+        this.bankInfoList = bankInfoObj.bankInfo
       })
     },
     //获取企业的注册信息
