@@ -6,11 +6,11 @@
                     <zj-content-block>
                         <zj-header title="基本信息" />
                         <el-row>
-                            <el-form-item label="受让人：">{{ pawneeInfo.pawneeName }}</el-form-item>
-                            <el-form-item label="交易业务类型：">{{ pawneeInfo.pawneeType }}</el-form-item>
-                            <el-form-item label="填表人归档号：">{{ pawneeInfo.personFillArchiveNo }}</el-form-item>
-                            <el-form-item label="登记期限（月）：">{{ pawneeInfo.regTimeLimit }}</el-form-item>
-                            <el-form-item label="登记到期日：">{{ pawneeInfo.regTimeLimitDate }}</el-form-item>
+                            <el-form-item label="受让人：">{{ this.pawneeInfo.corporationName }}</el-form-item>
+                            <el-form-item label="交易业务类型：">{{ this.pawneeInfo.pawneeType }}</el-form-item>
+                            <el-form-item label="填表人归档号：">{{ this.pawneeInfo.personFillArchiveNo }}</el-form-item>
+                            <el-form-item label="登记期限（月）：">{{ this.pawneeInfo.regTimeLimit }}</el-form-item>
+                            <el-form-item label="登记到期日：">{{ this.pawneeInfo.regTimeLimitDate }}</el-form-item>
                         </el-row>
                     </zj-content-block>
                     <zj-content-block>
@@ -147,7 +147,8 @@ export default {
             row: {},
             filemsg: {},
             fileres:{},
-            fileShow:false
+            fileShow:false,
+            uploadFileId:"",
         }
     },
     created() {
@@ -163,25 +164,23 @@ export default {
         deletefile(){
             this.fileShow=false
             let params = {
-                uploadFileId: this.fileres.uploadFileId,
-                validateFlownNo:this.fileres.validateFlownNo,
+                uploadFileId: this.uploadFileId,
+                validateFlownNo:this.row.checkLogin.validateFlownNo,
                 idList:this.idListDetail
             }
             this.zjControl.deleteAttach(params).then(res => {
-                
+                this.uploadFileId=""
             })
         },
         handleFileUpload( {file} ) {
             let formData = new FormData();
-            let req={
-                idList:this.idListDetail
-
-            }
             formData.append("fileOB", file);
-            formData.append("req", req);
+            formData.append("idList", this.idListDetail);
+            formData.append("validateFlownNo ", this.row.checkLogin.validateFlownNo );
+            formData.append("uploadFileId ", this.uploadFileId );
             console.log(formData);
             this.zjControl.submitDetil(formData).then((res) => {
-                this.fileres = res.data
+                this.uploadFileId = res.data.uploadFileId
                 console.log(res.data);
             });
         },
@@ -215,7 +214,8 @@ export default {
                 contractInfo: this.contractInfo,
                 debtorInfoList: this.debtorInfoList,
                 initRegisterToken1: this.row.checkLogin.initRegisterToken1,
-                validateFlownNo: this.row.checkLogin.validateFlownNo
+                validateFlownNo: this.row.checkLogin.validateFlownNo,
+                filemsg:this.filemsg
             }
             this.goChild('zhongdengManagexq2', row)
         },
@@ -235,6 +235,7 @@ export default {
                 this.fileAttach = res.data.fileAttach
                 this.collateralDesc = res.data.collateralDesc
                 this.idListDetail = res.data.idList
+                this.pawneeInfo=res.data.pawneeInfo
             })
         },
     },
