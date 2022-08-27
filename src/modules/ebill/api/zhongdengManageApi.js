@@ -43,6 +43,10 @@ const zhongdengManage = {
   detailspz: (params) => {
     return request.get('/zhongdeng-manage/get-financing-bill-infos', {params} )
   },
+  //中登-融资详情凭证信息列表切换
+  changedata: (params) => {
+    return request.get('/zhongdeng-manage/get-other-info-by-bill', {params} )
+  },
   //中登-融资详情申请信息
   detailssq: (params) => {
     return request.get('/zhongdeng-manage/get-financing-trans-detail', {params} )
