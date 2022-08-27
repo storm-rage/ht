@@ -11,12 +11,12 @@
           <el-row :gutter="10">
             <el-col :span="8">
               <el-form-item :disabled="!isEdit" label="核心企业名称：" >
-                {{form.buyerEntName}}
+                {{form.buyerName}}
               </el-form-item>
             </el-col>
             <el-col :span="8">
               <el-form-item :disabled="!isEdit" label="核心企业业是否海天集团：" >
-                {{typeMap(dic.isHtEnterprise, form.buyerIsHtEnterprise)}}
+                {{typeMap(dic.isHtEnterprise, form.isHtEnterprise)}}
               </el-form-item>
             </el-col>
             <el-col :span="8">

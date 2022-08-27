@@ -26,7 +26,8 @@
               <el-col :span="10">
                 <el-form-item :prop="`billFactoringModelList[${index}].rdDateStart`"
                               :rules="[
-                                {required: true,message: '请输入开始区间',trigger: ['change','blur']}
+                                {required: true,message: '请输入开始区间',trigger: ['change','blur']},
+                                { validator: validateRdDateStart, trigger: 'blur', rdDateEnd: item.rdDateEnd}
                               ]">
                   <zj-number-input  v-model.trim="item.rdDateStart" :max="180" :precision="0">
                   </zj-number-input>
@@ -38,7 +39,8 @@
               <el-col :span="11">
                 <el-form-item :prop="`billFactoringModelList[${index}].rdDateEnd`"
                               :rules="[
-                                {required: true,message: '请输入结束区间',trigger: ['change','blur']}
+                                {required: true,message: '请输入结束区间',trigger: ['change','blur']},
+                                {validator: validateRdDateEnd, trigger: 'blur', rdDateStart: item.rdDateStart}
                               ]">
                   <zj-number-input style="width: 82%" v-model.trim="item.rdDateEnd" :max="180" :precision="0">
                   </zj-number-input>&nbsp;天
@@ -53,7 +55,7 @@
                         :rules="[
                                 {required: true,message: '请输入凭证可用折扣',trigger: ['change','blur']}
                               ]">
-            <zj-number-input v-model.trim="item.availableDiscountsRate">
+            <zj-number-input v-model.trim="item.availableDiscountsRate" :max="100" :precision="4">
               <template slot="append">%</template>
             </zj-number-input>
           </el-form-item>
@@ -64,7 +66,7 @@
                         :rules="[
                                 {required: true,message: '请输入凭证融资月利率',trigger: ['change','blur']}
                               ]">
-            <zj-number-input v-model.trim="item.rdFinancingMonthRate">
+            <zj-number-input v-model.trim="item.rdFinancingMonthRate" :max="100">
               <template slot="append">%</template>
             </zj-number-input>
           </el-form-item>
@@ -114,12 +116,39 @@ export default {
         rdFinancingMonthRate: ''
       }
       const len = this.form.billFactoringModelList.length;
+      let rdDateEnd = 0;
       if (len > 0) {
         const lastRow = this.form.billFactoringModelList[len - 1];
+        rdDateEnd = lastRow.rdDateEnd;
         //  开始天数=上一个结束天数+1
         row.rdDateStart = Number(lastRow.rdDateEnd) + 1;
       }
-      this.form.billFactoringModelList.push(row);
+      if (rdDateEnd>=180) {
+        this.$message.error('区间最大为180天,无法再新增');
+      }else {
+        this.form.billFactoringModelList.push(row);
+      }
+    },
+    validateRdDateStart(rule, value, callback) {
+      console.log(rule)
+      const rdDateEnd = rule.rdDateEnd
+      if(rdDateEnd&&value && value>rdDateEnd) {
+        callback(new Error('开始区间不能大于结束区间'));
+      }else if(value && value>180) {
+        callback(new Error('区间最大为180天'));
+      }else {
+        callback();
+      }
+    },
+    validateRdDateEnd(rule, value, callback) {
+      const rdDateStart = rule.rdDateStart
+      if(rdDateStart&&value && value<rdDateStart) {
+        callback(new Error('结束区间不能小于开始区间'));
+      }else if(value && value>180) {
+        callback(new Error('区间最大为180天'));
+      }else {
+        callback();
+      }
     },
     toDelItem (index) {
       this.$delete(this.form.billFactoringModelList,index);

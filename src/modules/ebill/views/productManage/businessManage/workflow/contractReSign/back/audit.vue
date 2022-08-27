@@ -8,7 +8,7 @@
     <trade-list
       ref="tradeInfo"
       :tradeList="tradeRelationModelList"
-      :bizId="bizId"
+      :bizId="businessParamModel.id"
       :dic="dictionary"></trade-list>
   </div>
 </template>
