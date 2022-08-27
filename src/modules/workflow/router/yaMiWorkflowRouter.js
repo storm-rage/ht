@@ -8,8 +8,8 @@ export default [{
   },
   children: [
     {
-      path: 'businessApplyWAudit',
-      name: 'businessApplyWAudit',
+      path: 'businessApplyYamiAudit',
+      name: 'businessApplyYamiAudit',
       component: () => import('../views/businessManage/biz/yami/audit.vue'),
       meta: {
         title: '供应商业务申请审核',

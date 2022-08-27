@@ -1,6 +1,7 @@
 <template>
   <!-- 海天流程组件 -->
   <ht-approval
+    class="zj-ht-approval-component"
     ref="childrenRef"
     :before-cancel-submit="beforeCancelSubmit"
     :custom="params"
@@ -69,3 +70,15 @@ export default {
   }
 };
 </script>
+<style lang="less">
+.zj-ht-approval-component {
+  #process-container {
+    width: 98%;
+    .config-btn {
+      .el-input {
+        width: 100%;
+      }
+    }
+  }
+}
+</style>
