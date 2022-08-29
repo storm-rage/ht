@@ -1,5 +1,6 @@
-// 个人中心
+// 个人中心api
 import request from '@common/axios/request'
+import download from "@utils/download";
 
 const myBasicInformation = {
   //数据字典
@@ -21,6 +22,10 @@ const myBasicInformation = {
   //文件上传
   uploadFile: (params) => {
     return request.post('/personal-center/upload-file', params )
+  },
+  //下载协议模板
+  downloadTemplate: (params, type = 1, method = 'post') => {
+    return download('/personal-center/download-template', params, type, method)
   },
    //维护个人信息详情
    getPersonalInfo: (params) => {

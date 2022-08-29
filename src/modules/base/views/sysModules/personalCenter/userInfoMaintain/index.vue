@@ -70,7 +70,8 @@
       <zj-header v-show="pageType !== 3">身份证</zj-header>
       <div v-show="pageType === 3">
         <zj-header>附件信息</zj-header>
-        <zj-button type="text">点此下载《委托授权书模板》</zj-button>
+        <p>点此下载<zj-button type="text" @click="downloadTemplate">《委托授权书模板》</zj-button>
+        </p>
       </div>
 
       <zj-content>
@@ -138,6 +139,7 @@ export default {
   data() {
     return {
       zjControl: {
+        downloadFile: this.$api.baseCommon.downloadFile,//文件下载
         ...this.$api.myBasicInformation,
       },
       form: {},
@@ -220,6 +222,9 @@ export default {
       this.zjControl.getPersonalInfo(params).then((res) => {
         this.form = res.data.userInfo;
         this.platformFastMail = res.data.platformFastMail;
+        // 附件
+        this.attachInfo[0].fileId = this.form.identitycardFileId
+        this.attachInfo[0].fileName = this.form.identitycardFileName
         // 角色权限
         this.dictionary.roleId = this.dictionary.roleId.filter((item) => {
           return this.form.roleIds.indexOf(item.code) !== -1;
@@ -276,6 +281,13 @@ export default {
         data.row.fileName = res.data.fileName;
         this.$message.success("附件上传成功!");
       });
+    },
+    downloadTemplate() {
+      let params = {
+        userInfo: this.form,
+        templateType: "WTSQS"
+      }
+      this.zjControl.downloadTemplate(params)
     },
     //下载附件
     toDownload(fileId, fileName) {

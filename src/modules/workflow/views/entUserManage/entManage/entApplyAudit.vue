@@ -6,7 +6,7 @@
     <trade-info :detailData="detailData" :dictionary="dictionary" />
 
     <!--  平台方企业基础信息 -->
-    <ent-info-edit ref="entInfoedit" :form="detailData" @getDictionary="getDictionary" v-if="type === 'PT'" />
+    <ent-info-edit ref="entInfoedit" :form="detailData" @getDictionary="getDictionary" @formPass="formPass" v-if="type === 'PT'" />
 
     <!--  客户方企业基础信息 -->
     <ent-info-kh ref="entInfoKH" :detailData="detailData" :dictionary="dictionary" :isEdit="false" v-if="type === 'KH'" />
@@ -46,7 +46,8 @@ export default {
       dictionary: {},
       passLoading: {},
       rejectLoading: {},
-      type: "KH"
+      state: 'pass',
+      type: ""
     };
   },
   created() {
@@ -56,7 +57,7 @@ export default {
     if (this.row.workflowState === 'E005') {
       this.$route.meta.pageType = 'edit'
     }
-    // this.type = this.row.startObject
+    this.type = this.row.startObject
   },
   methods: {
     getDictionary(data) {
@@ -66,55 +67,77 @@ export default {
     getDetail() {
       let autoApi = this.zjControl.getTodoEnterprise // 平台方详情接口
       if (this.type === 'KH') {
-        autoApi = this.zjControl.getUserInformationDetail // 客户方详情接口
+        autoApi = this.zjControl.getTodoEnterpriseKhInfo // 客户方详情接口
       }
       autoApi({ serialNo: this.row.serialNo }).then(res => {
         this.detailData = res.data
       })
     },
+    // 通过
     toPass() {
-      this.$refs.auditRemark.getForm().clearValidate();
-      const { notes } = this.$refs.auditRemark.getData()
-      const entFrom = this.$refs.entInfoedit.getData()
-      this.passLoading = true;
-      this.zjControl.todoEnterpriseSubmit({
-        flag: '1',
-        ...entFrom,
-        notes,
-      }).then(res => {
-        this.passLoading = false;
-        //成功，关闭
-        if (res.success) {
-          this.$message.success(res.msg);
-          this.goParent();
-        }
-      }).catch(() => {
-        this.passLoading = false;
-      })
+      this.state = 'pass'
+      if (this.type === 'PT') {
+        this.$refs.userUpdate.handleForm()
+      }
+      if (this.type === 'KH') {
+        this.formPass({ serialNo: this.row.serialNo })
+      }
     },
+    // 拒绝
     toReject() {
-      this.$refs.auditRemark.getForm().validate((valid) => {
-        if (valid) {
-          const { notes } = this.$refs.auditRemark.getData()
-          const entFrom = this.$refs.entInfoedit.getData()
-          this.rejectLoading = true;
-          this.zjControl.todoEnterpriseSubmit({
-            flag: '2',
-            ...entFrom,
-            notes,
-          }).then(res => {
-            this.rejectLoading = false;
-            //成功，关闭
-            if (res.success) {
-              this.$message.success(res.msg);
-              this.goParent();
-            }
-          }).catch(() => {
-            this.rejectLoading = false;
-          })
-        }
-      })
-    }
+      this.state = 'reject'
+      if (this.type === 'PT') {
+        this.$refs.userUpdate.handleForm()
+      }
+      if (this.type === 'KH') {
+        this.formPass({ serialNo: this.row.serialNo })
+      }
+    },
+    formPass(params) {
+      if (this.state === 'pass') {
+        this.$refs.auditRemark.getForm().clearValidate();
+        const { notes } = this.$refs.auditRemark.getData()
+        
+        this.passLoading = true;
+        this.zjControl.todoEnterpriseSubmit({
+          flag: '1',
+          params,
+          ...entFrom,
+          notes,
+        }).then(res => {
+          this.passLoading = false;
+          //成功，关闭
+          if (res.success) {
+            this.$message.success(res.msg);
+            this.goParent();
+          }
+        }).catch(() => {
+          this.passLoading = false;
+        })
+      }
+      else {
+        this.$refs.auditRemark.getForm().validate((valid) => {
+          if (valid) {
+            const { notes } = this.$refs.auditRemark.getData()
+            this.rejectLoading = true;
+            this.zjControl.todoEnterpriseSubmit({
+              flag: '2',
+              params,
+              notes,
+            }).then(res => {
+              this.rejectLoading = false;
+              //成功，关闭
+              if (res.success) {
+                this.$message.success(res.msg);
+                this.goParent();
+              }
+            }).catch(() => {
+              this.rejectLoading = false;
+            })
+          }
+        })
+      }
+    },
   },
 };
 </script>

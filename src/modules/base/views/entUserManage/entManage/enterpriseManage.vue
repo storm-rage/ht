@@ -67,7 +67,7 @@ export default {
       })
     },
     submitForm() {
-      this.$refs.entInfoInit.save();
+      this.$refs.entInfoInit.handleForm();
     },
     saveEnterprise() {
       this.$refs.entInfoInit.saveEnterprise();

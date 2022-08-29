@@ -5,8 +5,9 @@
     <ent-form ref="entForm" :detailData="detailData" :dictionary="dictionary" @formPass="formPass" />
 
     <zj-content-footer>
-      <el-checkbox v-model="agreeCheck" :disabled="!isAgreeCheck">我已阅读并同意
-        <zj-button type="text">《银行账户变更通知》</zj-button>
+      <el-checkbox v-model="agreeCheck" v-if="isAgreeCheck">
+        <span>我已阅读并同意</span>
+        <zj-button type="text" @click="downloadTemplate">《银行账户变更通知》</zj-button>
       </el-checkbox>
       <zj-button type="primary" @click="updateUserInfo">确认提交</zj-button>
       <zj-button class="back" @click="back">返回</zj-button>
@@ -31,7 +32,7 @@ export default {
       detailData: {},
       agreeCheck: false,
       isAgreeCheck: false, //是否需要勾选协议
-     
+
     };
   },
   created() {
@@ -68,6 +69,14 @@ export default {
           type: "warning",
         });
       }
+    },
+    downloadTemplate() {
+      let params = {
+        id: this.row.id,
+        entBankInfo: this.$refs.entForm.$data.form.entBankInfo,
+        templateType: "YHZHBGTZ"
+      }
+      this.zjControl.downloadTemplate(params)
     },
     back() {
       this.$router.push("/personalCenter");
