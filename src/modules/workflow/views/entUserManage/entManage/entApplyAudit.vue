@@ -1,16 +1,22 @@
 <template>
   <zj-content-container>
     <zj-top-header :title="$route.name === 'entApplyAudit' ? '复核企业信息申请' : '企业信息申请交易详情'"></zj-top-header>
+
     <!--  交易信息  -->
     <trade-info :detailData="detailData" :dictionary="dictionary" />
-    <!--  企业基础信息 -->
-    <ent-info-edit ref="entInfoedit" :form="detailData" @getDictionary="getDictionary" />
+
+    <!--  平台方企业基础信息 -->
+    <ent-info-edit ref="entInfoedit" :form="detailData" @getDictionary="getDictionary" v-if="type === 'PT'" />
+
+    <!--  客户方企业基础信息 -->
+    <ent-info-kh ref="entInfoKH" :detailData="detailData" :dictionary="dictionary" :isEdit="false" v-if="type === 'KH'" />
 
     <!--  审批意见  -->
     <audit-remark ref="auditRemark" v-if="$route.name === 'entApplyAudit'"></audit-remark>
+
     <zj-content-footer>
       <zj-button type="primary" @click="toPass">复核通过</zj-button>
-      <zj-button @click="toReject" v-if="row.workflowState === 'E005'">拒绝</zj-button>
+      <zj-button @click="toReject" v-if="row.workflowState === 'E005' || type==='KH'">拒绝</zj-button>
       <zj-button @click="toReject" v-else>驳回上一级</zj-button>
       <zj-button @click="goParent">返回</zj-button>
     </zj-content-footer>
@@ -23,13 +29,15 @@
  */
 import tradeInfo from "../components/tradeInfo";
 import entInfoEdit from '@modules/base/views/entUserManage/entManage/entInfoEdit';
+import entInfoKh from "@modules/base/views/sysModules/personalCenter/entInfoMaintain/entForm"
 import AuditRemark from '../../components/auditRemark';
 
 export default {
   components: {
     tradeInfo,
     entInfoEdit,
-    AuditRemark
+    AuditRemark,
+    entInfoKh
   },
   data() {
     return {
@@ -37,7 +45,8 @@ export default {
       detailData: {},
       dictionary: {},
       passLoading: {},
-      rejectLoading: {}
+      rejectLoading: {},
+      type: "KH"
     };
   },
   created() {
@@ -47,13 +56,19 @@ export default {
     if (this.row.workflowState === 'E005') {
       this.$route.meta.pageType = 'edit'
     }
+    // this.type = this.row.startObject
   },
   methods: {
     getDictionary(data) {
       this.dictionary = data
     },
+    //获取详情
     getDetail() {
-      this.zjControl.getTodoEnterprise({ serialNo: this.row.serialNo }).then(res => {
+      let autoApi = this.zjControl.getTodoEnterprise // 平台方详情接口
+      if (this.type === 'KH') {
+        autoApi = this.zjControl.getUserInformationDetail // 客户方详情接口
+      }
+      autoApi({ serialNo: this.row.serialNo }).then(res => {
         this.detailData = res.data
       })
     },

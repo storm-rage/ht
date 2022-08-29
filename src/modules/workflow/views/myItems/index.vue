@@ -51,7 +51,7 @@
         <zj-table-column title="操作" fixed="right" v-if="tabAtive === 'agenda'">
           <template v-slot="{ row }">
             <zj-button type="text" @click="toHandle(row)">处理</zj-button>
-            <zj-button type="text" @click="toCancellation(row)">作废</zj-button>
+            <zj-button type="text" @click="toCancellation(row)" v-if="row.workflowState === 'S004'">作废</zj-button>
           </template>
         </zj-table-column>
       </zj-table>
@@ -112,10 +112,10 @@ export default {
         // 代办
         if (myItemsPath[row.busType].detailPath) {
           this.goChild(myItemsPath[row.busType].detailPath, row);
-        }else if (myItemsPath[row.busType][row.applyType][row.workflowState].detailPath) {
+        } else if (myItemsPath[row.busType][row.applyType][row.workflowState].detailPath) {
           this.goChild(myItemsPath[row.busType][row.applyType][row.workflowState].detailPath, row);
         }
-      }else {
+      } else {
         // 已办和已办结
         this.goChild(myItemsPath[row.busType][row.applyType].doneDetailPath, row);
       }
@@ -127,7 +127,7 @@ export default {
         // 代办
         if (myItemsPath[row.busType].auditPath) {
           this.goChild(myItemsPath[row.busType].auditPath, row);
-        }else if (myItemsPath[row.busType][row.applyType][row.workflowState].auditPath) {
+        } else if (myItemsPath[row.busType][row.applyType][row.workflowState].auditPath) {
           this.goChild(myItemsPath[row.busType][row.applyType][row.workflowState].auditPath, row);
         }
       }
@@ -141,12 +141,13 @@ export default {
       }).then(() => {
         let params = {
           serialNo: row.serialNo,
-          workflowState: row.workflowState
+          workflowState: row.workflowState,
+          busType: row.busType
         }
         this.zjControl.invalidateFlowable(params).then(res => {
           this.$message({
             type: "success",
-            message: "废除成功!",
+            message: "作废成功!",
           });
           this.search()
         })
