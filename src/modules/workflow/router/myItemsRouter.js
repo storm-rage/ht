@@ -4,8 +4,8 @@ const myItemsRouter = [
     name: 'myTodo',
     component: () => import('../views/myItems/index.vue'),
     meta: {
-      title: '我的代办',
-      root: '我的代办',
+      title: '我的待办',
+      root: '我的待办',
       keepAlive: true,
       refreshIndex: 0
     }

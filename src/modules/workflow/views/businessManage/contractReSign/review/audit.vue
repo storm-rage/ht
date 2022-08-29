@@ -9,7 +9,6 @@
     <operate-log :log-list="operateLogList"></operate-log>
     <!--  审批意见  -->
     <audit-remark ref="auditRemark"></audit-remark>
-    <zj-ht-approval></zj-ht-approval>
     <zj-content-footer>
       <zj-button type="primary" :disabled="rejectLoading" :loading="passLoading" :api="zjBtn.recheckContractRenewal" @click="toPass">审核通过</zj-button>
       <zj-button type="primary" :disabled="passLoading" :loading="rejectLoading" :api="zjBtn.recheckContractRenewal" @click="toReject">驳回</zj-button>

@@ -6,8 +6,10 @@
     :before-cancel-submit="beforeCancelSubmit"
     :custom="params"
     :process-instance-id="processInstanceId"
+    :show-upload-btn="showUploadBtn"
     :options="options"
     :snapshot-configs="snapshotConfigs"
+    @submit="submitAction"
     @back="backAction"
   ></ht-approval>
 </template>
@@ -38,6 +40,13 @@ export default {
      */
     beforeCancelSubmit: Function,
     /**
+     * 是否显示附件上传按钮
+     */
+    showUploadBtn: {
+      type: Boolean,
+      default: false
+    },
+    /**
      * 表单快照配置
      */
     snapshotConfigs: {
@@ -62,10 +71,14 @@ export default {
   },
   methods: {
     backAction (res) {
-      this.$message({
-        message: '退回成功',
-        type: 'success'
-      })
+      this.$emit('back-action', res);
+    },
+    /**
+     * 用户点击提交后成功返回后的处理
+     * @param res
+     */
+    submitAction(res) {
+      this.$emit('after-submit',res);
     }
   }
 };
