@@ -49,7 +49,7 @@ const entUserManage = {
         return request.get('/sys-user/get-todo-user-information-kh-detail', { params })
     },
     /**
-     *用户信息管理-提交
+     *用户信息管理-操作记录
      */
     getBusinessParamLog(params) {
         return request.get('/sys-user/get-todo-eb-business-param-log', { params })

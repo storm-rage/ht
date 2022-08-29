@@ -465,7 +465,7 @@ export default {
     },
 
     //保存
-    async save() {
+    async handleForm() {
       let params = JSON.parse(JSON.stringify(this.form))
       //1.校验表单
       this.$refs.form.validate(boo => {

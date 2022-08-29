@@ -9,7 +9,7 @@
     <user-update ref="userUpdate" :form="detailData" :dictionary="dictionary" :isEdit="isEdit" @formPass="formPass" v-if="type === 'PT'" />
 
     <!-- 客户方 用户信息  -->
-    <user-info-kh ref="userInfoKH" :form="detailData" :dictionary="dictionary" @formPass="formPass" v-if="type === 'KH'" />
+    <user-info-kh ref="userInfoKH" :form="detailData" :dictionary="dictionary" v-if="type === 'KH'" />
 
     <!--  操作记录  -->
     <operate-log ref="operateLog" :logList="logList"></operate-log>
@@ -111,7 +111,8 @@ export default {
         }).catch(() => {
           this.passLoading = false;
         })
-      } else {
+      }
+      if (this.state = 'reject') {
         this.$refs.auditRemark.getForm().validate((valid) => {
           if (valid) {
             const { notes } = this.$refs.auditRemark.getData()
@@ -137,13 +138,23 @@ export default {
     },
     // 通过
     toPass() {
-      this.$refs.userUpdate.handleForm()
       this.state = 'pass'
+      if (this.type === 'PT') {
+        this.$refs.userUpdate.handleForm()
+      }
+      if (this.type === 'KH') {
+        this.formPass({ serialNo: this.row.serialNo })
+      }
     },
     // 拒绝
     toReject() {
-      this.$refs.userUpdate.handleForm()
       this.state = 'reject'
+      if (this.type === 'PT') {
+        this.$refs.userUpdate.handleForm()
+      }
+      if (this.type === 'KH') {
+        this.formPass({ serialNo: this.row.serialNo })
+      }
     },
     //下载附件
     toDownload() {
