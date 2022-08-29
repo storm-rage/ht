@@ -72,6 +72,7 @@ export default {
     attaDownLoad(row) {
       this.$api.baseCommon.downloadFile({
         fileUrl: row.fileId,
+        fileId: row.fileId,
         fileName: row.fileName,
       })
     },

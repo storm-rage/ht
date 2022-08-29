@@ -6,7 +6,7 @@
     <!--  具体业务信息  -->
     <business-audit :rowData="row" :formData="detailData"/>
     <!--  阶段性协议信息  -->
-    <multistage-agreement :tableData="detailData" :dictionary="dictionary" :zjControl="zjControl" @handleAgreementList="agreementChange"/>
+    <multistage-agreement :rowData="row" :tableData="detailData" :dictionary="dictionary" :zjControl="zjControl" @handleAgreementList="agreementChange"/>
      <!--  审批意见  -->
     <audit-remark @reject="reject"/>
     <zj-content-footer>
@@ -34,11 +34,15 @@ export default {
     return {
       zjControl: {
         deletePhasedAgree:this.$api.multistageAgreementManageWorkflow.deletePhasedAgree,//运营端-阶段性协议维护-阶段性协议-删除
+        deleteWaitPhasedAgree:this.$api.multistageAgreementManageWorkflow.deleteWaitPhasedAgree,//运营端-阶段性协议维护-阶段性协议-删除
         getAddDetail:this.$api.multistageAgreementManageWorkflow.getAddDetail,//运营端-阶段性协议维护-阶段性协议维护详情
         getBackPhasedAgreeInfo:this.$api.multistageAgreementManageWorkflow.getBackPhasedAgreeInfo,//运营端-阶段性协议维护-详情
+        getWaitPhasedAgreeInfo:this.$api.multistageAgreementManageWorkflow.getWaitPhasedAgreeInfo,//运营端-阶段性协议维护-详情
         queryBackPhasedAgreePage:this.$api.multistageAgreementManageWorkflow.queryBackPhasedAgreePage,//运营端-阶段性协议-列表查询
         savePhasedAgree:this.$api.multistageAgreementManageWorkflow.savePhasedAgree,//运营端-阶段性协议维护-阶段性协议-保存
+        saveWaitPhasedAgree:this.$api.multistageAgreementManageWorkflow.saveWaitPhasedAgree,//待办-阶段性协议维护-阶段性协议-保存
         submitBackPhasedAgree:this.$api.multistageAgreementManageWorkflow.submitBackPhasedAgree,//运营端-阶段性协议维护-阶段性协议-确认提交
+        submitWaitBackPhasedAgree:this.$api.multistageAgreementManageWorkflow.submitWaitBackPhasedAgree,//待办-阶段性协议维护-阶段性协议-确认提交
         downLoadFile:this.$api.baseCommon.downloadFile,
         getBackPhasedAgreeDirectory:this.$api.multistageAgreementManageWorkflow.getBackPhasedAgreeDirectory,//阶段性协议管理-数据字典
         uploadFile:this.$api.baseCommon.uploadFile,
@@ -65,7 +69,8 @@ export default {
         sellerName: this.row.sellerName,
         serialNo: this.row.serialNo,
       }
-      this.zjControl.getBackPhasedAgreeInfo(params).then(res=>{
+      let requestUrl = this.row.maintainType=='1'?this.zjControl.getBackPhasedAgreeInfo:this.zjControl.getWaitPhasedAgreeInfo
+      requestUrl(params).then(res=>{
         this.detailData = res.data
       })
     },
@@ -96,13 +101,14 @@ export default {
           rejectReason: this.rejectReason,
           serialNo: this.detailData.businessApplyInfo?.serialNo,//申请流水号：保理公司直接维护时不需要传
         }
+        let requestUrl = this.row.maintainType=='1'?this.zjControl.submitBackPhasedAgree:this.zjControl.submitWaitBackPhasedAgree
         this.$messageBox({
           type:'info',
           title:'温馨提示',
           content:`是否确认${flag}？`,
           showCancelButton: true,
           messageResolve:()=>{
-            this.zjControl.submitBackPhasedAgree(params).then(res=>{
+            requestUrl(params).then(res=>{
               this.getDetail()
               this.$message.success(res.msg)
               this.goParent()

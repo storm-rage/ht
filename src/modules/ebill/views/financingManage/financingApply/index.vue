@@ -2,10 +2,10 @@
   <zj-content-container>
     <!--  融资申请  -->
     <el-tabs v-model="tabs" class="zj-tabs-card zj-p-l-16 zj-p-r-16">
-      <el-tab-pane label="订单融资" name="orderFinancing" v-if="tabInfo.orderTab">
+      <el-tab-pane label="订单融资" name="orderTab" v-if="tabInfo.orderTab">
         <orderFinancing :zjControl="zjControl" :dictionary="dictionary" :uBtn="zjBtn" @nextStepParams="handelNextStepParams"/>
       </el-tab-pane>
-      <el-tab-pane label="入库融资/凭证融资" name="voucherFinancing" v-if="tabInfo.billTab || tabInfo.warehouseTab">
+      <el-tab-pane label="入库融资/凭证融资" name="billTab" v-if="tabInfo.billTab || tabInfo.warehouseTab">
         <voucherFinancing :zjControl="zjControl" :dictionary="dictionary" :mBtn="zjBtn" @nextStepParams="handelNextStepParams"/>
       </el-tab-pane>
     </el-tabs>
@@ -39,7 +39,7 @@ export default {
         submitFinancingOrderApply:this.$api.financingApply.submitFinancingOrderApply,//订单融资提交
         downloadFile:this.$api.baseCommon.downloadFile,
       },
-      tabs:'orderFinancing',
+      tabs:'',
       dictionary:{},
       nextStepParams:{},
       tabInfo: {
@@ -59,6 +59,13 @@ export default {
     getTabInfo() {
       this.zjControl.getFinancingApplyTab().then(res=>{
         this.tabInfo = res.data
+        for(let key in res.data) {
+          if(res.data[key] === '1') {
+            this.tabs = key
+            break
+          }
+        }
+        console.log(this.tabs)
       })
     },
     getApiAfter(){
@@ -66,14 +73,17 @@ export default {
     },
     toNext() {
       console.log(JSON.stringify(this.nextStepParams))
-      if(this.tabs === 'orderFinancing') {
+      if(this.tabs === 'orderTab') {
         this.goChild('orderFinancingDetail', {buyerId: this.nextStepParams.buyerId})
       }
-      if(this.tabs === 'voucherFinancing') {
+      if(this.tabs === 'billTab') {
         if(this.nextStepParams.nextFlag) {
-          return this.$message.error('请选择到期日为同一天的凭证！')
+          this.$message.error('请选择到期日为同一天的凭证！')
+          return
         }
-        this.goChild('voucherFinancingDetail', {...this.nextStepParams})
+        if(!this.nextStepParams.nextFlag) {
+          this.goChild('voucherFinancingDetail', {...this.nextStepParams})
+        }
       }
     },
     handelNextStepParams(val) {

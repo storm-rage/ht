@@ -13,7 +13,7 @@ export const RouterWhiteList = ['login', 'forgetPass', 'userInfo', 'register', '
  */
 export const YaMiWorkFlowRouter = {
   // 业务管理-产品开通申请
-  CPSQ: '/workflow/businessApplyWAudit'
+  CPSQ: '/workflow/businessApplyYamiAudit'
 }
 /**
  * 单点登录后端配置的路由

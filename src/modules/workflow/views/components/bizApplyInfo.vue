@@ -9,7 +9,7 @@
               {{bizInfo.serialNo}}
             </el-form-item>
           </el-col>
-          <el-col :span="8">
+          <el-col :span="8" v-if="bizInfo.applyType||bizInfo.applyTypeDesc">
             <el-form-item label="申请类型：" prop="applyType">
               {{bizInfo.applyType || bizInfo.applyTypeDesc}}
             </el-form-item>
@@ -19,9 +19,9 @@
               {{bizInfo.applyStatus || bizInfo.applyStatusDesc}}
             </el-form-item>
           </el-col>
-          <el-col :span="8" v-if="bizInfo.startTime">
+          <el-col :span="8" v-if="bizInfo.startTime||bizInfo.modifyDatetime||bizInfo.applyDatetime">
             <el-form-item label="申请时间：" prop="startTime">
-              {{bizInfo.startTime}}
+              {{bizInfo.startTime||bizInfo.modifyDatetime||bizInfo.applyDatetime}}
             </el-form-item>
           </el-col>
         </el-row>

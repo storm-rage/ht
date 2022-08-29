@@ -15,7 +15,7 @@
             <el-input v-model="searchForm.buyerNameLike" @keyup.enter.native="enterSearch" />
           </el-form-item>
           <el-form-item label="登记状态：">
-            <el-select v-model="searchForm.productState">
+            <el-select v-model="searchForm.registStatus">
               <el-option label="全部" value="" />
               <el-option v-for="item in dictionary.registStatus" :key="item.code" :label="item.desc"
                 :value="item.code" />
@@ -63,12 +63,14 @@
           <zj-button @click="toIssuance" >手工登记</zj-button> 
           this.$refs.frozenDialog.open(loginRes.frozenPhone)-->
         <zj-button @click="zdlogin">中登登记</zj-button>
-        <zj-button @click="dialog">打开登录弹框</zj-button>
-        <zj-button @click="openDialog1">打开手工登记弹框</zj-button>
+        <zj-button @click="openDialog1">手工登记</zj-button>
+        <!-- <zj-button @click="dialog">打开登录弹框</zj-button> -->
+
       </el-row>
     </zj-workflow>
-<loginDialog ref="loginDialog"></loginDialog>
-<artRegister ref="artRegister" :idlist="this.idlist"></artRegister>
+    <!-- <loginDialog ref="loginDialog" :checkLogin="this.checkLogin" :idlist="this.idlist"></loginDialog> -->
+    <loginDialog ref="loginDialog"></loginDialog>
+    <artRegister ref="artRegister" :idlist="this.idlist"></artRegister>
   </zj-content-container>
 </template>
 <script>
@@ -100,8 +102,7 @@ export default {
         zdLongin: this.$api.zhongdengManage.zdLongin,//登录中登
       },
       dictionary: {},
-      dialogVisible: false,
-      dialogVisible1: false,
+
       list1: [
         {
           id: "1",
@@ -117,16 +118,16 @@ export default {
       list: [],
       tradeList: [],
       idlist: [],
-      baseInfoList: [],//客户基本信息集合
-      financingInfoList: [],//融资基本信息集合（列表显示的）
+
       // {
       //   type: "application/pdf",
       //   remarks: "死数据",
       //   name: "贸易关系(1).pdf",
       //   date: "Tue Aug 23 2022 18:56:33 GMT+0800(中国标准时间)"
       // }
-      zdAttachList: [],//需要上传的附件（不显示列表中）
+
       filemsg: {},
+      checkLogin: {}
 
     };
   },
@@ -135,24 +136,48 @@ export default {
     this.getDetail();
   },
   methods: {
-    openDialog1(){
-      this.$refs.artRegister.open()
+    getmsg() {
+      console.log(this.userData);
     },
-    dialog(){
-      this.$refs.loginDialog.open()
+    openDialog1() {
+      if (this.idlist.length == 0) {
+        this.$messageBox({
+          type:'warning',
+          content:'请至少选择一条'
+        })
+      } else {
+        let bizType="01"
+        this.$refs.artRegister.open(bizType)
+      }
+
+    },
+    dialog(row) {
+      this.$refs.loginDialog.open(row)
     },
     // --------中登登记
     zdlogin() {
-      this.zjControl.checkLogin().then(res => {
-        console.log(res.data);
-        if (res.data.login == true) {
-          // console.log("已经登录");
-          let row = res.data
-          this.goLogin(row)
-        } else {
-          this.dialogVisible1 = true;
-        }
-      })
+      if (this.idlist.length == 0) {
+        this.$messageBox({
+          type:'warning',
+          content:'请至少选择一条'
+        })
+      } else {
+        this.zjControl.checkLogin().then(res => {
+          console.log(res.data);
+          let row = {
+            checkLogin: res.data,
+            idlist: this.idlist,
+            bizType: "01"
+          }
+          this.checkLogin = res.data
+          if (res.data.login == true) {
+            this.goLogin(row)
+          } else {
+            this.dialog(row)
+          }
+        })
+      }
+
     },
 
 

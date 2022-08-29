@@ -9,7 +9,7 @@
     ref="tradeInfo"
     :tradeList="tradeRelationModelList"
     :is-edit-cactoring-logo="true"
-    :bizId="bizId"
+    :bizId="businessParamModel.id"
     :dic="dictionary"></trade-list>
   </div>
 </template>

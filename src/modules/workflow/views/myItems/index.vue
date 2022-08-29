@@ -13,6 +13,7 @@
           </el-form-item>
           <el-form-item label="业务类型：" class="col-center">
             <el-select v-model="searchForm.busType">
+              <el-option label="全部" value=""/>
               <el-option v-for="item in dictionary.busTypeList" :label="item.desc" :value="item.code" :key="item.code" />
             </el-select>
           </el-form-item>
@@ -21,6 +22,7 @@
           </el-form-item>
           <el-form-item label="发起方：">
             <el-select v-model="searchForm.startObject">
+              <el-option label="全部" value=""/>
               <el-option v-for="item in dictionary.startObjectList" :label="item.desc" :value="item.code" :key="item.code" />
             </el-select>
           </el-form-item>
@@ -65,7 +67,14 @@ export default {
   data() {
     return {
       tabAtive: "agenda",
-      searchForm: {},
+      searchForm: {
+        serialNo:"",
+        busType:"",
+        startTimeStart:"",
+        startTimeEnd:"",
+        startObject:"",
+        sellerEntName:"",
+      },
       zjControl: this.$api.myItems,
       fileList: [],
       dictionary: {},
@@ -75,6 +84,8 @@ export default {
   created() {
     console.log(myItemsPath)
     this.getDirectory()
+    this.getRow()
+    this.row.busType && (this.searchForm.busType = this.row.busType)
   },
   methods: {
     // 获取字典

@@ -24,7 +24,7 @@
       </div>
     </div>
   </home-content-block> -->
-  <home-content-block class="home-content-todo">
+  <home-content-block class="home-content-todo" v-loading="loading">
     <zj-header title="待办任务">
       <template slot="right">
         <right-more-btn @click.native="toMore"></right-more-btn>
@@ -34,47 +34,72 @@
       class="todo-block-item yw"
       v-for="(item, index) in list"
       :key="`${index}todo`"
-      :class="[index === 0 ? 'yw' : index === 1 ? 'ht' : 'rz']"
+      @click="goToDo(item)"
     >
+      <!-- :class="[index === 0 ? 'yw' : index === 1 ? 'ht' : 'rz']" -->
       <div class="logo">
-        <img v-if="index === 0" src="~@assets/img/home/todo/yw_bg.png" />
-        <img v-if="index === 1" src="~@assets/img/home/todo/ht_bg.png" />
-        <img v-if="index === 2" src="~@assets/img/home/todo/rz_bg.png" />
+        <img src="~@assets/img/home/todo/yw_bg.png" />
+        <!-- <img v-if="index === 1" src="~@assets/img/home/todo/ht_bg.png" /> -->
+        <!-- <img v-if="index === 2" src="~@assets/img/home/todo/rz_bg.png" /> -->
       </div>
-      <div class="title">{{ item.title }}</div>
-      <div class="num">{{ item.num }}</div>
+      <div class="title">{{ item.name }}</div>
+      <div class="num">{{ item.number }}</div>
     </div>
   </home-content-block>
 </template>
 <script>
 import HomeContentBlock from '../../components/homeContentBlock'
 import RightMoreBtn from '../../components/rightMoreBtn'
+import { mapState } from 'vuex'
+import { EntType } from '@modules/constant'
 export default {
+  computed: {
+    ...mapState({
+      entInfo: state => state.enterprise.entInfo
+    })
+  },
   components: {
     HomeContentBlock,
     RightMoreBtn
   },
   data () {
     return {
-      list: [
-        {
-          title: '业务管理',
-          num: 9
-        },
-        {
-          title: '合同管理',
-          num: 100
-        },
-        {
-          title: '融资审核',
-          num: 20
-        }
-      ]
+      loading: false,
+      zjControl: {
+        queryBackLog: this.$api.home.queryBackLog
+      },
+      EntType: EntType,
+      list: []
     }
+  },
+  mounted () {
+    this.getApi()
+    this.getList()
   },
   methods: {
     toMore () {
-      this.$router.push({ name: 'myTodo' })
+      this.goChild('myTodo')
+    },
+    goToDo (item) {
+      // 核心企业、供应商不跳待办
+      this.goChild(
+        this.entInfo.entType === EntType.HX || this.entInfo.entType === EntType.GYS
+          ? item.router
+          : 'myTodo',
+        { busType: item.busType }
+      )
+    },
+    getList () {
+      this.loading = true
+      this.zjControl
+        .queryBackLog()
+        .then(res => {
+          this.loading = false
+          this.list = res.data.innerList || []
+        })
+        .catch(() => {
+          this.loading = false
+        })
     }
   }
 }
@@ -157,6 +182,10 @@ export default {
     padding-left: 20px;
     padding-right: 20px;
     font-weight: bold;
+    .logo,
+    img {
+      width: 60px;
+    }
     // 业务管理
     &.yw {
       background-color: #fff6ed;
@@ -190,8 +219,11 @@ export default {
       font-size: 30px;
     }
   }
-  .todo-block-item + .todo-block-item {
+  .todo-block-item {
     margin-top: 12px;
+    &:first-child {
+      margin-top: 0;
+    }
   }
 }
 </style>

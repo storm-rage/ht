@@ -62,6 +62,7 @@ export default {
       // }
       zdAttachList: [],//需要上传的附件（不显示列表中）
       filemsg: {}, 
+      bizType:"",
       zjControl: {
         orderPage: this.$api.zhongdengManage.orderPage, //订单保理列表
         getDictionary: this.$api.zhongdengManage.getDictionary,//字典
@@ -105,11 +106,12 @@ export default {
       }
       this.financingInfoList.push(files1)
     },
-    open() {
-      console.log(this.idlist);
+    open(bizType) {
+      this.bizType=bizType
+      console.log(this.idlist,bizType);
       let params = {
         idList: this.idlist,
-        bizType: "01"
+        bizType:bizType 
       }
       this.zjControl.registerDetails(params).then(res => {
         this.baseInfoList = res.data.baseInfoList
@@ -127,12 +129,12 @@ export default {
       console.log(this.financingInfoList);
       let params = {
         idList: this.idlist,
-        bizType: "01",
+        bizType: this.bizType,
         zdAttachList: this.zdAttachList
       }
       console.log(params, "上传的");
       this.zjControl.registerSubmit(params).then(res => {
-        // this.dialogVisible = false;
+        this.close()
         console.log("提交成功");
       })
 

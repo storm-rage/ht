@@ -2,7 +2,7 @@
   <el-tabs v-bind="$attrs"
            v-on="$listeners"
            type="card"
-           class="zj-tabs-card">
+           class="zj-custom-tabs-card">
     <slot></slot>
   </el-tabs>
 </template>
@@ -12,9 +12,9 @@ export default {
   name: "ZjTabs",
 }
 </script>
-<style lang="less" scope>
+<style lang="less">
 @import "~@assets/less/variables";
-.zj-tabs-card {
+.zj-custom-tabs-card {
   &.el-tabs{
     .el-tabs__header{
       border: none;
@@ -57,7 +57,7 @@ export default {
   }
 }
 .search-page{
-  >.zj-tabs-card,>.el-tabs{
+  >.zj-custom-tabs-card,>.el-tabs{
     >.el-tabs__header{
       margin-bottom: 0!important;
     }

@@ -6,7 +6,7 @@
       <zj-content-block>
         <zj-header title="凭证信息"/>
         <zj-table ref="ebBillTable"
-                  :dataList="form.ebBillModelList"
+                  :dataList="ebBillModelList"
                   @radio-change="handleRadioChange"
                   :radio-config="{highlight: true}"
                   :pager="false"
@@ -24,34 +24,37 @@
       <!--    贸易合同    -->
       <zj-content-block>
         <zj-header title="贸易合同信息"/>
-        <zj-button type="primary" icon="el-icon-circle-plus-outline" @click="addContract">新增</zj-button>
+        <zj-button type="primary" icon="el-icon-circle-plus-outline" class="zj-m-b-10" @click="addContract">新增</zj-button>
         <zj-table ref="contractTable"
                   :dataList="form.contractList"
                   keep-source
                   :edit-config="{trigger: 'manual', mode: 'row', icon:'-', autoClear: false,showStatus: true}"
                   :pager="false"
         >
-          <zj-table-column field="contractType" title="合同类型" :formatter="obj=>typeMap(dictionary.contractTypeList,obj.cellValue)"/>
+          <zj-table-column field="contractType" title="合同类型" :formatter="obj=>typeMap(dictionary.contractType,obj.cellValue)"/>
           <zj-table-column field="contractNo" title="贸易合同编号" :edit-render="{name: '$input'}"/>
           <zj-table-column field="contractName" title="贸易合同名称" :edit-render="{name: '$input'}"/>
           <zj-table-column field="contractAmt" title="合同金额" :formatter="money" :edit-render="{name: '$input'}"/>
-          <zj-table-column field="signDate" title="合同签订日期" :formatter="date" :edit-render="{name: '$input'}"/>
-          <zj-table-column field="fileName" title="附件"  :edit-render="{name: '$input'}"/>
-          <zj-table-column title="操作" fixed="right" width="280">
+          <zj-table-column field="signDate" title="合同签订日期" :formatter="date" :edit-render="{name: '$input', props: {type:'date',editable:false}}">
             <template v-slot="{row}">
+              <span>{{date(row.signDate)}}</span>
+            </template>
+          </zj-table-column>
+          <zj-table-column field="fileName" title="附件"/>
+          <zj-table-column title="操作" fixed="right" width="280">
+            <template v-slot="{row,rowIndex}">
               <template v-if="$refs.contractTable.isActiveByRow(row)">
-                <zj-upload class="zj-inline" :httpRequest="uploadContractAtta" :data="{ row }">
-                  <zj-button slot="trigger" type="text" :api="zjBtn.uploadFile">上传</zj-button>
+                <zj-upload class="zj-inline" :httpRequest="handleFileUpload" :data="{ row, bizType:'contract' }">
+                  <zj-button slot="trigger" type="text" >上传</zj-button>
                 </zj-upload>
-                <zj-button type="text" @click="saveRow(row)">保存</zj-button>
-                <zj-button type="text" @click="cancleRow(row)">取消</zj-button>
+                <zj-button type="text" @click="saveContract(row,rowIndex)">保存</zj-button>
+                <zj-button type="text" @click="cancelContract(row,rowIndex)">取消</zj-button>
               </template>
               <template v-if="!$refs.contractTable.isActiveByRow(row)">
-                <zj-button type="text" @click="modifyContract(row)">修改</zj-button>
+                <zj-button type="text" @click="modifyContract('contractTable',row)">修改</zj-button>
+                <zj-button type="text" @click="downloadFile(row)">下载</zj-button>
+                <zj-button type="text" @click="deleteContract(row)">删除</zj-button>
               </template>
-
-              <zj-button type="text" @click="downloadContract(row)">下载</zj-button>
-              <zj-button type="text" @click="deleteContract(row)">删除</zj-button>
             </template>
           </zj-table-column>
         </zj-table>
@@ -59,48 +62,56 @@
       </zj-content-block>
       <zj-content-block>
         <zj-header title="发票信息"/>
-        <zj-button type="primary" icon="el-icon-circle-plus-outline" @click="addInvoice">新增发票</zj-button>
+        <zj-button type="primary" icon="el-icon-circle-plus-outline" class="zj-m-b-10" @click="addInvoice">新增发票</zj-button>
         <zj-table ref="invoiceTable"
                   :dataList="form.invoiceList"
                   keep-source
                   :edit-config="{trigger: 'manual', mode: 'row', icon:'-', autoClear: false,showStatus: true}"
                   :pager="false"
         >
-          <zj-table-column field="invoiceType" title="发票类型" :edit-render="{name: '$input'}"/>
+          <zj-table-column field="invoiceType" title="发票类型"
+                           :edit-render="{
+                              name: '$select',
+                              options: dictionary.invoiceTypeTable,
+                              optionProps: { value: 'status', label: 'label', key: 'status' }
+                            }"
+          />
           <zj-table-column field="invoiceNumber" title="发票号码" :edit-render="{name: '$input'}"/>
           <zj-table-column field="invoiceCode" title="发票代码" :edit-render="{name: '$input'}"/>
-          <zj-table-column field="field5" title="发票金额（含税）" :edit-render="{name: '$input'}" :formatter="money"/>
-          <zj-table-column field="field5" title="发票金额（不含税）" :edit-render="{name: '$input'}" :formatter="money"/>
-          <zj-table-column field="field5" title="销售方" :edit-render="{name: '$input'}"/>
-          <zj-table-column field="field5" title="购买方" :edit-render="{name: '$input'}"/>
-          <zj-table-column field="invoiceDate" title="发票日期" :edit-render="{name: '$input'}" :formatter="date"/>
-          <zj-table-column field="verifyCode" title="校验码（后6位）" :edit-render="{name: '$input'}"/>
-          <zj-table-column field="fileName" title="附件名称" :edit-render="{name: '$input'}"/>
-          <zj-table-column title="操作" fixed="right" width="200">
+          <zj-table-column field="totalAmtLowcase" title="发票金额（含税）" :edit-render="{name: '$input'}" :formatter="money"/>
+          <zj-table-column field="sellAmount" title="发票金额（不含税）" :edit-render="{name: '$input'}" :formatter="money"/>
+          <zj-table-column field="seller" title="销售方" :edit-render="{name: '$input'}"/>
+          <zj-table-column field="buyer" title="购买方" :edit-render="{name: '$input'}"/>
+          <zj-table-column field="invoiceDate" title="发票日期" :edit-render="{name: '$input', props: {type:'date',editable:false}}" :formatter="date">
             <template v-slot="{row}">
+              <span>{{date(row.invoiceDate)}}</span>
+            </template>
+          </zj-table-column>
+          <zj-table-column field="verifyCode" title="校验码（后6位）" :edit-render="{name: '$input'}"/>
+          <zj-table-column field="fileName" title="附件名称"/>
+          <zj-table-column title="操作" fixed="right" width="280">
+            <template v-slot="{row,rowIndex}">
               <template v-if="$refs.invoiceTable.isActiveByRow(row)">
-                <zj-upload class="zj-inline" :httpRequest="uploadContractAtta" :data="{ row }">
-                  <zj-button slot="trigger" type="text" :api="zjBtn.uploadFile">上传</zj-button>
+                <zj-upload class="zj-inline" :httpRequest="handleFileUpload" :data="{ row, bizType:'invoice' }">
+                  <zj-button slot="trigger" type="text" :api="zjBtn.uploadMaintainFile">上传</zj-button>
                 </zj-upload>
-                <zj-button type="text" @click="saveContract(row)">保存</zj-button>
-                <zj-button type="text" @click="cancel(row)">取消</zj-button>
+                <zj-button type="text" @click="saveInvoice(row,rowIndex)">保存</zj-button>
+                <zj-button type="text" @click="cancelInvoice(row,rowIndex)">取消</zj-button>
               </template>
               <template v-if="!$refs.invoiceTable.isActiveByRow(row)">
-                <zj-button type="text" @click="modifyContract(row)">修改</zj-button>
+                <zj-button type="text" @click="modifyInvoice('invoiceTable',row)">修改</zj-button>
+                <zj-button type="text" @click="downloadFile(row)">下载</zj-button>
+                <zj-button type="text" @click="deleteInvoice(row)">删除</zj-button>
               </template>
-              <zj-button type="text" @click="downloadContract(row)">下载</zj-button>
-              <zj-button type="text" @click="deleteContract(row)">删除</zj-button>
             </template>
           </zj-table-column>
         </zj-table>
-        <el-row>
-          发票金额（含税）合计：{{ form.totalAmount }}元
-        </el-row>
+        <el-row>发票金额（含税）合计：{{ form.totalAmount }}元</el-row>
       </zj-content-block>
       <!--    其他附件    -->
       <zj-content-block>
         <zj-header title="其他附件"/>
-        <zj-button type="primary" icon="el-icon-circle-plus-outline" @click="addAtta">新增</zj-button>
+        <zj-button type="primary" icon="el-icon-circle-plus-outline" class="zj-m-b-10" @click="addAttach">新增</zj-button>
         <zj-table ref="otherAttachTable"
                   :dataList="form.otherAttachList"
                   keep-source
@@ -108,20 +119,23 @@
                   :pager="false"
         >
           <zj-table-column type="seq" title="序号"/>
-          <zj-table-column field="field2" title="说明"/>
-          <zj-table-column field="field3" title="附件名称"/>
-          <zj-table-column title="操作" fixed="right">
-            <template v-slot="{row}">
-              <zj-button type="text" @click="downloadContract(row)">下载</zj-button>
-
+          <zj-table-column field="attachTheme" title="说明" :edit-render="{name: '$input'}"/>
+          <zj-table-column field="fileName" title="附件名称"/>
+          <zj-table-column title="操作" fixed="right" width="280">
+            <template v-slot="{row,rowIndex}">
               <template v-if="$refs.otherAttachTable.isActiveByRow(row)">
-                <zj-button type="text" @click="saveContract(row)">保存</zj-button>
-                <zj-button type="text" @click="cancel(row)">取消</zj-button>
+                <zj-upload class="zj-inline" :httpRequest="handleFileUpload" :data="{ row, bizType:'attach' }">
+                  <zj-button slot="trigger" type="text" :api="zjBtn.uploadMaintainFile">上传</zj-button>
+                </zj-upload>
+                <zj-button type="text" @click="saveAttach(row,rowIndex)">保存</zj-button>
+                <zj-button type="text" @click="cancelAttach(row,rowIndex)">取消</zj-button>
               </template>
               <template v-if="!$refs.otherAttachTable.isActiveByRow(row)">
-                <zj-button type="text" @click="modifyContract(row)">修改</zj-button>
+                <zj-button type="text" @click="modifyAttach('otherAttachTable',row)">修改</zj-button>
+                <zj-button type="text" @click="downloadFile(row)">下载</zj-button>
+                <zj-button type="text" @click="deleteAttach(row)">删除</zj-button>
+
               </template>
-              <zj-button type="text" @click="deleteContract(row)">删除</zj-button>
             </template>
           </zj-table-column>
         </zj-table>
@@ -135,47 +149,47 @@
   </zj-content-container>
 </template>
 <script>
+import tableMixins from "@common/mixins/tableMixins";
 export default {
+  name: 'tradeBackgroundMaintain',
+  mixins: [tableMixins],
   components: {},
   data() {
     return {
       zjControl: {
-        getDictionary:this.$api.financingApply.getDictionary,//获取数据字典
+        getTradeBackDictionary:this.$api.financingApply.getTradeBackDictionary,//获取数据字典
         getTradeBackgroundInfo:this.$api.financingApply.getTradeBackgroundInfo,//贸易背景管理-获取详情
         maintainContract:this.$api.financingApply.maintainContract,//贸易背景管理-合同维护
         maintainInvoice:this.$api.financingApply.maintainInvoice,//贸易背景管理-发票维护
         maintainOtherAttach:this.$api.financingApply.maintainOtherAttach,//贸易背景管理-其它附件维护
         uploadMaintainFile:this.$api.financingApply.uploadMaintainFile,//贸易背景管理-附件上传
-
+        downloadFile:this.$api.baseCommon.downloadFile,
       },
       form: {
         contractList: [],
         invoiceList: [],
         otherAttachList: [],
       },
+      ebBillModelList:[],
       dictionary: {},
-      list: [
-        {
-          field1: 'scm00001',
-          field2: '某某产品一号',
-          field3: '上游',
-          field4: '订单保理',
-          field5: '2022.09.08',
-          state: '生效',
-          fileName: '是'
-        }
-      ],
-      tradeList: []
-    };
+      tradeList: [],
+      oldRowInfo: {},
+      billTraceId: '',
+      tradeId: '',};
   },
   methods: {
     getDic() {
-      this.zjControl.getDictionary().then(res=>{
-        this.dictionary = res.data
+      this.zjControl.getTradeBackDictionary().then(res=>{
+        //发票类型字段转换
+        let dic = {
+          invoiceTypeTable:JSON.parse(
+            JSON.stringify(res.data.invoiceType)
+              .replace(/code/g,'status')
+              .replace(/desc/g,'label')
+          )
+        }
+        this.dictionary = Object.assign(dic,res.data)
       })
-    },
-    getDetail() {
-
     },
     handleDataChange(rows) {
       //默认勾选第一个凭证信息
@@ -185,6 +199,8 @@ export default {
       }
     },
     handleRadioChange({row}) {
+      this.billTraceId = row.billTraceId//存放到本地
+      this.tradeId = row.tradeId//存放到本地
       let params = {
         id : row.billTraceId,//融单轨迹主键ID
       }
@@ -193,67 +209,295 @@ export default {
         this.form = res.data
       })
     },
+    /**
+     * 合同维护
+     */
     addContract() {
-      if(!this.tableEditReport(["contractTable"])){return}
+      if(!this.tableEditReport(["contractTable","invoiceTable","otherAttachTable"])){return}
       console.log('addContract...')
       //检测是否存在主合同
-      let flag = this.form.contractList.some(item=>{item.contractType === '0'})
+      let flag = this.form.contractList.some(item=>item.contractType === '0')//0主合同,1补充合同
       let item = {contractType:flag ? '1' : '0', contractNo:'', contractName:'', contractAmt:'', signDate:'', fileName:''}
       this.form.contractList.push(item)
       this.$refs.contractTable.setActiveRow(item)
-
-    },
-    saveRow(row) {
-      if(!row.contractNo){ return this.$messageBox({type:'info',content:'请填写合同编号!'}) }
-      if(!row.contractName){ return this.$messageBox({type:'info',content:'请填写合同名称!'}) }
-      if(!row.contractAmt){ return this.$messageBox({type:'info',content:'请填写合同金额!'}) }
-      if(!row.signDate){ return this.$messageBox({type:'info',content:'请填写合同签订日期!'}) }
-      if(!row.fileName){ return this.$messageBox({type:'info',content:'请上传附件!'}) }
-      let params = {
-        ...row
-      }
-      //保存合同信息
-      this.zjControl.maintainContract(params).then(res => {
-        //刷新当前贸易关系下的合同附件列表
-        this.handleRadioChange(res.data)
-        for(let i of this.form.contractList) {
-          if(i.id === res.data.id) {
-
-          }
-        }
-
-        this.$message.success('保存成功！')
-        this.$refs.contractTable.clearActived()
-      })
-    },
-    cancleRow(row) {
-      this.contractInfoList.splice(row.index,1)
-      this.$refs.contractList.clearActived()
-    },
-    addInvoice() {
-      if(!this.tableEditReport(["invoiceTable"])){return}
-      console.log('addInvoice...')
-      //新增一条发票信息
-      let item = {attachId:'', fileId:'', fileName:'', fileRemark:'',}
-      this.form.invoiceList.push(item)
-      this.$refs.invoiceTable.setActiveRow(item)
-
     },
     //上传附件
     handleFileUpload({file,data}){
       let formData = new FormData()
-      formData.append('file',file)
-      this.zjControl.uploadFile(formData).then(res => {
+      if(data.row.id) {
+        formData.append('bizId',data.row.id)//业务类型对应的主键id（未保存前上传文件不需要）：发票id、合同id、其他附件id
+      }
+      formData.append('bizType',data.bizType)//业务类型：invoice-发票文件 contract-合同文件 attach-其他附件文件
+      formData.append('fileOB',file)
+      console.log(formData)
+      this.zjControl.uploadMaintainFile(formData).then(res => {
         data.row.fileId = res.data.fileId
         data.row.fileName = res.data.fileName
         this.$message.success('附件上传成功!')
       })
     },
-    addAtta() {
+    saveContract(row,rowIndex) {
+      //合同信息校验
+      //************
+      let key1 = this.tableLengthVali(row, 'contractNo',100,'合同编号',true)
+      if(!key1){return}
+      let key2 = this.tableLengthVali(row, 'contractName',100,'合同名称',true)
+      if(!key2){return}
+      // if(!row.contractNo){ return this.$messageBox({type:'info',content:'请填写合同编号!'}) }
+      // if(!row.contractName){ return this.$messageBox({type:'info',content:'请填写合同名称!'}) }
+      let key3 = this.tableMoneyVali(row.contractAmt, '合同金额',true)
+      if(!key3){return}
+      // if(!row.contractAmt){ return this.$messageBox({type:'info',content:'请填写合同金额!'}) }
+      if(!row.signDate){ return this.$messageBox({type:'info',content:'请填写合同签订日期!'}) }
+      if(!row.fileName){ return this.$messageBox({type:'info',content:'请上传附件!'}) }
+      let params = {
+        contract: {
+          ...row,
+          operateType: row.id ? 'MOD' : 'ADD',//ADD-新增 MOD-修改 DEL-删除 UP-上传
+          busType: '',//合同业务类型：GC-工程、LW-劳务、SD-水电、ZS-装饰、ZL-租赁、QT-其他
+          ebillCode: '',//融单编号
+          id: row.id,
+          tradeId: this.tradeId,
+        },
+        id: this.billTraceId,//业务ID：应付账款id/资料维护id/融单轨迹id
+      }
+      params.contract.signDate = params.contract.signDate.replace(/-/g,'')
+      //保存合同信息
+      this.zjControl.maintainContract(params).then(res => {
+        this.$refs.contractTable.clearActived()
+        this.$message.success('保存成功！')
+        let index = this.tableFindIndex('form','contractList',row)
+        if(typeof(res.data) === 'object' && res.data !== null && res.data.contract !== null) {
+          this.form.contractAmtTemp = res.data.contractAmt
+          this.form.contractList.splice(index,1,res.data)
+        } else {
+          //刷新当前凭证信息下的合同、发票、附件列表
+          this.handleRadioChange({...res.data})
+        }
 
+      })
     },
-    download(){},
+    //修改合同信息
+    modifyContract(table,row) {
+      console.log('contract')
+      if(!this.tableEditReport(["contractTable","invoiceTable","otherAttachTable"])){return}
+      this.oldRowInfo = Object.assign({},row)
+      console.log(this.oldRowInfo)
+      this.$refs[table].setActiveRow(row)
+    },
+    //取消合同信息修改保存
+    cancelContract(row,rowIndex) {
+      if(row.fileId) {
+        this.form.contractList.splice(rowIndex,1,this.oldRowInfo)
+      }else {
+        this.form.contractList.splice(rowIndex,1)
+      }
+      this.$refs.contractTable.clearActived()
+    },
+    //删除合同信息
+    deleteContract(row) {
+      if(!this.tableEditReport(["contractTable","invoiceTable","otherAttachTable"])){return}
+      this.$messageBox({
+        type:'confirm',
+        title:'删除确认',
+        content:row.contractNo ?
+          `您确认删除 合同编号为${row.contractNo}的${this.typeMap(this.dictionary.contractType,row.contractType)}吗?` :
+          `您确认删除该${this.typeMap(this.dictionary.contractType,row.contractType)}吗?`,
+        showCancelButton:true,
+        messageResolve:()=>{
+          //更新合同列表
+          let params = {
+            contract: {
+              ...row,
+              operateType: 'DEL',//ADD-新增 MOD-修改 DEL-删除 UP-上传
+              busType: '',//合同业务类型：GC-工程、LW-劳务、SD-水电、ZS-装饰、ZL-租赁、QT-其他
+              ebillCode: '',//融单编号
+              id: row.id,
+            },
+            id: this.billTraceId,//业务ID：应付账款id/资料维护id/融单轨迹id
+          }
+          this.zjControl.maintainContract(params).then(res=>{
+            this.form.contractList.splice(row.index,1)//删除当前行的合同信息
+            this.handleRadioChange({...res.data})
+            this.$message.success('删除合同信息成功！')
+          })
+        }
+      })
+    },
+    //下载附件
+    downloadFile(row) {
+      this.zjControl.downloadFile({
+        fileUrl:row.fileId,
+        fileName:row.fileName,
+      })
+    },
+    /**
+     * 发票维护
+     */
+    //新增发票信息
+    addInvoice() {
+      if(!this.tableEditReport(["contractTable","invoiceTable","otherAttachTable"])){return}
+      console.log('addInvoice...')
+      //新增一条发票信息
+      let item = {invoiceType:'', invoiceNumber:'', invoiceCode:'', totalAmtLowcase:'',sellAmount:'',seller:'',buyer:'',invoiceDate:'',verifyCode:'',fileName:''}
+      this.form.invoiceList.push(item)
+      this.$refs.invoiceTable.setActiveRow(item)
+    },
+    //保存发票信息
+    saveInvoice(row) {
+      if(!row.invoiceType){ return this.$messageBox({type:'info',content:'请选择发票类型!'}) }
+      if(!row.invoiceNumber){ return this.$messageBox({type:'info',content:'请填写发票号码!'}) }
+      if(!row.invoiceCode){ return this.$messageBox({type:'info',content:'请填写发票代码!'}) }
+      if(!row.totalAmtLowcase){ return this.$messageBox({type:'info',content:'请填写发票金额（含税）!'}) }
+      if(!row.sellAmount){ return this.$messageBox({type:'info',content:'请填写发票金额（不含税）!'}) }
+      if(!row.invoiceDate){ return this.$messageBox({type:'info',content:'请填写发票日期!'}) }
+      if(!row.verifyCode){ return this.$messageBox({type:'info',content:'请填写校验码!'}) }
+      if(!row.fileName){ return this.$messageBox({type:'info',content:'请上传附件!'}) }
+      let params = {
+        invoice: {
+          ...row,
+          operateType: row.id ? 'MOD' : 'ADD',//ADD-新增 MOD-修改 DEL-删除 UP-上传
+          busType: '',//合同业务类型：GC-工程、LW-劳务、SD-水电、ZS-装饰、ZL-租赁、QT-其他
+          ebillCode: '',//融单编号
+          id: row.id,
+          tradeId: this.tradeId,
+        },
+        id: this.billTraceId,//业务ID：资料维护id/融单轨迹id
+      }
+      params.invoice.invoiceDate = params.invoice.invoiceDate.replace(/-/g,'')
+      //保存合同信息
+      this.zjControl.maintainInvoice(params).then(res => {
+        this.$message.success('保存成功！')
+        this.$refs.invoiceTable.clearActived()
+        this.handleRadioChange({...res.data})
+        this.$refs.invoiceTable.refreshScroll()
+      })
+    },
+    modifyInvoice(table,row) {
+      if(!this.tableEditReport(["contractTable","invoiceTable","otherAttachTable"])){return}
+      this.oldRowInfo = Object.assign({},row)
+      this.$refs[table].setActiveRow(row)
+    },
+    //取消发票保存
+    cancelInvoice(row,rowIndex) {
+      if(row.invoiceType) {
+        this.form.invoiceList.splice(rowIndex,1,this.oldRowInfo)
+      }else {
+        this.form.invoiceList.splice(rowIndex,1)
+      }
+      this.$refs.invoiceTable.clearActived()
+    },
+    //删除发票信息
+    deleteInvoice(row) {
+      if(!this.tableEditReport(["contractTable","invoiceTable","otherAttachTable"])){return}
+      this.$messageBox({
+        type:'confirm',
+        title:'删除确认',
+        content:row.invoiceNumber ?
+          `您确认删除 发票编号为${row.invoiceNumber}的${this.typeMap(this.dictionary.invoiceType,row.invoiceType)}吗?` :
+          `您确认删除该${this.typeMap(this.dictionary.invoiceType,row.invoiceType)}吗?`,
+        showCancelButton:true,
+        messageResolve:()=>{
+          //更新发票列表
+          let params = {
+            invoice: {
+              ...row,
+              operateType: 'DEL',//ADD-新增 MOD-修改 DEL-删除 UP-上传
+              busType: '',//合同业务类型：GC-工程、LW-劳务、SD-水电、ZS-装饰、ZL-租赁、QT-其他
+              ebillCode: '',//融单编号
+              id: row.id,
+              tradeId: this.tradeId,
+            },
+            id: this.billTraceId,//业务ID：资料维护id/融单轨迹id
+          }
+          this.zjControl.maintainInvoice(params).then(res=>{
+            this.form.invoiceList.splice(row.index,1)//删除当前行的发票信息
+            this.handleRadioChange({...res.data})
+            this.$message.success('删除发票信息成功！')
+          })
+        }
+      })
+    },
+    /**
+     * 附件维护
+     */
+    //新增附件
+    addAttach() {
+      if(!this.tableEditReport(["contractTable","invoiceTable","otherAttachTable"])){return}
+      console.log('saveAttach...')
+      //新增一条发票信息
+      let item = {attachTheme:'', fileName:'',fileId: '',type:'ADD'}
+      this.form.otherAttachList.push(item)
+      this.$refs.otherAttachTable.setActiveRow(item)
+    },
+    //保存附件
+    saveAttach(row) {
+      if(!row.attachTheme){ return this.$messageBox({type:'info',content:'请填写附件说明!'}) }
+      if(!row.fileId){ return this.$messageBox({type:'info',content:'请上传附件!'}) }
+      let params = {
+        otherAttach: {
+          ...row,
+          operateType: row.id ? 'MOD' : 'ADD',//ADD-新增 MOD-修改 DEL-删除 UP-上传
+          busType: '',//合同业务类型：GC-工程、LW-劳务、SD-水电、ZS-装饰、ZL-租赁、QT-其他
+          ebillCode: '',//融单编号
+          id: row.id,
+          tradeId: this.tradeId,
+        },
+        id: this.billTraceId,
+      }
+      //保存合同信息
+      this.zjControl.maintainOtherAttach(params).then(res => {
+        this.$message.success('保存成功！')
+        this.$refs.otherAttachTable.clearActived()
+        //刷新当前凭证信息下的合同、发票、附件列表
+        this.handleRadioChange({...res.data})
+      })
+    },
+    modifyAttach(table,row) {
+      if(!this.tableEditReport(["contractTable","invoiceTable","otherAttachTable"])){return}
+      this.oldRowInfo = Object.assign({},row)
+      this.$refs[table].setActiveRow(row)
+    },
+    //取消附件保存
+    cancelAttach(row,rowIndex) {
+      if(row.fileId) {
+        this.form.otherAttachList.splice(rowIndex,1,this.oldRowInfo)
+      } else {
+        this.form.otherAttachList.splice(rowIndex,1)
+      }
+      this.$refs.otherAttachTable.clearActived()
+    },
+    //删除附件
+    deleteAttach(row) {
+      if(!this.tableEditReport(["contractTable","invoiceTable","otherAttachTable"])){return}
+      this.$messageBox({
+        type:'confirm',
+        title:'删除确认',
+        content: `您确认删除 其他附件${row.fileName}吗?`,
+        showCancelButton:true,
+        messageResolve:()=>{
+          //更新附件列表
+          let params = {
+            otherAttach: {
+              ...row,
+              operateType: 'DEL',//ADD-新增 MOD-修改 DEL-删除 UP-上传
+              busType: '',//合同业务类型：GC-工程、LW-劳务、SD-水电、ZS-装饰、ZL-租赁、QT-其他
+              ebillCode: '',//融单编号
+              id: row.id,
+              tradeId: this.tradeId,
+            },
+            id: this.billTraceId,
+          }
+          this.zjControl.maintainOtherAttach(params).then(res=>{
+            this.form.otherAttachList.splice(row.index,1)//删除当前行的发票信息
+            this.handleRadioChange({...res.data})
+            this.$message.success('删除附件成功！')
+          })
+        }
+      })
+    },
     maintainSuccess() {
+      this.$message.success('维护完成！')
       this.goParent()
     },
     //检测是否正在编辑     tableRefList需要检测的table数组
@@ -275,7 +519,7 @@ export default {
   created() {
     this.getApi()
     this.getDic()
-    this.form.ebBillModelList = this.$route.params.rowData.ebBillModelList//获取凭证信息列表
+    this.ebBillModelList = this.$route.params.rowData.ebBillModelList//获取凭证信息列表
     console.log(this.$route.params.rowData.ebBillModelList)
   }
 };

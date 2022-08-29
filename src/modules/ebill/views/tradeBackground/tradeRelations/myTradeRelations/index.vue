@@ -59,7 +59,7 @@
             <template v-slot="{ row }">
               <zj-button type="text" @click="edit(row)" v-if="row.isBuyerFlag==1">修改</zj-button>
               <!-- <zj-button type="text" @click="edit(row)">修改</zj-button> -->
-              <zj-upload 
+              <zj-upload
               :httpRequest="uploadfg"
               :data="{row}"
               accept=".pdf,.jpg,.zip,.bmp,.gif,.jpeg,.png,.rar"
@@ -69,7 +69,7 @@
               >
               <zj-button type="text"   :api="zjBtn.getEnterprise"  v-if="row.isBuyerFlag==0&&row.fileName">覆盖材料证明</zj-button>
               </zj-upload>
-              <zj-upload 
+              <zj-upload
               :httpRequest="uploadsc"
               :data="{row}"
               accept=".pdf,.jpg,.zip,.bmp,.gif,.jpeg,.png,.rar"
@@ -109,7 +109,7 @@
         <el-form-item label="银行联行号：" prop="bankNo" :class="{ 'zj-m-b-5': !editFlag }">
           <el-input v-model="formModel.bankNo" />
         </el-form-item>
-        
+
       </el-form>
 
       <el-row slot="footer" class="dialog-footer">
@@ -125,9 +125,9 @@
         </div>
       </div>
       <el-row slot="footer" class="dialog-footer">
-        <zj-button type="primary" status="primary" @click="signUserProtocol">确认签署</zj-button>
+        <!-- <zj-button type="primary" status="primary" @click="signUserProtocol">确认签署</zj-button> -->
         <!-- 云证书有问题，直接跳到新增联调接口 -->
-        <!-- <zj-button type="primary" status="primary" @click="lastadd">确认签署</zj-button> -->
+        <zj-button type="primary" status="primary" @click="lastadd">确认签署</zj-button>
       </el-row>
     </el-dialog>
         <!-- 云证书签章 -->
@@ -208,7 +208,7 @@ export default {
     this.zjControl.getDirectory = this.$api.tradeRelations.tradeRelationsGetDirectory
     this.getDirectory1()
     this.getApi();
-    
+
     this.getRow();
     this.getUserInfo();
   },
@@ -223,6 +223,7 @@ export default {
     downstuff(row) {
       let params = {
         fileUrl:row.fileId,
+        fileId:row.fileId,
         fileName:row.fileName
       }
       this.zjControl.downloadFile(params).then((res) => {
@@ -231,12 +232,13 @@ export default {
     downsagreement(row) {
       let params = {
         fileUrl:row.agreementFileId,
+        fileId:row.agreementFileId,
         fileName:row.agreementFileName
       }
       this.zjControl.downloadFile(params).then((res) => {
       });
     },
-    // 
+    //
     getDirectory1() {
       console.log(222)
       this.zjControl.getDirectory().then((res) => {

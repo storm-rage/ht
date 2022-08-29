@@ -584,86 +584,21 @@ export default {
       })
     },
     save(flag){
-      console.log('save')
-      //校验操作用户数据是否完整
-      if(!this.entInfoObj.form.registerUserList) {
-        for(let i of this.registerUserList){
-          let resCheck = (i.certEndDate===''||null) ||
-            (i.certNo===''||null) ||
-            (i.certStartDate===''||null) ||
-            (i.certType===''||null) ||
-            (i.mobileNo===''||null) ||
-            (i.roleId===''||null) ||
-            (i.userId===''||null) ||
-            (i.userName===''||null)
-          if(resCheck){
-            this.$message.error(`请补全操作用户的信息！`)
-            return
-          }
-        }
-      }else{
-        for(let i of this.entInfoObj.form.registerUserList){
-          let resCheck = (i.certEndDate===''||null) ||
-            (i.certNo===''||null) ||
-            (i.certStartDate===''||null) ||
-            (i.certType===''||null) ||
-            (i.mobileNo===''||null) ||
-            (i.roleId===''||null) ||
-            (i.userId===''||null) ||
-            (i.userName===''||null)
-          if(resCheck){
-            this.$message.error(`请补全操作用户的信息！`)
-            return
-          }
-        }
-      }
-      //校验影像资料是否完整
-      if(!this.entInfoObj.form.registerAttachList){
-        for(let i of this.registerAttachList){
-          if(i.fileName === null || '') {
-            this.$message.error(`请补全影像资料信息！`)
-            return
-          }
-        }
-      }else {
-        for(let i of this.entInfoObj.form.registerAttachList){
-          if(i.fileName ===  null || '') {
-            this.$message.error(`请补全影像资料信息！`)
-            return
-          }
-        }
-      }
-      console.log('影像资料success')
-
-      //校验发票信息
-      this.$refs.form.validate(boo=>{
-        if (!boo){
-          return
-        }else{
-          //校验贸易信息
-          if(this.entInfoObj.form.isHtEnterprise === '0' && this.tradeInfoForm.supplier !== '1'){
-            this.$message.error(`请勾选"我是供应商"！`)
-            return
-          }
-          this.entInfoObj.form.registerOperateFlag = flag//操作标记
-          this.entInfoObj.form.invoiceAddress = this.form.invoiceAddress
-          this.entInfoObj.form.invoiceBankAccno = this.form.invoiceBankAccno
-          this.entInfoObj.form.invoiceBankInfo = this.form.invoiceBankInfo
-          this.entInfoObj.form.invoiceEmail = this.form.invoiceEmail
-          this.entInfoObj.form.invoicePhone = this.form.invoicePhone
-          this.entInfoObj.form.invoiceTaxpayerId = this.form.invoiceTaxpayerId
-          this.entInfoObj.form.myBuyers = this.tradeInfoForm.myBuyers
-
-          this.zjControl.saveEntInfo(this.entInfoObj.form).then(res => {
-            this.$message.success('提交企业资料成功！')
-            this.registSuccess = true //true才能完成注册
-            let params = Object.assign({},this.entInfoObj)
-            params.form.registerUserList = this.registerUserList//操作用户
-            params.form.registerAttachList = this.registerAttachList//影像资料
-            params.form.tradeInfoForm = this.tradeInfoForm//贸易信息
-            this.$emit('update:entInfoObj',params)
-          })
-        }
+      this.entInfoObj.form.registerOperateFlag = flag//操作标记
+      this.entInfoObj.form.invoiceAddress = this.form.invoiceAddress
+      this.entInfoObj.form.invoiceBankAccno = this.form.invoiceBankAccno
+      this.entInfoObj.form.invoiceBankInfo = this.form.invoiceBankInfo
+      this.entInfoObj.form.invoiceEmail = this.form.invoiceEmail
+      this.entInfoObj.form.invoicePhone = this.form.invoicePhone
+      this.entInfoObj.form.invoiceTaxpayerId = this.form.invoiceTaxpayerId
+      this.entInfoObj.form.myBuyers = this.tradeInfoForm.myBuyers
+      this.zjControl.saveEntInfo(this.entInfoObj.form).then(res => {
+        this.$message.success('提交企业资料成功！')
+        let params = Object.assign({},this.entInfoObj)
+        params.form.registerUserList = this.registerUserList//操作用户
+        params.form.registerAttachList = this.registerAttachList//影像资料
+        params.form.tradeInfoForm = this.tradeInfoForm//贸易信息
+        this.$emit('update:entInfoObj',params)
       })
     },
     cancel() {

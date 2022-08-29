@@ -33,7 +33,7 @@
         </zj-table-column>
       </zj-table>
     </zj-content>
-    <add-or-edit ref="addOrEdit" :zjControl="zjControl" :dictionary="dictionary" @agreementUpdate="agreementUpdate"/>
+    <add-or-edit ref="addOrEdit" :rowData="rowData" v-bind="$attrs" :zjControl="zjControl" :dictionary="dictionary" @agreementUpdate="agreementUpdate"/>
   </zj-content-block>
 </template>
 <script>
@@ -46,6 +46,7 @@ export default {
     tableData: Object,
     dictionary: Object,
     zjControl: Object,
+    rowData: Object,
   },
   components: {
     ZjButton,
@@ -69,11 +70,20 @@ export default {
       let params = {
         phasedId: row.phasedId,
       }
-      this.zjControl.deletePhasedAgree(params).then(res => {
-        this.$emit('handleAgreementList',this.tableData)
-        this.$message.success(res.data.msg)
-        console.log(row.fileId)
-      })
+      let requestUrl = this.rowData.maintainType=='1'?this.zjControl.deletePhasedAgree:this.zjControl.deleteWaitPhasedAgree
+      this.$messageBox({
+          type:'info',
+          title:'温馨提示',
+          content:`是否确认删除？`,
+          showCancelButton: true,
+          messageResolve:()=>{
+            requestUrl(params).then(res=>{
+              this.$emit('handleAgreementList',this.tableData)
+              this.$message.success(res.data.msg)
+              console.log(row.fileId)
+            })
+          }
+        })
     },
 
   },

@@ -145,6 +145,7 @@ export default {
           if (ret.code == 200) {
             this.excelList = ret.data
             this.$message.success('上传成功!')
+            this.search()
           }
         })
         .catch(() => {})
@@ -182,15 +183,15 @@ export default {
     },
     //勾选删除
     remove () {
-      this.$refs.searchTable.removeCheckboxRow()
       let params = {
-        req: this.selection
+        accountBillList: this.selection
       }
       this.zjControl
         .accountOffline(params)
         .then(ret => {
           if (ret.code == 200) {
             this.$message.success('删除成功!')
+            this.$refs.searchTable.removeCheckboxRow()
           }
         })
         .catch(() => {})
