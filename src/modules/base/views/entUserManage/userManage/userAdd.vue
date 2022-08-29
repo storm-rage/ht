@@ -72,7 +72,7 @@
               </el-form-item>
             </el-col>
             <el-col :span="8">
-              <el-form-item label="海天业务系统账号：">
+              <el-form-item label="海天业务系统账号：" prop="isHtSysCode">
                 <el-input v-model="form.htSysCode" />
               </el-form-item>
             </el-col>
@@ -251,7 +251,9 @@ export default {
     submit() {
       let params = Object.assign(this.form, this.detailData);
       params.roles.forEach(item => {
-        item.statementAccountType = item.statementAccountTypeArr.join(',')
+        if (item.statementAccountTypeArr) {
+          item.statementAccountType = item.statementAccountTypeArr.join(',')
+        }
         delete item.statementAccountTypeArr
       })
       params.idCardAttach = this.attachInfo // 身份证附件
