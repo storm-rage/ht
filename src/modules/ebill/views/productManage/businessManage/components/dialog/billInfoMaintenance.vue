@@ -66,7 +66,7 @@
                         :rules="[
                                 {required: true,message: '请输入凭证融资月利率',trigger: ['change','blur']}
                               ]">
-            <zj-number-input v-model.trim="item.rdFinancingMonthRate" :max="100">
+            <zj-number-input v-model.trim="item.rdFinancingMonthRate" :max="100" :precision="4">
               <template slot="append">%</template>
             </zj-number-input>
           </el-form-item>

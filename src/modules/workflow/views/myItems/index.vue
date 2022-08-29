@@ -1,7 +1,7 @@
 <template>
   <zj-content-container>
     <zj-tabs v-model="tabAtive" type="card" @tab-click="handleClick">
-      <el-tab-pane label="代办" name="agenda"> </el-tab-pane>
+      <el-tab-pane label="待办" name="agenda"> </el-tab-pane>
       <el-tab-pane label="已办" name="pending"> </el-tab-pane>
       <el-tab-pane label="已办结" name="processed"> </el-tab-pane>
     </zj-tabs>
