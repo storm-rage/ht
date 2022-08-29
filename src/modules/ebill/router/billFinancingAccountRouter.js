@@ -15,7 +15,7 @@ const billFinancingAccountRouter = [
   {
     path: '/ddblFactoringLedgerDetail',
     name: 'ddblFactoringLedgerDetail',
-    component: () => import('../views/queryStatistics/billFinancingAccount/detail'),
+    component: () => import('../views/queryStatistics/billFinancingAccount/detail.vue'),
     meta: {
       isMock: true,
       title: '订单保理融资详情',
