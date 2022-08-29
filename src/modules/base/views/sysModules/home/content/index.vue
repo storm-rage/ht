@@ -56,6 +56,7 @@ export default {
 }
 .home-content-notice,.home-content-message {
   max-height: 206px;
+  min-height: 100px;
   // height: 100%;
   display: flex;
   flex-direction: column;
