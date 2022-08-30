@@ -1,7 +1,7 @@
 import request from '@common/axios/request'
 import download from "@utils/download";
 
-//融资台账查询api 
+//融资台账查询api
 // 凭证保理融资台账/订单保理融资台账
 const factoringLedger = {
   // ---------------凭证保理融资台账
@@ -46,5 +46,9 @@ const factoringLedger = {
     ddblPage: (params) => {
       return request.get('/ddbl-factoring-ledger/page', { params })
     },
+  //订单保理融资台账-列表
+  ddblDirectory: (params) => {
+    return request.get('/ddbl-factoring-ledger/directory', { params })
+  },
 }
 export default factoringLedger
