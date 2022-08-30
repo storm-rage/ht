@@ -8,9 +8,17 @@
                         <el-row>
                             <el-form-item label="受让人：">{{ this.pawneeInfo.corporationName }}</el-form-item>
                             <el-form-item label="交易业务类型：">{{ this.pawneeInfo.pawneeType }}</el-form-item>
-                            <el-form-item label="填表人归档号：">{{ this.pawneeInfo.personFillArchiveNo }}</el-form-item>
-                            <el-form-item label="登记期限（月）：">{{ this.pawneeInfo.regTimeLimit }}</el-form-item>
-                            <el-form-item label="登记到期日：">{{ this.pawneeInfo.regTimeLimitDate }}</el-form-item>
+                            <el-form-item label="填表人归档号：">
+                                <el-input type="text" v-model="pawneeInfo.personFillArchiveNo" name="loginName" />
+                                    
+                            </el-form-item>
+                            <!-- <el-form-item label="登记期限（月）：">{{ this.pawneeInfo.regTimeLimit }}</el-form-item> -->
+                            <el-form-item label="登记期限（月）：">
+                                <!-- <zj-number-input v-model="pawneeInfo.regTimeLimit" :step="10" :min="0" /> -->
+                                <el-input-number v-model="pawneeInfo.regTimeLimit" @change="handleChange" :min="1"
+                                    :max="24" size="small"></el-input-number>
+                            </el-form-item>
+                            <el-form-item label="登记到期日：">{{ date(this.pawneeInfo.regTimeLimitDate) }}</el-form-item>
                         </el-row>
                     </zj-content-block>
                     <zj-content-block>
@@ -57,15 +65,16 @@
                         <br>
 
                         <zj-upload class="zj-inline" :httpRequest="handleFileUpload" :autoUpload="true"
+                            accept=".pdf,.jpg,.zip,.bmp,.gif,.jpeg,.png,.rar,.ppt,.word,.excel"
                             :onChange="handleFileChange">
                             <zj-button slot="trigger" type="text">上传资料</zj-button>
                         </zj-upload>
-                      <p v-show="this.fileShow">
-                          {{filemsg.name}} <span @click="deletefile()">x</span>
-                      </p>
+                        <p v-show="this.fileShow">
+                            {{ filemsg.name }} <span @click="deletefile()">x</span>
+                        </p>
 
-                        
-                        
+
+
                         <div class="zz"></div>
                     </zj-content-block>
 
@@ -74,7 +83,7 @@
 
         </zj-content-block>
         <zj-content-footer>
-            <zj-button class="back" @click="goParent">返回</zj-button>
+            <zj-button class="back" @click="back()">返回</zj-button>
             <zj-button class="back" @click="next()">下一步</zj-button>
         </zj-content-footer>
         <!-- 弹框 -->
@@ -105,6 +114,7 @@ export default {
                 getDictionary: this.$api.zhongdengManage.getDictionary,//数据字典
                 submitDetil: this.$api.zhongdengManage.submitDetil,//上传附件
                 deleteAttach: this.$api.zhongdengManage.deleteAttach,//删除附件
+                registerDate: this.$api.zhongdengManage.registerDate,//计算登记日期
             },
             debtorInfoList: [
                 {
@@ -146,9 +156,9 @@ export default {
             idListDetail: [],
             row: {},
             filemsg: {},
-            fileres:{},
-            fileShow:false,
-            uploadFileId:"",
+            fileres: {},
+            fileShow: false,
+            uploadFileId: "",
         }
     },
     created() {
@@ -158,26 +168,49 @@ export default {
 
         this.idList = this.row.idList,
             this.getDictionary()
-            this.getDetail()
+        this.getDetail()
     },
     methods: {
-        deletefile(){
-            this.fileShow=false
+        handleChange(value) {
+            console.log(value);
             let params = {
-                uploadFileId: this.uploadFileId,
-                validateFlownNo:this.row.checkLogin.validateFlownNo,
-                idList:this.idListDetail
+                regTimeLimit: value,
+                idList: this.idListDetail
             }
-            this.zjControl.deleteAttach(params).then(res => {
-                this.uploadFileId=""
+            this.zjControl.registerDate(params).then(res => {
+                console.log(res.data);
+                this.pawneeInfo.regTimeLimitDate = res.data.expireDate
             })
         },
-        handleFileUpload( {file} ) {
+        back() {
+            this.goParent('zhongdengManage', false)
+        },
+        downs(row) {
+            console.log(row);
+            let params = {
+                fileId: row.fileId,
+                fileName: row.fileName
+            }
+            this.$api.baseCommon.downloadFile(params).then((res) => {
+            });
+        },
+        deletefile() {
+            this.fileShow = false
+            let params = {
+                uploadFileId: this.uploadFileId,
+                validateFlownNo: this.row.checkLogin.validateFlownNo,
+                idList: this.idListDetail
+            }
+            this.zjControl.deleteAttach(params).then(res => {
+                this.uploadFileId = ""
+            })
+        },
+        handleFileUpload({ file }) {
             let formData = new FormData();
             formData.append("fileOB", file);
             formData.append("idList", this.idListDetail);
-            formData.append("validateFlownNo ", this.row.checkLogin.validateFlownNo );
-            formData.append("uploadFileId ", this.uploadFileId );
+            formData.append("validateFlownNo ", this.row.checkLogin.validateFlownNo);
+            formData.append("uploadFileId ", this.uploadFileId);
             console.log(formData);
             this.zjControl.submitDetil(formData).then((res) => {
                 this.uploadFileId = res.data.uploadFileId
@@ -186,7 +219,7 @@ export default {
         },
         handleFileChange(file) {
             this.filemsg = file
-            this.fileShow=true
+            this.fileShow = true
             console.log(this.filemsg);
         },
         getqymsg() {
@@ -215,7 +248,7 @@ export default {
                 debtorInfoList: this.debtorInfoList,
                 initRegisterToken1: this.row.checkLogin.initRegisterToken1,
                 validateFlownNo: this.row.checkLogin.validateFlownNo,
-                filemsg:this.filemsg
+                filemsg: this.filemsg
             }
             this.goChild('zhongdengManagexq2', row)
         },
@@ -229,13 +262,13 @@ export default {
                 bizType: this.row.bizType,
                 idList: this.row.idlist,
             }
-            console.log(params,"详情接口的参数");
+            console.log(params, "详情接口的参数");
             this.zjControl.detailszd(params).then(res => {
                 this.debtorInfoList = res.data.debtorInfoList
                 this.fileAttach = res.data.fileAttach
                 this.collateralDesc = res.data.collateralDesc
                 this.idListDetail = res.data.idList
-                this.pawneeInfo=res.data.pawneeInfo
+                this.pawneeInfo = res.data.pawneeInfo
             })
         },
     },
@@ -257,10 +290,27 @@ h1 {
     width: 80vw;
     height: 200px;
 }
-.fileBox{
+
+.fileBox {
     width: 120px;
     height: 40px;
     border: 1px solid black;
     // background-color: black;
+}
+
+/deep/.el-input-number__increase {
+    left: 192px;
+    width: 26px;
+    height: 26px;
+    top: 3px;
+    // z-index:0
+}
+
+/deep/.el-input-number__decrease {
+    // left: 180px;
+    // z-index:0
+    width: 26px;
+    height: 26px;
+    top: 3px;
 }
 </style>

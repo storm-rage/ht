@@ -32,9 +32,7 @@
         <zj-header title="操作用户信息" />
         <zj-content>
           <zj-table :pager="false" :dataList="detailData.entUserList">
-            <zj-table-column field="roleId" title="操作员类型" :formatter="
-                (obj) => typeMap(dictionary.roleIdList, obj.cellValue)
-              " />
+            <zj-table-column field="roleId" title="操作员类型" :formatter="(obj)=>typeMap(dictionary.sysRoleList, obj.cellValue)" />
             <zj-table-column field="userName" title="姓名" />
             <zj-table-column field="certNo" title="身份证号" />
             <zj-table-column title="证件有效期">
@@ -138,60 +136,64 @@
 
       <zj-content-block>
         <zj-header title="企业其他信息" />
-        <zj-collapse title="开票信息">
-          <el-row>
-            <el-col :span="8">
-              <el-form-item label="企业名称："><span>{{ detailData.name | value }}</span>
-              </el-form-item>
-            </el-col>
-            <el-col :span="8">
-              <el-form-item label="纳税人识别号：">
-                <span>{{ detailData.invoiceTaxpayerId | value }}</span>
-              </el-form-item>
-            </el-col>
-            <el-col :span="8">
-              <el-form-item label="邮箱：">
-                <span>{{ detailData.invoiceEmail | value }}</span>
-              </el-form-item>
-            </el-col>
-            <el-col :span="8">
-              <el-form-item label="电话：">
-                <span>{{ detailData.invoicePhone | value }}</span>
-              </el-form-item>
-            </el-col>
-            <el-col :span="8">
-              <el-form-item label="开户行："><span>{{ detailData.invoiceBankInfo | value }}</span>
-              </el-form-item>
-            </el-col>
-            <el-col :span="8">
-              <el-form-item label="银行账号：">
-                <span>{{
+        <zj-content>
+          <zj-collapse title="开票信息">
+            <el-row>
+              <el-col :span="8">
+                <el-form-item label="企业名称："><span>{{ detailData.name | value }}</span>
+                </el-form-item>
+              </el-col>
+              <el-col :span="8">
+                <el-form-item label="纳税人识别号：">
+                  <span>{{ detailData.invoiceTaxpayerId | value }}</span>
+                </el-form-item>
+              </el-col>
+              <el-col :span="8">
+                <el-form-item label="邮箱：">
+                  <span>{{ detailData.invoiceEmail | value }}</span>
+                </el-form-item>
+              </el-col>
+              <el-col :span="8">
+                <el-form-item label="电话：">
+                  <span>{{ detailData.invoicePhone | value }}</span>
+                </el-form-item>
+              </el-col>
+              <el-col :span="8">
+                <el-form-item label="开户行："><span>{{ detailData.invoiceBankInfo | value }}</span>
+                </el-form-item>
+              </el-col>
+              <el-col :span="8">
+                <el-form-item label="银行账号：">
+                  <span>{{
                   detailData.invoiceBankAccno | value
                 }}</span>
-              </el-form-item>
-            </el-col>
-            <el-col :span="8">
-              <el-form-item label="地址："><span>{{ detailData.invoiceAddress | value }}</span>
-              </el-form-item>
-            </el-col>
-          </el-row>
-        </zj-collapse>
-        <zj-collapse title="其他信息">
-          <el-row>
-            <el-col :span="8">
-              <el-form-item label="注册渠道：">
-                <span>{{
+                </el-form-item>
+              </el-col>
+              <el-col :span="8">
+                <el-form-item label="地址："><span>{{ detailData.invoiceAddress | value }}</span>
+                </el-form-item>
+              </el-col>
+            </el-row>
+          </zj-collapse>
+        </zj-content>
+        <zj-content>
+          <zj-collapse title="其他信息">
+            <el-row>
+              <el-col :span="8">
+                <el-form-item label="注册渠道：">
+                  <span>{{
                   detailData.registerWebsite | value
                 }}</span>
-              </el-form-item>
-            </el-col>
-            <el-col :span="8">
-              <el-form-item label="买方企业：">
-                <span>{{ detailData.myBuyers | value }}</span>
-              </el-form-item>
-            </el-col>
-          </el-row>
-        </zj-collapse>
+                </el-form-item>
+              </el-col>
+              <el-col :span="8">
+                <el-form-item label="买方企业：">
+                  <span>{{ detailData.myBuyers | value }}</span>
+                </el-form-item>
+              </el-col>
+            </el-row>
+          </zj-collapse>
+        </zj-content>
       </zj-content-block>
     </el-form>
   </zj-content-block>

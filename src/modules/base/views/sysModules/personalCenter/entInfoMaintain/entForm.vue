@@ -166,6 +166,7 @@
                 <zj-upload :httpRequest="handleFileUpload" :data="{ row }" class="zj-inline" v-if="!!isEdit">
                   <zj-button type="text" v-if="isEdit">上传</zj-button>
                 </zj-upload>
+                <zj-button v-if="row.fileId" type="text" @click="toDownload(row)">下载</zj-button>
               </template>
             </zj-table-column>
           </zj-table>
@@ -209,15 +210,13 @@ export default {
   },
   watch: {
     detailData(data) {
-      let basicEntInfo = data.basicEntInfo;
-      this.form = {
-        ...basicEntInfo.entInfo,
-        ...basicEntInfo.fastMailInfo,
-        ...basicEntInfo.legalPersonInfo,
-      };
-      this.form.entBankInfo = [basicEntInfo.entBankInfo]; //银行账户信息
-      this.attachInfo[0].fileName = data.attachInfo.qyyzAttachName; // 营业执照
-      this.attachInfo[1].fileName = data.attachInfo.qyfrzjAttachName; // 法定代表人证件
+      this.form = data.form
+      this.attachInfo[0].qyyzAttachId = data.attachInfo.qyyzAttachId; // 营业执照
+      this.attachInfo[0].fileId = data.attachInfo.qyyzFileId;
+      this.attachInfo[0].fileName = data.attachInfo.qyyzAttachName;
+      this.attachInfo[1].qyfrzjAttachId = data.attachInfo.qyfrzjAttachId; // 法定代表人证件
+      this.attachInfo[1].fileId = data.attachInfo.qyfrzjFileId;
+      this.attachInfo[1].fileName = data.attachInfo.qyfrzjAttachName;
       this.detailData.attachInfo = this.attachInfo
       console.log(this.form)
     }
@@ -225,6 +224,7 @@ export default {
   data() {
     return {
       zjControl: {
+        downloadFile: this.$api.baseCommon.downloadFile,//文件下载
         ...this.$api.myBasicInformation,
       },
       form: {},
@@ -299,9 +299,11 @@ export default {
       this.$refs.form.validate((valid) => {
         if (valid) {
           // 营业执照
+          this.form.qyyzAttachId = this.attachInfo[0].qyyzAttachId;
           this.form.qyyzFileId = this.attachInfo[0].fileId;
           this.form.qyyzAttachName = this.attachInfo[0].fileName;
           // 法定代表人证件
+          this.form.qyfrzjAttachId = this.attachInfo[1].qyfrzjAttachId;
           this.form.qyfrzjFileId = this.attachInfo[1].fileId;
           this.form.qyfrzjAttachName = this.attachInfo[1].fileName;
           this.$emit('formPass', this.form)
@@ -342,6 +344,10 @@ export default {
         data.row.fileName = res.data.fileName;
         this.$message.success("附件上传成功!");
       });
+    },
+    //下载附件
+    toDownload(row) {
+      this.zjControl.downloadFile(row)
     },
     // 获取更换后的银行账户
     getEntBankInfo(data) {

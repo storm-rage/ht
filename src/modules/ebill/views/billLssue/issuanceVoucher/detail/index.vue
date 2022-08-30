@@ -89,7 +89,7 @@ export default {
         });
       }
       if (this.workflow === "lzgj") {
-        this.zjControl.getHoldBillDetailTrace(params).then((res) => {
+        this.zjControl.getOpenBillTtrace(params).then((res) => {
           this.form = res.data.traces;
         });
       }

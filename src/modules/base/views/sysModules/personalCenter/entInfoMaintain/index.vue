@@ -52,6 +52,13 @@ export default {
       let params = { entId: this.row.id };
       this.zjControl.getEntInfo(params).then((res) => {
         this.detailData = res.data
+        let basicEntInfo = res.data.basicEntInfo;
+        this.detailData.form = {
+          ...basicEntInfo.entInfo,
+          ...basicEntInfo.fastMailInfo,
+          ...basicEntInfo.legalPersonInfo,
+          entBankInfo: [basicEntInfo.entBankInfo]//银行账户信息
+        };
       });
     },
     updateUserInfo() {
@@ -59,9 +66,13 @@ export default {
     },
     //修改用户
     formPass(params) {
+      params = {
+        ...params,
+        ...params.entBankInfo[0]
+      }
       if (this.agreeCheck || !this.isAgreeCheck) {
         this.zjControl.updateUserInfo(params).then((res) => {
-          this.$message.success("修改成功!");
+          this.$message.success(res.msg);
           this.goParent()
         });
       } else {
@@ -72,8 +83,7 @@ export default {
     },
     downloadTemplate() {
       let params = {
-        id: this.row.id,
-        entBankInfo: this.$refs.entForm.$data.form.entBankInfo,
+        entBankInfo: this.$refs.entForm.$data.form.entBankInfo[0],
         templateType: "YHZHBGTZ"
       }
       this.zjControl.downloadTemplate(params)

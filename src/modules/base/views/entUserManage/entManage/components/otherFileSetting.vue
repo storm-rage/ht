@@ -2,71 +2,30 @@
   <el-form :model="form" ref="form" :rules="rules">
     <zj-content-block>
       <zj-header title="其他附件"></zj-header>
-      <el-button
-        style="width: 100px"
-        class="zj-m-b-10 zj-m-l-10"
-        size="small"
-        type="primary"
-        v-if="isEdit"
-        @click="toAddFile"
-        >新增</el-button
-      >
+      <el-button style="width: 100px" class="zj-m-b-10 zj-m-l-10" size="small" type="primary" v-if="isEdit" @click="toAddFile">新增</el-button>
       <zj-content>
-        <zj-table
-          ref="fileTable"
-          :dataList="fileList"
-          :pager="false"
-          keep-source
-          :edit-config="{
+        <zj-table ref="fileTable" :dataList="fileList" :pager="false" keep-source :edit-config="{
             trigger: 'manual',
             mode: 'row',
             icon: '-',
             autoClear: false,
             showStatus: true,
-          }"
-        >
+          }">
           <zj-table-column type="seq" title="序号" width="60" />
-          <zj-table-column
-            field="remark"
-            title="附件说明"
-            :edit-render="{ name: '$input', props: { maxlength: 200 } }"
-          />
+          <zj-table-column field="remark" title="附件说明" :edit-render="{ name: '$input', props: { maxlength: 200 } }" />
           <zj-table-column field="fileName" title="附件名称" />
           <zj-table-column title="操作" fixed="right">
             <template v-slot="{ row, rowIndex }">
               <template v-if="$refs.fileTable.isActiveByRow(row)">
-                <zj-upload
-                  class="zj-inline"
-                  :httpRequest="handleFileUpload"
-                  :data="{ row }"
-                  :autoUpload="true"
-                  :onChange="handleFileChange"
-                >
+                <zj-upload class="zj-inline" :httpRequest="handleFileUpload" :data="{ row }" :autoUpload="true" :onChange="handleFileChange">
                   <zj-button slot="trigger" type="text">上传</zj-button>
                 </zj-upload>
-                <zj-button type="text" @click="toSave(row, rowIndex)"
-                  >保存</zj-button
-                >
-                <zj-button
-                  type="text"
-                  style="margin-left: 0px"
-                  @click="toCancel(row, rowIndex)"
-                  >取消</zj-button
-                >
+                <zj-button type="text" @click="toSave(row, rowIndex)">保存</zj-button>
+                <zj-button type="text" style="margin-left: 0px" @click="toCancel(row, rowIndex)">取消</zj-button>
               </template>
               <template v-else>
-                <zj-button
-                  v-if="row.fileId"
-                  type="text"
-                  @click="toDownload(row)"
-                  >下载</zj-button
-                >
-                <zj-button
-                  v-if="isEdit"
-                  type="text"
-                  @click="delFile(row, rowIndex)"
-                  >删除</zj-button
-                >
+                <zj-button v-if="row.fileId" type="text" @click="toDownload(row)">下载</zj-button>
+                <zj-button v-if="isEdit" type="text" @click="delFile(row, rowIndex)">删除</zj-button>
               </template>
             </template>
           </zj-table-column>
@@ -88,6 +47,9 @@ export default {
   },
   data() {
     return {
+      zjControl: {
+        downloadFile: this.$api.baseCommon.downloadFile,//文件下载
+      },
       // 表单
       form: {},
       rules: {},
@@ -107,7 +69,9 @@ export default {
       return this.fileList;
     },
     // 下载
-    toDownload(row) {},
+    toDownload(row) {
+      this.zjControl.downloadFile(row);
+    },
     // 删除
     delFile(row, index) {
       if (row.fileId) {

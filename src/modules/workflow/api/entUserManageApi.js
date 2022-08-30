@@ -6,6 +6,13 @@ import request from '@common/axios/request'
 const entUserManage = {
     //--------------------------------------------- 企业信息管理 ---------------------------------------------
     /**
+    *企业信息管理--获取企业数据字典
+    *
+    */
+    queryEntDictionary: () => {
+        return request.get('/sys-enterprise/query-sys-enterprise-data-directory')
+    },
+    /**
      *企业信息管理-提交
      */
     todoEnterpriseSubmit(params) {
@@ -23,7 +30,10 @@ const entUserManage = {
     getTodoEnterpriseKhInfo(params) {
         return request.get('/sys-enterprise/get-todo-sys-enterprise-kh-info', { params })
     },
-
+    //企业信息管理-获取操作记录
+    getTodoBusinessParamLog: (params) => {
+        return request.get('/sys-enterprise/get-todo-eb-business-param-log', { params })
+    },
 
     //--------------------------------------------- 用户信息管理 ---------------------------------------------
     //企业用户数据字典

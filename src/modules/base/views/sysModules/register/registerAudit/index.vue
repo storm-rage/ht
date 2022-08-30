@@ -67,7 +67,7 @@
           <template v-slot="{ row }">
             <span
               class="table-elbill-code"
-              @click="goChild('registerAuditApplyAudit', row)"
+              @click="goChild('registerAuditApplyDetail', row)"
               >{{ row.serialNo }}</span
             >
           </template>
@@ -138,7 +138,7 @@
               v-else-if="row.registerState === '4'"
               >发证</zj-button
             >
-            <span v-else>——</span>
+            <span v-else>—</span>
           </template>
         </zj-table-column>
       </zj-table>

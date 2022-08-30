@@ -106,7 +106,7 @@ export default {
             console.log(this.dictionary);
         },
         save() {
-
+            
             let params = {
                 address: this.row.address,
                 city: this.city,
@@ -118,7 +118,7 @@ export default {
                 province: this.province,
                 // province:460000,
                 scale: this.row.scale,
-                idList: this.row.idList,
+                idList: this.idList,
             }
             console.log(params);
             this.zjControl.changePerson(params).then(res => {

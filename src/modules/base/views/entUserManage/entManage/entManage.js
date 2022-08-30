@@ -1,6 +1,6 @@
 // import project from "../../project";
 import {
-  validateEmail, newValidateFixedPhone, validateBankAcct
+  validateEmail, newValidateFixedPhone, validateBankAcct, validateIdCard
 } from '@utils/rules'
 import OperateLog from '@modules/workflow/views/components/operateLog';
 import OtherFileSetting from './components/otherFileSetting';
@@ -12,19 +12,13 @@ export default {
   props: {
     form: {
       type: Object,
-      default: () => {
-        return {
-          isHtEnterprise: '1', // 是否海天集团
-          isDoublePost: '1', // 是否双岗
-          sysUserList: [], // 企业操作员信息
-          pubAttachList: [] // 企业附件
-        }
-      }
+      default: () => { }
     },
   },
   watch: {
     form(data) {
       this.queryEntDictionary()
+      // this.form = Object.assign({}, data)
     }
   },
   data() {
@@ -34,6 +28,14 @@ export default {
       dictionary: {},
       old_projectInfoList: [],
       statementAccountTypeTable: [],
+      sysUserList: [], // 企业操作员信息
+      pubAttachList: [], // 企业附件
+      // form: {
+      //   isHtEnterprise: '1', // 是否海天集团
+      //   isDoublePost: '1', // 是否双岗
+      //   sysUserList: [], // 企业操作员信息
+      //   pubAttachList: [] // 企业附件
+      // },
       rules: {
         //企业基本信息
         name: [
@@ -76,16 +78,16 @@ export default {
           { name: '是否双岗', required: true, message: "请选择是否双岗" }
         ],
         registerStartDate: [
-          { name: '成立日期', required: true, message: "请输入成立日期" }
+          { name: '成立日期', required: true, message: "请输入成立日期", trigger: 'blur' }
         ],
         registerCapital: [
           { name: '注册资本', required: true, message: "请输入注册资本" }
         ],
         registerEndDate: [
-          { name: '企业工商有效期', required: true, message: "请输入企业工商有效期" }
+          { name: '企业工商有效期', required: true, message: "请输入企业工商有效期", trigger: 'blur' }
         ],
         address: [
-          { name: '营业执照注册地址', required: true, message: "请输入企业工商有效期" }
+          { name: '营业执照注册地址', required: true, message: "请输入营业执照注册地址" }
         ],
         entType: [
           { name: '平台客户类型', required: true, validator: this.radioSelectValidator, trigger: 'change' }
@@ -109,7 +111,7 @@ export default {
           { name: '收件人', max: 50, required: false, validator: this.inputValidator, trigger: 'change' }
         ],
         fastMailPhone: [
-          { name: '收件电话', max: 20, required: false, validator: newValidateFixedPhone, trigger: 'change' }
+          { name: '企业手机号', max: 20, required: false, validator: newValidateFixedPhone, trigger: 'change' }
         ],
         fastMailAddress: [
           { name: '收件地址', max: 400, required: false, validator: this.inputValidator, trigger: 'change' }
@@ -135,7 +137,7 @@ export default {
           { name: '法定代表人婚姻状况', required: false, validator: this.radioSelectValidator, trigger: 'change' }
         ],
         legalCertNo: [
-          { name: '法定代表人', varName: 'legal', required: false, validator: this.certNoValidator, trigger: 'change' }
+          { name: '法定代表人身份证号', varName: 'legal', required: false, validator: validateIdCard, trigger: 'change' }
         ],
         legalCertRegDate: [
           { name: '法定代表人', varName: 'reg', required: false, validator: this.regExpireValidator, trigger: 'change' }
@@ -154,7 +156,7 @@ export default {
           { name: '实际控制人', varName: 'controller', required: false, validator: this.certTypeValidator, trigger: 'change' }
         ],
         controllerCertNo: [
-          { name: '实际控制人', varName: 'controller', required: false, validator: this.certNoValidator, trigger: 'change' }
+          { name: '控制人身份证号', varName: 'controller', required: false, validator: validateIdCard, trigger: 'change' }
         ],
         controllerCertRegDate: [
           { name: '实际控制人', varName: 'reg', required: false, validator: this.regExpireValidator, trigger: 'change' }
@@ -191,16 +193,15 @@ export default {
   created() {
     this.getRow()
     this.getApi()
+    console.log(this.form)
     //详情页判断
     this.isDetail = this.$route.meta.pageType === 'detail'
     //新增页判断
     this.isAdd = this.$route.meta.pageType === 'add'
     //修改页判断
     this.isEdit = this.$route.meta.pageType === 'edit'
-    // 查询操作记录
-    if (!this.isAdd) {
+    if (this.isAdd) {
       this.queryEntDictionary()
-      this.getEbBusinessParamLog()
     }
   },
   methods: {
@@ -220,7 +221,7 @@ export default {
         }
         this.dictionary = Object.assign(tableDic, res.data)
         this.projectInfoList = this.dictionary.projectInfoList
-        this.$emit('getDictionary', this.dictionary)
+        // this.$emit('getDictionary', this.dictionary)
         //   // 新增时
         if (this.isAdd) {  //设置企业附件
           this.dictionary.sysAttachTypeList.map(item => {
@@ -238,28 +239,21 @@ export default {
 
     //获取详情处理
     detailsHandle() {
-      // this.dictionary.sysAttachTypeList.forEach(item => {
-      //   // this.form.pubAttachList.map(j => {
-      //   //   if (item.code === j.code) {
-      //   //     item = Object.assign(j, item)
-      //   //   }
-      //   // })
-      //   this.form.pubAttachList.push({
-      //     busType: item.code,
-      //     fileId: '',
-      //     fileName: ''
-      //   })
-      // })
-      if (!!!this.form.pubAttachList) {
-        this.dictionary.sysAttachTypeList.map(item => {
-          this.form.pubAttachList.push({
-            busType: item.code,
-            fileId: '',
-            fileName: ''
-          })
-        })
-      }
       this.$nextTick(() => {
+        if (!!this.form.pubAttachList) { // 企业附件回显
+         this.pubAttachList =  this.form.pubAttachList
+        } else {
+          this.dictionary.sysAttachTypeList.map(item => {
+            this.pubAttachList.push({
+              busType: item.code,
+              fileId: '',
+              fileName: ''
+            })
+          })
+        }
+        // 其他附件
+        this.$refs.ofileSetting.$data.fileList = this.form.pubOtherAttachList
+        console.log(this.$refs.ofileSetting.$data.fileList)
         this.$refs.form.clearValidate()
       })
     },
@@ -331,7 +325,7 @@ export default {
 
     //平台客户类型发生改变
     entTypeChange() {
-      this.form.sysUserList = []
+      this.sysUserList = []
       if (this.form.entType === "B") {
         this.statementAccountTypeTable = this.dictionary.hxqySysRoleListTable
       }
@@ -379,7 +373,7 @@ export default {
         statementAccountType: [], //对账单类型
         save: false,//是否保存过
       }
-      this.form.sysUserList.push(item)
+      this.sysUserList.push(item)
       this.$refs.sysUser.setActiveRow(item)
     },
     //修改企业操作员
@@ -391,7 +385,7 @@ export default {
     //删除企业操作员
     sysUserDel(rowIndex) {
       if (this.sysUserIng()) { return }
-      this.form.sysUserList.splice(rowIndex, 1)
+      this.sysUserList.splice(rowIndex, 1)
     },
     //保存企业操作员
     sysUserSave(row, rowIndex) {
@@ -436,9 +430,9 @@ export default {
     //取消企业操作员
     sysUserCancel(row, rowIndex) {
       if (!row.save) {
-        this.form.sysUserList.splice(rowIndex, 1)
+        this.sysUserList.splice(rowIndex, 1)
       } else {
-        this.form.sysUserList.splice(rowIndex, 1, JSON.parse(JSON.stringify(this.oldRow)))
+        this.sysUserList.splice(rowIndex, 1, JSON.parse(JSON.stringify(this.oldRow)))
       }
       this.$refs.sysUser.clearActived()
     },
@@ -446,12 +440,7 @@ export default {
 
     //企业附件下载
     pubAttachDownload(row) {
-      let params = {
-        fileId: row.fileId,
-        fileUrl: row.fileId,
-        fileName: row.fileName,
-      }
-      this.$api.baseCommon.downloadFile(params)
+      this.$api.baseCommon.downloadFile(row)
     },
     //企业附件上传
     pubAttachUpload(data) {
@@ -469,7 +458,7 @@ export default {
       let params = JSON.parse(JSON.stringify(this.form))
       //1.校验表单
       this.$refs.form.validate(boo => {
-        if (boo) {
+        if (boo || this.isDetail) {
           if (this.isAdd) {
             //企业操作员校验
             if (this.sysUserIng()) { return }
@@ -519,12 +508,15 @@ export default {
               }
             })
           }
+          params.sysUserList = this.sysUserList
           // 企业附件
-          if (params.pubAttachList) {
-            params.pubAttachList = params.pubAttachList.filter(item => {
-              return !!item.fileName
-            })
-          }
+          params.pubAttachList = this.pubAttachList
+          // if (params.pubAttachList) {
+          //   params.pubAttachList = params.pubAttachList.filter(item => {
+          //     return !!item.fileName
+          //   })
+          // }
+          // return
           this.$emit('formPass', params)
         } else {
           return this.$messageBox({
@@ -533,16 +525,6 @@ export default {
           })
         }
       })
-    },
-    // 获取操作记录
-    getEbBusinessParamLog() {
-      let params = {
-        id: this.row.id,
-        serialNo: this.row.serialNo
-      }
-      this.zjControl.getEbBusinessParamLog(params).then((res) => {
-        this.logList = res.data.sysEntRegLogList;
-      });
     },
     // 暂存
     saveEnterprise() {
