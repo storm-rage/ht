@@ -27,7 +27,7 @@ export default {
     return {
       agreementDownLoad(row) {
         this.$api.baseCommon.downloadFile({
-          fileId: row.fileId,
+          fileId: row.afterFileId,
           fileName: row.fileName,
         })
       }

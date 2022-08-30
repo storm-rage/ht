@@ -117,9 +117,10 @@ export default {
     },
     checkChange() {
       let checkArr = this.$refs.searchTable.getCheckboxRecords()
+      let newCheckArr = checkArr.map(item=>item.ebillAmt)
       if(checkArr.length > 1 ) {
-        this.checkedTotalAmount = checkArr.reduce((a,b)=>{
-          return Number(a.ebillAmt)+Number(b.ebillAmt)
+        this.checkedTotalAmount = newCheckArr.reduce((a,b)=>{
+          return Number(a)+Number(b)
         })
       } else if(checkArr.length === 1) {
         this.checkedTotalAmount = checkArr[0].ebillAmt
@@ -156,3 +157,10 @@ export default {
   }
 };
 </script>
+<style lang="less" scoped>
+/deep/.vxe-pager--wrapper{
+  .vxe-pager--left-wrapper {
+    float: left;
+  }
+}
+</style>

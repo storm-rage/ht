@@ -2,7 +2,6 @@
   <zj-content-container>
     <!--  订单融资  -->
     <zj-content-block>
-      <zj-content>
         <div class="zj-search-response">
           <zj-table ref="tradeRelationTable"
                     :api="zjControl.getOrderFinancingCredit"
@@ -46,8 +45,7 @@
             </template>
           </vxe-table-column>
         </zj-table>
-      </zj-content>
-    </zj-content-block>
+      </zj-content-block>
   </zj-content-container>
 </template>
 <script>

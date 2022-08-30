@@ -35,7 +35,7 @@ const financingAuditManageRouter = [
       title: '融资审核',
       root: '融资管理',
       keepAlive: true,
-      parent:'financingReviewManage',
+      parent:'myTodo',
       refreshIndex: 0,
       notRequireAuth: true
     }
@@ -49,7 +49,7 @@ const financingAuditManageRouter = [
       title: '融资交易详情',
       root: '融资管理',
       keepAlive: true,
-      parent:'financingReviewManage',
+      parent:'myTodo',
       refreshIndex: 0,
       notRequireAuth: true
     }
@@ -63,7 +63,7 @@ const financingAuditManageRouter = [
       title: '融资交易详情',
       root: '融资管理',
       keepAlive: true,
-      parent:'financingReviewManage',
+      parent:'myTodo',
       refreshIndex: 0,
       notRequireAuth: true
     }

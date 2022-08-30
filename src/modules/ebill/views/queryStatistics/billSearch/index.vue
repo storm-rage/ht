@@ -116,6 +116,7 @@
                 <zj-table-column field="isBusPush" title="开立凭证状态是否已推送业务系统" :formatter="obj=>typeMap(dictionary.isBusPush, obj.cellValue)"/>
                 <zj-table-column field="isHbkPush" title="开立凭证状态是否已推送海天银行" :formatter="obj=>typeMap(dictionary.isHbkPush, obj.cellValue)"/>
                 <zj-table-column field="accountBillStatus" title="业务系统对账单结算系统状态" :formatter="obj=>typeMap(dictionary.accountBillStatus, obj.cellValue)"/>
+                <zj-table-column field="isPay" title="对账单是否已支付" :formatter="obj=>typeMap(dictionary.isPay, obj.cellValue)"/>
               </zj-table>
             </zj-list-layout>
           </div>
