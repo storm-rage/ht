@@ -106,7 +106,7 @@
           <zj-table-column
             field="cactoringLogo"
             title="保理标识" :formatter="(obj) => typeMap(dictionary.cactoringLogo, obj.cellValue)"/>
-          <zj-table-column field="settlementCycle" title="结算周期"/>
+          <zj-table-column field="settlementCycle" title="结算周期" :formatter="(obj) => typeMap(dictionary.settlementCycle, obj.cellValue)"/>
           <zj-table-column field="totalCreditAmount" title="供应商总额度" :formatter="money"/>
           <zj-table-column field="estimatedAnnualProcurementAmount" title="预计年采购金额" :formatter="money"/>
           <zj-table-column field="state" title="贸易关系状态" :formatter="(obj) => typeMap(dictionary.state, obj.cellValue)"/>
