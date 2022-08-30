@@ -6,6 +6,7 @@
           <el-form-item label="协议文本编号：">
             <el-input
               v-model="searchForm.agreementType"
+              clearable
               @keyup.enter.native="enterSearch"
             />
           </el-form-item>
@@ -17,13 +18,12 @@
               :popper-append-to-body="false"
             >
               <el-option value="" label="全部"></el-option>
-              <!-- <el-option
-              v-for="item in dictionary.isGenerateVouchers"
-              :key="item.code"
-              :label="item.desc"
-              :value="item.code"
-            >
-            </el-option> -->
+              <el-option
+                v-for="(item, index) in dictionary.agreementTypeList"
+                :key="index"
+                :value="item.code"
+                :label="item.desc"
+              ></el-option>
             </el-select>
           </el-form-item>
           <el-form-item label="最近维护日期：" class="col-right">
@@ -32,15 +32,16 @@
               :endDate.sync="searchForm.expireDateEnd"
             />
           </el-form-item>
-          <el-form-item label="模板类型：" class="col-center">
+          <el-form-item label="模板状态：" class="col-center">
             <el-select
               v-model="targetListSrc"
               placeholder="请选择"
               clearable
               :popper-append-to-body="false"
             >
+              <el-option value="" label="全部"></el-option>
               <el-option
-                v-for="(item, index) in agreementTypeList"
+                v-for="(item, index) in dictionary.isEffectiveFlagList"
                 :key="index"
                 :value="item.code"
                 :label="item.desc"
@@ -57,13 +58,13 @@
         <zj-table-column field="agreementTypeName" title="协议类型" />
         <zj-table-column field="agreementType" title="协议文本编号" />
         <zj-table-column field="agreementTypeName" title="文件名称" />
-        <zj-table-column field="modifyDatetime" title="附件" />
+        <!-- <zj-table-column field="modifyDatetime" title="附件" /> -->
         <zj-table-column field="isEffective" title="模板状态" />
         <zj-table-column field="agreementVersion" title="版本号" />
         <zj-table-column
-          field="issueEntName"
+          field="modifyDatetime"
           title="最近维护日期"
-          :formatter="date"
+          :formatter="obj=>date(obj.cellValue)||'-'"
         />
         <zj-table-column title="操作" fixed="right">
           <template v-slot="{ row }">
@@ -79,6 +80,7 @@
 <script>
 // import download from "@utils/download";
 export default {
+  name: "modelAggreement",
   data() {
     return {
       zjControl: {
@@ -91,18 +93,18 @@ export default {
       type: "info",
       tableData: [{ id: 1 }],
       formModel: {},
-      agreementTypeList: [],
       targetListSrc: "",
+      dictionary: {
+        agreementTypeList: [],
+        isEffectiveFlagList: []
+      }
     };
   },
   created() {
-    let params = {
-      id: "1",
-    };
-    this.zjControl.getDirectory(params).then((res) => {
+    this.zjControl.getDirectory().then((res) => {
       if (res.code === 200) {
-        console.log(res, "------");
-        this.agreementTypeList = res.data.agreementTypeList;
+        // console.log(res, "------");
+        this.dictionary = res.data || {};
       }
     });
   },

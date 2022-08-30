@@ -2,13 +2,13 @@
   <header class="home-header" v-if="showHeader">
     <div class="title">{{nowTimeTip}}好！{{userInfo.userName}}</div>
     <div class="login-time">上次登录时间：{{userInfo.lastLoginTime}}</div>
-    <div class="close" v-if="showClose">
+    <!-- <div class="close" v-if="showClose">
       <el-button size="mini" icon="el-icon-close" @click="showHeader = false" style="color: #606266;padding: 2px 4px;">
         <span class="close-time" v-if="closeTime && closeTime!=0">
           {{closeTime}}
         </span>
       </el-button>
-    </div>
+    </div> -->
   </header>
 </template>
 <script>
@@ -39,25 +39,25 @@ export default {
         return '晚上';
       }
     },
-    showClose() {
-      let wClientY = document.documentElement.clientHeight
-      return wClientY <= 768
-    }
+    // showClose() {
+    //   let wClientY = document.documentElement.clientHeight
+    //   return wClientY <= 768
+    // }
   },
-  created() {
-    if (this.showClose) {
-      this.timeClose = window.setInterval(()=>{
-        this.closeTime--
-        if(this.closeTime <= 0) {
-          window.clearInterval(this.timeClose)
-          this.showHeader = false
-        }
-      },1000)
-    }
-  },
-  beforeDestroy() {
-    this.timeClose && window.clearInterval(this.timeClose)
-  },
+  // created() {
+  //   if (this.showClose) {
+  //     this.timeClose = window.setInterval(()=>{
+  //       this.closeTime--
+  //       if(this.closeTime <= 0) {
+  //         window.clearInterval(this.timeClose)
+  //         this.showHeader = false
+  //       }
+  //     },1000)
+  //   }
+  // },
+  // beforeDestroy() {
+  //   this.timeClose && window.clearInterval(this.timeClose)
+  // },
 };
 </script>
 <style lang="less" scoped>
