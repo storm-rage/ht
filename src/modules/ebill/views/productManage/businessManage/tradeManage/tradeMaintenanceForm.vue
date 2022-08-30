@@ -160,10 +160,10 @@ export default {
     cactoringLogoList () {
       if (this.dictionary.cactoringLogo) {
         return this.dictionary.cactoringLogo.filter((item) => {
-          if (this.productType.indexOf(ProductType.DDBL)>=0) {
+          if (this.productType&&this.productType.indexOf(ProductType.DDBL)>=0) {
             //若开通订单保理产品，则只能维护为“订单保理”
             return item.code!==CactoringLogo.BILLBL
-          }else if(this.productType.indexOf(ProductType.RD)>=0){
+          }else if(this.productType&&this.productType.indexOf(ProductType.RD)>=0){
             //若开通凭证保理产品，则只能维护为“凭证保理”
             return item.code!==CactoringLogo.ORDERBL
           }
@@ -300,20 +300,20 @@ export default {
         if (codes.length) {
           if (codes.includes(ProductType.RD)&&!codes.includes(ProductType.DDBL)) {
             // 只包含电子凭证保理
-            const billData = this.$refs.bbizSetting.getData();
+            const billData = this.$refs.bbizSetting[0].getData();
             // 赋值
             this.form.openGraceDays = billData.openGraceDays;
             this.form.billFactoringModelList = billData.billFactoringModelList;
 
           }else if (!codes.includes(ProductType.RD)&&codes.includes(ProductType.DDBL)) {
             // 赋值
-            const orderData = this.$refs.pbizSetting.getData();
+            const orderData = this.$refs.pbizSetting[0].getData();
             this.form.orderFactoringModel = orderData;
 
           }else if (codes.includes(ProductType.RD)&&codes.includes(ProductType.DDBL)) {
             // 赋值
-            const billData = this.$refs.bbizSetting.getData();
-            const orderData = this.$refs.pbizSetting.getData();
+            const billData = this.$refs.bbizSetting[0].getData();
+            const orderData = this.$refs.pbizSetting[0].getData();
             this.form.orderFactoringModel = orderData;
             this.form.openGraceDays = billData.openGraceDays;
             this.form.billFactoringModelList = billData.billFactoringModelList;
@@ -378,10 +378,10 @@ export default {
       });
     },
     getRdForm () {
-      return this.$refs.bbizSetting;
+      return this.$refs.bbizSetting[0];
     },
     getDDBlForm () {
-      return this.$refs.pbizSetting;
+      return this.$refs.pbizSetting[0];
     }
   }
 };

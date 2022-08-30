@@ -46,6 +46,10 @@ export default {
       passLoading: false
     }
   },
+  created() {
+    this.getApi();
+    this.getRow();
+  },
   methods: {
     toPass() {
       this.$refs.auditRemark.getForm().clearValidate();
