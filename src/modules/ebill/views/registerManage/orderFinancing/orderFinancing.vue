@@ -70,7 +70,7 @@
     </zj-workflow>
     <!-- <loginDialog ref="loginDialog" :checkLogin="this.checkLogin" :idlist="this.idlist"></loginDialog> -->
     <loginDialog ref="loginDialog"></loginDialog>
-    <artRegister ref="artRegister" :idlist="this.idlist"></artRegister>
+    <artRegister ref="artRegister" :idlist="this.idlist" :dictionary="this.dictionary"></artRegister>
   </zj-content-container>
 </template>
 <script>

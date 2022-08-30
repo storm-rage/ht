@@ -180,8 +180,15 @@ export default {
           this.zdAttachList=res.data.zdAttachList
       });
     },
-    toDownload (row) {
-      this.zjControl.downApi(row);
+   
+    toDownload(row) {
+      console.log(row);
+      let params = {
+        fileId:row.fileId,
+        fileName:row.fileName
+      }
+      this.$api.baseCommon.downloadFile(params).then((res) => {
+      });
     },
     handleRadioChange ({row}) {
       this.currentRow = row;

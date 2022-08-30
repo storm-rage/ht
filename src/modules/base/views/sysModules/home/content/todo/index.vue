@@ -30,20 +30,22 @@
         <right-more-btn @click.native="toMore"></right-more-btn>
       </template>
     </zj-header>
-    <div
-      class="todo-block-item yw"
-      v-for="(item, index) in list"
-      :key="`${index}todo`"
-      @click="goToDo(item)"
-    >
-      <!-- :class="[index === 0 ? 'yw' : index === 1 ? 'ht' : 'rz']" -->
-      <div class="logo">
-        <img src="~@assets/img/home/todo/yw_bg.png" />
-        <!-- <img v-if="index === 1" src="~@assets/img/home/todo/ht_bg.png" /> -->
-        <!-- <img v-if="index === 2" src="~@assets/img/home/todo/rz_bg.png" /> -->
+    <div class="todo-block" >
+      <div
+        class="todo-block-item yw"
+        v-for="(item, index) in list"
+        :key="`${index}todo`"
+        @click="goToDo(item)"
+      >
+        <!-- :class="[index === 0 ? 'yw' : index === 1 ? 'ht' : 'rz']" -->
+        <!-- <div class="logo">
+          <img src="~@assets/img/home/todo/yw_bg.png" />
+          <img v-if="index === 1" src="~@assets/img/home/todo/ht_bg.png" />
+          <img v-if="index === 2" src="~@assets/img/home/todo/rz_bg.png" />
+        </div> -->
+        <div class="title">{{ item.name }}</div>
+        <div class="num">{{ item.number }}</div>
       </div>
-      <div class="title">{{ item.name }}</div>
-      <div class="num">{{ item.number }}</div>
     </div>
   </home-content-block>
 </template>
@@ -106,71 +108,44 @@ export default {
 </script>
 <style lang="less" scoped>
 // 新的样式
-/* .home-content-todo {
+.home-content-todo {
   height: 100%;
   .todo-block {
-    display: flex;
-    overflow: hidden;
-    justify-content: space-between;
-    align-items: center;
+    max-height: 320px;
+    overflow: auto;
+    margin-right: -20px;
+    padding-right: 20px;
   }
   .todo-block-item {
     position: relative;
     cursor: pointer;
-    width: 220px;
-    height: 131px;
-    font-weight: bold;
-    z-index: 1;
-    // .logo,
-    // img {
-    //   width: 60px;
-    // }
-    // 业务管理
-    &.yw {
-      background: url(~@assets/img/home/todo/yw_nbg.png) no-repeat center;
-      .num {
-        color: #ffa958;
-      }
+    display: flex;
+    justify-content: space-between;
+    align-content: center;
+    align-items: center;
+    // font-weight: bold;
+    font-size: 14px;
+    .title {
+      margin-left: 15px;
+      font-weight: 700;
+      color: #303133;
     }
-    // 合同管理
-    &.ht {
-      background: url(~@assets/img/home/todo/ht_nbg.png) no-repeat center;
-      .num {
-        color: #ff6d6d;
-      }
-    }
-    // 融资审核
-    &.rz {
-      background: url(~@assets/img/home/todo/rz_nbg.png) no-repeat center;
-      .num {
-        color: #1ec5a3;
-      }
-    }
-    .todo-info {
-      display: flex;
-      justify-content: flex-end;
-      flex-direction: column;
-      position: absolute;
-      right: 30px;
-      bottom: 20px;
-      .title {
-        margin-left: 15px;
-        font-size: 14px;
-        color: #303133;
-      }
-      .num {
-        text-align: right;
-        font-size: 20px;
-      }
+    .num {
+      text-align: right;
+      font-size: 16px;
+      color: red;
     }
   }
-  // .todo-block-item + .todo-block-item {
-  //   margin-top: 12px;
-  // }
-} */
+  .todo-block-item {
+    margin-top: 20px;
+    &:first-child {
+      margin-top: 0;
+    }
+  }
+}
 
 // 原样式
-.home-content-todo {
+/* .home-content-todo {
   height: 100%;
   .todo-block-item {
     position: relative;
@@ -225,5 +200,5 @@ export default {
       margin-top: 0;
     }
   }
-}
+} */
 </style>

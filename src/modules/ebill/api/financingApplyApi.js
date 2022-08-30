@@ -49,7 +49,7 @@ const financingApply = {
    * */
   //获取数据字典
   getTradeBackDictionary: (params) => {
-    return request.get('/financing-apply/get-trade-back-dictionary', {params} )
+    return request.get('/financing-apply/get-trade-back-dictionary', {params, isUnLock: true} )
   },
   //贸易背景管理-获取详情
   getTradeBackgroundInfo: (params) => {

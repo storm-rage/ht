@@ -18,7 +18,7 @@
           <zj-table-column field="stateDesc" title="凭证状态" />
           <zj-table-column title="操作" fixed="right">
             <template v-slot="{ row }">
-              <zj-button type="text" @click="goChild('entManageDetail', row)" :api="zjBtn.getEnterprise">贸易背景</zj-button>
+              <zj-button type="text" @click="openDialog(row)" :api="zjBtn.getEnterprise">贸易背景</zj-button>
             </template>
           </zj-table-column>
         </zj-table>
@@ -79,11 +79,13 @@
       <zj-button type="primary" @click="toApply">提交申请</zj-button>
       <zj-button @click="goParent">返回</zj-button>
     </zj-content-footer>
+    <trade-bj-dialog ref="tradeBjDialog" v-if="tradeBjShow" :visible.sync="tradeBjShow" :rowData="rowData"/>
   </zj-content-container>
 </template>
 
 <script>
 import { validateBankAcct } from "@utils/rules";
+import tradeBjDialog from './dialog/tradeBjDialog'
 
 export default {
   data() {
@@ -92,6 +94,7 @@ export default {
       form: {
         ebillAmt: 0,
       },
+      tradeBjShow: false,
       detailData: {},
       dataList: [],
       ids: [],
@@ -127,6 +130,7 @@ export default {
           { required: true, message: "请输入收款账户开户行", trigger: "blur" },
         ],
       },
+      rowData: {}
     };
   },
   created() {
@@ -176,6 +180,11 @@ export default {
         }
       });
     },
+    openDialog(row) {
+      // this.$refs.tradeBjDialog.open(this.row)
+      this.rowData = row
+      this.tradeBjShow = true
+    }
   },
 };
 </script>

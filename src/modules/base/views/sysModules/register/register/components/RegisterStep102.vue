@@ -192,7 +192,7 @@
           <el-form-item label="请确认开户行" prop="confirmBankId">
             <el-select v-model="form.confirmBankId"
                        filterable
-                       placeholder="请选择" class="sw-year-select"
+                       placeholder="请选择" class="sw-year-select register102-legalCertType"
                        :popper-append-to-body="false"
                        @change="bankChange"
             >
@@ -765,9 +765,6 @@ export default {
     .el-select-dropdown.el-popper{
       width: 250px!important;
     }
-    .el-input {
-      width: 260px;
-    }
   }
 </style>
 <style lang="less" scoped>
@@ -909,6 +906,13 @@ export default {
       padding: 0 30px 0 15px !important;
     }
   }
-
+.register102-legalCertType{
+  .el-select-dropdown.el-popper{
+    width: 250px!important;
+  }
+  /deep/.el-input {
+    width: 260px;
+  }
+}
 
 </style>

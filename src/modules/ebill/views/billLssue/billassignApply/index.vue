@@ -39,11 +39,11 @@
           </template>
         </zj-table-column>
         <zj-table-column field="rootCode" title="原始债权凭证编号" />
-        <zj-table-column field="payEntName" title="签发人" :formatter="money" />
-        <zj-table-column field="receiptEntName" title="原始持有人" :formatter="money" />
+        <zj-table-column field="payEntName" title="签发人" />
+        <zj-table-column field="receiptEntName" title="原始持有人" />
         <zj-table-column field="payableIssuanceDate" title="凭证签发日" :formatter="date" />
         <zj-table-column field="payableExpireDate" title="凭证到期日" :formatter="date" />
-        <zj-table-column field="transferName" title="转让企业" :formatter="date" />
+        <zj-table-column field="transferName" title="转让企业"  />
         <zj-table-column field="ebillAmt" title="凭证金额" :formatter="money" />
         <zj-table-column field="holderDate" title="凭证签收日" :formatter="date" />
         <zj-table-column field="stateDesc" title="凭证状态" />

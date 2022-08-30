@@ -1,7 +1,8 @@
 <template>
     <zj-content-container>
       <!--  入库融资申请/凭证融资申请  -->
-      <zj-content-block>
+      <zj-content>
+        <zj-content-block>
           <div class="quota-manage">
             剩余可用额度：<span>{{form.surplusQuota}}</span>
             总额度：<span>{{form.totalQuota}}</span>
@@ -77,6 +78,7 @@
               </el-col>
             </el-row>
           </el-form>
+        </zj-content-block>
         <zj-content-block>
           <zj-table ref="searchTable" class="zj-search-table"
                     :dataList="form.ebBillModelList"
@@ -124,33 +126,34 @@
           <zj-content-block>
             <zj-table ref="invoiceItemListsTable" class="zj-search-table"
                       :dataList="form.invoiceItemLists"
+                      v-if="invoiceShow"
             >
               <zj-table-column field="invoiceType" title="发票类型"/>
               <zj-table-column field="invoiceCode" title="发票代码"/>
               <zj-table-column field="invoiceNumber" title="发票号码"/>
               <zj-table-column field="totalAmtLowcase" title="发票金额（含税）" :formatter="money"/>
               <zj-table-column field="sellAmount" title="发票金额（不含税）" :formatter="money"/>
-              <zj-table-column field="userdAmt" title="发票使用金额"/>
-              <zj-table-column field="financingUsedAmtTotal" title="融资已占用金额"/>
-              <zj-table-column field="seller" title="本次融资"/>
+              <zj-table-column field="userdAmt" title="发票使用金额" :formatter="money"/>
+              <zj-table-column field="financingUsedAmtTotal" title="融资已占用金额" :formatter="money"/>
+              <zj-table-column field="financingUsedAmt" title="本次融资发票金额" :edit-render="{name: '$input'}" :formatter="money"/>
               <zj-table-column field="invoiceDate" title="发票日期" :formatter="date"/>
               <zj-table-column field="fileName" title="发票附件"/>
-              <el-row slot="pager-left" class="slotRows" :gutter="40">
-                凭证金额合计：{{form.totalAmt?moneyNoSynbol(form.totalAmt):''}}
-              </el-row>
+              <span slot="pager-left" class="slotRows" :gutter="40">
+                凭证金额合计：{{ebillAmtTotal?moneyNoSynbol(ebillAmtTotal):0}}
+              </span>
             </zj-table>
 
           </zj-content-block>
 
         </zj-content-block>
-      </zj-content-block>
+      </zj-content>
 
       <zj-content-footer>
         <zj-button class="back" @click="goParent">上一步</zj-button>
         <zj-button type="primary" @click="submit">提交申请</zj-button>
       </zj-content-footer>
       <submit-dialog ref="submitDialog" :zjControl="zjControl" :form="form"/>
-      <choice-invoice ref="choiceInvoice" :invoiceItemList="form.invoiceItemList" @handleInvoiceList="checkInvoice"/>
+      <choice-invoice ref="choiceInvoice" :invoiceItemList="form.invoiceItemList" @handleInvoiceList="handleInvoiceList"/>
     </zj-content-container>
 </template>
 
@@ -167,7 +170,18 @@ export default {
     titleInfo() {
       let res = this.typeMap(this.dictionary.financingProductType,this.form.financingFlag)
       return res
-    }
+    },
+    ebillAmtTotal() {
+      let resArr = []
+      let res = 0
+      if(this.invoiceItemLists && this.invoiceItemLists.length) {
+        resArr = this.invoiceItemLists.map(item=>item.totalAmtLowcase)
+        res = resArr.reduce((a,b)=>{
+          return Number(a) + Number(b)
+        })
+      }
+      return res
+    },
   },
   data() {
     return {
@@ -182,6 +196,8 @@ export default {
         invoiceItemList: [],
         invoiceItemLists: [],
       },
+      invoiceItemLists:[],
+      invoiceShow: true,
       rules:{
         tranferAmt: [
           { required: true, message: '请输入申请转让金额', trigger: 'change'},
@@ -205,10 +221,11 @@ export default {
       })
     },
     getDetail() {
+      let {entId, idList} = this.row
       let params = {
         applyDatetime: this.form.applyDatetime,//不为工作日
-        entId: this.$route.params.rowData.entId,
-        idList: this.$route.params.rowData.idList,
+        entId: entId,
+        idList: idList,
         tranferAmt: this.form.tranferAmt,
       }
       this.zjControl.getFinancingApplyBillDetail(params).then(res=>{
@@ -218,7 +235,6 @@ export default {
     handleChange() {
       this.getDetail()
     },
-
     downloadAgreement(item) {
       let params = {
         applyDatetime: this.form.applyDatetime,
@@ -238,10 +254,16 @@ export default {
     choiceInvoiceItem() {
       this.$refs.choiceInvoice.open({invoiceList: this.form.invoiceItemList})
     },
-    checkInvoice(val) {
+    handleInvoiceList(val) {
+      this.invoiceItemLists = [...val]//存放到本地
+      this.invoiceShow = false
       this.$nextTick(()=>{
-        this.form.invoiceItemLists = [...val]
+        if(this.invoiceItemLists) {
+          this.form.invoiceItemLists = this.invoiceItemLists
+          this.invoiceShow = true
+        }
       })
+      console.log(this.invoiceItemLists)
       console.log(this.form.invoiceItemLists)
       this.$refs.invoiceItemListsTable.iRefresh()
     },
@@ -255,6 +277,7 @@ export default {
   },
   created() {
     this.getApi()
+    this.getRow()
     this.getDic()
     this.getDetail()
   }
@@ -294,5 +317,9 @@ export default {
     border-bottom: 1px dashed #cbcbcb;
   }
 }
-
+/deep/.vxe-pager--wrapper{
+  .vxe-pager--left-wrapper {
+    float: left;
+  }
+}
 </style>

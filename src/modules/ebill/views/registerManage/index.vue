@@ -1,14 +1,14 @@
 <template>
   <zj-content-container>
     <!--  中登登记管理  -->
-    <el-tabs v-model="tabs" class="zj-tabs-card zj-p-l-16 zj-p-r-16">
+    <zj-tabs v-model="tabs" class="zj-tabs-card zj-p-l-16 zj-p-r-16">
       <el-tab-pane label="订单保理" name="orderFinancing" >
         <orderFinancing :zjControl="zjControl" :uDictionary="uDictionary" :uBtn="zjBtn"/>
       </el-tab-pane>
       <el-tab-pane label="凭证融资" name="voucherFinancing" >
         <voucherFinancing :zjControl="zjControl" :mDictionary="mDictionary" :mBtn="zjBtn"/>
       </el-tab-pane>
-    </el-tabs>
+    </zj-tabs>
 
   </zj-content-container>
 </template>
