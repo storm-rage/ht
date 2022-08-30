@@ -67,7 +67,7 @@
               :autoUpload="true"
               v-if="row.fileName"
               >
-              <zj-button type="text"   :api="zjBtn.getEnterprise"  v-if="row.isBuyerFlag==0&&row.fileName">覆盖材料证明</zj-button>
+              <zj-button type="text"   :api="zjBtn.getEnterprise"  v-if="row.isBuyerFlag==0&&row.fileName">上传材料证明</zj-button>
               </zj-upload>
               <zj-upload
               :httpRequest="uploadsc"
@@ -125,9 +125,9 @@
         </div>
       </div>
       <el-row slot="footer" class="dialog-footer">
-        <!-- <zj-button type="primary" status="primary" @click="signUserProtocol">确认签署</zj-button> -->
+        <zj-button type="primary" status="primary" @click="signUserProtocol">确认签署</zj-button>
         <!-- 云证书有问题，直接跳到新增联调接口 -->
-        <zj-button type="primary" status="primary" @click="lastadd">确认签署</zj-button>
+        <!-- <zj-button type="primary" status="primary" @click="lastadd">确认签署</zj-button> -->
       </el-row>
     </el-dialog>
         <!-- 云证书签章 -->
@@ -221,6 +221,7 @@ export default {
   },
   methods: {
     downstuff(row) {
+      console.log(row);
       let params = {
         fileUrl:row.fileId,
         fileId:row.fileId,
@@ -230,6 +231,7 @@ export default {
       });
     },
     downsagreement(row) {
+      console.log(row);
       let params = {
         fileUrl:row.agreementFileId,
         fileId:row.agreementFileId,
@@ -265,10 +267,9 @@ export default {
     },
     //云证书返回
     handleCertuficateDone(){
-      // this.zjControl.signUserProtocol().then(() => {
-      //   this.$refs.certuficate.close()
-      // })
+     
       console.log("云证书返回");
+      this.lastadd()
     },
     // 获取信息
     getUserInfo() {

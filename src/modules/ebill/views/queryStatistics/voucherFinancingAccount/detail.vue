@@ -121,6 +121,7 @@
           <zj-table-column field="payableExpireDate" title="海e单到期日" :formatter="date" />
         </zj-table>
       </zj-content-block>
+      <div class="zz"></div>
       <zj-content-block>
         <zj-header :title="`对账单信息:（海e单编号：${this.bjcode})`" />
         <zj-table ref="searchTable" :dataList="billList" :pager="false">
@@ -137,6 +138,7 @@
           <zj-table-column field="billSource" title="对账单来源" />
         </zj-table>
       </zj-content-block>
+      <div class="zz"></div>
       <zj-content-block>
         <zj-header :title="`贸易背景资料（资产编号：${this.bjcode})`" />
         <el-tabs v-model="tabs" class="zj-tabs-card">
@@ -240,7 +242,7 @@ export default {
         getFinancingTransDirectory: this.$api.factoringLedger.getDictionary,//数据字典
         rdDetailpzxx: this.$api.factoringLedger.rdDetailpzxx,//凭证信息
         getOtherInfoByBill: this.$api.factoringLedger.changeData,//凭证信息-详情
-
+        downloadFile: this.$api.baseCommon.downloadFile,//下载
       },
       workflow: 'sqxx',
       workflowList: [
@@ -348,8 +350,14 @@ export default {
     agreementDownLoad() {
 
     },
-    downs() {
-      console.log("下载还没做");
+    downs(row) {
+      console.log(row);
+      let params = {
+        fileId:row.fileId,
+        fileName:row.fileName
+      }
+      this.$api.baseCommon.downloadFile(params).then((res) => {
+      });
     },
 
     handleDataChange(rows) {
@@ -394,4 +402,8 @@ export default {
 </script>
 
 <style scoped lang="less">
+.zz{
+  width: 20px;
+  height: 60px;
+}
 </style>
