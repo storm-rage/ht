@@ -34,7 +34,7 @@
         <zj-table-column field="customCode" title="客户业务系统编码" />
         <zj-table-column field="name" title="企业名称" />
         <zj-table-column field="entType" title="平台客户类型" :formatter="(obj) => typeMap(dictionary.entTypeList, obj.cellValue)" />
-        <zj-table-column field="isHtEnterprise" title="是否海天集团" :formatter="(obj) => typeMap(dictionary.isHtEnterprise, obj.cellValue)" />
+        <zj-table-column field="isHtEnterprise" title="是否海天集团" :formatter="(obj) => typeMap(dictionary.isHtEnterpriseList, obj.cellValue)" />
         <zj-table-column field="applyDate" title="创建日期" :formatter="date" />
         <zj-table-column field="state" title="企业状态" :formatter="
             (obj) => typeMap(dictionary.enterpriseStateList, obj.cellValue)
@@ -42,7 +42,7 @@
         <zj-table-column title="操作" fixed="right">
           <template v-slot="{ row }">
             <zj-button type="text" @click="goChild('entManageEdit', row)" :api="zjBtn.updateEnterprise" v-if="row.isHtEnterprise==='1'">维护</zj-button>
-            <span v-else>--</span>
+            <span v-else>—</span>
           </template>
         </zj-table-column>
       </zj-table>

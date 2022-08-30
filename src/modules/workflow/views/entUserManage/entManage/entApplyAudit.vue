@@ -6,7 +6,7 @@
     <trade-info :detailData="detailData" :dictionary="dictionary" />
 
     <!--  平台方企业基础信息 -->
-    <ent-info-edit ref="entInfoedit" :form="detailData" @getDictionary="getDictionary" @formPass="formPass" v-if="type === 'PT'" />
+    <ent-info-edit ref="entInfoeEdit" :form="detailData" @formPass="formPass" v-if="type === 'PT'" />
 
     <!--  客户方企业基础信息 -->
     <ent-info-kh ref="entInfoKH" :detailData="detailData" :dictionary="dictionary" :isEdit="false" v-if="type === 'KH'" />
@@ -16,8 +16,9 @@
 
     <zj-content-footer>
       <zj-button type="primary" @click="toPass">复核通过</zj-button>
-      <zj-button @click="toReject" v-if="row.workflowState === 'E005' || type==='KH'">拒绝</zj-button>
-      <zj-button @click="toReject" v-else>驳回上一级</zj-button>
+      <zj-button @click="toReject" v-if="row.workflowState = 'E002'">驳回上一级</zj-button>
+      <zj-button @click="toReject" v-else-if="row.workflowState = 'E005'">作废</zj-button>
+      <zj-button @click="toReject" v-else>拒绝</zj-button>
       <zj-button @click="goParent">返回</zj-button>
     </zj-content-footer>
   </zj-content-container>
@@ -52,32 +53,65 @@ export default {
   },
   created() {
     this.getRow()
+    this.getDictionary()
     this.getDetail()
+    this.getTodoBusinessParamLog()
     // 驳回待处理可修改
     if (this.row.workflowState === 'E005') {
       this.$route.meta.pageType = 'edit'
     }
-    this.type = this.row.startObject
   },
   methods: {
-    getDictionary(data) {
-      this.dictionary = data
+    getDictionary() {
+      this.zjControl.queryEntDictionary().then(res => {
+        this.dictionary = res.data
+      })
+    },
+    // 获取操作记录
+    getTodoBusinessParamLog() {
+      let params = {
+        serialNo: this.row.serialNo
+      }
+      this.zjControl.getTodoBusinessParamLog(params).then((res) => {
+        this.$nextTick(() => {
+          this.$refs.entInfoeEdit.$data.logList = res.data.sysEntRegLogList;
+        })
+      });
     },
     //获取详情
     getDetail() {
+      this.type = this.row.startObject
       let autoApi = this.zjControl.getTodoEnterprise // 平台方详情接口
       if (this.type === 'KH') {
         autoApi = this.zjControl.getTodoEnterpriseKhInfo // 客户方详情接口
       }
       autoApi({ serialNo: this.row.serialNo }).then(res => {
         this.detailData = res.data
+        if (this.type === 'KH') {
+          this.detailData.form = res.data
+          this.detailData.entBankInfo = [{ // 银行账户信息
+            bankAccname: res.data.bankAccname,
+            bankAccno: res.data.bankAccno,
+            bankName: res.data.bankName,
+            bankNo: res.data.bankNo,
+            bankType: res.data.bankType,
+          }]
+          this.detailData.attachInfo = { // 附件
+            qyyzAttachId: res.data.qyyzAttachId,
+            qyyzAttachName: res.data.qyyzAttachName,
+            qyfrzjAttachId: res.data.qyfrzjAttachId,
+            qyfrzjAttachName: res.data.qyfrzjAttachName
+          }
+
+          console.log(this.detailData)
+        }
       })
     },
     // 通过
     toPass() {
       this.state = 'pass'
       if (this.type === 'PT') {
-        this.$refs.userUpdate.handleForm()
+        this.$refs.entInfoeEdit.handleForm()
       }
       if (this.type === 'KH') {
         this.formPass({ serialNo: this.row.serialNo })
@@ -87,7 +121,7 @@ export default {
     toReject() {
       this.state = 'reject'
       if (this.type === 'PT') {
-        this.$refs.userUpdate.handleForm()
+        this.$refs.entInfoeEdit.handleForm()
       }
       if (this.type === 'KH') {
         this.formPass({ serialNo: this.row.serialNo })
@@ -97,12 +131,11 @@ export default {
       if (this.state === 'pass') {
         this.$refs.auditRemark.getForm().clearValidate();
         const { notes } = this.$refs.auditRemark.getData()
-        
+
         this.passLoading = true;
         this.zjControl.todoEnterpriseSubmit({
           flag: '1',
-          params,
-          ...entFrom,
+          ...params,
           notes,
         }).then(res => {
           this.passLoading = false;
@@ -122,7 +155,7 @@ export default {
             this.rejectLoading = true;
             this.zjControl.todoEnterpriseSubmit({
               flag: '2',
-              params,
+              ...params,
               notes,
             }).then(res => {
               this.rejectLoading = false;
