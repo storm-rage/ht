@@ -259,7 +259,6 @@ export default {
       })
     },
     recheck(flag) {
-      console.log(flag)
       this.$refs.form.validate(boo=>{
         if(boo) {
           if(flag === '复核拒绝' && !this.form.remark) {
