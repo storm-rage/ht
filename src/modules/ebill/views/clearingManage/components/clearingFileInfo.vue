@@ -99,6 +99,13 @@ export default {
     getForm() {
       return this.$refs.form;
     },
+    /**
+     * 不包含删除列表的数据,到期清算
+     * @returns {{list: [], busDesc: string}}
+     */
+    getNormalData() {
+      return {busDesc: this.form.busDesc, list: this.fileList}
+    },
     getData () {
       return {busDesc: this.form.busDesc, list: this.fileList.concat(this.delList)}
     },

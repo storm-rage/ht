@@ -4,6 +4,7 @@
       <slot>{{title}}</slot>
       <slot v-if="$slots.tip" name="tip"></slot>
       <span v-if="tipText" class="header-left-tip"><i style="color:#F18C3C;margin-right: 5px;" class="el-icon-info"></i>{{tipText}}</span>
+      <slot name="btn"></slot>
     </h4>
     <div class="zj-header-right" v-if="$slots.right"><slot name="right"></slot></div>
   </div>
@@ -37,6 +38,8 @@ export default {
     clear: both;
   }
   .header-left-title {
+    display: flex;
+    align-items: center;
     font-size: 18px;
     height: 22px;
     line-height: 22px;

@@ -34,9 +34,11 @@ router.beforeEach((to, from, next) => {
       if (res.isSuccess) {
         next({
           path: YaMiWorkFlowRouter[to.query.type],
-          params:{
-            businessKey:to.query.businessKey
-          }
+          query:{
+            bizId:to.query.businessKey,
+            bizType:to.query.type,
+          },
+          replace: true
         })
       }else {
         next('/login')

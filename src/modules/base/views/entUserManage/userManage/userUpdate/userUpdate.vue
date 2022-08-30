@@ -129,7 +129,6 @@ export default {
         this.$nextTick(() => {
           this.attachInfo[0] = Object.assign(this.attachInfo[0], data.idCardAttach[0])
         })
-
       }
     }
   },
@@ -172,12 +171,6 @@ export default {
     this.getDictionary()
   },
   methods: {
-    //获取字典
-    getDictionary() {
-      this.zjControl.getUserDictionary().then((res) => {
-        this.dictionary = res.data;
-      });
-    },
     handleForm() {
       this.$refs.userForm.validate(boo => {
         if (!this.isEdit) { //详情状态不校验表单

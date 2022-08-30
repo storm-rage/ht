@@ -15,7 +15,7 @@
             <el-input v-model="searchForm.buyerNameLike" @keyup.enter.native="enterSearch" />
           </el-form-item>
           <el-form-item label="登记状态：">
-            <el-select v-model="searchForm.productState">
+            <el-select v-model="searchForm.registStatus">
               <el-option label="全部" value="" />
               <el-option v-for="item in dictionary.registStatus" :key="item.code" :label="item.desc"
                 :value="item.code" />

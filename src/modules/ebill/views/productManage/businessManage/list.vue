@@ -174,6 +174,7 @@ export default {
       this.dictionary = res.data
       this.$nextTick(() => {
         if (this.$refs.searchContractTable) {
+          console.log('hhhh')
           this.$refs.searchContractTable.refreshColumn();
         }
       })

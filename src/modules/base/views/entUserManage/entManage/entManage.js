@@ -22,6 +22,11 @@ export default {
       }
     },
   },
+  watch: {
+    form(data) {
+      this.queryEntDictionary()
+    }
+  },
   data() {
     return {
       zjControl: this.$api.entInfoManage,
@@ -192,24 +197,10 @@ export default {
     this.isAdd = this.$route.meta.pageType === 'add'
     //修改页判断
     this.isEdit = this.$route.meta.pageType === 'edit'
-    this.queryEntDictionary()
     // 查询操作记录
     if (!this.isAdd) {
+      this.queryEntDictionary()
       this.getEbBusinessParamLog()
-    }
-    //   // 新增时
-    if (this.isAdd) {  //设置企业附件
-      this.dictionary.sysAttachTypeList.map(item => {
-        this.form.pubAttachList.push({
-          busType: item.code,
-          fileId: '',
-          fileName: ''
-        })
-      })
-    }
-    //修改时
-    else {
-      this.detailsHandle()
     }
   },
   methods: {
@@ -230,12 +221,23 @@ export default {
         this.dictionary = Object.assign(tableDic, res.data)
         this.projectInfoList = this.dictionary.projectInfoList
         this.$emit('getDictionary', this.dictionary)
+        //   // 新增时
+        if (this.isAdd) {  //设置企业附件
+          this.dictionary.sysAttachTypeList.map(item => {
+            this.form.pubAttachList.push({
+              busType: item.code,
+              fileId: '',
+              fileName: ''
+            })
+          })
+        } else {
+          this.detailsHandle()
+        }
       })
     },
 
     //获取详情处理
     detailsHandle() {
-      this.form.pubAttachList = this.form.pubAttachList || []
       // this.dictionary.sysAttachTypeList.forEach(item => {
       //   // this.form.pubAttachList.map(j => {
       //   //   if (item.code === j.code) {
@@ -248,6 +250,15 @@ export default {
       //     fileName: ''
       //   })
       // })
+      if (!!!this.form.pubAttachList) {
+        this.dictionary.sysAttachTypeList.map(item => {
+          this.form.pubAttachList.push({
+            busType: item.code,
+            fileId: '',
+            fileName: ''
+          })
+        })
+      }
       this.$nextTick(() => {
         this.$refs.form.clearValidate()
       })
@@ -362,7 +373,6 @@ export default {
       let item = {
         userName: '',//用户名
         roleId: '',//操作员角色
-        userName: '',//姓名
         certNo: '',//证件号码
         mobileNo: '',//手机号码
         email: '',//电子邮箱
@@ -455,7 +465,7 @@ export default {
     },
 
     //保存
-    async save() {
+    async handleForm() {
       let params = JSON.parse(JSON.stringify(this.form))
       //1.校验表单
       this.$refs.form.validate(boo => {
