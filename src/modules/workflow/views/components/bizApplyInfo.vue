@@ -11,12 +11,12 @@
           </el-col>
           <el-col :span="8" v-if="bizInfo.applyType||bizInfo.applyTypeDesc">
             <el-form-item label="申请类型：" prop="applyType">
-              {{bizInfo.applyType || bizInfo.applyTypeDesc}}
+              {{bizInfo.applyTypeDesc || bizInfo.applyType}}
             </el-form-item>
           </el-col>
           <el-col :span="8">
             <el-form-item label="申请状态：" prop="applyStatus">
-              {{bizInfo.applyStatus || bizInfo.applyStatusDesc}}
+              {{bizInfo.applyStatusDesc || bizInfo.applyStatus}}
             </el-form-item>
           </el-col>
           <el-col :span="8" v-if="bizInfo.startTime||bizInfo.modifyDatetime||bizInfo.applyDatetime">

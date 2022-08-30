@@ -139,10 +139,10 @@ export default {
     cactoringLogoList () {
       if (this.dictionary.cactoringLogo) {
         return this.dictionary.cactoringLogo.filter((item) => {
-          if (this.productType.indexOf(ProductType.DDBL)>=0) {
+          if (this.businessParamModel.productType&&this.businessParamModel.productType.indexOf(ProductType.DDBL)>=0) {
             //若开通订单保理产品，则只能维护为“订单保理”
             return item.code!==CactoringLogo.BILLBL
-          }else if(this.productType.indexOf(ProductType.RD)>=0){
+          }else if(this.businessParamModel.productType&&this.businessParamModel.productType.indexOf(ProductType.RD)>=0){
             //若开通凭证保理产品，则只能维护为“凭证保理”
             return item.code!==CactoringLogo.ORDERBL
           }
