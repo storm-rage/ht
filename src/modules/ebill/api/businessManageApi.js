@@ -65,7 +65,7 @@ const businessManage = {
    * @returns {Promise<AxiosResponse<any>>}
    */
   applyLimit (params) {
-    return request.post('/business-manage/apply-contract-renewal',params);
+    return request.post('/business-manage/apply-limit',params);
   },
   /**
    * 业务管理-检验在途数据
