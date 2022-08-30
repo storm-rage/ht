@@ -52,6 +52,9 @@
                   <span>{{ detailData.htSysCode | value }}</span>
                 </el-form-item>
               </el-col>
+              <el-col :span="8">
+                <zj-button type="text" @click="downloadFile(row)">身份证影像件</zj-button>
+              </el-col>
             </el-row>
           </div>
         </zj-content>
@@ -98,7 +101,10 @@ export default {
   components: {},
   data() {
     return {
-      zjControl: this.$api.userInfoManage,
+      zjControl: {
+        downloadFile: this.$api.baseCommon.downloadFile,//文件下载
+        ...this.$api.userInfoManage,
+      },
       pageType: this.$route.meta.pageType,
       detailData: {},
       dictionary: {},
@@ -212,6 +218,9 @@ export default {
           return arr.join(',')
         }
       }
+    },
+    downloadFile(fileId, fileName) {
+      this.zjControl.downloadFile({ fileId, fileName })
     },
     toDetail(row) {
       if (this.detailData.userAndEntInfoList.length) {

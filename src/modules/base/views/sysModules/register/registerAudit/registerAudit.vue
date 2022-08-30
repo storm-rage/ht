@@ -102,9 +102,21 @@
       <!-- 审批信息 -->
       <zj-content-block v-show="workflow === 'spxx'">
         <!--操作记录 -->
-        <operate-log :logList="detailData.entRegLogList || []"></operate-log>
+        <zj-content-block>
+          <zj-header title="操作记录"></zj-header>
+          <zj-content>
+            <zj-table ref="logTable" :dataList="detailData.entRegLogList || []" :pager="false">
+              <zj-table-column type="seq" width="60" title="序号" />
+              <zj-table-column field="operType" title="业务节点" />
+              <zj-table-column field="creator" title="处理人" />
+              <zj-table-column field="createDatetime" title="处理时间" formatter="formatDateTime" />
+              <zj-table-column field="operFlag" title="审核结果" />
+              <zj-table-column field="notes" title="审核意见" />
+            </zj-table>
+          </zj-content>
+        </zj-content-block>
         <!--审核信息 -->
-        <el-form label-width="170px" :model="form" :rules="rules" ref="auditForm" :disabled="detailData.applyStatus === 'E002'">
+        <el-form label-width="170px" :model="form" :rules="rules" ref="auditForm" :disabled="detailData.applyStatus === 'E002' || pageType === 'detail'">
           <zj-content>
             <zj-collapse title="审核信息">
               <el-form-item label="平台客户类型：" prop="entType">
@@ -147,15 +159,15 @@
           </zj-content>
         </el-form>
         <!--  审核意见  -->
-        <audit-remark ref="auditRemark"></audit-remark>
+        <audit-remark ref="auditRemark" v-if="pageType !== 'detail'"></audit-remark>
       </zj-content-block>
     </el-form>
 
     <!-- 底部工作流状态 -->
     <zj-workflow v-model="workflow" :list="workflowList">
       <!-- 审核时 -->
-      <el-row slot="right" v-if="$route.name === 'registerAuditApplyAudit'">
-        <span v-show="workflow === 'spxx'">
+      <el-row slot="right">
+        <span v-show="workflow === 'spxx'" v-if="pageType !== 'detail'">
           <zj-button type="primary" @click="submitAudit('1')" v-if="detailData.applyStatus === 'E001'">暂存</zj-button>
           <zj-button type="primary" @click="submitAudit('2')">审核通过</zj-button>
           <zj-button @click="submitAudit('3')" v-if="detailData.applyStatus === 'E002'">审核驳回</zj-button>
@@ -173,13 +185,11 @@
 <script>
 import protocolAudit from "./commom/protocolAudit.js";
 import view from "@pubComponent/preview/view.js";
-import OperateLog from "@modules/workflow/views/components/operateLog";
 import AuditRemark from "@modules/workflow/views/components/auditRemark";
 import entInfo from "@modules/base/views/entUserManage/entManage/detail/entInfo.vue";
 import { windowSSStorage } from "@utils/storageUtils";
 export default {
   components: {
-    OperateLog,
     AuditRemark,
     entInfo,
   },
@@ -192,6 +202,7 @@ export default {
   ],
   data() {
     return {
+      pageType: this.$route.meta.pageType,
       detailData: {}, //详情数据
       dictionary: {}, //字典
       zjControl: {

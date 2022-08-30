@@ -198,7 +198,7 @@
         <zj-header title="企业操作员" />
         <zj-content>
           <zj-button class="append zj-m-b-10" type="primary" @click="sysUserAdd">新增</zj-button>
-          <zj-table ref="sysUser" :dataList="form.sysUserList" :pager="false" keep-source auto-resize :edit-config="{
+          <zj-table ref="sysUser" :dataList="sysUserList" :pager="false" keep-source auto-resize :edit-config="{
               trigger: 'manual',
               mode: 'row',
               icon: '-',
@@ -238,7 +238,7 @@
       <zj-content-block>
         <zj-header title="企业附件" />
         <el-row class="zj-p-x-20">
-          <zj-table ref="pubAttach" :dataList="form.pubAttachList" :pager="false" keep-soursce auto-resize>
+          <zj-table ref="pubAttach" :dataList="pubAttachList" :pager="false" keep-soursce auto-resize>
             <zj-table-column title="附件类型">
               <template v-slot="{ row }">
                 {{ typeMap(dictionary.sysAttachTypeList, row.busType) }}
@@ -247,16 +247,10 @@
             <zj-table-column field="fileName" title="附件名称" />
             <zj-table-column title="操作">
               <template v-slot="{ row }">
-                <!-- <zj-button
-                  type="text"
-                  class="zj-m-r-10"
-                  @click="pubAttachDownload(row)"
-                  v-if="row.fileId"
-                  >下载</zj-button
-                > -->
                 <zj-upload :httpRequest="pubAttachUpload" :data="{ row }" class="zj-inline" v-if="!isDetail">
                   <zj-button type="text">上传</zj-button>
                 </zj-upload>
+                <zj-button type="text" class="zj-m-r-10" @click="pubAttachDownload(row)" v-if="row.fileId">下载</zj-button>
               </template>
             </zj-table-column>
           </zj-table>

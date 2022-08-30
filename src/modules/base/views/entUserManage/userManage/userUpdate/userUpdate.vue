@@ -88,7 +88,7 @@
               {{handleStatementAccountType(row.statementAccountType)}}
             </template>
           </zj-table-column>
-          <zj-table-column title="操作" fixed="right" width="200px">
+          <zj-table-column title="操作" fixed="right" width="200px" v-if="isEdit">
             <template v-slot="{ row,rowIndex }">
               <zj-button type="text" @click="updateTypeDialog(row,rowIndex)">维护对账单类型</zj-button>
             </template>

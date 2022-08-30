@@ -24,7 +24,7 @@ const myOpenBill = {
     return request.post('/my-open-bill/get-my-open-bill-detail-trade', params)
   },
   //我签发的凭证-凭证轨迹
-  getOpenBillTrade: (params) => {
+  getOpenBillTtrace: (params) => {
     return request.post('/my-open-bill/get-my-open-bill-detail-trace', params)
   },
   //我签发的凭证-撤销

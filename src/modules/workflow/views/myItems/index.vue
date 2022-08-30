@@ -51,7 +51,7 @@
         <zj-table-column title="操作" fixed="right" v-if="tabAtive === 'agenda'">
           <template v-slot="{ row }">
             <zj-button type="text" @click="toHandle(row)">处理</zj-button>
-            <zj-button type="text" @click="toCancellation(row)" v-if="row.workflowState === 'S004'">作废</zj-button>
+            <zj-button type="text" @click="toCancellation(row)" v-if="['E005','U006','S004'].includes(row.workflowState)">作废</zj-button>
           </template>
         </zj-table-column>
       </zj-table>
