@@ -13,7 +13,7 @@
           </el-form-item>
           <el-form-item label="业务类型：" class="col-center">
             <el-select v-model="searchForm.busType">
-              <el-option label="全部" value=""/>
+              <el-option label="全部" value="" />
               <el-option v-for="item in dictionary.busTypeList" :label="item.desc" :value="item.code" :key="item.code" />
             </el-select>
           </el-form-item>
@@ -22,7 +22,7 @@
           </el-form-item>
           <el-form-item label="发起方：">
             <el-select v-model="searchForm.startObject">
-              <el-option label="全部" value=""/>
+              <el-option label="全部" value="" />
               <el-option v-for="item in dictionary.startObjectList" :label="item.desc" :value="item.code" :key="item.code" />
             </el-select>
           </el-form-item>
@@ -51,7 +51,7 @@
         <zj-table-column title="操作" fixed="right" v-if="tabAtive === 'agenda'">
           <template v-slot="{ row }">
             <zj-button type="text" @click="toHandle(row)">处理</zj-button>
-            <zj-button type="text" @click="toCancellation(row)" v-if="['E005','U006','S004'].includes(row.workflowState)">作废</zj-button>
+            <zj-button type="text" @click="toCancellation(row)" v-if="['E005','U006','S004'].includes(row.workflowState) && row.startObject === 'PT'">作废</zj-button>
           </template>
         </zj-table-column>
       </zj-table>
@@ -68,12 +68,12 @@ export default {
     return {
       tabAtive: "agenda",
       searchForm: {
-        serialNo:"",
-        busType:"",
-        startTimeStart:"",
-        startTimeEnd:"",
-        startObject:"",
-        sellerEntName:"",
+        serialNo: "",
+        busType: "",
+        startTimeStart: "",
+        startTimeEnd: "",
+        startObject: "",
+        sellerEntName: "",
       },
       zjControl: this.$api.myItems,
       fileList: [],

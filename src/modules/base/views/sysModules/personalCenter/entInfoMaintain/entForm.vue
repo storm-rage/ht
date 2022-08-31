@@ -100,12 +100,12 @@
             </el-form-item>
           </el-col>
           <el-col :span="8">
-            <el-form-item label="法定代表人手机号码：" prop="legalPersonName">
+            <el-form-item label="法定代表人手机号码：" prop="registerPhone">
               <el-input v-model.trim="form.registerPhone" :disabled="!isEdit" />
             </el-form-item>
           </el-col>
           <el-col :span="8">
-            <el-form-item label="法定代表人证件类型：" prop="legalPersonName">
+            <el-form-item label="法定代表人证件类型：" prop="legalCertType">
               {{ typeMap(dictionary.legalCertType, this.form.legalCertType) }}
             </el-form-item>
           </el-col>
@@ -163,7 +163,7 @@
             <zj-table-column field="fileName" title="附件名称" />
             <zj-table-column title="操作">
               <template v-slot="{ row }">
-                <zj-upload :httpRequest="handleFileUpload" :data="{ row }" class="zj-inline" v-if="!!isEdit">
+                <zj-upload :httpRequest="handleFileUpload" :data="{ row }" accept=".pdf" class="zj-inline" v-if="!!isEdit">
                   <zj-button type="text" v-if="isEdit">上传</zj-button>
                 </zj-upload>
                 <zj-button v-if="row.fileId" type="text" @click="toDownload(row)">下载</zj-button>
@@ -188,7 +188,7 @@
 
 <script>
 import bankAccount from "./dialog/bankAccount";
-import { newValidateFixedPhone } from "@utils/rules";
+import { newValidateFixedPhone, validateIdCard } from "@utils/rules";
 
 export default {
   components: {
@@ -284,6 +284,12 @@ export default {
           },
           { validator: newValidateFixedPhone, trigger: ["blur"] },
         ],
+        legalCertNo: [
+          { validator: validateIdCard, trigger: ["blur"] },
+        ],
+        registerPhone: [
+          { validator: newValidateFixedPhone, trigger: ["blur"] },
+        ],
         fastMailAddress: [
           {
             required: true,
@@ -351,7 +357,9 @@ export default {
     },
     // 获取更换后的银行账户
     getEntBankInfo(data) {
-      this.$parent.$parent.$data.isAgreeCheck = true; // 更换银行账号需要勾选协议
+      if (this.detailData.signContract === true) {
+        this.$parent.$parent.$data.isAgreeCheck = true; // 更换银行账号需要勾选协议
+      }
       this.form = { ...this.form, ...data };
       this.form.entBankInfo = [data];
     },

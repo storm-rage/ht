@@ -30,9 +30,7 @@ export default {
     this.getRow()
     if (this.pageType !== 'add') {
       this.getEnterprise()
-    }
     // 查询操作记录
-    if (!this.isAdd) {
       this.getEbBusinessParamLog()
     }
   },
@@ -53,8 +51,8 @@ export default {
           type: 'confirm',
           content: '确认后将新增企业！',
           messageResolve: () => {
-            this.zjControl.addEnterprise(params).then(() => {
-              this.$message.success('企业新增成功！')
+            this.zjControl.addEnterprise(params).then((res) => {
+              this.$message.success(res.msg)
               this.goParent()
             })
           }
@@ -66,8 +64,8 @@ export default {
           type: 'confirm',
           content: '确认后将更新企业信息！',
           messageResolve: () => {
-            this.zjControl.updateEnterprise(params).then(() => {
-              this.$message.success('企业信息修改成功！')
+            this.zjControl.updateEnterprise(params).then((res) => {
+              this.$message.success(res.msg)
               this.goParent()
             })
           }

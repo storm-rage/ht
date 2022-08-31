@@ -80,7 +80,7 @@
           <zj-table-column field="fileName" title="附件" />
           <zj-table-column title="操作" fixed="right">
             <template v-slot="{ row }">
-              <zj-upload :httpRequest="handleFileUpload" :data="{ row }" class="zj-inline" v-if="pageType !== 1">
+              <zj-upload :httpRequest="handleFileUpload" :data="{ row }" accept=".pdf" class="zj-inline" v-if="pageType !== 1">
                 <zj-button type="text">上传</zj-button>
               </zj-upload>
               <zj-button v-if="row.fileId" type="text" @click="toDownload(row)">下载</zj-button>
@@ -254,13 +254,21 @@ export default {
     updatePersonalInfo() {
       this.$refs.form.validate((valid) => {
         if (valid) {
-          // 身份证附件
-          this.form.identitycardFileId = this.attachInfo[0].fileId;
-          this.form.identitycardFileName = this.attachInfo[0].fileName;
-          this.zjControl.updatePersonalInfo(this.form).then((res) => {
-            this.$message.success("修改成功!");
-            this.goParent()
-          });
+          this.$messageBox({
+            type: "confirm",
+            title: `温馨提示`,
+            content: `信息维护提交后，需等待平台方审核，审核通过后生效。是否确认提交？`,
+            showCancelButton: true,
+            messageResolve: () => {
+              // 身份证附件
+              this.form.identitycardFileId = this.attachInfo[0].fileId;
+              this.form.identitycardFileName = this.attachInfo[0].fileName;
+              this.zjControl.updatePersonalInfo(this.form).then((res) => {
+                this.$message.success(res.msg);
+                this.goParent()
+              });
+            }
+          })
         }
       });
     },
@@ -268,15 +276,23 @@ export default {
     updateOperator() {
       this.$refs.form.validate((valid) => {
         if (valid) {
-          // 身份证附件
-          this.form.identitycardFileId = this.attachInfo[0].fileId;
-          this.form.identitycardFileName = this.attachInfo[0].fileName;
-          this.form.wtsqsFileId = this.attachInfo[1].fileId;
-          this.form.wtsqsFileName = this.attachInfo[1].fileName;
-          this.zjControl.updateOperator(this.form).then((res) => {
-            this.getPersonalInfo();
-            this.$message.success("修改成功!");
-          });
+          this.$messageBox({
+            type: "confirm",
+            title: `温馨提示`,
+            content: `信息维护提交后，需等待平台方审核，审核通过后生效。是否确认提交？`,
+            showCancelButton: true,
+            messageResolve: () => {
+              // 身份证附件
+              this.form.identitycardFileId = this.attachInfo[0].fileId;
+              this.form.identitycardFileName = this.attachInfo[0].fileName;
+              this.form.wtsqsFileId = this.attachInfo[1].fileId;
+              this.form.wtsqsFileName = this.attachInfo[1].fileName;
+              this.zjControl.updateOperator(this.form).then((res) => {
+                this.getPersonalInfo();
+                this.$message.success(res.msg);
+              });
+            }
+          })
         }
       });
     },
