@@ -37,11 +37,15 @@
             </template>
           </zj-table-column>
           <zj-table-column field="fromEntName" title="融资企业" />
-          <zj-table-column field="financingProductType" title="融资产品名称" />
-          <zj-table-column field="tranAmt" title="融资申请金额" />
+          <zj-table-column field="financingProductType" title="融资产品名称" :formatter="
+            (obj) => typeMap(dictionary.financingProductType, obj.cellValue)
+          " />
+          <zj-table-column field="tranAmt" title="融资申请金额" :formatter="money" />
           <zj-table-column field="applyDatetime" title="融资开始日" :formatter="date" />
           <zj-table-column field="expireDate" title="融资到期日" :formatter="date" />
-          <zj-table-column field="registStatus" title="登记状态" />
+          <zj-table-column field="registStatus" title="登记状态" :formatter="
+            (obj) => typeMap(dictionary.registStatus, obj.cellValue)
+          " />
           <zj-table-column field="outApplyNo" title="放款单号" />
         </zj-table>
       </zj-list-layout>
@@ -52,7 +56,7 @@
       <el-row slot="right">
         <zj-button @click="zdlogin">中登登记</zj-button>
         <zj-button @click="openDialog1">手工登记</zj-button>
-        <zj-button  @click="daqian">确认放款</zj-button>
+        <zj-button @click="daqian">确认放款</zj-button>
       </el-row>
     </zj-workflow>
     <loginDialog ref="loginDialog"></loginDialog>
@@ -99,22 +103,22 @@ export default {
     this.getDetail();
   },
   methods: {
-    daqian(){
+    daqian() {
       if (this.idlist.length == 0) {
         this.$messageBox({
           type: 'warning',
           content: '请至少选择一条'
         })
       } else {
-        let params={
-          idList:this.idlist
+        let params = {
+          idList: this.idlist
         }
         this.zjControl.confirmLoan(params).then(res => {
-        this.$messageBox({
-          type: 'success',
-          content: '放款成功'
+          this.$messageBox({
+            type: 'success',
+            content: '放款成功'
+          })
         })
-      })
       }
     },
     openDialog1() {
@@ -124,7 +128,7 @@ export default {
           content: '请至少选择一条'
         })
       } else {
-        let bizType="00"
+        let bizType = "00"
         this.$refs.artRegister.open(bizType)
       }
 

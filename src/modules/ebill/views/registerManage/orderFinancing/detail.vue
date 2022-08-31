@@ -43,21 +43,27 @@
               title="核心企业名称"/>
             <zj-table-column
               field="isHtEnterprise"
-              title="核心企业是否海天集团"/>
+              title="核心企业是否海天集团" :formatter="
+            (obj) => typeMap(dictionary.isHtEnterprise, obj.cellValue)
+          "/>
             <zj-table-column
               field="bizLicence"
               title="核心企业统一社会信用代码"/>
             <zj-table-column
               field="cactoringLogo"
-              title="保理标识"/>
+              title="保理标识"  :formatter="
+            (obj) => typeMap(dictionary.cactoringLogo, obj.cellValue)
+          "/>
             <zj-table-column
               field="state"
-              title="贸易关系状态"/>
+              title="贸易关系状态"  :formatter="
+            (obj) => typeMap(dictionary.state, obj.cellValue)
+          "/>
             <zj-table-column
               field="factoringCreditEndDate"
               title="额度有效期">
               <template v-slot="{row}">
-                {{row.factoringCreditStartDate}}～{{row.factoringCreditEndDate}}
+                {{date(row.factoringCreditStartDate)}}～{{date(row.factoringCreditEndDate)}}
               </template>
             </zj-table-column>
             <zj-table-column
@@ -86,7 +92,8 @@
               title="合同/协议名称"/>
             <zj-table-column
               field="signDate"
-              title="生效日期"/>
+              title="生效日期"
+              :formatter="date"/>
             <!-- <zj-table-column
               field="status"
               title="合同/协议状态" :formatter="(obj)=>typeMap(dictionary.contractStatus, obj.cellValue)"/> -->
@@ -112,13 +119,15 @@
               title="序号"/>
             <zj-table-column
               field="busType"
-              title="附件类型"/>
+              title="附件类型" :formatter="
+            (obj) => typeMap(dictionary.busType, obj.cellValue)
+          "/>
             <zj-table-column
               field="fileName"
               title="附件名称"/>
             <zj-table-column
               field="createDatetime"
-              title="上传日期"/>
+              title="上传日期" :formatter="date"/>
             <zj-table-column title="操作" fixed="right">
               <template v-slot="{ row }">
                 <zj-button type="text" @click="toDownload(row)">下载</zj-button>
