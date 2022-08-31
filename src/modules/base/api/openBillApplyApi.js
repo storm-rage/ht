@@ -2,6 +2,7 @@
  * 凭证签发申请接口
  */
 import request from '@common/axios/request'
+import download from "@utils/download";
 
 const openBillApply = {
     //对账单-签发凭证
@@ -42,7 +43,7 @@ const openBillApply = {
     },
     //下载批量开立凭证导入模板
     openBill: (params) => {
-        return request.post('/open-bill-apply/download-batch-open-bill-template', params)
+        return download('/open-bill-apply/download-batch-open-bill-template', params, 1, 'post' )
     },
     // 线下对账单-维护附件字典
     getOpenBillDictionary: (params) => {

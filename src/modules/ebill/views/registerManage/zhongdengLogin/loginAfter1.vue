@@ -10,7 +10,7 @@
                             <el-form-item label="交易业务类型：">{{ this.pawneeInfo.pawneeType }}</el-form-item>
                             <el-form-item label="填表人归档号：">
                                 <el-input type="text" v-model="pawneeInfo.personFillArchiveNo" name="loginName" />
-                                    
+
                             </el-form-item>
                             <!-- <el-form-item label="登记期限（月）：">{{ this.pawneeInfo.regTimeLimit }}</el-form-item> -->
                             <el-form-item label="登记期限（月）：">
@@ -26,11 +26,17 @@
                         <zj-header title="出让人信息" />
                         <zj-table ref="searchTable" class="zj-search-table" :dataList="debtorInfoList" :pager="false">
                             <zj-table-column field="debtorName" title="出让人" />
-                            <zj-table-column field="debtorType" title="出让人类型" />
+                            <zj-table-column field="debtorType" title="出让人类型" :formatter="
+                                (obj) => typeMap(dictionary.debtorType, obj.cellValue)
+                            " />
                             <zj-table-column field="organizationCode" title="统一社会信用代码" />
                             <zj-table-column field="corporationName" title="法定代表人" />
-                            <zj-table-column field="industryCode" title="所属行业" />
-                            <zj-table-column field="scale" title="企业规模" />
+                            <zj-table-column field="industryCode" title="所属行业" :formatter="
+                                (obj) => typeMap(dictionary.industryCode, obj.cellValue)
+                            " />
+                            <zj-table-column field="scale" title="企业规模" :formatter="
+                                (obj) => typeMap(dictionary.entScale, obj.cellValue)
+                            " />
                             <zj-table-column field="debtorAddress" title="住所详情" />
                             <zj-table-column title="操作">
                                 <template v-slot="{ row, rowIndex }">
@@ -183,7 +189,8 @@ export default {
             })
         },
         back() {
-            this.goParent('zhongdengManage', false)
+            this.goParent('zhongdengManage')
+            // this.goParent('zhongdengManage', false)
         },
         downs(row) {
             console.log(row);

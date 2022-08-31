@@ -606,7 +606,7 @@ export default {
       this.formModel.id = this.entInfoObj.form.id
       this.formModel.userId = this.formModel.userId ? this.formModel.userId : ''
       this.formModel.isHtEnterprise  = this.entInfoObj.form.isHtEnterprise
-      this.formModel.certStartDate = this.formModel.certStartDate.replace(/-/g,'')
+      this.formModel.certStartDate = this.formModel.certStartDate?this.formModel.certStartDate.replace(/-/g,''):''
       this.formModel.certEndDate = this.formModel.certEndDate.replace(/-/g,'')
       this.zjControl.saveRegisterEntUser(this.formModel).then( res => {
         //更新列表数据

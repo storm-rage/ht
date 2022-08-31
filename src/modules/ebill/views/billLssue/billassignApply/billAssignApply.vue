@@ -50,7 +50,7 @@
               <span>{{ detailData.remark | value }}</span>
             </el-form-item>
           </el-col>
-          <el-button v-if="!detailData.htSign || true" class="zj-f-r zj-m-r-20" type="primary" @click="openDialog">贸易背景</el-button>
+          <el-button v-if="!detailData.htSign" class="zj-f-r zj-m-r-20" type="primary" :api="zjBtn.getEnterprise" @click="openDialog">贸易背景</el-button>
         </el-row>
       </el-form>
     </zj-content-block>

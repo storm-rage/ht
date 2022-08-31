@@ -42,6 +42,16 @@ export default [{
         title: '供应商业务维护审核',
         parent:'login'
       }
-    }
+    },
+    {
+      path: 'financeYamiAudit',
+      name: 'financeYamiAudit',
+      component: () => import('../views/financingReviewManage/yami/audit.vue'),
+      meta: {
+        title: '融资风控审核',
+        parent:'login'
+      }
+    },
+
   ]
 }]

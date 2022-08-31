@@ -10,7 +10,9 @@
                         <!-- <el-form-item label="出让人名称："> 
                              <el-input type="text" v-model="row.debtorName" name="loginName" size="medium" />
                         </el-form-item> -->
-                        <el-form-item label="出让人类型：">{{ row.debtorType }}</el-form-item>
+                        <el-form-item label="出让人类型：">{{
+                    typeMap(this.dictionary.debtorType, row.debtorType)
+                  }}</el-form-item>
                         <el-form-item label="统一社会信用代码：">
                             <el-input type="text" v-model="row.organizationCode" name="loginName" size="medium" />
                         </el-form-item>
@@ -106,7 +108,7 @@ export default {
             console.log(this.dictionary);
         },
         save() {
-            
+
             let params = {
                 address: this.row.address,
                 city: this.city,
@@ -129,7 +131,7 @@ export default {
             // this.$parent.getDetail();
             // this.$emit('getDetail')
             // console.log("试图调详情接口");
-            
+
         },
         close() {
             this.show = false

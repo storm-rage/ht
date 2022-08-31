@@ -61,7 +61,7 @@
         </zj-table>
       </el-row>
     </zj-content-container>
-    <el-row style="position: relative;margin-top: 20px;">
+    <el-row style="position: relative;margin-top: 40px;">
       <zj-content-footer>
         <zj-button class="submit-button" @click="goParent">返回</zj-button>
       </zj-content-footer>
