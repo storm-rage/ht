@@ -7,11 +7,7 @@
         <zj-table-column field="bankName" title="银行账户开户行" />
         <zj-table-column field="bankNo" title="银行联行号" />
         <zj-table-column field="bankType" title="银行类型" />
-        <zj-table-column
-          field="checkState"
-          title="核查方式"
-          v-if="isShowInspect"
-          :formatter="
+        <zj-table-column field="checkState" title="核查方式" v-if="isShowInspect" :formatter="
             (obj) =>
               typeMap(
                 [
@@ -20,8 +16,7 @@
                 ],
                 obj.cellValue
               )
-          "
-        />
+          " />
       </zj-table>
     </zj-collapse>
   </zj-content-block>
@@ -35,11 +30,13 @@ export default {
       type: Boolean,
       default: true,
     },
+    dataList: {
+      type: Array,
+      default: () => { }
+    }
   },
   data() {
-    return {
-      dataList: [],
-    };
+    return {};
   },
 };
 </script>

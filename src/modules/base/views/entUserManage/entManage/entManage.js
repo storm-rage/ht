@@ -253,7 +253,6 @@ export default {
         }
         // 其他附件
         this.$refs.ofileSetting.$data.fileList = this.form.pubOtherAttachList
-        console.log(this.$refs.ofileSetting.$data.fileList)
         this.$refs.form.clearValidate()
       })
     },

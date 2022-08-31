@@ -12,6 +12,8 @@
       <zj-button type="primary" @click="updateUserInfo">确认提交</zj-button>
       <zj-button class="back" @click="back">返回</zj-button>
     </zj-content-footer>
+    <!-- 云证书签章 -->
+    <zj-certuficate ref="certuficate" @confirm="confirm" />
   </zj-content-container>
 </template>
 
@@ -70,16 +72,25 @@ export default {
         ...params,
         ...params.entBankInfo[0]
       }
-      if (this.agreeCheck || !this.isAgreeCheck) {
+      if (this.agreeCheck && this.isAgreeCheck) {
+        this.$refs.certuficate.open(); //打开云证书
+      } else if (!this.agreeCheck && this.isAgreeCheck) {
+        this.$alert("请阅读并同意《银行账户变更通知》", "提示", {
+          type: "warning",
+        });
+      } else {
         this.zjControl.updateUserInfo(params).then((res) => {
           this.$message.success(res.msg);
           this.goParent()
         });
-      } else {
-        this.$alert("请阅读并同意《银行账户变更通知》", "提示", {
-          type: "warning",
-        });
       }
+    },
+    //云证书确认事件
+    confirm() {
+      this.zjControl.updateUserInfo(params).then((res) => {
+        this.$message.success(res.msg);
+        this.goParent()
+      });
     },
     downloadTemplate() {
       let params = {

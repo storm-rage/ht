@@ -1,7 +1,7 @@
 <template>
   <zj-content-container>
     <zj-top-header>企业详情</zj-top-header>
-    <ent-info ref="entInfo">
+    <ent-info ref="entInfo" :detailData="detailData" :dictionary="dictionary">
       <template slot="entInfo">
         <zj-collapse title="企业信息">
           <el-form ref="form" label-width="160px">
@@ -88,7 +88,7 @@
 </template>
 
 <script>
-import entInfo from "./entInfo.vue";
+import entInfo from "../components/entInfo.vue";
 export default {
   components: {
     entInfo,
@@ -108,7 +108,6 @@ export default {
     this.getRow();
     this.queryEntDictionary();
     this.getEnterprise();
-    this.getEbBusinessParamLog();
   },
   methods: {
     // 获取字典
@@ -120,31 +119,19 @@ export default {
     // 获取详情
     getEnterprise() {
       this.zjControl.getEnterprise({ id: this.row.id }).then((res) => {
+        // 银行账户
+        if (!res.data.entBanksList) {
+          res.data.entBanksList = [{
+            entBanksList: res.data.entBanksList,
+            bankAccno: res.data.bankAccno,
+            bankName: res.data.bankName,
+            bankNo: res.data.bankNo,
+            bankType: res.data.bankType,
+          }]
+        }
         this.detailData = res.data;
-        this.handleProps(res.data);
+        console.log(this.detailData)
       });
-    },
-    //获取操作记录
-    getEbBusinessParamLog() {
-      this.zjControl.getEbBusinessParamLog({ id: this.row.id }).then((res) => {
-        this.$refs.entInfo.sysEntRegLogList = res.data.sysEntRegLogList;
-      });
-    },
-    // 传递值给子组件
-    handleProps(data) {
-      let entInfoDom = this.$refs.entInfo;
-      entInfoDom.detailData = data;
-      // 银行账户
-      if (!data.entBanksList) {
-        data.entBanksList = [{
-          entBanksList: data.entBanksList,
-          bankAccno: data.bankAccno,
-          bankName: data.bankName,
-          bankNo: data.bankNo,
-          bankType: data.bankType,
-        }]
-      }
-      entInfoDom.$refs.bankAccount.dataList = data.entBanksList;
     },
   },
 };

@@ -10,21 +10,12 @@
           <zj-table-column title="操作" fixed="right">
             <template v-slot="{ row }">
               <template v-if="isEdit">
-                <zj-upload
-                  class="zj-inline"
-                  :httpRequest="handleFileUpload"
-                  :data="{ row }"
-                >
+                <zj-upload class="zj-inline" :httpRequest="handleFileUpload" :data="{ row }">
                   <zj-button slot="trigger" type="text">上传</zj-button>
                 </zj-upload>
               </template>
               <template>
-                <zj-button
-                  v-show="row.fileId"
-                  type="text"
-                  @click="toDownload(row)"
-                  >下载</zj-button
-                >
+                <zj-button v-show="row.fileId" type="text" @click="toDownload(row)">下载</zj-button>
               </template>
             </template>
           </zj-table-column>
@@ -68,7 +59,9 @@ export default {
       return { form: this.form, list: this.fileList };
     },
     // 下载
-    toDownload(row) {},
+    toDownload(row) {
+      this.$api.baseCommon.downloadFile.downloadFile(row)
+    },
     handleFileUpload({ file, data }) {
       let formData = new FormData();
       formData.append("file", file);

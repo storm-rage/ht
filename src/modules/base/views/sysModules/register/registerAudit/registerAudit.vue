@@ -41,7 +41,7 @@
           </zj-content>
         </zj-content-block>
         <!-- 企业基础信息 -->
-        <ent-info ref="entInfo">
+        <ent-info ref="entInfo" :detailData="detailData" :dictionary="dictionary">
           <template slot="entInfo">
             <zj-collapse title="企业信息">
               <el-form label-width="160px">
@@ -186,7 +186,7 @@
 import protocolAudit from "./commom/protocolAudit.js";
 import view from "@pubComponent/preview/view.js";
 import AuditRemark from "@modules/workflow/views/components/auditRemark";
-import entInfo from "@modules/base/views/entUserManage/entManage/detail/entInfo.vue";
+import entInfo from "@modules/base/views/entUserManage/entManage/components/entInfo.vue";
 import { windowSSStorage } from "@utils/storageUtils";
 export default {
   components: {
@@ -217,17 +217,17 @@ export default {
       form: {},
       rules: {
         shortName: [
-          { required: true, message: "请填写企业简称", trigger: "change" },
-          { max: 100, message: "企业简称不可超过100字符", trigger: "change" },
+          { required: true, message: "请填写企业简称", trigger: "blur" },
+          { max: 100, message: "企业简称不可超过100字符", trigger: "blur" },
         ],
         entType: [
-          { required: true, message: "请选择平台客户类型", trigger: "change" },
+          { required: true, message: "请选择平台客户类型", trigger: "blur" },
         ],
         supplierType: [
           {
             required: true,
             message: "请选择供应商类型",
-            trigger: "change",
+            trigger: "blur",
           },
         ],
       },
@@ -259,12 +259,6 @@ export default {
     getAuditDetail() {
       this.zjControl.getAuditDetail({ id: this.row.id }).then((res) => {
         this.detailData = res.data;
-        //企业基础信息
-        let entInfoDom = this.$refs.entInfo;
-        entInfoDom.detailData = res.data;
-        // 银行账户
-        entInfoDom.$refs.bankAccount.dataList = res.data.entBanksList;
-
         //审核信息
         this.form = this.detailData;
         this.form.id = this.row.id;

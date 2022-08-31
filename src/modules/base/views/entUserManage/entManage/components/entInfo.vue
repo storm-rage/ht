@@ -14,10 +14,10 @@
           <ent-linkman ref="entLinkman" :detailData="detailData" />
 
           <!-- 银行账户 -->
-          <bank-account ref="bankAccount" />
+          <bank-account ref="bankAccount" :dataList="detailData.entBanksList" />
 
           <!-- 控制人信息 -->
-          <controller ref="controller" :detailData="detailData" v-if="$route.name !== 'registerAuditApplyAudit'" />
+          <controller ref="controller" :detailData="detailData" v-if="$route.name === 'entDetail'" />
           <!-- 天眼查信息 -->
           <zj-collapse title="天眼查信息" v-if="$route.name === 'registerAuditApplyAudit'">
             <zj-button type="text" @click="activeEyeSky = !activeEyeSky" ref="EyeSkyBtn">{{ activeEyeSky ? "收起" : "展开" }}</zj-button>
@@ -32,7 +32,7 @@
         <zj-header title="操作用户信息" />
         <zj-content>
           <zj-table :pager="false" :dataList="detailData.entUserList">
-            <zj-table-column field="roleId" title="操作员类型" :formatter="(obj)=>typeMap(dictionary.sysRoleList, obj.cellValue)" />
+            <zj-table-column field="roleName" title="操作员类型" />
             <zj-table-column field="userName" title="姓名" />
             <zj-table-column field="certNo" title="身份证号" />
             <zj-table-column title="证件有效期">
@@ -63,29 +63,9 @@
             <el-row class="attach-box-bar">
               <table>
                 <tr>
-                  <td>
-                    <label>{{ infoItem.oneLabel }}</label>
-                    <span>{{ infoItem.oneValue }}</span>
-                  </td>
-                  <td>
-                    <label>{{ infoItem.twoLabel }}</label>
-                    <span v-if="infoBarActive !== 0">{{
-                      typeMap(
-                        this.dictionary.legalCertTypeList,
-                        infoItem.twoValue
-                      )
-                    }}</span>
-                    <span v-else>{{ infoItem.twoValue }}</span>
-                  </td>
-                  <td>
-                    <label>{{ infoItem.threeLabel }}</label>
-                    <span>{{ infoItem.threeValue }}</span>
-                  </td>
-                  <td v-if="infoBarActive !== 0">
-                    <label>{{ infoItem.fourLabel }}</label>
-                    <span>{{ date(infoItem.fourValue) }}至{{
-                        date(infoItem.fiveValue)
-                      }}</span>
+                  <td v-for="item in infoItem" :key="item.value">
+                    <label>{{ item.label }}</label>
+                    <span>{{ item.value }}</span>
                   </td>
                 </tr>
               </table>
@@ -213,18 +193,31 @@ export default {
     bankAccount,
     controller,
   },
+  props: {
+    dictionary: {
+      type: Object,
+      default: () => { }
+    },
+    detailData: {
+      type: Object,
+      default: () => {
+        return {
+          entUserList: []
+        }
+      }
+    },
+  },
   data() {
     return {
       zjControl: {
         downloadFile: this.$api.registerAudit.downloadFile,
         downloadFlow: this.$api.registerAudit.downloadFlow
       },
-      detailData: {},
-      dictionary: {},
+      // detailData: {},
+      // dictionary: {},
       dataList: [],
-      sysEntRegLogList: [],
       //相关附件资料
-      infoBar: [], //导航栏
+      infoBar: ['营业执照', '法定代表人身份证', '操作用户经办员', '操作用户复核员', '风险信息接收人', '委托授权书'], //导航栏
       infoList: [], //集合
       infoItem: {},//显示内容
       infoBarActive: 0, //导航栏选中
@@ -288,38 +281,37 @@ export default {
     //相关附件资料初始化
     initAttchInfo() {
       console.log(this.detailData)
-      this.infoBar = ['营业执照', '法定代表人身份证', '操作用户经办员', '操作用户复核员', '风险信息接收人', '委托授权书']
+      // this.infoBar = ['营业执照', '法定代表人身份证', '操作用户经办员', '操作用户复核员', '风险信息接收人', '委托授权书']
       let jb = this.detailData.entUserList.find(item => item.roleId == '5') || {}
       let fh = this.detailData.entUserList.find(item => item.roleId == '6') || {}
       let fx = this.detailData.entUserList.find(item => item.roleId == '7') || {}
       this.infoList = [
-        {
-          oneLabel: '统一社会信用代码：', oneValue: this.detailData.bizLicence,
-          twoLabel: '工商有效期：', twoValue: this.date(this.detailData.registerEndDate),
-          threeLabel: '注册资本：', threeValue: this.detailData.registerCapital,
-        },
-        {
-          oneLabel: '法定代表人姓名：', oneValue: this.detailData.legalPersonName,
-          twoLabel: '证件类型：', twoValue: this.detailData.legalCertType,
-          threeLabel: '证件号码：', threeValue: this.detailData.legalCertNo,
-          fourLabel: '证件有效期：', fourValue: this.date(this.detailData.legalCertRegDate),
-          fiveValue: this.date(this.detailData.legalCertExpireDate)
-        },
-        {
-          oneLabel: '经办员姓名:', oneValue: jb.userName,
-          twoLabel: '经办员身份证号码：', twoValue: jb.certNo,
-          threeLabel: '证件有效期：', threeValue: this.date(jb.certStartDate), fiveValue: this.date(jb.certEndDate)
-        },
-        {
-          oneLabel: '操作用户复核员：', oneValue: fh.userName,
-          twoLabel: '证件号码：', twoValue: fh.certNo,
-          threeLabel: '证件有效期：', threeValue: this.date(fh.certStartDate), fiveValue: this.date(fh.certEndDate)
-        },
-        {
-          oneLabel: '风险信息接收人：', oneValue: fx.userName,
-          twoLabel: '证件号码：', twoLabel: fx.certNo,
-          threeLabel: '证件有效期：', threeValue: this.date(fx.certStartDate), fiveValue: this.date(fx.certEndDate)
-        },
+        [
+          { label: '统一社会信用代码：', value: this.detailData.bizLicence },
+          { label: '工商有效期：', value: this.date(this.detailData.registerStartDate) + ' 至 ' + this.date(this.detailData.registerEndDate) },
+          { label: '注册资本：', value: this.detailData.registerCapital }
+        ],
+        [
+          { label: '法定代表人姓名：', value: this.detailData.legalPersonName },
+          { label: '证件号码：', value: this.detailData.legalCertNo },
+          { label: '证件有效期：', value: this.date(this.detailData.legalCertRegDate) + ' 至 ' + this.date(this.detailData.legalCertExpireDate) }
+        ],
+        [
+          { label: '经办员姓名:', value: jb.userName },
+          { label: '经办员身份证号码：', value: jb.certNo },
+          { label: '证件有效期：', value: this.date(jb.certStartDate) + ' 至 ' + this.date(jb.certEndDate) }
+        ],
+        [
+          { label: '操作用户复核员：', value: fh.userName },
+          { label: '证件号码：', value: fh.certNo },
+          { label: '证件有效期：', value: this.date(fh.certStartDate) + ' 至 ' + this.date(fh.certEndDate) }
+        ],
+        [
+          { label: '风险信息接收人：', value: fx.userName },
+          { label: '证件号码：', value: fx.certNo },
+          { label: '证件有效期：', value: this.date(fx.certStartDate) + ' 至 ' + this.date(fx.certEndDate) }
+        ],
+        [{}]
       ]
       //是否开通天眼查
       // if (this.detailData.isOpenTyc === '1') {
@@ -338,6 +330,7 @@ export default {
         { fileId: jb.fileId, fileName: jb.attachName },
         { fileId: fh.fileId, fileName: fh.attachName },
         { fileId: fx.fileId, fileName: fx.attachName },
+        { fileId: this.detailData.qywtsqsFileId, fileName: this.detailData.qywtsqsAttachName },
       ]
       this.infoBarChange(0)
     },
@@ -347,7 +340,9 @@ export default {
       this.infoBarActive = index
       //查看
       this.infoViewitem = this.infoViewList[index]
+      console.log(this.infoViewitem)
       if (!this.infoViewitem.fileId) {
+        this.infoViewitem = { fileId: null, fileName: null }
         return
       }
       //判断类型
@@ -425,7 +420,6 @@ export default {
     // 渲染pdf
     renderPdfs(id, scaleView) {
       this.getPdfs(pdf => {
-        console.error('12353')
         let pdfDoc = pdf
         // 因为不想要分页所以循环生成canvas   ---pdfDoc.numPages
         for (let i = 1; i <= 1; i++) {
@@ -466,7 +460,7 @@ export default {
           this.viewItemType = ''
         })
       }
-    },
+    }
   }
 };
 </script>
