@@ -29,21 +29,21 @@
     <el-row>
       <zj-header title="电子债权凭证信息" />
       <zj-table ref="searchTable" class="zj-search-table" :api="zjControl.queryBillRecordPage">
-        <zj-table-column field="rootCode" title="原始凭证编号" />
-        <zj-table-column field="ebillCode" title="凭证编号" />
+        <zj-table-column field="rootCode" title="原始海e单编号" />
+        <zj-table-column field="ebillCode" title="海e单编号" />
         <zj-table-column field="payEntName" title="签发人" />
         <zj-table-column field="receiptEntName" title="原始持有人" />
-        <zj-table-column field="payableIssuanceDate" title="凭证签发日" :formatter="date" />
-        <zj-table-column field="payableExpireDate" title="凭证到期日" :formatter="date" />
+        <zj-table-column field="payableIssuanceDate" title="海e单签发日" :formatter="date" />
+        <zj-table-column field="payableExpireDate" title="海e单到期日" :formatter="date" />
         <zj-table-column field="transferName" title="转让企业" />
-        <zj-table-column field="ebillAmt" title="凭证金额" :formatter="money" />
+        <zj-table-column field="ebillAmt" title="海e单金额" :formatter="money" />
         <zj-table-column field="holderDate" title="凭证签收日" :formatter="date" />
       </zj-table>
     </el-row>
     <el-row>
       <zj-header title="转让信息" />
       <zj-table ref="searchTable" class="zj-search-table" :dataList="detail.transferInfos" :pager="false">
-        <zj-table-column field="ebillCode" title="凭证编号" />
+        <zj-table-column field="ebillCode" title="海e单编号" />
         <zj-table-column field="receiptEntName" title="被转让人名称" />
         <zj-table-column field="tranAmt" title="转让金额" />
         <zj-table-column field="receiptAcctNo" title="收款账号" />
