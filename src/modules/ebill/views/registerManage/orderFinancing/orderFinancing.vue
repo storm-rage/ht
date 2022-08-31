@@ -35,20 +35,34 @@
         <zj-table-column type="checkbox" width="60" />
         <zj-table-column field="sellerName" title="供应商名称" />
         <zj-table-column field="buyerName" title="核心企业" />
-        <zj-table-column field="cactoringLogo" title="保理标识" />
-        <zj-table-column field="state" title="贸易关系状态" />
+        <zj-table-column field="cactoringLogo" title="保理标识" 
+        :formatter="
+            (obj) => typeMap(dictionary.cactoringLogo, obj.cellValue)
+          "
+        />
+        
+        <zj-table-column field="state" title="贸易关系状态"
+        :formatter="
+            (obj) => typeMap(dictionary.state, obj.cellValue)
+          "
+        />
+       
         <zj-table-column field="accountTransfer" title="应收账款转让期限" :formatter="date">
           <template v-slot="{ row }">
-            {{ row.accountTransferStartDate }}~{{ row.accountTransferEndDate }}
+            {{ date(row.accountTransferStartDate) }}~{{ date(row.accountTransferEndDate) }}
           </template>
         </zj-table-column>
-        <zj-table-column field="factoringCreditAmount" title="授信额度" />
+        <zj-table-column field="factoringCreditAmount" title="授信额度" :formatter="money"/>
         <zj-table-column field="factoringCredit" title="额度期限（月）">
           <template v-slot="{ row }">
-            {{ row.factoringCreditStartDate }}~{{ row.factoringCreditEndDate }}
+            {{ date(row.factoringCreditStartDate) }}~{{ date(row.factoringCreditEndDate) }}
           </template>
         </zj-table-column>
-        <zj-table-column field="registStatus" title="登记状态" />
+        <zj-table-column field="registStatus" title="登记状态"
+        :formatter="
+            (obj) => typeMap(dictionary.registStatus, obj.cellValue)
+          "
+        />
         <zj-table-column title="操作" fixed="right" width="160">
           <template v-slot="{ row }">
             <zj-button type="text" @click="toEdit(row)">详情</zj-button>
@@ -127,8 +141,8 @@ export default {
       // }
 
       filemsg: {},
-      checkLogin: {}
-
+      checkLogin: {},
+      registStatus:{},
     };
   },
   created() {
@@ -195,9 +209,19 @@ export default {
     },
     getDetail() {
       this.zjControl.getDictionary().then(res => {
+        console.log(res.data);
         this.dictionary = Object.assign({}, res.data)
+        // this.getRegisterStateList(this.directory.registStatus || []);
       })
     },
+    // getRegisterStateList(data) {
+    //   data.forEach((item, index) => {
+       
+    //       this.registStatus.push(item);
+        
+    //     console.log(this.registStatus);
+    //   });
+    // },
     toContractDetail(row) {
       console.error(row);
       this.$router.push({ name: 'businessDetail' });
