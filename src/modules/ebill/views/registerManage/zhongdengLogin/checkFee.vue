@@ -66,10 +66,10 @@ export default {
                 this.form = res.data.CalculateZhongDengRegisterFeeRes
 
             })
-            this.goChild('zhongdengManage')
+            this.goParent('zhongdengManage')
         },
         giveup() {
-            this.goChild('zhongdengManage')
+            this.goParent('zhongdengManage')
         },
         back() { this.$router.go(-1) },
         getDetail() {

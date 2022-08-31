@@ -214,7 +214,7 @@ export default {
     },
     expireDateDisabledDate(date) {
       if (this.form.expireDate) {
-        return date.getTime() > this.$moment(this.form.expireDate)
+        return date.getTime() < this.$moment(this.form.applyDatetime)
       }
     },
     submit(){

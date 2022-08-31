@@ -39,7 +39,7 @@
           <zj-table-column field="agreementEstimateEndDate" title="协议预计到期日" :formatter="date"/>
           <zj-table-column field="agreementStatus" title="状态" :formatter="obj=>typeMap(dictionary.agreementStatus,obj.cellValue)"/>
           <zj-table-column field="fileName" title="附件" />
-          <vxe-table-column fixed="right" title="操作">
+          <vxe-table-column fixed="right" title="操作" width="120">
             <template v-slot="{row}">
               <zj-button type="text" @click="download(row)">下载</zj-button>
             </template>

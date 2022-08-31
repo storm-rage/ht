@@ -190,6 +190,7 @@ export default {
             .replace(/code/g, "key")
             .replace(/desc/g, "label")
         );
+        console.log(res.data.platFormEntStateListCheList);
         this.directory = res.data;
         this.getEntTypeList(this.directory.platFormAuditEntTypeList || []);
         this.getRegisterStateList(this.directory.registerStateList || []);
@@ -208,6 +209,7 @@ export default {
           //2-待平台初审 3-待平台复审 4-待发证 5-注册拒绝 6-平台拒绝
           this.registerStateList.push(item);
         }
+        console.log(this.registerStateList);
       });
     },
     //发证

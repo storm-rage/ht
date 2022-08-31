@@ -27,6 +27,14 @@ const billAssignReview = {
    */
   sumbitEbBillReview: (params) => {
     return request.post('/eb-bill-apply-review/sumbit-eb-bill-review', params)
-  }
+  },
+  /**
+  * 凭证转让复核-相关协议
+  * @param params
+  * @returns {Promise<AxiosResponse<any>>}
+  */
+   getEbBillAgreementReviewDetail: (params) => {
+    return request.get('/eb-bill-apply-review/get-eb-bill-agreement-review-detail', { params, isUnLock: true })
+  },
 }
 export default billAssignReview

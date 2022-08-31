@@ -20,6 +20,8 @@ export const YaMiWorkFlowRouter = {
   YWCSWH: '/workflow/tradeChangeYamiAudit',
   // 业务管理-额度管理
   EDGL: '/workflow/quotaChangeYamiAudit',
+  // 融资风控审核
+  RZSHGL: '/workflow/financeYamiAudit',
 }
 /**
  * 单点登录后端配置的路由
