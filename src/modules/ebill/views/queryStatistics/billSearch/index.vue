@@ -112,9 +112,11 @@
                 <zj-table-column field="billSource" title="对账单来源"/>
                 <zj-table-column field="checkBillStatus" title="对账单状态"/>
                 <zj-table-column field="isSettle" title="对账单是否已结算" :formatter="obj=>typeMap(dictionary.isSettle, obj.cellValue)"/>
-                <zj-table-column field="ebillCode" title="业务系统单号"/>
+                <zj-table-column field="outOrederNo" title="业务系统单号"/>
                 <zj-table-column field="isBusPush" title="开立凭证状态是否已推送业务系统" :formatter="obj=>typeMap(dictionary.isBusPush, obj.cellValue)"/>
                 <zj-table-column field="isHbkPush" title="开立凭证状态是否已推送海天银行" :formatter="obj=>typeMap(dictionary.isHbkPush, obj.cellValue)"/>
+                <zj-table-column field="accountBillStatus" title="业务系统对账单结算系统状态" :formatter="obj=>typeMap(dictionary.accountBillStatus, obj.cellValue)"/>
+                <zj-table-column field="isPay" title="对账单是否已支付" :formatter="obj=>typeMap(dictionary.isPay, obj.cellValue)"/>
               </zj-table>
             </zj-list-layout>
           </div>
@@ -124,7 +126,6 @@
 <script>
 export default {
   name: "queryAccountBill",
-  components: {},
   data() {
     return {
       zjControl: {
@@ -145,17 +146,6 @@ export default {
         billSource: '',
         isSettle: '',
       },
-      list: [
-        {
-          field1: 'scm00001',
-          field2: '某某产品一号',
-          field3: '上游',
-          field4: '订单保理',
-          field5: '2022.09.08 11:18:19',
-          field6: '生效',
-          field7: '是'
-        }
-      ],
       dictionary:{},
     };
   },

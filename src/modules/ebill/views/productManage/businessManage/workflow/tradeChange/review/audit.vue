@@ -36,16 +36,6 @@ export default {
       default: false
     }
   },
-  computed: {
-    cactoringLogoList () {
-      if (this.dictionary.cactoringLogo && this.form.cactoringLogo) {
-        return this.dictionary.cactoringLogo.filter((item) => {
-          return item.code==='2'||item.code === String(this.form.cactoringLogo)
-        });
-      }
-      return [];
-    }
-  },
   components: {
     SupplierBaseInfo,
     TradeMaintenanceForm,

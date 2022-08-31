@@ -82,7 +82,7 @@
                           :rules="[
                           {required: true,message: '请输入订单融资月利率',trigger: ['change','blur']}
                         ]">
-              <zj-number-input :disabled="!isEdit&&!isOnlyMonthRateEdit" v-model.trim="form.factoringFinancingMonthRate">
+              <zj-number-input :disabled="!isEdit&&!isOnlyMonthRateEdit" :max="100" :precision="4" v-model.trim="form.factoringFinancingMonthRate">
                 <template slot="append">%</template>
               </zj-number-input>&nbsp;<zj-text-tip text="注：订单融资日利率=订单融资月利率/30"></zj-text-tip>
             </el-form-item>
@@ -130,11 +130,13 @@ export default {
       deep: true,
       handler () {
         this.form = this.params||{};
+        this.initData();
       }
     }
   },
   mounted() {
     this.form = this.params||{}
+    this.initData();
   },
   data () {
     return {
@@ -180,6 +182,14 @@ export default {
     };
   },
   methods: {
+    initData() {
+      if (!this.form.factoringRecourse) {
+        this.form.factoringRecourse = '1'
+      }
+      if (!this.form.factoringFinancingForm) {
+        this.form.factoringFinancingForm = '1'
+      }
+    },
     getForm () {
       return this.$refs.form;
     },

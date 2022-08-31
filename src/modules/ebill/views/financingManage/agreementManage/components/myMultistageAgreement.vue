@@ -117,7 +117,11 @@ export default {
       this.queryMyPhasedAgreePage({'coreCompanyName': coreComName})
     },
     attaDownload(row) {
-      this.zjControl.downloadFile(row.fileId)
+      this.zjControl.downloadFile({
+        fileUrl:row.fileId,
+        fileId:row.fileId,
+        fileName:row.fileName,
+      })
     },
     //贸易关系列表
     getMyTradeRelationList() {
@@ -127,13 +131,10 @@ export default {
     },
     //协议列表
     queryMyPhasedAgreePage(coreName) {
-      let params = {
-        ...coreName,
-        page: 1,
-        rows: 10,
-      }
-      this.zjControl.queryMyPhasedAgreePage(params).then(res => {
-        this.myPhasedAgreePageList = res.data.rows
+      this.searchForm = {...this.searchForm, ...coreName}
+      console.log(this.searchForm)
+      this.$nextTick(() => {
+        this.$refs.searchTable.getList(this.searchForm)
       })
     },
     toLogList(row) {

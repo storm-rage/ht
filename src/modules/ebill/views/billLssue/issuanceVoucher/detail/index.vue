@@ -12,7 +12,7 @@
 
     <zj-content-block v-if="workflow === 'lzgj'">
       <!--    流转轨迹    -->
-      <locus :dataTraceTree="form" />
+      <locus :dataTraceTree="form.billTraceTree" />
     </zj-content-block>
 
     <!-- 底部工作流状态 -->
@@ -44,8 +44,8 @@ export default {
       return this.workflow === "lzgj"
         ? "电子凭证流转轨迹"
         : this.workflow === "pzxx" || "mybj"
-        ? "电子债权凭证详情"
-        : "";
+          ? "电子债权凭证详情"
+          : "";
     },
   },
   watch: {
@@ -89,7 +89,7 @@ export default {
         });
       }
       if (this.workflow === "lzgj") {
-        this.zjControl.getHoldBillDetailTrace(params).then((res) => {
+        this.zjControl.getOpenBillTtrace(params).then((res) => {
           this.form = res.data.traces;
         });
       }

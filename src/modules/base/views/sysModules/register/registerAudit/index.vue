@@ -58,17 +58,16 @@
           </el-form-item>
         </el-form>
       </template>
-      <!-- <zj-table
+      <zj-table
         ref="searchTable"
         :params="searchForm"
         :api="zjControl.tableApi"
-      > -->
-      <zj-table ref="searchTable" :api="zjControl.tableApi">
+      >
         <zj-table-column field="serialNo" title="申请流水号">
           <template v-slot="{ row }">
             <span
               class="table-elbill-code"
-              @click="goChild('registerAuditApplyAudit', row)"
+              @click="goChild('registerAuditApplyDetail', row)"
               >{{ row.serialNo }}</span
             >
           </template>
@@ -139,7 +138,7 @@
               v-else-if="row.registerState === '4'"
               >发证</zj-button
             >
-            <span v-else>——</span>
+            <span v-else>—</span>
           </template>
         </zj-table-column>
       </zj-table>

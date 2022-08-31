@@ -2,7 +2,6 @@
   <zj-content-container>
     <!--  订单融资  -->
     <zj-content-block>
-      <zj-content>
         <div class="zj-search-response">
           <zj-table ref="tradeRelationTable"
                     :api="zjControl.getOrderFinancingCredit"
@@ -13,7 +12,7 @@
           >
             <zj-table-column type="radio" width="40"/>
             <zj-table-column field="buyerName" title="买方企业名称"/>
-            <zj-table-column field="isFactoringCredit" title="是否已有订单保理额度" :formatter="obj=>typeMap(dictionary,obj.cellValue)"/>
+            <zj-table-column field="isFactoringCredit" title="是否已有订单保理额度" :formatter="obj=>typeMap(dictionary.isFactoringCredit,obj.cellValue)"/>
             <zj-table-column field="totalCreditAmount" title="额度总额" :formatter="money"/>
             <zj-table-column field="availableCreditAmount" title="剩余可用额度" :formatter="money"/>
           </zj-table>
@@ -35,10 +34,10 @@
         >
           <zj-table-column field="agreementNo" title="阶段性协议编号"/>
           <zj-table-column field="agreementName" title="阶段性协议名称"/>
-          <zj-table-column field="agreementType" title="协议类型"/>
+          <zj-table-column field="agreementType" title="协议类型" :formatter="obj=>typeMap(dictionary.agreementType,obj.cellValue)"/>
           <zj-table-column field="agreementStartDate" title="协议签订日期" :formatter="date"/>
           <zj-table-column field="agreementEstimateEndDate" title="协议预计到期日" :formatter="date"/>
-          <zj-table-column field="agreementStatus" title="状态" :formatter="obj=>typeMap(dictionary,obj.cellValue)"/>
+          <zj-table-column field="agreementStatus" title="状态" :formatter="obj=>typeMap(dictionary.agreementStatus,obj.cellValue)"/>
           <zj-table-column field="fileName" title="附件" />
           <vxe-table-column fixed="right" title="操作">
             <template v-slot="{row}">
@@ -46,8 +45,7 @@
             </template>
           </vxe-table-column>
         </zj-table>
-      </zj-content>
-    </zj-content-block>
+      </zj-content-block>
   </zj-content-container>
 </template>
 <script>
@@ -72,6 +70,7 @@ export default {
         }
       ],
       agreementList: [],
+      activeEntParams: {},
     };
   },
   methods: {
@@ -83,12 +82,15 @@ export default {
       }
     },
     handleRadioChange({row}) {
+      this.activeEntParams = {...row}
+      console.log(this.activeEntParams)
+      this.$emit('nextStepParams',this.activeEntParams)
       //获取阶段性协议列表
       let params = {
         ...row
       }
       this.zjControl.getPhasedAgreement(params).then(res=>{
-        this.agreementList = res.data
+        this.agreementList = res.data.rows
       })
     },
     toDetail (row) {
@@ -98,7 +100,10 @@ export default {
       this.goChild('productInfoManageEdit', row)
     },
     download(row) {
-      this.zjControl.downloadFile(row.fileId)
+      this.zjControl.downloadFile({
+        fileUrl: row.fileId,
+        fileName: row.fileName,
+      })
     },
   }
 };

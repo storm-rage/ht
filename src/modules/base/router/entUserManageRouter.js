@@ -87,7 +87,7 @@ const entUserManage = [
   },
   {
     path: '/userDetail',
-    name: 'userVindicate',
+    name: 'userDetail',
     component: () => import('../views/entUserManage/userManage/vindicate'),
     meta: {
       title: '用户详情',
@@ -115,7 +115,7 @@ const entUserManage = [
   {
     path: '/userUpdate',
     name: 'userUpdate',
-    component: () => import('../views/entUserManage/userManage/userUpdate'),
+    component: () => import('../views/entUserManage/userManage/userUpdate/index.vue'),
     meta: {
       title: '企业用户信息管理-修改',
       parent: 'sysUser',

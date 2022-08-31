@@ -18,32 +18,32 @@
         <el-form ref="searchForm" :model="searchForm">
           <el-form-item label="对账单编号：">
             <el-input
-              v-model="searchForm.issueEntName"
+              v-model="searchForm.acctBillCode"
               @keyup.enter.native="enterSearch"
             />
           </el-form-item>
           <el-form-item label="供应商业务系统编码：">
             <el-input
-              v-model="searchForm.issueEntName"
+              v-model="searchForm.supplierCode"
               @keyup.enter.native="enterSearch"
             />
           </el-form-item>
           <el-form-item label="供应商名称：">
             <el-input
-              v-model="searchForm.issueEntName"
+              v-model="searchForm.supplierName"
               @keyup.enter.native="enterSearch"
             />
           </el-form-item>
           <el-form-item label="对账日期：" class="col-right">
             <zj-date-range-picker
-              :startDate.sync="searchForm.expireDateStart"
-              :endDate.sync="searchForm.expireDateEnd"
+              :startDate.sync="searchForm.checkBillDateStart"
+              :endDate.sync="searchForm.checkBillDateEnd"
             />
           </el-form-item>
           <el-form-item label="预计付款日期：" class="col-right">
             <zj-date-range-picker
-              :startDate.sync="searchForm.expireDateStart"
-              :endDate.sync="searchForm.expireDateEnd"
+              :startDate.sync="searchForm.estimatedPaymentDateStart"
+              :endDate.sync="searchForm.estimatedPaymentDateEnd"
             />
           </el-form-item>
         </el-form>
@@ -51,25 +51,31 @@
       <div class="zj-search-response">
         <zj-table
           :api="zjControl.offlineList"
-          ref="selectionCheckbox"
+          :params="searchForm"
+          ref="searchTable"
           @checkbox-change="checkChange"
           @checkbox-all="checkChange"
         >
-          <zj-table-column type="checkbox" title="对账单编号" />
-          <zj-table-column field="acctBillCode" title="供应商编码" />
-          <zj-table-column field="billSource" title="供应商名称" />
+          <zj-table-column type="checkbox" width="60" />
+          <zj-table-column field="acctBillCode" title="对账单编号" />
+          <zj-table-column field="supplierCode" title="供应商业务系统编码" />
+          <zj-table-column field="supplierName" title="供应商名称" />
           <zj-table-column
-            field="checkBillAmt"
+            field="checkBillDate"
             title="对账日期"
             :formatter="date"
           />
-          <zj-table-column field="checkBillDate" title="对账单金额" />
           <zj-table-column
-            field="companyName"
-            title="付款日期"
+            field="checkBillAmt"
+            title="对账单金额"
+            :formatter="money"
+          />
+          <zj-table-column
+            field="estimatedPaymentDate"
+            title="预计付款日期"
             :formatter="date"
           />
-          <zj-table-column field="supplierCode" title="开立凭证说明" />
+          <zj-table-column field="voucherRemark" title="备注" />
           <zj-table-column title="操作" fixed="right">
             <template v-slot="{ row }">
               <zj-button type="text" @click="toDatails(row)"
@@ -87,7 +93,7 @@
       <!-- 工作流 -->
       <zj-workflow>
         <el-row slot="right">
-          <zj-button @click="goChild" :api="zjBtn.passBillSignBatch"
+          <zj-button @click="toIssuance" :api="zjBtn.passBillSignBatch"
             >签发凭证</zj-button
           >
           <zj-button @click="remove" :api="zjBtn.passBillSignBatch"
@@ -100,7 +106,7 @@
 </template>
 <script>
 export default {
-  data() {
+  data () {
     return {
       zjControl: {
         offlineList: this.$api.openBillApply.offlineList, //线下对账单-查询
@@ -108,77 +114,90 @@ export default {
         billExcel: this.$api.openBillApply.billExcel, //上传开立凭证文件
         billData: this.$api.openBillApply.billData, //上传开立凭证文件-保存数据
         accountOffline: this.$api.openBillApply.accountOffline, //线下对账单-删除
-        billApply: this.$api.openBillApply.billApply, //对账单-签发凭证
+        billApply: this.$api.openBillApply.billApply //对账单-签发凭证
       },
       searchForm: {},
-      selection: [], //储存删除的值
-      excelList: {},
-    };
+      selection: [], // 勾选的数据
+      excelList: {}
+    }
   },
-  created() {
-    this.getApi();
+  created () {
+    this.getApi()
   },
   methods: {
     //点击下载
-    downs(row) {
-      this.zjControl.openBill().then((res) => {
-        if (res.code === 200) {
-        }
-      });
-    },
-    //上传
-    upLoad({ file }) {
-      let formData = new FormData();
-      formData.append("fileOB", file);
+    downs (row) {
       this.zjControl
-        .billExcel(formData)
-        .then((ret) => {
-          if (ret.code == 200) {
-            this.excelList = ret.data;
-            this.$message.success("上传成功!");
+        .openBill()
+        .then(res => {
+          if (res.code === 200) {
           }
         })
-        .catch(() => {});
+        .catch(() => {})
+    },
+    //上传
+    upLoad ({ file }) {
+      let formData = new FormData()
+      formData.append('fileOB', file)
+      this.zjControl
+        .billExcel(formData)
+        .then(ret => {
+          if (ret.code == 200) {
+            this.excelList = ret.data
+            this.$message.success('上传成功!')
+            this.search()
+          }
+        })
+        .catch(() => {})
     },
     //签发凭证
-    goChild(row) {
+    toIssuance () {
       let params = {
-        ApiModelProperty: '1',
-      };
-      this.zjControl.billApply(params).then((res) => {
+        applyType: '1',
+        accountBillList: this.selection
+      }
+      this.zjControl.billApply(params).then(res => {
         if (res.code === 200) {
-          this.$router.push("/openBillApplyConfirm");
+          this.goChild('openBillApplyConfirm', {
+            list: res.data.accountBillList || [],
+            applyType: '1' // 线下
+          })
         }
-      });
+      })
     },
     //维护附件
-    toDatails(row) {
-      this.$router.push("/openBillApplyConfirm");
+    toDatails (row) {
+      this.$router.push({
+        name: 'offlineDatails',
+        params: {
+          rowData: row
+        }
+      })
     },
     //勾选
-    checkChange(row) {
-      let checkArr = this.$refs.selectionCheckbox.getCheckboxRecords();
+    checkChange (row) {
+      let checkArr = this.$refs.searchTable.getCheckboxRecords()
       // console.log(checkArr, "===勾选===");
-      this.selection = checkArr;
+      this.selection = checkArr
       // console.log(this.selection, "===储存勾选===");
     },
     //勾选删除
-    remove() {
-      this.$refs.selectionCheckbox.removeCheckboxRow();
+    remove () {
       let params = {
-        req: this.selection,
-      };
+        accountBillList: this.selection
+      }
       this.zjControl
         .accountOffline(params)
-        .then((ret) => {
+        .then(ret => {
           if (ret.code == 200) {
-            this.$message.success("删除成功!");
+            this.$message.success('删除成功!')
+            this.$refs.searchTable.removeCheckboxRow()
           }
         })
-        .catch(() => {});
-    },
-  },
-};
+        .catch(() => {})
+    }
+  }
+}
 </script>
 <style lang="less" scoped>
 .zj-search-condition {

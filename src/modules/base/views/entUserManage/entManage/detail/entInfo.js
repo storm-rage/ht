@@ -66,9 +66,9 @@ export default {
     //相关附件资料初始化
     initAttchInfo() {
       this.infoBar = ['营业执照', '法定代表人身份证', '操作用户经办员', '操作用户复核员', '风险信息接收人', '委托授权书']
-      let jb = this.detailData.entUserList.find(item => item.roleId == '2') || {}
-      let fh = this.detailData.entUserList.find(item => item.roleId == '3') || {}
-      let fx = this.detailData.entUserList.find(item => item.roleId == '4') || {}
+      // let jb = this.detailData.entUserList.find(item => item.roleId == '2') || {}
+      // let fh = this.detailData.entUserList.find(item => item.roleId == '3') || {}
+      // let fx = this.detailData.entUserList.find(item => item.roleId == '4') || {}
       this.infoList = [
         {
           oneLabel: '统一社会信用代码：', oneValue: this.detailData.bizLicence,
@@ -95,23 +95,23 @@ export default {
           fourLabel: '证件有效期：', fourValue: this.date(fx.certStartDate), fiveValue: this.date(fx.certEndDate)
         },
       ]
-      是否开通天眼查
-      if (this.detailData.isOpenTyc === '1') {
-        // threeLabel:'天眼查核准日期',threeValue:''
-        this.infoList[0].threeLabel = '天眼查核准日期：'
-        if (this.detailData.approvedTime) {
-          this.infoList[0].threeValue = this.tycDates(this.detailData.approvedTime)
-        } else {
-          this.infoList[0].threeValue = '--'
-        }
+      //是否开通天眼查
+      // if (this.detailData.isOpenTyc === '1') {
+      //   // threeLabel:'天眼查核准日期',threeValue:''
+      //   this.infoList[0].threeLabel = '天眼查核准日期：'
+      //   if (this.detailData.approvedTime) {
+      //     this.infoList[0].threeValue = this.tycDates(this.detailData.approvedTime)
+      //   } else {
+      //     this.infoList[0].threeValue = '--'
+      //   }
 
-      }
+      // }
       this.infoViewList = [
         { fileId: this.detailData.qyyzFileId, fileName: this.detailData.qyyzAttachName },
         { fileId: this.detailData.qyfrzjFileId, fileName: this.detailData.qyfrzjAttachName },
-        { fileId: jb.fileId, fileName: jb.attachName },
-        { fileId: fh.fileId, fileName: fh.attachName },
-        { fileId: fx.fileId, fileName: fx.attachName },
+        // { fileId: jb.fileId, fileName: jb.attachName },
+        // { fileId: fh.fileId, fileName: fh.attachName },
+        // { fileId: fx.fileId, fileName: fx.attachName },
       ]
       this.infoBarChange(0)
     },

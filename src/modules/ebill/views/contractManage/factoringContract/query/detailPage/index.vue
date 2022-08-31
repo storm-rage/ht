@@ -1,8 +1,6 @@
 <template>
   <div>
-    <detail-page ref="detailPage"
-                 :stepList="stepList"
-                 :stepActive="4"
+    <detail-page v-loading="loading" ref="detailPage"
                  :detail-info="detailInfo"
                  :dictionary="dictionary"
                  title="合同签约申请"></detail-page>
@@ -18,6 +16,7 @@ export default {
   components: {DetailPage},
   data() {
     return {
+      loading: false,
       zjControl: {
         getEbContractDirectory: this.$api.factoringContract.getEbContractDirectory,
         queryMyEbContractDetail: this.$api.factoringContract.queryMyEbContractDetail
@@ -26,28 +25,7 @@ export default {
       detailInfo: {},
       // 字典
       dictionary: {},
-      stepList: [
-        {
-          title: '签约申请',
-          desc: ''
-        },
-        {
-          title: '签约复核',
-          desc: ''
-        },
-        {
-          title: '买方签署转让回执',
-          desc: ''
-        },
-        {
-          title: '保理公司签约',
-          desc: ''
-        },
-        {
-          title: '保理合同签约完成',
-          desc: ''
-        }
-      ]
+      stepList: []
     };
   },
   created() {
@@ -63,9 +41,13 @@ export default {
       });
     },
     getDetail() {
-      this.zjControl.queryMyEbContractDetail({contractId: this.row.contractId}).then(res => {
+      this.loading = true
+      this.zjControl.queryMyEbContractDetail({serialNo: this.row.serialNo}).then(res => {
         this.detailInfo = res.data;
-      });
+        this.loading = false
+      }).catch(()=>{
+        this.loading = false
+      })
     }
   },
 };

@@ -27,28 +27,14 @@ export default {
      * @returns {*}
      */
     transferListToCommon(list) {
-      return list.map((item) => {
-        return {
-          fileName: item.fileName,
-          remark: item.fileRemark,
-          fileId: item.fileId,
-          id: item.attachId
-        }
-      });
+      return list;
     },
     /**
      * 通用的附件列表转换成到期清算转换附件列表
      * @param list
      */
     transferCommonToExpireList(list) {
-      return list.map((item) => {
-        return {
-          fileName: item.fileName,
-          fileRemark: item.remark,
-          fileId: item.fileId,
-          attachId: item.id
-        }
-      });
+      return list;
     },
     getDetail() {
       this.zjControl.getDetail({
@@ -67,7 +53,7 @@ export default {
         confirmButtonText: '确定',
         cancelButtonText: '取消'
       }).then(() => {
-        const fileData = this.$refs.fileInfo.getData();
+        const fileData = this.$refs.fileInfo.getNormalData();
         this.loading = true;
         this.zjControl.submitClearApply({
           attachInfoList: this.transferCommonToExpireList(fileData.list),

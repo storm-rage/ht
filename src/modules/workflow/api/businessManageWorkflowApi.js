@@ -151,6 +151,14 @@ export default {
    * @returns {Promise<AxiosResponse<any>>}
    */
   getOperateList(params) {
-    return request.get('/business-manage/get-trade-rebut-detail',{params})
+    return request.get('/business-manage/get-operate-list',{params})
+  },
+  /**
+   * 亚米工作流获取流程实例ID
+   * @param params
+   * @returns {Promise<AxiosResponse<any>>}
+   */
+  getProcessInstanceId(params) {
+    return request.get('/business-manage/get-process-instance-id',{params})
   }
 }

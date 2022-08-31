@@ -9,18 +9,18 @@ export default {
       },
       // 业务申请信息
       applyModel: {},
-      // 操作记录
+      // 操作记录z'j
       operateLogList: []
     }
   },
-  created() {
+  beforeMount() {
     this.getWorkflowDetail();
   },
   methods: {
     getWorkflowDetail() {
-      this.zjControl.getOperateList({id: this.row.id}).then(res => {
+      this.zjControl.getOperateList({id: this.row.bizId}).then(res => {
         this.applyModel = res.data.applyModel;
-        this.operateLogList = res.data.operateLogList;
+        this.operateLogList = res.data.operateLogList||[];
       });
     },
   }

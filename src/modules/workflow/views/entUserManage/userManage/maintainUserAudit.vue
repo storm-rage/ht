@@ -1,40 +1,28 @@
 <template>
   <zj-content-container>
-    <zj-top-header
-      :title="pageType === 'audit' ? '维护用户信息审核' : '维护用户交易详情'"
-    ></zj-top-header>
+    <zj-top-header :title="pageType === 'audit' ? '维护用户信息审核' : '维护用户交易详情'"></zj-top-header>
+
     <!--  交易信息  -->
-    <trade-info />
-    <!--  用户信息  -->
-    <zj-content-block>
-      <zj-header title="用户信息"></zj-header>
-      <zj-content>
-        <zj-collapse title="身份证">
-          <zj-table :pager="false">
-            <zj-table-column type="seq" width="60" title="序号" />
-            <zj-table-column field="field2" title="附件类型" />
-            <zj-table-column field="field2" title="附件" />
-            <zj-table-column title="操作" fixed="right">
-              <template v-slot="{ row }">
-                <zj-button type="text" @click="toDownload(row)">下载</zj-button>
-              </template>
-            </zj-table-column>
-          </zj-table>
-        </zj-collapse>
-      </zj-content>
-    </zj-content-block>
-    <!--  用户归属企业信息  -->
-    <user-belongto-ent></user-belongto-ent>
+    <trade-info :detailData="detailData" :dictionary="dictionary" />
+
+    <!-- 平台方 用户信息  -->
+    <user-update ref="userUpdate" :form="detailData" :dictionary="dictionary" :isEdit="isEdit" @formPass="formPass" v-if="type === 'PT'" />
+
+    <!-- 客户方 用户信息  -->
+    <user-info-kh ref="userInfoKH" :form="detailData" :dictionary="dictionary" v-if="type === 'KH'" />
+
     <!--  操作记录  -->
-    <operate-log></operate-log>
+    <operate-log ref="operateLog" :logList="logList"></operate-log>
+
     <!--  审核意见  -->
-    <audit-remark></audit-remark>
+    <audit-remark ref="auditRemark" v-if="pageType === 'audit'"></audit-remark>
+
     <zj-content-footer>
-      <template v-if="pageType === 'audit'">
-        <zj-button type="primary" @click="back">复核通过</zj-button>
-        <zj-button @click="back">驳回上一级</zj-button>
-      </template>
-      <zj-button @click="back">返回</zj-button>
+      <zj-button type="primary" @click="toPass">复核通过</zj-button>
+      <zj-button @click="toReject" v-if="row.workflowState = 'U002'">驳回上一级</zj-button>
+      <zj-button @click="toReject" v-else-if="row.workflowState = 'U006'">作废</zj-button>
+      <zj-button @click="toReject" v-else>拒绝</zj-button>
+      <zj-button @click="goParent">返回</zj-button>
     </zj-content-footer>
   </zj-content-container>
 </template>
@@ -45,24 +33,134 @@
  */
 import tradeInfo from "../components/tradeInfo";
 import OperateLog from "../../components/operateLog";
-import userBelongtoEnt from "../components/userBelongtoEnt";
 import AuditRemark from "../../components/auditRemark";
-
+import userUpdate from '@modules/base/views/entUserManage/userManage/userUpdate/userUpdate.vue'
+import userInfoKh from './userInfoKH.vue'
 export default {
   components: {
     tradeInfo,
-    userBelongtoEnt,
     OperateLog,
     AuditRemark,
+    userUpdate,
+    userInfoKh
   },
   data() {
     return {
       pageType: this.$route.meta.pageType,
+      zjControl: this.$api.entUserManage,
+      detailData: {},
+      dictionary: {},
+      passLoading: {},
+      rejectLoading: {},
+      attachInfo: [{ fileId: "", type: "身份证影印件", fileName: "" }],
+      logList: [],
+      state: 'pass',
+      isEdit: false,
+      type: ""
     };
   },
+  created() {
+    this.getRow()
+    this.getDictionary()
+    this.getDetail()
+    // 驳回待处理可修改
+    if (this.row.workflowState === 'E005') {
+      this.isEdit = true
+    }
+    this.type = this.row.startObject
+  },
   methods: {
-    back() {},
-    toDownload() {},
+    //获取字典
+    getDictionary() {
+      this.zjControl.getUserDictionary().then((res) => {
+        this.dictionary = res.data;
+      });
+    },
+    //详情
+    getDetail() {
+      let autoApi = this.zjControl.getUserInformationDetail // 平台方详情接口
+      if (this.type === 'KH') {
+        autoApi = this.zjControl.getUserInformationKhDetail // 客户方详情接口
+      }
+      autoApi({ serialNo: this.row.serialNo }).then(res => {
+        this.detailData = res.data
+      })
+    },
+    // 操作记录
+    getBusinessParamLog() {
+      this.zjControl.getBusinessParamLog({ serialNo: this.row.serialNo }).then(res => {
+        this.logList = res.data
+      })
+    },
+    //
+    formPass(params) {
+      if (this.state === 'pass') {
+        this.$refs.auditRemark.getForm().clearValidate();
+        const { notes } = this.$refs.auditRemark.getData()
+        this.passLoading = true;
+        this.zjControl.todoUserSubmit({
+          flag: '1',
+          ...params,
+          notes,
+        }).then(res => {
+          this.passLoading = false;
+          //成功，关闭
+          if (res.success) {
+            this.$message.success(res.msg);
+            this.goParent();
+          }
+        }).catch(() => {
+          this.passLoading = false;
+        })
+      }
+      if (this.state = 'reject') {
+        this.$refs.auditRemark.getForm().validate((valid) => {
+          if (valid) {
+            const { notes } = this.$refs.auditRemark.getData()
+            this.rejectLoading = true;
+            this.zjControl.todoUserSubmit({
+              flag: '2',
+              ...params,
+              notes,
+            }).then(res => {
+              this.rejectLoading = false;
+              //成功，关闭
+              if (res.success) {
+                this.$message.success(res.msg);
+                this.goParent();
+              }
+            }).catch(() => {
+              this.rejectLoading = false;
+            })
+          }
+        })
+      }
+
+    },
+    // 通过
+    toPass() {
+      this.state = 'pass'
+      if (this.type === 'PT') {
+        this.$refs.userUpdate.handleForm()
+      }
+      if (this.type === 'KH') {
+        this.formPass({ serialNo: this.row.serialNo })
+      }
+    },
+    // 拒绝
+    toReject() {
+      this.state = 'reject'
+      if (this.type === 'PT') {
+        this.$refs.userUpdate.handleForm()
+      }
+      if (this.type === 'KH') {
+        this.formPass({ serialNo: this.row.serialNo })
+      }
+    },
+    //下载附件
+    toDownload() {
+      this.zjControl.downloadFile(this.attachInfo[0]);
+    },
   },
 };
 </script>

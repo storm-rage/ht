@@ -21,7 +21,9 @@
               </el-col>
               <el-col :span="8">
                 <el-form-item label="证件类型：">
-                  <span>{{ detailData.certType | value }}</span>
+                  {{
+                    typeMap(this.dictionary.certType, this.detailData.certType)
+                  }}
                 </el-form-item>
               </el-col>
               <el-col :span="8">
@@ -31,10 +33,8 @@
               </el-col>
               <el-col :span="8">
                 <el-form-item label="证件有效期：">
-                  <span
-                    >{{ detailData.certStartDate | value }} 至
-                    {{ detailData.certEndDate | value }}</span
-                  >
+                  <span>{{ detailData.certStartDate | value }} 至
+                    {{ detailData.certEndDate | value }}</span>
                 </el-form-item>
               </el-col>
               <el-col :span="8">
@@ -52,6 +52,9 @@
                   <span>{{ detailData.htSysCode | value }}</span>
                 </el-form-item>
               </el-col>
+              <el-col :span="8">
+                <zj-button type="text" @click="downloadFile(row)">身份证影像件</zj-button>
+              </el-col>
             </el-row>
           </div>
         </zj-content>
@@ -63,32 +66,24 @@
             <zj-table-column field="code" title="企业代码" />
             <zj-table-column field="customCode" title="客户业务系统编码" />
             <zj-table-column field="entName" title="企业名称" />
-            <zj-table-column field="isHtEnterprise" title="是否海天集团" />
-            <zj-table-column field="entType" title="平台客户类型" />
-            <zj-table-column field="createDatetime" title="新增日期" />
-            <zj-table-column field="entState" title="企业状态" />
-            <zj-table-column field="roleId" title="角色" />
-            <zj-table-column field="userState" title="状态" />
-            <zj-table-column
-              field="field3"
-              title="支持开立债权凭证的对账单类型"
-              v-if="pageType !== 'detail'"
-            />
-            <zj-table-column
-              title="操作"
-              fixed="right"
-              width="200px"
-              v-if="pageType !== 'detail'"
-            >
-              <template>
-                <zj-button type="text" @click="makeCertKey(row)"
-                  >制key</zj-button
-                >
-                <zj-button type="text" @click="freezeUser(row)">冻结</zj-button>
-                <zj-button type="text" @click="unfreezeUser(row)"
-                  >解冻</zj-button
-                >
-                <zj-button type="text" @click="cancelUser(row)">注销</zj-button>
+            <zj-table-column field="isHtEnterprise" title="是否海天集团" :formatter="(obj) => typeMap(dictionary.isHtEnterprise, obj.cellValue)" />
+            <zj-table-column field="entType" title="平台客户类型" :formatter="(obj) => typeMap(dictionary.entType, obj.cellValue)" />
+            <zj-table-column field="createDatetime" title="新增日期" :formatter="date" />
+            <zj-table-column field="entState" title="企业状态" :formatter="(obj) => typeMap(dictionary.enterpriseStateList, obj.cellValue)" />
+            <zj-table-column field="roleId" title="角色" :formatter="(obj) => typeMap(dictionary.sysRoleList, obj.cellValue)" />
+            <zj-table-column field="userState" title="状态" :formatter="(obj) => typeMap(dictionary.userState, obj.cellValue)" />
+            <zj-table-column field="statementAccountType" title="支持开立债权凭证的对账单类型" v-if="pageType !== 'detail'">
+              <template v-slot="{ row }">
+                {{handleStatementAccountType
+                (row.statementAccountType)}}
+              </template>
+            </zj-table-column>
+            <zj-table-column title="操作" fixed="right" width="240px" v-if="pageType !== 'detail'">
+              <template v-slot="{ row }">
+                <zj-button type="text" @click="makeCertKey(row)">制key</zj-button>
+                <zj-button type="text" @click="freezeUser(row)" v-if="row.userState === '1'">冻结</zj-button>
+                <zj-button type="text" @click="unfreezeUser(row)" v-if="row.userState === '5'">解冻</zj-button>
+                <zj-button type="text" @click="cancelUser(row)" v-if="row.userState === '1' || row.userState === '5'">注销</zj-button>
               </template>
             </zj-table-column>
           </zj-table>
@@ -96,12 +91,7 @@
       </zj-content-block>
     </el-form>
     <zj-content-footer>
-      <zj-button
-        type="primary"
-        @click="goChild('userUpdate', row)"
-        v-if="pageType !== 'detail'"
-        >修改</zj-button
-      >
+      <zj-button type="primary" @click="toDetail(row)" v-if="pageType !== 'detail'">修改</zj-button>
       <zj-button @click="goParent">返回</zj-button>
     </zj-content-footer>
   </zj-content-container>
@@ -111,16 +101,27 @@ export default {
   components: {},
   data() {
     return {
-      zjControl: this.$api.userInfoManage,
+      zjControl: {
+        downloadFile: this.$api.baseCommon.downloadFile,//文件下载
+        ...this.$api.userInfoManage,
+      },
       pageType: this.$route.meta.pageType,
       detailData: {},
+      dictionary: {},
     };
   },
   created() {
     this.getRow();
+    this.getDictionary();
     this.getUserInformation();
   },
   methods: {
+    //获取字典
+    getDictionary() {
+      this.zjControl.getUserDictionary().then((res) => {
+        this.dictionary = res.data;
+      });
+    },
     // 获取详情
     getUserInformation() {
       this.zjControl.getUserInformation({ id: this.row.id }).then((res) => {
@@ -132,29 +133,16 @@ export default {
       this.$messageBox({
         type: "confirm",
         title: `制key确认`,
-        content: `${"是否确认为用户" + row.userName + "  -  制作key"}`,
+        content: `${"是否确认为用户" + this.detailData.userName + "  -  绑定云证书？"}`,
         messageResolve: () => {
-          if (row.certType === "1") {
-            let paramsKey = {
-              userId: row.id,
-              p10: "",
-            };
-            this.zjControl.makeCertKey(paramsKey).then(() => {
-              this.$Message.success(`已为用户：${row.userName}  -  制Key成功`);
-              this.search(false);
-            });
-          } else if (row.certType === "2") {
-            let paramsClound = {
-              entId: row.entId,
-              userId: row.id,
-            };
-            this.zjControl.bindCloudCerUser(paramsClound).then(() => {
-              this.$Message.success(
-                `已为用户：${row.userName}  -  绑定云证书成功！`
-              );
-              this.search(false);
-            });
-          }
+          let params = {
+            entId: row.entId,
+            userId: this.detailData.id,
+          };
+          this.zjControl.bindCloudCerUser(params).then(() => {
+            this.$message.success(`已为用户：${row.userName}  -  绑定云证书成功！`);
+            this.getUserInformation();
+          });
         },
       });
     },
@@ -166,8 +154,13 @@ export default {
         content: `是否确认冻结该用户？`,
         showCancelButton: true,
         messageResolve: () => {
-          this.zjControl.freezeUser({ id: row.id }).then(() => {
-            this.getNewUserInfo(true);
+          let params = {
+            entId: row.entId,
+            roleId: row.roleId,
+            userId: this.detailData.id,
+          }
+          this.zjControl.freezeUser(params).then(() => {
+            this.getUserInformation();
             this.$message.success("冻结账户成功！");
           });
         },
@@ -181,8 +174,13 @@ export default {
         content: `是否确认解冻该用户？`,
         showCancelButton: true,
         messageResolve: () => {
-          this.zjControl.unfreezeUser({ id: row.id }).then(() => {
-            this.getNewUserInfo(true);
+          let params = {
+            entId: row.entId,
+            roleId: row.roleId,
+            userId: this.detailData.id,
+          }
+          this.zjControl.unfreezeUser(params).then(() => {
+            this.getUserInformation();
             this.$message.success("解冻账户成功！");
           });
         },
@@ -196,13 +194,53 @@ export default {
         content: `是否确认注销该用户？`,
         showCancelButton: true,
         messageResolve: () => {
-          this.zjControl.cancelUser({ id: row.id }).then(() => {
-            this.getNewUserInfo(true);
+          let params = {
+            entId: row.entId,
+            roleId: row.roleId,
+            userId: this.detailData.id,
+          }
+          this.zjControl.cancelUser(params).then(() => {
+            this.getUserInformation();
             this.$message.success("注销账户成功！");
           });
         },
       });
     },
+    //对账单类型转码
+    handleStatementAccountType(data) {
+      if (!!data) {
+        let arr = data.split(',')
+        if (Array.isArray(arr) && data.length) {
+          arr.forEach((item, i) => {
+            console.log(this.typeMap(this.dictionary.statementAccountTypeList, item))
+            arr[i] = this.typeMap(this.dictionary.statementAccountTypeList, item)
+          })
+          return arr.join(',')
+        }
+      }
+    },
+    downloadFile(fileId, fileName) {
+      this.zjControl.downloadFile({ fileId, fileName })
+    },
+    toDetail(row) {
+      if (this.detailData.userAndEntInfoList.length) {
+        this.detailData.userAndEntInfoList.forEach((item, index) => {
+          if (item.isHtEnterprise === '0') {
+            this.$messageBox({
+              type: 'warning',
+              content: `归属企业必须都是海天集团才能修改`,
+              title: '提示',
+              showConfirmButton: true,
+              center: true
+            })
+            return false;
+          }
+          if (index >= this.detailData.userAndEntInfoList.length - 1) {
+            this.goChild('userUpdate', row)
+          }
+        })
+      }
+    }
   },
 };
 </script>

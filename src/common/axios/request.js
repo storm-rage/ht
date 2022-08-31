@@ -22,22 +22,13 @@ service.interceptors.request.use(config => {
   if (config.isMock) {
     config.baseURL = `/mock${config.baseURL}`
   }
-  if(config.data && typeof(config.data) === 'object' && config.data.unlock){
-    ZjLog.unLock()
-  }else{
+  if(!config.isUnLock){
     ZjLog.lock()
   }
   // 不允许同一个浏览器登录多个账号打开
   // if (!store.getters['user/isCurrentToken']()) {
   //   throw new Error('会话失效');
   // }
-  if (config.isUpload) { // 上传转换数据格式
-    const form = new FormData()
-    for (let key in config.data) {
-      form.append(key, config.data[key])
-    }
-    config.data = form
-  }
   if (config.method === 'get') {
     config.paramsSerializer = function (params) {
       return qs.stringify(params, {arrayFormat: 'comma'})
@@ -82,9 +73,11 @@ const errorHandle = (status,response) => {
 }
 
 service.interceptors.response.use(response => {
-  ZjLog.unLock()
   if (response.config.isMock) {
     return Promise.resolve(response.data)
+  }
+  if (!response.config.isUnLock) {
+    ZjLog.unLock()
   }
   if (response.status === 200 || response.data.code === '200') { // json
     if (response.headers['content-type'] && response.headers['content-type'].indexOf('application/json') !== -1) {

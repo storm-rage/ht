@@ -19,9 +19,9 @@
           </el-row>
         </el-form>
         <el-row class="button-row">
-          <vxe-button type="primary" icon="el-icon-circle-plus-outline" @click="addRole">新增角色</vxe-button>
-          <vxe-button class="reset" icon="el-icon-refresh" @click="resetSearch">重置</vxe-button>
-          <vxe-button class="search" icon="el-icon-search" @click="search">查询</vxe-button>
+<!--          <vxe-button type="primary" icon="el-icon-circle-plus-outline" @click="addRole">新增角色</vxe-button>-->
+          <zj-button class="reset" icon="el-icon-refresh" @click="resetSearch">重置</zj-button>
+          <zj-button type="primary" class="search zj-m-r-10" icon="el-icon-search" @click="search">查询</zj-button>
         </el-row>
         <zj-table ref="searchTable" :api="zjControl.search" :params="searchForm" :dataList="currentRoleList"
                   @radio-change="handleRadioChange" :printConfig="{trigger:row}"

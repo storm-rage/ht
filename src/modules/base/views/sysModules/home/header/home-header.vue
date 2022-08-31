@@ -39,25 +39,25 @@ export default {
         return '晚上';
       }
     },
-    showClose() {
-      let wClientY = document.documentElement.clientHeight
-      return wClientY <= 768
-    }
-  },
-  created() {
-    // if (this.showClose) {
-    //   this.timeClose = window.setInterval(()=>{
-    //     this.closeTime--
-    //     if(this.closeTime <= 0) {
-    //       window.clearInterval(this.timeClose)
-    //       this.showHeader = false
-    //     }
-    //   },1000)
+    // showClose() {
+    //   let wClientY = document.documentElement.clientHeight
+    //   return wClientY <= 768
     // }
   },
-  beforeDestroy() {
-    // this.timeClose && window.clearInterval(this.timeClose)
-  },
+  // created() {
+  //   if (this.showClose) {
+  //     this.timeClose = window.setInterval(()=>{
+  //       this.closeTime--
+  //       if(this.closeTime <= 0) {
+  //         window.clearInterval(this.timeClose)
+  //         this.showHeader = false
+  //       }
+  //     },1000)
+  //   }
+  // },
+  // beforeDestroy() {
+  //   this.timeClose && window.clearInterval(this.timeClose)
+  // },
 };
 </script>
 <style lang="less" scoped>
@@ -76,24 +76,24 @@ export default {
     font-weight: 400;
     color: #606266;
   }
-  // /deep/ .close {
-  //   position: absolute;
-  //   top: 10px;
-  //   right: 10px;
-  //   .el-button i {
-  //     display: none;
-  //     + span {
-  //       margin-left: 0;
-  //     }
-  //   }
-  //   .el-button:hover {
-  //     > i {
-  //       display: block;
-  //     }
-  //     .close-time {
-  //       display: none;
-  //     }
-  //   }
-  // }
+  /deep/ .close {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    .el-button i {
+      display: none;
+      + span {
+        margin-left: 0;
+      }
+    }
+    .el-button:hover {
+      > i {
+        display: block;
+      }
+      .close-time {
+        display: none;
+      }
+    }
+  }
 }
 </style>

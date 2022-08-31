@@ -12,28 +12,30 @@
         <template slot="searchForm">
           <el-form ref="searchForm" :model="searchForm">
             <el-form-item label="状态：">
-              <el-select v-model="searchForm.state">
+              <el-select v-model="searchForm.agreementState">
                 <el-option label="全部" value=""/>
+                <el-option v-for="(item, index) in dictionary.agreementStateList" :key="index" :value="item.code" :label="item.desc"></el-option>
               </el-select>
             </el-form-item>
             <el-form-item label="协议签订日期：">
               <zj-date-range-picker
-                :startDate.sync="searchForm.lastTimeDateStart"
-                :endDate.sync="searchForm.lastTimeDateEnd"
+                :startDate.sync="searchForm.agreementStartDateBegin"
+                :endDate.sync="searchForm.agreementStartDateEnd"
               />
             </el-form-item>
             <el-form-item label="阶段性协议编码：">
-              <el-input v-model="searchForm.supplierCode" @keyup.enter.native="enterSearch"/>
+              <el-input v-model="searchForm.agreementNo" @keyup.enter.native="enterSearch"/>
             </el-form-item>
             <el-form-item label="协议类型：">
-              <el-select v-model="searchForm.type">
+              <el-select v-model="searchForm.agreementType">
                 <el-option label="全部" value=""/>
+                <el-option v-for="(item, index) in dictionary.agreementTypeList" :key="index" :value="item.code" :label="item.desc"></el-option>
               </el-select>
             </el-form-item>
           </el-form>
         </template>
-<!--        <zj-table ref="searchTable" :dataList="tableData" :params="searchForm" :api="zjControl.getBackPhasedAgreeInfo">-->
-        <zj-table ref="searchTable" :dataList="tableData" >
+        <zj-table ref="searchTable" :params="searchForm" :api="zjControl.queryBasePhasedAgreePage">
+        <!-- <zj-table ref="searchTable" :dataList="tableData" > -->
           <zj-table-column field="agreementNo" title="SRM阶段性协议编号"/>
           <zj-table-column field="agreementNo" title="阶段性协议编号"/>
           <zj-table-column field="agreementName" title="阶段性协议名称"/>
@@ -68,23 +70,41 @@ export default {
   props: {
     tableData: Array,
     zjControl: Object,
+    rowData: Object,
   },
   components: {ZjButton,addOrEdit},
   data () {
     return {
-      searchForm:{},
+      searchForm:{
+        buyerId: this.rowData.buyerId,
+        sellerId: this.rowData.sellerId,
+      },
       agreementList: [
         {}
       ],
+      dictionary: {}
     };
   },
+  created() {
+    this.getBackPhasedAgreeDirectory()
+  },
   methods: {
+    afterResetSearch() {
+      this.searchForm.buyerId = this.rowData.buyerId
+      this.searchForm.sellerId = this.rowData.sellerId
+    },
     addEditAgreement(row,flag){
       this.$refs.addOrEdit.show(row,flag)
     },
     attaDelete(row) {},
-    attaDownload(row) {},
-
+    attaDownload(row) {
+      this.zjControl.downLoadFile({...row,fileUrl: row.fileId,fileId: row.fileId})
+    },
+    getBackPhasedAgreeDirectory() {
+      this.zjControl.getBackPhasedAgreeDirectory && this.zjControl.getBackPhasedAgreeDirectory().then(res=>{
+        this.dictionary = res.data
+      })
+    }
   }
 }
 </script>

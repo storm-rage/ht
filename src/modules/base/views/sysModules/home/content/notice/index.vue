@@ -12,7 +12,7 @@
         @click.native="toMore(item)"
       >
         <template slot="title">{{ item.theme }}</template>
-        <!-- <template slot="tip" v-if="item.isNew">NEW</template> -->
+        <template slot="tip" v-if="item.isReadFlag=='0'">NEW</template>
         <template slot="date">{{ item.createDatetime }}</template>
       </list-item-block>
       <el-empty v-if="list.length === 0" style="padding: 0;">
@@ -49,7 +49,13 @@ export default {
   },
   methods: {
     toMore (item) {
-      this.goChild('homeNotice', item || {})
+      // this.goChild('homeNotice', item || {})
+      this.$router.push({
+        name: 'homeNotice',
+        query: {
+          rowId: item.id
+        }
+      })
     },
     getList () {
       this.loading = true
@@ -71,10 +77,12 @@ export default {
 </script>
 <style lang="less" scoped>
 .home-content-notice {
-  // .notice-list-block {
-  //   overflow: auto;
-  //   margin: 0 -20px -20px;
-  //   padding: 0 20px 20px;
-  // }
+  .notice-list-block {
+    overflow: auto;
+    // margin: 0 -20px -20px;
+    // padding: 0 20px 20px;
+    margin-right: -20px;
+    padding-right: 20px;
+  }
 }
 </style>

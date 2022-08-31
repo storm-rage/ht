@@ -31,7 +31,7 @@ export default {
       zjControl: {
         getBackPhasedAgreeInfo:this.$api.multistageAgreementManageWorkflow.getBackPhasedAgreeInfo,//运营端-阶段性协议维护-详情
 
-        getPhasedAgreeDirectory:this.$api.multistageAgreementManageWorkflow.getPhasedAgreeDirectory,//阶段性协议管理-数据字典
+        getPhasedAgreeDirectory:this.$api.agreementManage.getPhasedAgreeDirectory,//阶段性协议管理-数据字典
         uploadFile:this.$api.baseCommon.uploadFile,
       },
       detailData: {},
@@ -45,6 +45,7 @@ export default {
       })
     },
     getDetail() {
+      window.console.log('row', this.row);
       let params = {
         busTradeId: this.row.busTradeId,
         buyerId: this.row.buyerId,

@@ -33,7 +33,7 @@
       </template>
       <zj-table ref="searchTable" :params="searchForm" :api="zjControl.tableApi" :pagerPageSize="6" :pagerPageSizes="[6,10,15,20,50,100]">
         <zj-table-column field="serialNo" title="申请流水号"/>
-        <zj-table-column field="productApplyDatetime" title="申请时间"/>
+        <zj-table-column field="productApplyDatetime" title="申请时间" formatter="formatDateTime"/>
         <zj-table-column field="productType" title="申请产品">
           <template v-slot="{row,rowIndex}">
             <div v-if="row.productType">
@@ -71,6 +71,11 @@ export default {
     this.getApi()
     this.zjControl.getDataDirectory().then(res => {
       this.dictionary = res.data
+      this.$nextTick(() => {
+        if (this.$refs.searchTable) {
+          this.$refs.searchTable.refreshColumn();
+        }
+      })
     })
   },
   methods: {

@@ -4,7 +4,7 @@
     <zj-content-block>
       <el-tabs v-model="tabs" class="zj-tabs-card zj-p-l-16 zj-p-r-16">
         <el-tab-pane label="阶段性协议维护" name="multistageAgreementMaintain" >
-          <multistage-agreement-maintain :zjControl="zjControl" :dictionary="dictionary" @update="handleContractInfo" :mBtn="zjBtn"/>
+          <multistage-agreement-maintain :zjControl="zjControl" :dictionary="dictionary" @update="handleContractInfo" :mBtn="zjBtn" ref="mulAgreeMaintain"/>
         </el-tab-pane>
         <el-tab-pane label="我的阶段性协议" name="myMultistageAgreement" >
           <my-multistage-agreement :zjControl="zjControl" :dictionary="dictionary" :mBtn="zjBtn"/>
@@ -52,22 +52,29 @@ export default {
   },
   methods: {
     submit() {
+      console.log(JSON.stringify(this.contractInfo))
       let params = {
         busTradeId : this.contractInfo.busTradeId,
         buyerId : this.contractInfo.buyerId,
         buyerName : this.contractInfo.buyerName,
         contractInfoList : this.contractInfo.contractInfoList,
+        recordId : this.contractInfo.recordId || '',
         tradeId : this.contractInfo.tradeId,
       }
-      console.log(this.contractInfo)
       this.zjControl.submitPhasedAgree(params).then(res => {
         this.$message.success('提交成功！')
-        console.log(res.data)
+        let rowParams = {
+          busTradeId : this.contractInfo.busTradeId,
+          coreCompanyName : this.contractInfo.buyerName,
+          tradeId : this.contractInfo.tradeId,
+          buyerId : this.contractInfo.buyerId,
+          buyerName : this.contractInfo.buyerName,
+        }
+        this.$refs.mulAgreeMaintain.handleRadioChange({row: {...rowParams}})
       })
     },
     handleContractInfo(val) {
       this.contractInfo = {...val}
-      console.log(`~~~`+val)
     },
     back() {},
   },

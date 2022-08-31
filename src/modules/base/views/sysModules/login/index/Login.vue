@@ -1,12 +1,12 @@
 <template>
     <div class="login">
         <div class="loginBody">
-            <div class="right-content">
+            <div class="right-content" :class="{'is-one-login': isOneLogin}">
               <div class="main-content">
                 <!--    登录头部          -->
                 <ht-login-header></ht-login-header>
                 <!--      切换登录类型        -->
-                <login-type v-model="userData.pwdVerifyMode" @change="handleChangeLoginType"></login-type>
+                <login-type v-model="userData.pwdVerifyMode" @change="handleChangeLoginType" :is-one-login="isOneLogin"></login-type>
                 <!--     登录表单       -->
                 <el-form status-icon ref="userForm" class="login-form" :statusIcon="false" :model="userData" :rules="userRules" >
                   <div class="form-item-title" v-if="userData.pwdVerifyMode==='1'">账户</div>
@@ -59,7 +59,7 @@
                       <img :src="imgCodeString" @click="getCaptcha" class="code-img"/>
                     </div>
                   </el-form-item>
-                  <el-form-item style="margin-top: 14%" >
+                  <el-form-item class="login-btn-form">
                     <el-button class="loginBtn" type="primary" @click="submitForm">登录</el-button>
                   </el-form-item>
                 </el-form>

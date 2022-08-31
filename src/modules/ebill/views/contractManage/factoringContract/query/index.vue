@@ -77,7 +77,7 @@
           </template>
         </zj-table-column>
         <zj-table-column field="applyTypeDesc" title="签约结果"/>
-        <zj-table-column field="applyDate" title="申请时间"/>
+        <zj-table-column field="applyDate" title="申请时间" :formatter="obj=>formatDate(obj.cellValue)" />
         <zj-table-column title="操作" fixed="right">
           <template v-slot="{row}">
             <zj-button type="text"
@@ -91,6 +91,7 @@
   </div>
 </template>
 <script>
+import {formatDate} from '@utils/index'
 export default {
   data() {
     return {
@@ -112,6 +113,11 @@ export default {
       dictionary: {}
     }
   },
+  computed: {
+    formatDate() {
+      return formatDate
+    }
+  },
   created() {
     this.getApi();
     this.getDic();
@@ -123,7 +129,7 @@ export default {
       });
     },
     toViewDetail(row) {
-      this.goChild('mySignContractDetail',{contractId: row.contractId})
+      this.goChild('mySignContractDetail',{serialNo: row.serialNo})
     }
   }
 }

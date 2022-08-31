@@ -1,9 +1,25 @@
 //我的代办
 import request from '@common/axios/request'
 const myItems = {
-  //列表查询
-  queryReceivedBillList: (params) => {
-    return request.get('/my-bill/query-receive-bill-list',{params})
+  //待办
+  myTodoList: (params) => {
+    return request.get('/my-todo/todo-list', { params })
+  },
+  //已办
+  myTodoDoneList: (params) => {
+    return request.get('/my-todo/done-list', { params })
+  },
+  //已办结
+  myTodoDoneFinishedList: (params) => {
+    return request.get('/my-todo/done-finished-list', { params })
+  },
+  //字典
+  getDirectory: (params) => {
+    return request.get('/my-todo/get-all-enums', { params })
+  },
+  //作废
+  invalidateFlowable: (params) => {
+    return request.post('/my-todo/invalidate-flowable', params )
   }
 }
 export default myItems

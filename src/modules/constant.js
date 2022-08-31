@@ -28,11 +28,11 @@ export const OperateFlag = {
  */
 export const CactoringLogo = {
   //订单保理
-  ORDERBL: '3',
+  ORDERBL: '03',
   // 为保理
-  NOTBL: '2',
+  NOTBL: '02',
   // 凭证保理
-  BILLBL: '1'
+  BILLBL: '01'
 };
 /**
  * 企业类型

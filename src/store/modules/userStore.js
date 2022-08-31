@@ -3,10 +3,13 @@ import windowCookie from "@utils/cookie";
 import {windowLsStorege,windowSSStorage} from '@utils/storageUtils';
 import {getMenuPower} from '@utils/menuTree';
 import loginApi from '@modules/base/api/loginApi';
+import homeApi from '@modules/base/api/homeApi';
 
 const state = {
   // 用户信息
   userInfo: {},
+  productName: '海e单',
+  messageTipNum: ''
 }
 
 const mutations = {
@@ -17,11 +20,11 @@ const mutations = {
     }
     state.userInfo = userInfo;
   },
-  CLOSE_USER_SIGNZJDJBFLAG: (state) => {
-    state.userInfo.signZJDJBFlag = false
-  },
   SET_USER_POWER:(state, power) => {
     state.userInfo.power = power
+  },
+  SET_MESSAGE_TIP_NUM: (state,num) =>{
+    state.messageTipNum = num
   }
 }
 
@@ -32,7 +35,7 @@ const actions = {
   },
   // 保存用户信息
   saveUserInfo({commit, state, dispatch}, userInfo) {
-    // 设置项目,项目列表
+    // 设置企业,企业列表
     dispatch('enterprise/saveEntInfo', userInfo.entInfoList,{ root: true });
     if (userInfo.currentEnt) {
       dispatch('enterprise/setEntInfo', userInfo.currentEnt,{ root: true });
@@ -47,14 +50,9 @@ const actions = {
       entType:userInfo.entType,
       entId:userInfo.entId,
       mobileNo:userInfo.mobileNo,
-      power:getMenuPower(userInfo.resList),
-      signZJDJBFlag:userInfo.signZJDJBFlag
+      power:getMenuPower(userInfo.resList)
     }
     commit('SET_USER_INFO', user)
-  },
-  // 修改登录时弹出的资金登记簿
-  closeUserSignZJDJBFlag({commit}){
-    commit('CLOSE_USER_SIGNZJDJBFLAG')
   },
   //设置权限url
   setUserPower({ commit },power) {
@@ -83,6 +81,27 @@ const actions = {
 
     })
   },
+  // 处理yami流程引擎自动登录处理业务
+  ymEngineSsoLoin({commit, state, dispatch}, ssoToken) {
+    return new Promise((resolve,reject) => {
+      loginApi.ymEngineSso({token: ssoToken}).then((res) => {
+        const result = {isSuccess: true,model: null}
+        if (res.data) {
+          const loginRes = res.data;
+          if (loginRes.faceCheck || loginRes.userServiceAgreementFlag === '1') {
+            result.isSuccess = false;
+          }else {
+            dispatch('user/saveUserInfo', loginRes,{root: true});
+          }
+        }else {
+          result.isSuccess = false;
+        }
+        resolve(result);
+      }).catch(() => {
+        reject(false)
+      })
+    })
+  },
   // 退出登录清除相关信息
   logoutToClearUserInfo() {
     //清除local存储的信息
@@ -98,6 +117,19 @@ const actions = {
       windowCookie.remove(item)
     })
   },
+  // 消息未读数量更新
+  setMessageTipNum({state, commit}) {
+    return new Promise((resove,reject)=>{
+      homeApi.getMessageReadCount()
+        .then(res=>{
+          commit('SET_MESSAGE_TIP_NUM', res.data.count)
+          resove()
+        })
+        .catch(()=>{
+          reject()
+        })
+    })
+  }
 }
 
 const getters = {
@@ -107,6 +139,9 @@ const getters = {
       return state.userInfo&&state.userInfo.userName&&state.userInfo.token === windowCookie.get('XSRF-TOKEN')
     }
     return true;
+  },
+  productName: (state) => {
+    return state.productName;
   }
 }
 

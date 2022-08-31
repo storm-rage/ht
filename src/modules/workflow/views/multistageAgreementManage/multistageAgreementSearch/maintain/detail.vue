@@ -3,7 +3,7 @@
     <zj-top-header title="阶段性协议详情"></zj-top-header>
     <!--  业务申请信息  -->
 <!--    <biz-apply-info/>-->
-    <business-detail :formData="detailData" :zjControl="zjControl"/>
+    <business-detail :formData="detailData" :zjControl="zjControl" :rowData="row" />
     <!--  阶段性协议信息  -->
 <!--    <multistage-agreement/>-->
 
@@ -26,6 +26,9 @@ export default {
     return {
       zjControl: {
         getBackPhasedAgreeInfo:this.$api.multistageAgreementManageWorkflow.getBackPhasedAgreeInfo,//运营端-阶段性协议维护-详情
+        getBackPhasedAgreeDirectory:this.$api.multistageAgreementManageWorkflow.getBackPhasedAgreeDirectory,//运营端-阶段性协议维护数据字典
+        queryBasePhasedAgreePage:this.$api.multistageAgreementManageWorkflow.queryBasePhasedAgreePage,// 运营端-阶段性协议信息列表查询
+        downLoadFile:this.$api.baseCommon.downloadFile,
       },
       detailData: {},
     }
@@ -37,7 +40,7 @@ export default {
         busTradeId: this.row.busTradeId,
         buyerId: this.row.buyerId,
         buyerName: this.row.buyerName,
-        maintainType: '0',//0-待办维护 1-保理公司直接维护
+        maintainType: this.row.maintainType?this.row.maintainType:'0',//0-待办维护 1-保理公司直接维护
         sellerId: this.row.sellerId,
         sellerName: this.row.sellerName,
         serialNo: this.row.serialNo,

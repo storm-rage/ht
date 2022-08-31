@@ -19,7 +19,7 @@
                            v-model="form.smallPaymentCertAmt"
                            placeholder="请输入收到的金额，示例：若收到0.11，请输入11"
                            :max="99"
-                           :min="1"
+                           :min="0"
           />
         </el-form-item>
       </el-form>

@@ -2,7 +2,7 @@ import request from '@common/axios/request'
 const login = {
   //获取手机验证码
   sendMobileCaptcha:(params) => {
-    return request.get('/login/send-mobile-captcha',{params})
+    return request.post('/login/hadaySendMessage',params)
   },
   // 登录
   login: (params) => {
@@ -15,12 +15,14 @@ const login = {
   ssoLogin: (params) => {
     return request.get('/login/sso',{params})
   },
+  // 亚米流程引擎自动登录
+  ymEngineSso: (params) => {
+    return request.get('/login/ymEngineSso',{params})
+  },
   //登出
   logout: (params) => {
     return request.post('/login/logout',params)
   },
-
-
   // 首次登录修改密码
   upDatePassword:(params) => {
     return request.post('/login/save-new-password',params)
@@ -33,8 +35,7 @@ const login = {
   },
   // 人脸识别结果-查询
   queryFaceResult:() => {
-    // return request.post('/login/face-check-query', {}, { unlock: true })
-    return request.post('/login/face-check-query', { unlock: true })
+    return request.post('/login/face-check-query', null,{ isUnLock: true })
   },
 
   // 用户服务协议-查询

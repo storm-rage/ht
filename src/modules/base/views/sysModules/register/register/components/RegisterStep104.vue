@@ -23,7 +23,7 @@
           <zj-table-column field="email" title="邮箱"/>
           <zj-table-column field="bankAcctNo" title="银行卡号"/>
           <zj-table-column field="htSysCode" title="海天业务系统账号" v-if="form.isHtEnterprise == '1'"/>
-          <zj-table-column field="idCheckState" title="是否完成身份核验" v-if="form.isHtEnterprise == '1'"/>
+          <zj-table-column field="idCheckState" title="是否完成身份核验" v-if="form.isHtEnterprise == '1'" :formatter="obj=>typeMap(dictionary.idCheckStateList,obj.cellValue)"/>
           <zj-table-column  title="操作" fixed="right">
             <template v-slot="{row}">
               <zj-button type="text" @click="maintainOperator(row)">维护</zj-button>
@@ -46,7 +46,7 @@
           <zj-table-column title="附件类型">
             <template v-slot="{row}">
               <span style="color: red">{{ row.fileType? '*' : '' }}</span>
-              {{ row.fileType ? row.fileType : '' }}
+              {{ row.fileType ? typeMap(dictionary.attachTypeList,row.fileType)||row.fileType : '' }}
             </template>
           </zj-table-column>
           <zj-table-column field="needSeal" title="是否需要加盖企业公章" v-if="form.isHtEnterprise == '1'"/>
@@ -163,7 +163,7 @@
           </el-form-item>
           <div class="zj-inline zj-center zj-w-20">至</div>
           <el-form-item prop="certEndDate" class="zj-inline">
-            <zj-date-picker placeholder="年/月/日" :date.sync="formModel.certEndDate" :pickerOptions="{ disabledDate: certEndDateDisabledDate }" ></zj-date-picker>
+            <zj-date-picker placeholder="年/月/日" :date.sync="formModel.certEndDate" :pickerOptions="{ disabledDate: certEndDateDisabledDate }" :disabled="formModel.term" ></zj-date-picker>
           </el-form-item>
           <el-row>
             <el-checkbox v-model="formModel.term" @change="isChecked">长期有效</el-checkbox>
@@ -194,6 +194,9 @@
       title="温馨提示"
       :visible.sync="dialogVisible"
       width="400px" center
+      :show-close="false"
+      :close-on-click-modal="false"
+      :close-on-press-escape="false"
     >
       <div>
         <p>提交成功！请您将上传影像件对应的的纸质版文件邮寄至平台方对应地址，谢谢！</p>
@@ -437,7 +440,6 @@ export default {
             (i.certNo===''||null) ||
             (i.certStartDate===''||null) ||
             (i.certType===''||null) ||
-            (i.idCheckState===''||null) ||
             (i.mobileNo===''||null) ||
             (i.roleId===''||null) ||
             (i.userId===''||null) ||
@@ -453,7 +455,6 @@ export default {
             (i.certNo===''||null) ||
             (i.certStartDate===''||null) ||
             (i.certType===''||null) ||
-            (i.idCheckState===''||null) ||
             (i.mobileNo===''||null) ||
             (i.roleId===''||null) ||
             (i.userId===''||null) ||
@@ -559,7 +560,7 @@ export default {
             this.formModel.userId = this.formModel.userId ? this.formModel.userId : ''
             this.formModel.isHtEnterprise  = this.entInfoObj.form.isHtEnterprise
             this.formModel.certStartDate = this.formModel.certStartDate.replace(/-/g,'')
-            this.formModel.certEndDate = this.formModel.certEndDate.replace(/-/g,'')
+            this.formModel.certEndDate = this.formModel.term ? '' : this.formModel.certEndDate.replace(/-/g,'')
             this.zjControl.saveRegisterEntUser(this.formModel).then( res => {
               //更新列表数据
               this.operatorTable = false
@@ -574,110 +575,30 @@ export default {
               let params = Object.assign({},this.entInfoObj)
               params.form.registerUserList = this.registerUserList
               this.$emit('update:entInfoObj',params)
-              if(res.data.idCheckState == '否') {
-                this.$messageBox({
-                  type:'warning',
-                  title:`温馨提示`,
-                  content:`手机核验身份失败，是否继续使用手机号核验？您亦也可录入银行卡号进行核验，谢谢！`,
-                  showCancelButton:false,
-                  messageResolve:()=>{
-
-                  },
-                })
-              }
-              if(res.data.idCheckState == '是') {
-                let activeRoleId = this.typeMap(this.dictionary.roleIdList,res.data.roleId)
-                this.$message.success(`维护${activeRoleId}成功！`)
-                this.maintainInfo = false
-              }
+              let activeRoleId = this.typeMap(this.dictionary.roleIdList,res.data.roleId)
+              this.$message.success(`维护${activeRoleId}成功！`)
+              this.maintainInfo = false
             })
           }
         })
       })
     },
     save(flag){
-      console.log('save')
-      //校验操作用户数据是否完整
-      if(!this.entInfoObj.form.registerUserList) {
-        for(let i of this.registerUserList){
-          let resCheck = (i.certEndDate===''||null) ||
-            (i.certNo===''||null) ||
-            (i.certStartDate===''||null) ||
-            (i.certType===''||null) ||
-            (i.idCheckState===''||null) ||
-            (i.mobileNo===''||null) ||
-            (i.roleId===''||null) ||
-            (i.userId===''||null) ||
-            (i.userName===''||null)
-          if(resCheck){
-            this.$message.error(`请补全操作用户的信息！`)
-            return
-          }
-        }
-      }else{
-        for(let i of this.entInfoObj.form.registerUserList){
-          let resCheck = (i.certEndDate===''||null) ||
-            (i.certNo===''||null) ||
-            (i.certStartDate===''||null) ||
-            (i.certType===''||null) ||
-            (i.idCheckState===''||null) ||
-            (i.mobileNo===''||null) ||
-            (i.roleId===''||null) ||
-            (i.userId===''||null) ||
-            (i.userName===''||null)
-          if(resCheck){
-            this.$message.error(`请补全操作用户的信息！`)
-            return
-          }
-        }
-      }
-      //校验影像资料是否完整
-      if(!this.entInfoObj.form.registerAttachList){
-        for(let i of this.registerAttachList){
-          if(i.fileName === null || '') {
-            this.$message.error(`请补全影像资料信息！`)
-            return
-          }
-        }
-      }else {
-        for(let i of this.entInfoObj.form.registerAttachList){
-          if(i.fileName ===  null || '') {
-            this.$message.error(`请补全影像资料信息！`)
-            return
-          }
-        }
-      }
-      console.log('影像资料success')
-
-      //校验发票信息
-      this.$refs.form.validate(boo=>{
-        if (!boo){
-          return
-        }else{
-          //校验贸易信息
-          if(this.entInfoObj.form.isHtEnterprise === '0' && this.tradeInfoForm.supplier !== '1'){
-            this.$message.error(`请勾选"我是供应商"！`)
-            return
-          }
-          this.entInfoObj.form.registerOperateFlag = flag//操作标记
-          this.entInfoObj.form.invoiceAddress = this.form.invoiceAddress
-          this.entInfoObj.form.invoiceBankAccno = this.form.invoiceBankAccno
-          this.entInfoObj.form.invoiceBankInfo = this.form.invoiceBankInfo
-          this.entInfoObj.form.invoiceEmail = this.form.invoiceEmail
-          this.entInfoObj.form.invoicePhone = this.form.invoicePhone
-          this.entInfoObj.form.invoiceTaxpayerId = this.form.invoiceTaxpayerId
-          this.entInfoObj.form.myBuyers = this.tradeInfoForm.myBuyers
-
-          this.zjControl.saveEntInfo(this.entInfoObj.form).then(res => {
-            this.$message.success('提交企业资料成功！')
-            this.registSuccess = true //true才能完成注册
-            let params = Object.assign({},this.entInfoObj)
-            params.form.registerUserList = this.registerUserList//操作用户
-            params.form.registerAttachList = this.registerAttachList//影像资料
-            params.form.tradeInfoForm = this.tradeInfoForm//贸易信息
-            this.$emit('update:entInfoObj',params)
-          })
-        }
+      this.entInfoObj.form.registerOperateFlag = flag//操作标记
+      this.entInfoObj.form.invoiceAddress = this.form.invoiceAddress
+      this.entInfoObj.form.invoiceBankAccno = this.form.invoiceBankAccno
+      this.entInfoObj.form.invoiceBankInfo = this.form.invoiceBankInfo
+      this.entInfoObj.form.invoiceEmail = this.form.invoiceEmail
+      this.entInfoObj.form.invoicePhone = this.form.invoicePhone
+      this.entInfoObj.form.invoiceTaxpayerId = this.form.invoiceTaxpayerId
+      this.entInfoObj.form.myBuyers = this.tradeInfoForm.myBuyers
+      this.zjControl.saveEntInfo(this.entInfoObj.form).then(res => {
+        this.$message.success('提交企业资料成功！')
+        let params = Object.assign({},this.entInfoObj)
+        params.form.registerUserList = this.registerUserList//操作用户
+        params.form.registerAttachList = this.registerAttachList//影像资料
+        params.form.tradeInfoForm = this.tradeInfoForm//贸易信息
+        this.$emit('update:entInfoObj',params)
       })
     },
     cancel() {
@@ -747,7 +668,6 @@ export default {
             (i.certNo===''||null) ||
             (i.certStartDate===''||null) ||
             (i.certType===''||null) ||
-            (i.idCheckState===''||null) ||
             (i.mobileNo===''||null) ||
             (i.roleId===''||null) ||
             (i.userId===''||null) ||
@@ -763,7 +683,6 @@ export default {
             (i.certNo===''||null) ||
             (i.certStartDate===''||null) ||
             (i.certType===''||null) ||
-            (i.idCheckState===''||null) ||
             (i.mobileNo===''||null) ||
             (i.roleId===''||null) ||
             (i.userId===''||null) ||
@@ -817,6 +736,7 @@ export default {
         id: this.entInfoObj.form.id,
         name: this.entInfoObj.form.name,
       }).then(res=>{
+        this.registerUserList = res.data.registerUserList
         this.registerAttachList = res.data.registerAttachList
         this.setInvoiceInfo()
 

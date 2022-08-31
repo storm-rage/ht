@@ -9,7 +9,7 @@
                 <vxe-button class="search" icon="el-icon-search" @click="search">查询</vxe-button>
               </template>
               <template slot="leftBtns">
-                <vxe-button class="export" icon="el-icon-download" @click="toExport" :api="zjControl.exportMyFinancingList">导出</vxe-button>
+                <vxe-button class="export" icon="el-icon-download" @click="toExport" :api="zjBtn.exportMyFinancingList">导出</vxe-button>
               </template>
               <template slot="searchForm">
                 <el-form ref="searchForm" :model="searchForm">
@@ -54,7 +54,7 @@
                   </template>
                 </zj-table-column>
                 <zj-table-column field="fromEntName" title="融资企业"/>
-                <zj-table-column field="financingProductType" title="融资产品名称"/>
+                <zj-table-column field="financingProductType" title="融资产品名称" :formatter="obj=>typeMap(dictionary.financingProductType,obj.cellValue)"/>
                 <zj-table-column field="createDatetime" title="融资申请日期" :formatter="date"/>
                 <zj-table-column field="tranAmt" title="融资金额" :formatter="money"/>
                 <zj-table-column field="interestRate" title="融资月利率" :formatter="rate"/>
@@ -71,7 +71,6 @@
   </div>
 </template>
 <script>
-import myFinancing from "../../../api/myfinancingApi";
 
 export default {
   name: 'myFinancing',
@@ -93,18 +92,6 @@ export default {
         applyAmtEnd: '',
         repaymentFlag: '',
       },
-      list: [
-        {
-          field1: 'scm00001',
-          field2: '某某产品一号',
-          field3: '上游',
-          field4: '订单保理',
-          field5: '2022.09.08 11:18:19',
-          field6: '生效',
-          field7: '是'
-        }
-      ],
-      tradeList: [],
       dictionary: {},
     };
   },

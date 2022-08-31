@@ -46,15 +46,12 @@ export default {
     //标题
     tabTagTitle(item){
       let title = item.meta ? item.meta.title : ''
-      //融单签收
-      if(item.name === 'billSign'){
-        title = `${this.$store.getters['project/productName']}签收`
-      }
-      return title.replace(new RegExp("\\{0\\}","g"), this.$store.getters['project/productName'])
+      return title && title.replace(new RegExp("\\{0\\}","g"), this.$store.getters['user/productName'])
     },
     //删除
     deleteClick(item){
       this.$store.commit('tab/tabDel',item)
+      this.$store.dispatch('tab/removeCache', item)
     },
     closeAllTab () {
       this.$store.commit('tab/tabClear');
@@ -103,6 +100,7 @@ export default {
     // 关闭其他标签页
     closeOtherTab () {
       this.$store.commit('tab/tabOther',this.currentRoute)
+      this.$store.dispatch('tab/removeOtherCache',this.currentRoute)
     },
     //刷新标签
     refreshTab () {
@@ -133,6 +131,7 @@ export default {
         fullPath:newRouter.fullPath,
         path:newRouter.path,
         meta:newRouter.meta,
+        query: newRouter.query,
         params:{
           boo:newRouter.params && newRouter.params.rowData ? true : false
         }

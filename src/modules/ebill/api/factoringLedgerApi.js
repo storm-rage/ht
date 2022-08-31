@@ -1,25 +1,33 @@
 import request from '@common/axios/request'
 import download from "@utils/download";
 
-//融资台账查询api 
+//融资台账查询api
 // 凭证保理融资台账/订单保理融资台账
-const FactoringLedger = {
+const factoringLedger = {
   // ---------------凭证保理融资台账
   //凭证保理融资台账-导出
-  exportMyFinancingList: (params) => {
+  rdexport: (params) => {
     return download('/rd-factoring-ledger/export',  params, 1, 'get')
   },
-  //凭证保理融资台账-详情
-  getMyFinancingDetail: (params) => {
-    return request.get('/my-financing/get-my-financing-detail', { params })
+  //凭证保理融资台账-融资申请详情
+  rdDetailrzxq: (params) => {
+    return request.get('/rd-factoring-ledger/financing-detail', { params })
+  },
+  //凭证保理融资台账-凭证信息详情
+  rdDetailpzxx: (params) => {
+    return request.get('/rd-factoring-ledger/voucher-detail', { params })
+  },
+  //凭证保理融资台账-凭证信息切换列表数据
+  changeData: (params) => {
+    return request.get('/rd-factoring-ledger/voucher-other-detail', { params })
   },
   //凭证保理融资台账-获取数据字典
-  getMyFinancingDirectory: (params) => {
+  rdgetDirectory: (params) => {
     return request.get('/rd-factoring-ledger/directory', { params })
   },
   //凭证保理融资台账-查询
-  queryMyFinancingPage: (params) => {
-    return request.get('/my-financing/query-my-financing-page', { params })
+  rdqueryPage: (params) => {
+    return request.get('/rd-factoring-ledger/page', { params })
   },
   // ---------------订单保理融资台账
     //订单保理融资台账-导出
@@ -38,5 +46,9 @@ const FactoringLedger = {
     ddblPage: (params) => {
       return request.get('/ddbl-factoring-ledger/page', { params })
     },
+  //订单保理融资台账-列表
+  ddblDirectory: (params) => {
+    return request.get('/ddbl-factoring-ledger/directory', { params })
+  },
 }
-export default FactoringLedger
+export default factoringLedger

@@ -5,6 +5,7 @@ export default {
       zjControl: {
         getDetail: this.$api.expireClearingManageWorkflow.getReviewDetails,
         clearReview: this.$api.expireClearingManageWorkflow.clearReview,
+        clearAbort: this.$api.expireClearingManageWorkflow.clearAbort,
         submitClearApply: this.$api.expireClearingManageWorkflow.submitClearApply
       },
       // 复核和驳回用到
@@ -16,7 +17,12 @@ export default {
       // 操作记录
       operateRecordList: [],
       // 业务信息
-      bizInfo:{}
+      bizInfo:{
+        attachInfoList:[],
+        basicInfo: {},
+        financeInfo: {},
+        waitClearInfoList: []
+      }
     }
   },
   created() {
@@ -39,6 +45,7 @@ export default {
     },
     // 复核通过
     toReviewPass() {
+      this.$refs.auditRemark.getForm().clearValidate();
       this.$confirm('是否确认复核通过？','温馨提示',{
         type: 'warning',
         confirmButtonText: '确定',
@@ -80,7 +87,7 @@ export default {
               return item.id
             });
             this.rejectLoading = true;
-            this.zjControl.billReceiptReview({
+            this.zjControl.clearReview({
               operateFlag: OperResult.BACK,
               reviewOpinion: notes,
               serialNo: this.row.serialNo,
@@ -102,6 +109,7 @@ export default {
     },
     // 驳回申请通过
     toPass() {
+      this.$refs.auditRemark.getForm().clearValidate();
       this.$confirm('是否确认审核通过？','温馨提示',{
         type: 'warning',
         confirmButtonText: '确定',
@@ -118,8 +126,8 @@ export default {
           opinion: notes,
           serialNo: this.row.serialNo,
           clearIds,
-          attachInfoList: bizData.fileData.list,
-          bizDesc: bizData.fileData.busDesc
+          attachInfoList: bizData.list,
+          bizDesc: bizData.busDesc
         }).then(res => {
           this.passLoading = false;
           //成功，关闭
@@ -142,15 +150,10 @@ export default {
             cancelButtonText: '取消'
           }).then(() => {
             const {notes} = this.$refs.auditRemark.getData();
-            const clearIds = this.bizInfo.waitClearInfoList.map((item) => {
-              return item.id
-            });
             this.rejectLoading = true;
-            this.zjControl.submitClearApply({
-              operateFlag: OperResult.REJECT,
-              opinion: notes,
-              serialNo: this.row.serialNo,
-              clearIds
+            this.zjControl.clearAbort({
+              reviewOpinion: notes,
+              serialNo: this.row.serialNo
             }).then(res => {
               this.rejectLoading = false;
               //成功，关闭

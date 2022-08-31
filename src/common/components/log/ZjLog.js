@@ -18,9 +18,9 @@ ZjLog.unLock = (force) => {
   zjLoadingCount--
   if ((zjLoadingCount <= 0 && zjLoadingInstance) || force) {
     zjLoadingInstance.close()
-    zjLoadingCount = 0
     zjLoadingInstance = null
   }
+  zjLoadingCount = Math.max(0,zjLoadingCount)
 }
 
 ZjLog.messageBox = (options) => {
@@ -29,8 +29,9 @@ ZjLog.messageBox = (options) => {
 
 ZjLog.alert = (message, callback, options = {}) => {
   return MessageBox(Object.assign({
+    title: '温馨提示',
     message: message,
-    type: 'alert',
+    type: 'warning',
     closeOnPressEscape: false,
     closeOnClickModal: false,
     callback: (action) => {

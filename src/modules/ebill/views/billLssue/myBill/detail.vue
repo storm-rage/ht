@@ -12,7 +12,7 @@
 
       <zj-content-block v-if="workflow === 'lzgj'">
         <!--    流转轨迹    -->
-        <locus :dataTraceTree="form"/>
+        <locus :billTraceTree="form.billTraceTree"/>
       </zj-content-block>
 
       <!-- 底部工作流状态 -->

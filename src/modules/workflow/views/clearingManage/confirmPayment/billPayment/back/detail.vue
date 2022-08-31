@@ -51,7 +51,7 @@ export default {
       });
     },
     getDetail() {
-      this.zjControl.getBillReceiptPendingDetail({id: this.row.id}).then(res => {
+      this.zjControl.getBillReceiptPendingDetail({id: this.row.bizId}).then(res => {
         this.detailInfo = res.data;
       });
     },

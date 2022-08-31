@@ -128,7 +128,7 @@ const billLssueRouter = [
   {
     path: '/ebBillApply',
     name: 'ebBillApply',
-    component: () => import('../views/billLssue/transferApplication/index.vue'),
+    component: () => import('../views/billLssue/billassignApply/index.vue'),
     meta: {
       title: `转让申请`,
       root: '电子债权凭证',
@@ -139,51 +139,45 @@ const billLssueRouter = [
   {
     path: '/billAssignApply',
     name: 'billAssignApply',
-    component: () => import('../views/billLssue/transferApplication/billAssignApply.vue'),
+    component: () => import('../views/billLssue/billassignApply/billAssignApply.vue'),
     meta: {
-      isMock: false,
       title: `凭证转让申请`,
       parent: 'ebBillApply',
       keepAlive: true,
       refreshIndex: 0,
-      notRequireAuth: true
     }
   },
   {
     path: '/billAssignApplyS',
     name: 'billAssignApplyS',
-    component: () => import('../views/billLssue/transferApplication/billAssignApplyS.vue'),
+    component: () => import('../views/billLssue/billassignApply/billAssignApplyS.vue'),
     meta: {
-      isMock: false,
       title: `凭证转让申请-批量`,
       parent: 'ebBillApply',
       keepAlive: true,
       refreshIndex: 0,
-      notRequireAuth: true
     }
   },
   {
     path: '/ebBillApplyReview',
     name: 'ebBillApplyReview',
-    component: () => import('../views/billLssue/transferCheck/index.vue'),
+    component: () => import('../views/billLssue/assignReview/index.vue'),
     meta: {
-      title: `转让复核`,
+      title: `转让复核列表`,
       keepAlive: true,
       refreshIndex: 0,
     }
   },
   {
-    path: '/transferCheckDetails',
-    name: 'transferCheckDetails',
-    component: () => import('../views/billLssue/transferCheck/detail.vue'),
+    path: '/assignReview',
+    name: 'assignReview',
+    component: () => import('../views/billLssue/assignReview/review.vue'),
     meta: {
-      isMock: false,
       title: `凭证转让复核`,
       parent: 'ebBillApplyReview',
       keepAlive: true,
       refreshIndex: 0,
-      notRequireAuth: true
-    },
-  },
+    }
+  }
 ]
 export default billLssueRouter

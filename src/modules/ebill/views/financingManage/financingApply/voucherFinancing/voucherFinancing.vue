@@ -2,17 +2,21 @@
   <zj-content-container>
     <!--  凭证融资  -->
       <div class="zj-search-condition zj-m-b-20" style="border-bottom: none;">
-        <zj-header title="请选择凭证签发人/转让企业"/>
-        <el-form ref="searchEntForm" :model="searchEntForm">
-          <el-form-item label="凭证签发人/转让企业：">
-            <el-select v-model="searchEntForm.entState" @change="entChange">
-              <el-option value="未登记" />
-              <el-option value="已登记" />
+        <zj-header title="请选择海e单开单人/转让企业"/>
+        <el-form ref="searchForm" :model="searchForm">
+          <el-form-item label="海e单开单人/转让企业：">
+            <el-select v-model="searchForm.entId" @change="entChange">
+              <el-option
+                v-for="item in dictionary.entInfoList"
+                :label="item.entName"
+                :value="item.entId"
+                :key="item.entId"
+              />
             </el-select>
           </el-form-item>
         </el-form>
-        <zj-header title="凭证信息"/>
         <zj-list-layout>
+          <zj-header title="凭证信息"/>
           <template slot="rightBtns">
             <vxe-button class="reset" icon="el-icon-refresh" @click="resetSearch()">重置</vxe-button>
             <vxe-button class="search" icon="el-icon-search" @click="search()">查询</vxe-button>
@@ -44,9 +48,9 @@
             </el-form>
           </template>
           <zj-table ref="searchTable"
-                    :api="zjControl.queryFinancingApplyBillPage"
-                    :params="searchForm"
-                    @radio-change="handleRadioChange"
+                    :dataList="billList"
+                    @checkbox-change="checkChange"
+                    @checkbox-all="checkChange"
                     :radio-config="{highlight: true}"
           >
             <zj-table-column type="checkbox" width="40"/>
@@ -55,12 +59,12 @@
             <zj-table-column field="writerName" title="凭证签发人"/>
             <zj-table-column field="transferName" title="转让企业"/>
             <zj-table-column field="ebillAmt" title="凭证金额" :formatter="money"/>
-            <zj-table-column field="field5" title="剩余可用金额" :formatter="money"/>
+            <zj-table-column field="availableAmt" title="剩余可用金额" :formatter="money"/>
             <zj-table-column field="holderDate" title="凭证持有日期" :formatter="date"/>
-            <zj-table-column field="field7" title="凭证到期日" :formatter="date"/>
+            <zj-table-column field="expireDate" title="凭证到期日" :formatter="date"/>
             <el-row slot="pager-left" class="slotRows" >
-              凭证金额合计：{{moneyNoSynbol(detail.totalAmount)}}
-              <span class="zj-m-l-10">已勾选凭证金额合计：{{moneyNoSynbol(' ')}}</span>
+              海e单金额合计：{{moneyNoSynbol(totalAmount)}}
+              <span class="zj-m-l-10">已勾选凭证金额合计：{{moneyNoSynbol(checkedTotalAmount)}}</span>
             </el-row>
           </zj-table>
         </zj-list-layout>
@@ -72,13 +76,15 @@ export default {
   name: 'voucherFinancing',
   props: {
     zjControl: Object,
+    dictionary: Object,
+  },
+  computed: {
+
   },
   data() {
     return {
-      searchEntForm: {
-        entState: '',
-      },
       searchForm: {
+        entId: '',
         holderDateStart: '',
         holderDateEnd: '',
         expireDateStart: '',
@@ -87,30 +93,74 @@ export default {
         ebillAmtEnd: '',
         ebillCodeLike: '',
       },
-      detail: {},
+      billList: [],
+      totalAmount: '',
+      checkedTotalAmount: 0,
+      nextParams: {},// 下一步需要的参数
     };
   },
   methods: {
-    toContractDetail(row) {
-      console.error(row);
-      this.$router.push({name: 'businessDetail'});
-    },
-    getDetail(){
+    entChange(val) {
       let params = {
-
+        ...this.searchForm,
+        entId: val,//选择凭证签发人ID/转让企业ID
+        page: 1,
+        rows: 10,
       }
+      this.zjControl.queryFinancingApplyBillPage(params).then(res=>{
+        this.nextParams = {
+          entId: params.entId,
+        }
+        this.billList = res.data.rows
+        this.totalAmount = res.data.totalAmount
+      })
     },
-    entChange() {
-      console.log();
+    checkChange() {
+      let checkArr = this.$refs.searchTable.getCheckboxRecords()
+      let newCheckArr = checkArr.map(item=>item.ebillAmt)
+      if(checkArr.length > 1 ) {
+        this.checkedTotalAmount = newCheckArr.reduce((a,b)=>{
+          return Number(a)+Number(b)
+        })
+      } else if(checkArr.length === 1) {
+        this.checkedTotalAmount = checkArr[0].ebillAmt
+      } else {
+        this.checkedTotalAmount = 0
+      }
+      console.log(`~`+JSON.stringify(checkArr))
+      let nextStepFlag = false
+      //勾选多个凭证时，遍历数组查看选中的凭证是否为同一个到期日
+      if(checkArr.length > 1) {
+        let expDate = checkArr[0].expireDate
+        for(let i of checkArr) {
+          if(i.expireDate !== expDate.expireDate) {
+            nextStepFlag = true
+            this.$message.error('请选择到期日为同一天的凭证！')
+            break
+          }
+        }
+      }
+      //勾选的凭证的id合集
+      let selectBillId = checkArr.map(item=>item.id)
+      this.nextParams = {
+        ...this.nextParams,
+        idList: selectBillId,
+        nextFlag: nextStepFlag,
+      }
+      this.$emit('nextStepParams',this.nextParams)
     },
-    handleRadioChange({row}) {
-
-    },
+    toNext() {},
     toEditQuota (row) {},
     applyLoan () {},
   },
   created() {
-    this.getApi()
   }
 };
 </script>
+<style lang="less" scoped>
+/deep/.vxe-pager--wrapper{
+  .vxe-pager--left-wrapper {
+    float: left;
+  }
+}
+</style>

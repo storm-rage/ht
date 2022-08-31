@@ -34,7 +34,7 @@ export default {
   },
   methods: {
     downLoad(row) {
-      this.zjControl.downLoadFile(row.fileId)
+      this.zjControl.downLoadFile({...row,fileUrl: row.fileId,fileId: row.fileId})
     }
   }
 };
