@@ -5,20 +5,21 @@
       <zj-header>电子债权凭证信息</zj-header>
       <zj-content>
         <zj-table :pager="false" :dataList="dataList">
-          <zj-table-column field="ebillCode" title="原始凭证编号">
+          <zj-table-column field="ebillCode" title="海e单编号">
           </zj-table-column>
-          <zj-table-column field="issueEntName" title="凭证编号" />
-          <zj-table-column field="ebillAmt" title="签发人" :formatter="money" />
-          <zj-table-column field="transferAmt" title="原始持有人" :formatter="money" />
-          <zj-table-column field="splusAmt" title="凭证签发日" :formatter="money" />
-          <zj-table-column field="issueDate" title="凭证到期日" :formatter="date" />
-          <zj-table-column field="receiveDate" title="转让企业" :formatter="date" />
-          <zj-table-column field="ebillAmt" title="凭证金额" :formatter="money" />
+          <zj-table-column field="rootCode" title="原始海e单编号" />
+          <zj-table-column field="payEntName" title="签发人" :formatter="money" />
+          <zj-table-column field="receiptEntName" title="原始持有人" :formatter="money" />
+          <zj-table-column field="payableIssuanceDate" title="凭证签发日" :formatter="money" />
+          <zj-table-column field="payableExpireDate" title="海e单到期日" :formatter="date" />
+          <zj-table-column field="transferName" title="转让企业" :formatter="date" />
+          <zj-table-column field="ebillAmt" title="海e单金额" :formatter="money" />
+          <zj-table-column field="availableAmt" title="剩余可用金额" :formatter="money" />
           <zj-table-column field="holderDate" title="凭证签收日" :formatter="date" />
-          <zj-table-column field="stateDesc" title="凭证状态" />
+          <zj-table-column field="stateDesc" title="海e单状态" />
           <zj-table-column title="操作" fixed="right">
             <template v-slot="{ row }">
-              <zj-button type="text" @click="openDialog(row)" :api="zjBtn.getEnterprise">贸易背景</zj-button>
+              <zj-button type="text" v-if="!row.htSign" @click="openDialog(row)" :api="zjBtn.getEnterprise">贸易背景</zj-button>
             </template>
           </zj-table-column>
         </zj-table>
@@ -88,6 +89,9 @@ import { validateBankAcct } from "@utils/rules";
 import tradeBjDialog from './dialog/tradeBjDialog'
 
 export default {
+  components: {
+    tradeBjDialog
+  },
   data() {
     return {
       zjControl: this.$api.billAssignApply,
@@ -138,7 +142,7 @@ export default {
     this.dataList = this.row.paramsDataList;
     this.dataList.forEach((item) => {
       this.ids.push(item.id);
-      this.ebillAmt += parseInt(item.ebillAmt)
+      this.ebillAmt += parseInt(item.availableAmt)
     });
     this.getTradeRalation()
   },
@@ -159,7 +163,8 @@ export default {
         if (valid) {
           this.$confirm(
             `您本次申请转让<b style="font-size: 18px;">${this.dataList.length}</b>笔电子债权凭证，共计：<br/>
-        <b style="font-size: 18px;">${this.ebillAmt}</b>元请确认<br>`,
+        <b style="font-size: 18px;">${this.ebillAmt}</b>元,<br/>
+        请确认<br>`,
             "转让申请确认",
             {
               dangerouslyUseHTMLString: true,
@@ -172,7 +177,7 @@ export default {
               ids: this.ids,
               billInfoList: [this.form],
             };
-            this.zjControl.submitEbBillOneToMany(params).then((res) => {
+            this.zjControl.submitEbBillManyToOne(params).then((res) => {
               this.$message.success("申请成功!");
               this.goParent();
             });
