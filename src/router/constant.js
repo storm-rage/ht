@@ -13,7 +13,15 @@ export const RouterWhiteList = ['login', 'forgetPass', 'userInfo', 'register', '
  */
 export const YaMiWorkFlowRouter = {
   // 业务管理-产品开通申请
-  CPSQ: '/workflow/businessApplyYamiAudit'
+  CPSQ: '/workflow/businessApplyYamiAudit',
+  // 业务管理-合同续签
+  HTXQ: '/workflow/contractReSignYamiAudit',
+  // 业务管理-业务参数维护
+  YWCSWH: '/workflow/tradeChangeYamiAudit',
+  // 业务管理-额度管理
+  EDGL: '/workflow/quotaChangeYamiAudit',
+  // 融资风控审核
+  RZSHGL: '/workflow/financeYamiAudit',
 }
 /**
  * 单点登录后端配置的路由

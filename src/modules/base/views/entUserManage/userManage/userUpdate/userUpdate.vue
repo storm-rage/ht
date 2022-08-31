@@ -88,7 +88,7 @@
               {{handleStatementAccountType(row.statementAccountType)}}
             </template>
           </zj-table-column>
-          <zj-table-column title="操作" fixed="right" width="200px">
+          <zj-table-column title="操作" fixed="right" width="200px" v-if="isEdit">
             <template v-slot="{ row,rowIndex }">
               <zj-button type="text" @click="updateTypeDialog(row,rowIndex)">维护对账单类型</zj-button>
             </template>
@@ -129,7 +129,6 @@ export default {
         this.$nextTick(() => {
           this.attachInfo[0] = Object.assign(this.attachInfo[0], data.idCardAttach[0])
         })
-
       }
     }
   },
@@ -172,12 +171,6 @@ export default {
     this.getDictionary()
   },
   methods: {
-    //获取字典
-    getDictionary() {
-      this.zjControl.getUserDictionary().then((res) => {
-        this.dictionary = res.data;
-      });
-    },
     handleForm() {
       this.$refs.userForm.validate(boo => {
         if (!this.isEdit) { //详情状态不校验表单

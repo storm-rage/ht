@@ -79,8 +79,10 @@ export default {
 .home-content-message {
   .message-list-block {
     overflow: auto;
-    margin: 0 -20px -20px;
-    padding: 0 20px 20px;
+    // margin: 0 -20px -20px;
+    // padding: 0 20px 20px;
+    margin-right: -20px;
+    padding-right: 20px;
   }
 }
 </style>

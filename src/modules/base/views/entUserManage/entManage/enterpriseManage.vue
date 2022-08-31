@@ -31,8 +31,21 @@ export default {
     if (this.pageType !== 'add') {
       this.getEnterprise()
     }
+    // 查询操作记录
+    if (!this.isAdd) {
+      this.getEbBusinessParamLog()
+    }
   },
   methods: {
+    // 获取操作记录
+    getEbBusinessParamLog() {
+      let params = {
+        id: this.row.id,
+      }
+      this.zjControl.getEbBusinessParamLog(params).then((res) => {
+        this.$refs.entInfoInit.$data.logList = res.data.sysEntRegLogList;
+      });
+    },
     formPass(params) {
       if (this.pageType === 'add') {
         this.$messageBox({
@@ -67,7 +80,7 @@ export default {
       })
     },
     submitForm() {
-      this.$refs.entInfoInit.save();
+      this.$refs.entInfoInit.handleForm();
     },
     saveEnterprise() {
       this.$refs.entInfoInit.saveEnterprise();

@@ -12,12 +12,16 @@
     <div slot="footer" class="dialog-footer">
       <zj-button type="primary" @click="onConfirm(titleInfo === '复核通过'? '1':'2')"
                  :api="zjBtn.submitFirstAudit"
-                 v-if="dialogForm.transInfo.workflowState === 'F002'"
-      >确认</zj-button>
+                 v-if="dialogForm.transInfo.workflowState === 'F003'"
+      >
+        确认
+      </zj-button>
       <zj-button type="primary" @click="reviewConfirm(titleInfo === '复核通过'? '3':'4')"
                  :api="zjBtn.submitReviewAudit"
-                 v-if="dialogForm.transInfo.workflowState === 'F003'"
-      >确认</zj-button>
+                 v-if="dialogForm.transInfo.workflowState === 'F004'"
+      >
+        确认
+      </zj-button>
       <zj-button status="primary" @click="cancel">取消</zj-button>
     </div>
   </el-dialog>
@@ -40,7 +44,6 @@ export default {
     }
   },
   methods: {
-    //初审
     onConfirm(flag) {
       let params = {
         attachList: this.dialogForm.otherAttachList,
@@ -48,15 +51,16 @@ export default {
         isRiskFlag: this.dialogForm.isRiskFlag,
         operateFlag: flag,//融资审核操作标志：1-保理公司初审通过 2-保理公司初审驳回 3-保理公司复审通过 4-保理公司复审驳回上一级
         remark: this.dialogForm.rejectReason,
-        voucherId: this.dialogForm.voucherCreditInfo.voucherId,
+        voucherId: this.dialogForm.voucherCreditInfo?this.dialogForm.voucherCreditInfo.voucherId:'',
         bizId: this.bizId,
       }
+      //初审
       this.zjControl.submitFirstAudit(params).then(res=>{
         this.$message.success(res.msg)
         this.dialogShow = false
+        this.goParent()
       })
     },
-    //复审
     reviewConfirm(flag) {
       let params = {
         attachList: this.dialogForm.otherAttachList,
@@ -64,12 +68,14 @@ export default {
         isRiskFlag: this.dialogForm.isRiskFlag,
         operateFlag: flag,//融资审核操作标志：1-保理公司初审通过 2-保理公司初审驳回 3-保理公司复审通过 4-保理公司复审驳回上一级
         remark: this.dialogForm.rejectReason,
-        voucherId: this.dialogForm.voucherCreditInfo.voucherId,
+        voucherId: this.dialogForm.voucherCreditInfo?this.dialogForm.voucherCreditInfo.voucherId:'',
         bizId: this.bizId,
       }
+      //复审
       this.zjControl.submitReviewAudit(params).then(res=>{
         this.$message.success(res.msg)
         this.dialogShow = false
+        this.goParent()
       })
     },
     cancel() {

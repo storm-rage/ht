@@ -139,10 +139,10 @@ export default {
     cactoringLogoList () {
       if (this.dictionary.cactoringLogo) {
         return this.dictionary.cactoringLogo.filter((item) => {
-          if (this.productType.indexOf(ProductType.DDBL)>=0) {
+          if (this.businessParamModel.productType&&this.businessParamModel.productType.indexOf(ProductType.DDBL)>=0) {
             //若开通订单保理产品，则只能维护为“订单保理”
             return item.code!==CactoringLogo.BILLBL
-          }else if(this.productType.indexOf(ProductType.RD)>=0){
+          }else if(this.businessParamModel.productType&&this.businessParamModel.productType.indexOf(ProductType.RD)>=0){
             //若开通凭证保理产品，则只能维护为“凭证保理”
             return item.code!==CactoringLogo.ORDERBL
           }
@@ -296,11 +296,13 @@ export default {
               this.loading = true;
               if (codes.includes(ProductType.RD)&&!codes.includes(ProductType.DDBL)) {
                 // 只包含电子凭证保理
-                const billData = this.$refs.bbizSetting.getData();
+                const billData = this.$refs.bbizSetting[0].getData();
                 if (billData.billFactoringModelList.length) {
                   // 赋值
                   this.form.openGraceDays = billData.openGraceDays;
                   this.form.billFactoringModelList = billData.billFactoringModelList;
+                  // 提交操作
+                  this.realApply();
                 }else {
                   this.loading = false;
                   this.$messageBox({
@@ -311,11 +313,13 @@ export default {
                 }
               }else if (!codes.includes(ProductType.RD)&&codes.includes(ProductType.DDBL)) {
                 // 只包含订单保理
-                this.$refs.pbizSetting.getForm().validate((valid) => {
+                this.$refs.pbizSetting[0].getForm().validate((valid) => {
                   if (valid) {
                     // 赋值
-                    const orderData = this.$refs.pbizSetting.getData();
+                    const orderData = this.$refs.pbizSetting[0].getData();
                     this.form.orderFactoringModel = orderData;
+                    // 提交操作
+                    this.realApply();
                   }else {
                     this.loading = false;
                     return;
@@ -323,7 +327,7 @@ export default {
                 })
               }else if (codes.includes(ProductType.RD)&&codes.includes(ProductType.DDBL)) {
                 // 两者都包含
-                const billData = this.$refs.bbizSetting.getData();
+                const billData = this.$refs.bbizSetting[0].getData();
                 if (!billData.billFactoringModelList.length) {
                   this.loading = false;
                   this.$messageBox({
@@ -332,21 +336,21 @@ export default {
                   })
                   return;
                 }
-                this.$refs.pbizSetting.getForm().validate((valid) => {
+                this.$refs.pbizSetting[0].getForm().validate((valid) => {
                   if (valid) {
                     // 赋值
-                    const orderData = this.$refs.pbizSetting.getData();
+                    const orderData = this.$refs.pbizSetting[0].getData();
                     this.form.orderFactoringModel = orderData;
                     this.form.openGraceDays = billData.openGraceDays;
                     this.form.billFactoringModelList = billData.billFactoringModelList;
+                    // 提交操作
+                    this.realApply();
                   }else {
                     this.loading = false;
                     return;
                   }
                 })
               }
-              // 提交操作
-              this.realApply();
             }else {
               this.$messageBox({
                 type:'warning',

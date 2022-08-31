@@ -47,7 +47,7 @@ export default {
       }).then(res => {
         this.tranInfo = res.data.basicInfo;
         this.bizInfo = res.data.contractInfo;
-        this.operateRecordList = res.data.ebContractOperateRecordList;
+        this.operateRecordList = res.data.ebContractOperateRecordList||[];
       })
     }
   }

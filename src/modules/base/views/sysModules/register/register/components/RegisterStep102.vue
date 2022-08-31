@@ -192,7 +192,7 @@
           <el-form-item label="请确认开户行" prop="confirmBankId">
             <el-select v-model="form.confirmBankId"
                        filterable
-                       placeholder="请选择" class="sw-year-select"
+                       placeholder="请选择" class="sw-year-select register102-legalCertType"
                        :popper-append-to-body="false"
                        @change="bankChange"
             >
@@ -403,7 +403,9 @@ export default {
       this.zjControl.getOpenBankInfo().then(res=>{
         let bankInfoObj = {
           bankInfo: JSON.parse(
-            JSON.stringify(res.data.bankInfoList).replace(/confirmBankId/g,'status').replace(/confirmBankName/g,'label')
+            JSON.stringify(res.data.bankInfoList)
+              .replace(/confirmBankId/g,'status')
+              .replace(/confirmBankName/g,'label')
           )
         }
         this.bankInfoList = bankInfoObj.bankInfo
@@ -568,14 +570,7 @@ export default {
       this.form.isSelectEntBankInfo = true
     },
     bankChange(val) {
-      for(let i of this.bankInfoList) {
-        if(i.confirmBankId === val) {
-          this.form.confirmBankName = i.confirmBankName
-          // this.form.entBankInfo.bankName = i.confirmBankName
-          break
-        }
-      }
-      console.log(this.form.confirmBankName)
+
     },
     //添加银行账户
     contAdd() {
@@ -715,6 +710,11 @@ export default {
           if(this.entInfoObj.form.isHtEnterprise === '0') {
             this.form.entBankInfo = this.form.entBankInfoList[0]
           }
+          console.log(this.form.entBankInfo)
+          if(this.form.confirmBankId !== this.form.entBankInfo.bankName) {
+            return this.$message.error('请确认开户行一致！')
+          }
+          this.form.confirmBankName = this.form.confirmBankId
           this.form.registerOperateFlag = flag
           this.form.legalCertType = this.entInfoObj.form.legalCertType
           this.zjControl.saveEntInfo(this.form).then(res => {
@@ -764,9 +764,6 @@ export default {
   .register102-legalCertType{
     .el-select-dropdown.el-popper{
       width: 250px!important;
-    }
-    .el-input {
-      width: 260px;
     }
   }
 </style>
@@ -909,6 +906,13 @@ export default {
       padding: 0 30px 0 15px !important;
     }
   }
-
+.register102-legalCertType{
+  .el-select-dropdown.el-popper{
+    width: 250px!important;
+  }
+  /deep/.el-input {
+    width: 260px;
+  }
+}
 
 </style>

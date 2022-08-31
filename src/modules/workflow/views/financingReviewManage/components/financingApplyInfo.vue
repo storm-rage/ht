@@ -83,11 +83,11 @@
           <zj-table-column field="agreementNumber" title="数量"/>
           <zj-table-column field="price" title="单价" :formatter="money"/>
           <zj-table-column field="agreementEstimatedPrice" title="协议预估总价" :formatter="money"/>
-          <zj-table-column field="agreementStatus" title="状态" />
+          <zj-table-column field="agreementStatus" title="状态" :formatter="obj=>typeMap(dictionary.agreementStatus,obj.cellValue)"/>
           <zj-table-column field="fileName" title="附件" />
-          <zj-table-column title="操作">
+          <zj-table-column title="操作" fixed="right">
             <template v-slot="{row}">
-              <zi-button type="text" @click="downLoad(row)">下载</zi-button>
+              <zj-button type="text" @click="downLoad(row)">下载</zj-button>
             </template>
           </zj-table-column>
         </zj-table>
@@ -125,6 +125,7 @@ export default {
     voucherList: Array,
     phasedAgreementList: Array,
     proType: String,
+    dictionary: Object,
   },
   computed: {
     totalAccount() {

@@ -145,7 +145,15 @@ export const myItemsPath = {
   },
 
   // 融资审核
-  RZCS: {
+  RZSHGL:{
+    auditPath: 'financingReviewToDoReview',
+    detailPath: 'financingReviewToDoDetail',
+    // 已办和办结状态
+    doneDetailPath: '',
+  },
+
+  // 融资复审
+  RZFS: {
     auditPath: 'financingReviewToDoReview',
     detailPath: 'financingReviewToDoDetail',
     // 已办和办结状态

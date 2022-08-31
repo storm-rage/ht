@@ -3,7 +3,10 @@
     <!--  业务信息  -->
     <biz-info :base-info="bizInfo.basicInfo" :bill-list="bizInfo.waitClearInfoList"></biz-info>
     <!-- 附件信息   -->
-    <clearing-file-info ref="fileInfo" :is-edit="isEdit" :attach-list="bizInfo.attachInfoList" :bus-desc="bizInfo.basicInfo.bizDesc"></clearing-file-info>
+    <clearing-file-info ref="fileInfo"
+                        :is-edit="isEdit"
+                        :attach-list="bizInfo.attachInfoList"
+                        :bus-desc="bizInfo.basicInfo.remark"></clearing-file-info>
   </div>
 </template>
 <script>
@@ -40,8 +43,8 @@ export default {
   },
   methods: {
     getData() {
-      return this.$refs.fileInfo.getData();
-    },
+      return this.$refs.fileInfo.getNormalData();
+    }
   }
 }
 </script>

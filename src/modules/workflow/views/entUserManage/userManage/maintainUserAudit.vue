@@ -1,19 +1,27 @@
 <template>
   <zj-content-container>
     <zj-top-header :title="pageType === 'audit' ? '维护用户信息审核' : '维护用户交易详情'"></zj-top-header>
+
     <!--  交易信息  -->
-    <trade-info :detailData="detailData" @getDictionary="getDictionary" />
-    <!--  用户信息  -->
-    <user-update ref="userUpdate" :form="detailData" :isEdit="isEdit" @formPass="formPass" />
+    <trade-info :detailData="detailData" :dictionary="dictionary" />
+
+    <!-- 平台方 用户信息  -->
+    <user-update ref="userUpdate" :form="detailData" :dictionary="dictionary" :isEdit="isEdit" @formPass="formPass" v-if="type === 'PT'" />
+
+    <!-- 客户方 用户信息  -->
+    <user-info-kh ref="userInfoKH" :form="detailData" :dictionary="dictionary" v-if="type === 'KH'" />
+
     <!--  操作记录  -->
     <operate-log ref="operateLog" :logList="logList"></operate-log>
+
     <!--  审核意见  -->
     <audit-remark ref="auditRemark" v-if="pageType === 'audit'"></audit-remark>
+
     <zj-content-footer>
-      <template v-if="pageType === 'audit'">
-        <zj-button type="primary" @click="toPass">复核通过</zj-button>
-        <zj-button @click="toReject">驳回上一级</zj-button>
-      </template>
+      <zj-button type="primary" @click="toPass">复核通过</zj-button>
+      <zj-button @click="toReject" v-if="row.workflowState = 'U002'">驳回上一级</zj-button>
+      <zj-button @click="toReject" v-else-if="row.workflowState = 'U006'">作废</zj-button>
+      <zj-button @click="toReject" v-else>拒绝</zj-button>
       <zj-button @click="goParent">返回</zj-button>
     </zj-content-footer>
   </zj-content-container>
@@ -27,12 +35,14 @@ import tradeInfo from "../components/tradeInfo";
 import OperateLog from "../../components/operateLog";
 import AuditRemark from "../../components/auditRemark";
 import userUpdate from '@modules/base/views/entUserManage/userManage/userUpdate/userUpdate.vue'
+import userInfoKh from './userInfoKH.vue'
 export default {
   components: {
     tradeInfo,
     OperateLog,
     AuditRemark,
-    userUpdate
+    userUpdate,
+    userInfoKh
   },
   data() {
     return {
@@ -45,30 +55,35 @@ export default {
       attachInfo: [{ fileId: "", type: "身份证影印件", fileName: "" }],
       logList: [],
       state: 'pass',
-      isEdit: false
+      isEdit: false,
+      type: ""
     };
   },
   created() {
     this.getRow()
+    this.getDictionary()
     this.getDetail()
     // 驳回待处理可修改
     if (this.row.workflowState === 'E005') {
       this.isEdit = true
     }
+    this.type = this.row.startObject
   },
   methods: {
     //获取字典
-    getDictionary(data) {
-      this.dictionary = data
+    getDictionary() {
+      this.zjControl.getUserDictionary().then((res) => {
+        this.dictionary = res.data;
+      });
     },
     //详情
     getDetail() {
-      this.zjControl.getUserInformationDetail({ serialNo: this.row.serialNo }).then(res => {
+      let autoApi = this.zjControl.getUserInformationDetail // 平台方详情接口
+      if (this.type === 'KH') {
+        autoApi = this.zjControl.getUserInformationKhDetail // 客户方详情接口
+      }
+      autoApi({ serialNo: this.row.serialNo }).then(res => {
         this.detailData = res.data
-        if (this.detailData.idCardAttach) {
-          this.attachInfo = this.detailData.idCardAttach
-          this.attachInfo[0].type = '身份证影印件'
-        }
       })
     },
     // 操作记录
@@ -97,7 +112,8 @@ export default {
         }).catch(() => {
           this.passLoading = false;
         })
-      } else {
+      }
+      if (this.state = 'reject') {
         this.$refs.auditRemark.getForm().validate((valid) => {
           if (valid) {
             const { notes } = this.$refs.auditRemark.getData()
@@ -123,13 +139,23 @@ export default {
     },
     // 通过
     toPass() {
-      this.$refs.userUpdate.handleForm()
       this.state = 'pass'
+      if (this.type === 'PT') {
+        this.$refs.userUpdate.handleForm()
+      }
+      if (this.type === 'KH') {
+        this.formPass({ serialNo: this.row.serialNo })
+      }
     },
     // 拒绝
     toReject() {
-      this.$refs.userUpdate.handleForm()
       this.state = 'reject'
+      if (this.type === 'PT') {
+        this.$refs.userUpdate.handleForm()
+      }
+      if (this.type === 'KH') {
+        this.formPass({ serialNo: this.row.serialNo })
+      }
     },
     //下载附件
     toDownload() {

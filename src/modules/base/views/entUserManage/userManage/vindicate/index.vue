@@ -52,6 +52,9 @@
                   <span>{{ detailData.htSysCode | value }}</span>
                 </el-form-item>
               </el-col>
+              <el-col :span="8">
+                <zj-button type="text" @click="downloadFile(row)">身份证影像件</zj-button>
+              </el-col>
             </el-row>
           </div>
         </zj-content>
@@ -88,7 +91,7 @@
       </zj-content-block>
     </el-form>
     <zj-content-footer>
-      <zj-button type="primary" @click="goChild('userUpdate', row)" v-if="pageType !== 'detail'">修改</zj-button>
+      <zj-button type="primary" @click="toDetail(row)" v-if="pageType !== 'detail'">修改</zj-button>
       <zj-button @click="goParent">返回</zj-button>
     </zj-content-footer>
   </zj-content-container>
@@ -98,7 +101,10 @@ export default {
   components: {},
   data() {
     return {
-      zjControl: this.$api.userInfoManage,
+      zjControl: {
+        downloadFile: this.$api.baseCommon.downloadFile,//文件下载
+        ...this.$api.userInfoManage,
+      },
       pageType: this.$route.meta.pageType,
       detailData: {},
       dictionary: {},
@@ -130,12 +136,11 @@ export default {
         content: `${"是否确认为用户" + this.detailData.userName + "  -  绑定云证书？"}`,
         messageResolve: () => {
           let params = {
-            p10: "",
+            entId: row.entId,
             userId: this.detailData.id,
-            code: row.code
           };
           this.zjControl.bindCloudCerUser(params).then(() => {
-            this.$Message.success(`已为用户：${row.userName}  -  绑定云证书成功！`);
+            this.$message.success(`已为用户：${row.userName}  -  绑定云证书成功！`);
             this.getUserInformation();
           });
         },
@@ -212,6 +217,28 @@ export default {
           })
           return arr.join(',')
         }
+      }
+    },
+    downloadFile(fileId, fileName) {
+      this.zjControl.downloadFile({ fileId, fileName })
+    },
+    toDetail(row) {
+      if (this.detailData.userAndEntInfoList.length) {
+        this.detailData.userAndEntInfoList.forEach((item, index) => {
+          if (item.isHtEnterprise === '0') {
+            this.$messageBox({
+              type: 'warning',
+              content: `归属企业必须都是海天集团才能修改`,
+              title: '提示',
+              showConfirmButton: true,
+              center: true
+            })
+            return false;
+          }
+          if (index >= this.detailData.userAndEntInfoList.length - 1) {
+            this.goChild('userUpdate', row)
+          }
+        })
       }
     }
   },

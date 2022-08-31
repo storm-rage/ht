@@ -41,7 +41,7 @@
             </template>
           </zj-table-column>
           <zj-table-column field="fileName" title="附件"/>
-          <zj-table-column title="操作" fixed="right" width="280">
+          <zj-table-column title="操作" fixed="right" width="200">
             <template v-slot="{row,rowIndex}">
               <template v-if="$refs.contractTable.isActiveByRow(row)">
                 <zj-upload class="zj-inline" :httpRequest="handleFileUpload" :data="{ row, bizType:'contract' }">
@@ -53,7 +53,7 @@
               <template v-if="!$refs.contractTable.isActiveByRow(row)">
                 <zj-button type="text" @click="modifyContract('contractTable',row)">修改</zj-button>
                 <zj-button type="text" @click="downloadFile(row)">下载</zj-button>
-                <zj-button type="text" @click="deleteContract(row)">删除</zj-button>
+                <zj-button type="text" @click="deleteContract(row,rowIndex)">删除</zj-button>
               </template>
             </template>
           </zj-table-column>
@@ -89,7 +89,7 @@
           </zj-table-column>
           <zj-table-column field="verifyCode" title="校验码（后6位）" :edit-render="{name: '$input'}"/>
           <zj-table-column field="fileName" title="附件名称"/>
-          <zj-table-column title="操作" fixed="right" width="280">
+          <zj-table-column title="操作" fixed="right" width="200">
             <template v-slot="{row,rowIndex}">
               <template v-if="$refs.invoiceTable.isActiveByRow(row)">
                 <zj-upload class="zj-inline" :httpRequest="handleFileUpload" :data="{ row, bizType:'invoice' }">
@@ -106,7 +106,7 @@
             </template>
           </zj-table-column>
         </zj-table>
-        <el-row>发票金额（含税）合计：{{ form.totalAmount }}元</el-row>
+        <el-row class="zj-m-t-10 zj-m-l-10">发票金额（含税）合计：{{ invoiceTotalAmount?moneyNoSynbol(invoiceTotalAmount):0 }}元</el-row>
       </zj-content-block>
       <!--    其他附件    -->
       <zj-content-block>
@@ -118,10 +118,10 @@
                   :edit-config="{trigger: 'manual', mode: 'row', icon:'-', autoClear: false,showStatus: true}"
                   :pager="false"
         >
-          <zj-table-column type="seq" title="序号"/>
+          <zj-table-column type="seq" title="序号" width="60"/>
           <zj-table-column field="attachTheme" title="说明" :edit-render="{name: '$input'}"/>
           <zj-table-column field="fileName" title="附件名称"/>
-          <zj-table-column title="操作" fixed="right" width="280">
+          <zj-table-column title="操作" fixed="right" width="200">
             <template v-slot="{row,rowIndex}">
               <template v-if="$refs.otherAttachTable.isActiveByRow(row)">
                 <zj-upload class="zj-inline" :httpRequest="handleFileUpload" :data="{ row, bizType:'attach' }">
@@ -154,6 +154,19 @@ export default {
   name: 'tradeBackgroundMaintain',
   mixins: [tableMixins],
   components: {},
+  computed: {
+    invoiceTotalAmount() {
+      let res = 0
+      let newArr = []
+      if(this.form.invoiceList && this.form.invoiceList.length) {
+        newArr = this.form.invoiceList.map(item=>item.totalAmtLowcase)
+        res = newArr.reduce((a,b)=>{
+          return Number(a)+Number(b)
+        })
+      }
+      return res
+    }
+  },
   data() {
     return {
       zjControl: {
@@ -175,7 +188,9 @@ export default {
       tradeList: [],
       oldRowInfo: {},
       billTraceId: '',
-      tradeId: '',};
+      tradeId: '',
+      currentRowBillInfo: {},
+    };
   },
   methods: {
     getDic() {
@@ -193,16 +208,19 @@ export default {
     },
     handleDataChange(rows) {
       //默认勾选第一个凭证信息
-      if (rows&& rows.length) {
+      if (rows && rows.length) {
         this.$refs.ebBillTable.setRadioRow(rows[0])
         this.handleRadioChange({row: rows[0]})
       }
     },
     handleRadioChange({row}) {
-      this.billTraceId = row.billTraceId//存放到本地
-      this.tradeId = row.tradeId//存放到本地
+      console.log({...row})
+      this.currentRowBillInfo = {...row}
+      console.log(this.currentRowBillInfo)
+      this.billTraceId = this.currentRowBillInfo.billTraceId//存放到本地
+      this.tradeId = this.currentRowBillInfo.tradeId//存放到本地
       let params = {
-        id : row.billTraceId,//融单轨迹主键ID
+        id : this.currentRowBillInfo.billTraceId,//融单轨迹主键ID
       }
       //获取合同列表，发票列表，附件列表
       this.zjControl.getTradeBackgroundInfo(params).then(res=>{
@@ -229,7 +247,6 @@ export default {
       }
       formData.append('bizType',data.bizType)//业务类型：invoice-发票文件 contract-合同文件 attach-其他附件文件
       formData.append('fileOB',file)
-      console.log(formData)
       this.zjControl.uploadMaintainFile(formData).then(res => {
         data.row.fileId = res.data.fileId
         data.row.fileName = res.data.fileName
@@ -238,16 +255,12 @@ export default {
     },
     saveContract(row,rowIndex) {
       //合同信息校验
-      //************
       let key1 = this.tableLengthVali(row, 'contractNo',100,'合同编号',true)
       if(!key1){return}
       let key2 = this.tableLengthVali(row, 'contractName',100,'合同名称',true)
       if(!key2){return}
-      // if(!row.contractNo){ return this.$messageBox({type:'info',content:'请填写合同编号!'}) }
-      // if(!row.contractName){ return this.$messageBox({type:'info',content:'请填写合同名称!'}) }
       let key3 = this.tableMoneyVali(row.contractAmt, '合同金额',true)
       if(!key3){return}
-      // if(!row.contractAmt){ return this.$messageBox({type:'info',content:'请填写合同金额!'}) }
       if(!row.signDate){ return this.$messageBox({type:'info',content:'请填写合同签订日期!'}) }
       if(!row.fileName){ return this.$messageBox({type:'info',content:'请上传附件!'}) }
       let params = {
@@ -272,9 +285,11 @@ export default {
           this.form.contractList.splice(index,1,res.data)
         } else {
           //刷新当前凭证信息下的合同、发票、附件列表
-          this.handleRadioChange({...res.data})
+          let params = {
+            ...this.currentRowBillInfo,
+          }
+          this.handleRadioChange({row: params})
         }
-
       })
     },
     //修改合同信息
@@ -295,7 +310,7 @@ export default {
       this.$refs.contractTable.clearActived()
     },
     //删除合同信息
-    deleteContract(row) {
+    deleteContract(row,rowIndex) {
       if(!this.tableEditReport(["contractTable","invoiceTable","otherAttachTable"])){return}
       this.$messageBox({
         type:'confirm',
@@ -317,8 +332,11 @@ export default {
             id: this.billTraceId,//业务ID：应付账款id/资料维护id/融单轨迹id
           }
           this.zjControl.maintainContract(params).then(res=>{
-            this.form.contractList.splice(row.index,1)//删除当前行的合同信息
-            this.handleRadioChange({...res.data})
+            this.form.contractList.splice(rowIndex,1)//删除当前行的合同信息
+            let params = {
+              ...this.currentRowBillInfo,
+            }
+            this.handleRadioChange({row: params})
             this.$message.success('删除合同信息成功！')
           })
         }
@@ -369,7 +387,10 @@ export default {
       this.zjControl.maintainInvoice(params).then(res => {
         this.$message.success('保存成功！')
         this.$refs.invoiceTable.clearActived()
-        this.handleRadioChange({...res.data})
+        let params = {
+          ...this.currentRowBillInfo,
+        }
+        this.handleRadioChange({row: params})
         this.$refs.invoiceTable.refreshScroll()
       })
     },
@@ -412,7 +433,10 @@ export default {
           }
           this.zjControl.maintainInvoice(params).then(res=>{
             this.form.invoiceList.splice(row.index,1)//删除当前行的发票信息
-            this.handleRadioChange({...res.data})
+            let params = {
+              ...this.currentRowBillInfo,
+            }
+            this.handleRadioChange({row: params})
             this.$message.success('删除发票信息成功！')
           })
         }
@@ -450,7 +474,10 @@ export default {
         this.$message.success('保存成功！')
         this.$refs.otherAttachTable.clearActived()
         //刷新当前凭证信息下的合同、发票、附件列表
-        this.handleRadioChange({...res.data})
+        let params = {
+          ...this.currentRowBillInfo,
+        }
+        this.handleRadioChange({row: params})
       })
     },
     modifyAttach(table,row) {
@@ -490,7 +517,10 @@ export default {
           }
           this.zjControl.maintainOtherAttach(params).then(res=>{
             this.form.otherAttachList.splice(row.index,1)//删除当前行的发票信息
-            this.handleRadioChange({...res.data})
+            let params = {
+              ...this.currentRowBillInfo,
+            }
+            this.handleRadioChange({row: params})
             this.$message.success('删除附件成功！')
           })
         }
@@ -518,9 +548,14 @@ export default {
   },
   created() {
     this.getApi()
+    this.getRow()
     this.getDic()
-    this.ebBillModelList = this.$route.params.rowData.ebBillModelList//获取凭证信息列表
-    console.log(this.$route.params.rowData.ebBillModelList)
+    this.ebBillModelList = this.row.ebBillModelList//获取凭证信息列表
+    // this.ebBillModelList = this.$route.params.rowData.ebBillModelList//获取凭证信息列表
+    console.log(this.row)
+  },
+  mounted() {
+    this.handleDataChange(this.row.ebBillModelList)
   }
 };
 </script>

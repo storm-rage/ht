@@ -5,6 +5,7 @@ export default {
       zjControl: {
         getDetail: this.$api.expireClearingManageWorkflow.getReviewDetails,
         clearReview: this.$api.expireClearingManageWorkflow.clearReview,
+        clearAbort: this.$api.expireClearingManageWorkflow.clearAbort,
         submitClearApply: this.$api.expireClearingManageWorkflow.submitClearApply
       },
       // 复核和驳回用到
@@ -149,15 +150,10 @@ export default {
             cancelButtonText: '取消'
           }).then(() => {
             const {notes} = this.$refs.auditRemark.getData();
-            const clearIds = this.bizInfo.waitClearInfoList.map((item) => {
-              return item.id
-            });
             this.rejectLoading = true;
-            this.zjControl.submitClearApply({
-              operateFlag: OperResult.REJECT,
-              opinion: notes,
-              serialNo: this.row.serialNo,
-              clearIds
+            this.zjControl.clearAbort({
+              reviewOpinion: notes,
+              serialNo: this.row.serialNo
             }).then(res => {
               this.rejectLoading = false;
               //成功，关闭

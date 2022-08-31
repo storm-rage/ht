@@ -70,11 +70,11 @@
       <zj-header v-show="pageType !== 3">身份证</zj-header>
       <div v-show="pageType === 3">
         <zj-header>附件信息</zj-header>
-        <zj-button type="text">点此下载《委托授权书模板》</zj-button>
+        <p class="zj-m-l-20">点此下载<zj-button type="text" @click="downloadTemplate">《委托授权书模板》</zj-button>
+        </p>
       </div>
-
       <zj-content>
-        <zj-table :pager="false" ref="attach" :dataList="attachInfo">
+        <zj-table :pager="false" ref="attach" :dataList="pageType===3?attachInfo:[attachInfo[0]]">
           <zj-table-column type="seq" width="60" title="序号" />
           <zj-table-column field="type" title="附件类型" />
           <zj-table-column field="fileName" title="附件" />
@@ -123,8 +123,8 @@
       </zj-content>
     </zj-content-block>
     <zj-content-footer>
-      <zj-button type="primary" @click="pageType = 2" v-show="pageType === 1">维护本人信息</zj-button>
-      <zj-button type="primary" @click="pageType = 3" v-show="pageType === 1">更换操作人员</zj-button>
+      <zj-button type="primary" @click="changePageType(2)" v-show="pageType === 1">维护本人信息</zj-button>
+      <zj-button type="primary" @click="changePageType(3)" v-show="pageType === 1">更换操作人员</zj-button>
       <zj-button type="primary" @click="submit" v-show="pageType === 2 || pageType === 3">确认提交</zj-button>
       <zj-button class="back" @click="back">返回</zj-button>
     </zj-content-footer>
@@ -138,11 +138,15 @@ export default {
   data() {
     return {
       zjControl: {
+        downloadFile: this.$api.baseCommon.downloadFile,//文件下载
         ...this.$api.myBasicInformation,
       },
       form: {},
       dictionary: {},
-      attachInfo: [{ fileId: "", type: "身份证影印件", fileName: "" }],
+      attachInfo: [
+        { fileId: "", type: "身份证影印件", fileName: "" },
+        { fileId: "", type: "委托授权书", fileName: "" }
+      ],
       platformFastMail: {},
       pageType: 1, // 1详情 2维护本人信息 3更换操作人员
       roleId: "", //  角色
@@ -220,6 +224,12 @@ export default {
       this.zjControl.getPersonalInfo(params).then((res) => {
         this.form = res.data.userInfo;
         this.platformFastMail = res.data.platformFastMail;
+        // 身份证附件
+        this.attachInfo[0].fileId = this.form.identitycardFileId
+        this.attachInfo[0].fileName = this.form.identitycardFileName
+        // 委托书附件
+        this.attachInfo[1].fileId = this.form.wtsqsFileId
+        this.attachInfo[1].fileName = this.form.wtsqsFileName
         // 角色权限
         this.dictionary.roleId = this.dictionary.roleId.filter((item) => {
           return this.form.roleIds.indexOf(item.code) !== -1;
@@ -236,6 +246,9 @@ export default {
         this.form.roleId = this.roleId;
         this.updateOperator();
       }
+    },
+    changePageType(val) {
+      this.pageType = val
     },
     // 维护本人信息
     updatePersonalInfo() {
@@ -258,6 +271,8 @@ export default {
           // 身份证附件
           this.form.identitycardFileId = this.attachInfo[0].fileId;
           this.form.identitycardFileName = this.attachInfo[0].fileName;
+          this.form.wtsqsFileId = this.attachInfo[1].fileId;
+          this.form.wtsqsFileName = this.attachInfo[1].fileName;
           this.zjControl.updateOperator(this.form).then((res) => {
             this.getPersonalInfo();
             this.$message.success("修改成功!");
@@ -277,15 +292,28 @@ export default {
         this.$message.success("附件上传成功!");
       });
     },
+    //下载委托授权书模板
+    downloadTemplate() {
+      this.$refs.form.validate((valid) => {
+        if (valid) {
+          let params = {
+            userInfo: this.form,
+            templateType: "WTSQS"
+          }
+          this.zjControl.downloadTemplate(params)
+        }
+      })
+    },
     //下载附件
-    toDownload(fileId, fileName) {
-      this.zjControl.downloadFile({ fileId, fileName })
+    toDownload(row) {
+      this.zjControl.downloadFile(row)
     },
     back() {
       if (this.pageType === 1) {
         this.$router.push("/personalCenter");
       } else {
         this.pageType = 1;
+        this.$refs.form.clearValidate()
       }
     },
   },
