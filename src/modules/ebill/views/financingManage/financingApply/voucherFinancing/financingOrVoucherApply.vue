@@ -57,8 +57,8 @@
             <el-row>
               <el-col :span="12">
                 <el-form-item label="预计融资期限：">
-                  {{form.finConStartDate}}
-                  {{form.finConEndDate?`至${form.finConEndDate}`:''}}
+                  {{form.applyDateTime}}
+                  {{form.expireDate?`至${form.expireDate}`:''}}
                   {{form.estimateDays?`共${form.estimateDays}天`:''}}
                 </el-form-item>
               </el-col>
