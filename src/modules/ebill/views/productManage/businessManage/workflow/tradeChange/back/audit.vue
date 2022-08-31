@@ -89,7 +89,7 @@ export default {
      * @returns {Promise<unknown>}
      */
     validData () {
-      return  this.$refs.tradeInfo.validForm
+      return  this.$refs.tradeInfo.validForm()
     },
     /**
      * 获取维护之后的数据
