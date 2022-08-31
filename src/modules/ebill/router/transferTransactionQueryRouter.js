@@ -2,7 +2,7 @@ const transferTransactionQueryRouter = [
   {
     path: '/queryBillTransfer',
     name: 'queryBillTransfer',
-    component: () => import('../views/billLssue/transferTransactionQuery'),
+    component: () => import('../views/billLssue/transferTransactionQuery/index.vue'),
     meta: {
       title: '转让交易查询',
       root: '电子债权凭证',
@@ -13,7 +13,7 @@ const transferTransactionQueryRouter = [
   {
     path: '/transferTransactionSearchDetail',
     name: 'transferTransactionSearchDetail',
-    component: () => import('../views/billLssue/transferTransactionQuery/detail'),
+    component: () => import('../views/billLssue/transferTransactionQuery/detail.vue'),
     meta: {
       title: '转让交易详情',
       root: '电子债权凭证',

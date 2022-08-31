@@ -11,6 +11,7 @@
       <zj-content-block>
         <zj-header title="贸易合同信息" />
         <zj-button
+          v-if="isEdit"
           type="primary"
           icon="el-icon-circle-plus-outline"
           @click="handleAdd('contract')"
@@ -89,11 +90,15 @@
             :edit-render="{
               name: 'input'
             }"
-          />
+          >
+            <template v-slot:edit="{ row }">
+              {{ row.fileName || '-' }}
+            </template>
+          </zj-table-column>
           <zj-table-column title="操作" width="200" fixed="right">
             <template v-slot="{ row, rowIndex }">
               <template v-if="!$refs.contractTable.isActiveByRow(row)">
-                <zj-button type="text" @click="edit('contract', row)"
+                <zj-button v-if="isEdit" type="text" @click="edit('contract', row)"
                   >修改</zj-button
                 >
                 <zj-button v-if="row.fileId" type="text" @click="downs(row)">下载</zj-button>
@@ -120,6 +125,7 @@
                 icon-color="red"
                 title="确定删除吗？"
                 @confirm="del('contract', row)"
+                v-if="isEdit"
               >
                 <zj-button slot="reference" type="text">删除</zj-button>
               </el-popconfirm>
@@ -131,6 +137,7 @@
       <zj-content-block>
         <zj-header title="发票信息" />
         <zj-button
+          v-if="isEdit"
           type="primary"
           icon="el-icon-circle-plus-outline"
           @click="handleAdd('invoice')"
@@ -289,7 +296,7 @@
           <zj-table-column title="操作" width="200" fixed="right">
             <template v-slot="{ row, rowIndex }">
               <template v-if="!$refs.invoiceTable.isActiveByRow(row)">
-                <zj-button type="text" @click="edit('invoice', row)"
+                <zj-button v-if="isEdit" type="text" @click="edit('invoice', row)"
                   >修改</zj-button
                 >
                 <zj-button v-if="row.fileId" type="text" @click="downs(row)">下载</zj-button>
@@ -311,9 +318,15 @@
                   <zj-button slot="trigger" type="text">上传</zj-button>
                 </zj-upload>
               </template>
-              <zj-button type="text" @click="del('invoice', row)"
-                >删除</zj-button
+              <el-popconfirm
+                icon="el-icon-info"
+                icon-color="red"
+                title="确定删除吗？"
+                @confirm="del('invoice', row)"
+                v-if="isEdit"
               >
+                <zj-button slot="reference" type="text">删除</zj-button>
+              </el-popconfirm>
             </template>
           </zj-table-column>
         </zj-table>
@@ -323,6 +336,7 @@
       <zj-content-block>
         <zj-header title="其他附件" />
         <zj-button
+          v-if="isEdit"
           type="primary"
           icon="el-icon-circle-plus-outline"
           @click="handleAdd('other')"
@@ -363,7 +377,7 @@
           <zj-table-column title="操作" width="200" fixed="right">
             <template v-slot="{ row, rowIndex }">
               <template v-if="!$refs.otherTable.isActiveByRow(row)">
-                <zj-button type="text" @click="edit('other', row)"
+                <zj-button v-if="isEdit" type="text" @click="edit('other', row)"
                   >修改</zj-button
                 >
                 <zj-button v-if="row.fileId" type="text" @click="downs(row)">下载</zj-button>
@@ -387,7 +401,15 @@
                   <zj-button slot="trigger" type="text">上传</zj-button>
                 </zj-upload>
               </template>
-              <zj-button type="text" @click="del('other', row)">删除</zj-button>
+              <el-popconfirm
+                icon="el-icon-info"
+                icon-color="red"
+                title="确定删除吗？"
+                @confirm="del('other', row)"
+                v-if="isEdit"
+              >
+                <zj-button slot="reference" type="text">删除</zj-button>
+              </el-popconfirm>
             </template>
           </zj-table-column>
         </zj-table>
@@ -411,7 +433,11 @@ export default {
   name: 'submitDialog',
   props: {
     visible: Boolean,
-    rowData: Object // 从外面传进来的数据集合，用于查详情，修改有部分key需要在这里拿
+    rowData: Object, // 从外面传进来的数据集合，用于查详情，修改有部分key需要在这里拿
+    isEdit: {
+      type: Boolean,
+      default: true
+    }
   },
   data () {
     return {
@@ -427,7 +453,7 @@ export default {
           .offlineStatementMaintainInvoice, //贸易背景管理-发票维护
         offlineStatementMaintainOther: this.$api.billAssignApply
           .offlineStatementMaintainOther, //贸易背景管理-其它附件维护
-        uploadMaintainFile: this.$api.billAssignApply.uploadMaintainFile //贸易背景管理-附件上传
+        uploadMaintainFile: this.$api.billAssignApply.uploadMaintainFile, //贸易背景管理-附件上传
       },
       form: {
         contractList: [],
@@ -486,15 +512,38 @@ export default {
       dictionary: {}
     }
   },
-  created () {
-    if (this.rowData.ebillCode) {
-      this.getApi()
-      this.getDic()
-      this.getDetail()
+  watch: {
+    visible: {
+      handler(value) {
+        if(value && this.rowData.ebillCode) {
+          this.getApi()
+          this.getDic()
+          this.getDetail()
+        }
+      },
+      immediate: true
     }
   },
   methods: {
-    onConfirm () {},
+    onConfirm () {
+      let types = ['contract','invoice','other']
+      let prosimeAll =  types.map((type,index)=>{
+        return new Promise((resove,reject)=>{
+          let tableActiveRow = this.$refs[type+'Table'] && this.$refs[type+'Table'].getActiveRecord()
+          if(tableActiveRow) {
+            // 有未保存的数据
+            this.save(type, tableActiveRow.row).then(res=>{
+              resove(res)
+            })
+          } else {
+            resove()
+          }
+        })
+      })
+      Promise.all(prosimeAll).then(()=>{
+        this.cancel()
+      }).catch((err)=>{})
+    },
     cancel () {
       this.$emit('update:visible', false)
     },
@@ -654,43 +703,51 @@ export default {
       this.$refs[type + 'Table'].setActiveRow(row)
     },
     save (type, row) {
-      this.$refs[type + 'Table']
-        .validate(row)
-        .then(() => {
-          let saveType = {
-            contract: {
-              url: this.zjControl.offlineStatementMaintainContract,
-              valueProp: 'contractInfo'
-            },
-            invoice: {
-              url: this.zjControl.offlineStatementMaintainInvoice,
-              valueProp: 'invoice'
-            },
-            other: {
-              url: this.zjControl.offlineStatementMaintainOther,
-              valueProp: 'otherAttach'
+      return new Promise((resove,reject)=>{
+        this.$refs[type + 'Table']
+          .validate(row)
+          .then(() => {
+            let saveType = {
+              contract: {
+                url: this.zjControl.offlineStatementMaintainContract,
+                valueProp: 'contractInfo'
+              },
+              invoice: {
+                url: this.zjControl.offlineStatementMaintainInvoice,
+                valueProp: 'invoice'
+              },
+              other: {
+                url: this.zjControl.offlineStatementMaintainOther,
+                valueProp: 'otherAttach'
+              }
             }
-          }
-          let request = saveType[type].url
-          request({
-            acctId: this.rowData.id,
-            [saveType[type].valueProp]: {
-              ...row,
-              operateType: row.id ? 'MOD' : 'ADD',
+            let request = saveType[type].url
+            request({
+              acctId: this.rowData.id,
+              [saveType[type].valueProp]: {
+                ...row,
+                operateType: row.id ? 'MOD' : 'ADD',
+                ebillCode: this.rowData.ebillCode
+              },
               ebillCode: this.rowData.ebillCode
-            },
-            ebillCode: this.rowData.ebillCode
-          })
-            .then(res => {
-              this.$refs[type + 'Table'].clearActived()
-              !row.id ? (row.id = res.data.id) : ''
-              this.$message.success('保存成功!')
             })
-            .catch(() => {})
-        })
-        .catch(err => {})
+              .then(res => {
+                this.$refs[type + 'Table'].clearActived()
+                !row.id ? (row.id = res.data.id) : ''
+                this.$message.success('保存成功!')
+                resove(res)
+              })
+              .catch((err) => {
+                reject(err)
+              })
+          })
+          .catch(err => {
+            reject(err)
+          })
+      })
     },
     del (type, row) {
+      if(!row.id) return this.$refs[type + 'Table'].remove(row)
       let saveType = {
         contract: {
           url: this.zjControl.offlineStatementMaintainContract,
