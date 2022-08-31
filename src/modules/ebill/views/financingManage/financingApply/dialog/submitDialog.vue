@@ -19,21 +19,20 @@
 export default {
   name: "submitDialog",
   props: {
-    form: Object,
     zjControl: Object,
   },
   data() {
     return {
       dialogShow:false,
+      dialogForm:{},
     }
   },
   methods: {
     onConfirm() {
-      console.log(this.zjControl)
       //订单融资提交
       if(this.zjControl.submitFinancingOrderApply) {
         console.log('订单融资')
-        this.zjControl.submitFinancingOrderApply(this.form).then(res=>{
+        this.zjControl.submitFinancingOrderApply({...this.dialogForm}).then(res=>{
           this.$message.success(res.msg)
           this.dialogShow = false
           this.goParent()
@@ -42,20 +41,20 @@ export default {
       //入库/凭证融资提交
       if(this.zjControl.submitFinancingBillApply) {
         console.log('入库/凭证融资提交')
-        this.zjControl.submitFinancingBillApply(this.form).then(res=>{
+        this.zjControl.submitFinancingBillApply({...this.dialogForm}).then(res=>{
           this.$message.success(res.msg)
           this.dialogShow = false
           this.goParent()
         })
       }
-
     },
     cancel() {
       this.dialogShow = false
     },
     open(form,Boolean) {
       this.dialogShow = true
-      console.log(form)
+      this.dialogForm = form.form
+      console.log(this.dialogForm)
     },
   },
 }

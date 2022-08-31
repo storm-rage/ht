@@ -24,7 +24,7 @@
             <zj-table-column field="invoiceNumber" title="发票号码"/>
             <zj-table-column field="totalAmtLowcase" title="发票金额（含税）" :formatter="money"/>
             <zj-table-column field="sellAmount" title="发票金额（不含税）" :formatter="money"/>
-            <zj-table-column field="userdAmt" title="发票使用金额" :formatter="money"/>
+            <zj-table-column field="usedAmt" title="发票使用金额" :formatter="money"/>
             <zj-table-column field="financingUsedAmtTotal" title="融资已占用金额" :formatter="money"/>
             <zj-table-column field="financingUsedAmt" title="本次融资发票金额" :formatter="money"/>
             <zj-table-column field="invoiceDate" title="发票日期" :formatter="date"/>
@@ -44,7 +44,7 @@
             <zj-table-column field="invoiceNumber" title="发票号码"/>
             <zj-table-column field="totalAmtLowcase" title="发票金额（含税）" :formatter="money"/>
             <zj-table-column field="sellAmount" title="发票金额（不含税）" :formatter="money"/>
-            <zj-table-column field="userdAmt" title="发票使用金额" :formatter="money"/>
+            <zj-table-column field="usedAmt" title="发票使用金额" :formatter="money"/>
             <zj-table-column field="financingUsedAmtTotal" title="融资已占用金额" :formatter="money"/>
             <zj-table-column field="financingUsedAmt" title="本次融资发票金额" :edit-render="{name: '$input'}" :formatter="money"/>
             <zj-table-column field="invoiceDate" title="发票日期" :formatter="date"/>
@@ -59,7 +59,7 @@
                   <zj-button type="text" @click="modifyInvoice('applyInvoiceTable',row)">维护</zj-button>
                   <zj-button type="text" @click="previewFile(row)">查看</zj-button>
                   <zj-button type="text" @click="downloadFile(row)">下载</zj-button>
-                  <zj-button type="text" @click="deleteInvoice(row)">删除</zj-button>
+                  <zj-button type="text" @click="deleteInvoice(row,rowIndex)">删除</zj-button>
                 </template>
               </template>
             </zj-table-column>
@@ -110,10 +110,20 @@ export default {
     beforeClose() {},
 
     submit() {
+      for(let item of this.applyInvoiceList) {
+        if(!item.financingUsedAmt) {
+          item.financingUsedAmt = '0.00'
+        }
+      }
       this.$emit('handleInvoiceList',this.applyInvoiceList)
       this.show = false
     },
     saveInvoice(row,rowIndex) {
+      if(!row.financingUsedAmt) {return this.$message.error('请输入本次融资发票金额！')}
+      let flag = (row.usedAmt - row.financingUsedAmtTotal) < row.financingUsedAmt
+      if(flag) {
+        return this.$message.error(`本次融资发票金额不能大于${row.usedAmt - row.financingUsedAmtTotal}!`)
+      }
       this.applyInvoiceList[rowIndex] = row
       this.$message.success('发票保存成功！')
       this.$refs.applyInvoiceTable.clearActived()
@@ -133,11 +143,12 @@ export default {
     },
     downloadFile(row) {
       this.$api.baseCommon.downloadFile({
-        fileId: row.fileId,
+        fileUrl: row.fileId,
         fileName: row.fileName,
       })
     },
-    deleteInvoice(row) {
+    deleteInvoice(row,rowIndex) {
+      this.applyInvoiceList.splice(rowIndex,1)
 
     },
     //检测是否正在编辑     tableRefList需要检测的table数组

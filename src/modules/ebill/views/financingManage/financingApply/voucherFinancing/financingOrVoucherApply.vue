@@ -111,7 +111,7 @@
             </ol>
           </div>
         </zj-content-block>
-        <zj-content-block>
+        <zj-content-block v-if="form.isGysHtEnterprise === '1'">
           <zj-header title="贸易背景">
             <template #btn>
               <zj-button type="danger" class="zj-m-l-10" :round="true" @click="toTradeBackground">维护</zj-button>
@@ -133,13 +133,13 @@
               <zj-table-column field="invoiceNumber" title="发票号码"/>
               <zj-table-column field="totalAmtLowcase" title="发票金额（含税）" :formatter="money"/>
               <zj-table-column field="sellAmount" title="发票金额（不含税）" :formatter="money"/>
-              <zj-table-column field="userdAmt" title="发票使用金额" :formatter="money"/>
+              <zj-table-column field="usedAmt" title="发票使用金额" :formatter="money"/>
               <zj-table-column field="financingUsedAmtTotal" title="融资已占用金额" :formatter="money"/>
               <zj-table-column field="financingUsedAmt" title="本次融资发票金额" :edit-render="{name: '$input'}" :formatter="money"/>
               <zj-table-column field="invoiceDate" title="发票日期" :formatter="date"/>
               <zj-table-column field="fileName" title="发票附件"/>
               <span slot="pager-left" class="slotRows" :gutter="40">
-                凭证金额合计：{{ebillAmtTotal?moneyNoSynbol(ebillAmtTotal):0}}
+                本次融资发票金额合计：{{ebillAmtTotal?moneyNoSynbol(ebillAmtTotal):0}}
               </span>
             </zj-table>
 
@@ -152,7 +152,7 @@
         <zj-button class="back" @click="goParent">上一步</zj-button>
         <zj-button type="primary" @click="submit">提交申请</zj-button>
       </zj-content-footer>
-      <submit-dialog ref="submitDialog" :zjControl="zjControl" :form="form"/>
+      <submit-dialog ref="submitDialog" :zjControl="zjControl"/>
       <choice-invoice ref="choiceInvoice" :invoiceItemList="form.invoiceItemList" @handleInvoiceList="handleInvoiceList"/>
     </zj-content-container>
 </template>
@@ -175,7 +175,7 @@ export default {
       let resArr = []
       let res = 0
       if(this.invoiceItemLists && this.invoiceItemLists.length) {
-        resArr = this.invoiceItemLists.map(item=>item.totalAmtLowcase)
+        resArr = this.invoiceItemLists.map(item=>item.financingUsedAmt)
         res = resArr.reduce((a,b)=>{
           return Number(a) + Number(b)
         })
@@ -256,6 +256,7 @@ export default {
     },
     handleInvoiceList(val) {
       this.invoiceItemLists = [...val]//存放到本地
+      console.log(this.invoiceItemLists)
       this.invoiceShow = false
       this.$nextTick(()=>{
         if(this.invoiceItemLists) {
@@ -263,14 +264,24 @@ export default {
           this.invoiceShow = true
         }
       })
-      console.log(this.invoiceItemLists)
-      console.log(this.form.invoiceItemLists)
       this.$refs.invoiceItemListsTable.iRefresh()
     },
     submit(){
+      if(this.form.isGysHtEnterprise === '1' && this.form.tranAmt > this.ebillAmtTotal) {
+        return this.$message.error('本次融资发票金额不足！')
+      }
+      let params = {
+        idList: this.form.ebBillModelList.map(item=>item.id),
+        invoiceList : this.form.invoiceItemLists,
+        entId : this.form.buyerId,
+        applyDatetime : this.form.applyDatetime,
+        financingFlag : this.form.financingFlag,
+        isGysHtEnterprise : this.form.isGysHtEnterprise,
+        tranferAmt : this.form.tranferAmt,
+      }
       this.$refs.form.validate(boo=>{
         if(boo){
-          this.$refs.submitDialog.open({form: this.form}, true)
+          this.$refs.submitDialog.open({form: params}, true)
         }
       })
     },
