@@ -37,7 +37,7 @@
           </template>
         </zj-table-column>
       </zj-table>
-      <el-row class="button-row zj-center zj-m-t-20" v-if="opeType">
+      <el-row class="button-row zj-center zj-m-t-20" v-if="opeType || !isEdit">
         <zj-button type="primary" icon="el-icon-circle-plus-outline" @click="infoUpload">上传资料</zj-button>
       </el-row>
     </zj-content-block>
@@ -55,6 +55,7 @@ export default {
     zjControl: Object,
     dictionary: Object,
     opeType: Boolean,
+    isEdit: Boolean,
   },
   data() {
     return {

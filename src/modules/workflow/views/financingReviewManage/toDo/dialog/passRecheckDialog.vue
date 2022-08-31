@@ -16,7 +16,7 @@
       >
         确认
       </zj-button>
-      <zj-button type="primary" @click="onConfirm(titleInfo === '复核通过'? '3':'4')"
+      <zj-button type="primary" @click="reviewConfirm(titleInfo === '复核通过'? '3':'4')"
                  :api="zjBtn.submitReviewAudit"
                  v-if="dialogForm.transInfo.workflowState === 'F004'"
       >
@@ -51,25 +51,32 @@ export default {
         isRiskFlag: this.dialogForm.isRiskFlag,
         operateFlag: flag,//融资审核操作标志：1-保理公司初审通过 2-保理公司初审驳回 3-保理公司复审通过 4-保理公司复审驳回上一级
         remark: this.dialogForm.rejectReason,
-        voucherId: this.dialogForm.voucherCreditInfo.voucherId,
+        voucherId: this.dialogForm.voucherCreditInfo?this.dialogForm.voucherCreditInfo.voucherId:'',
         bizId: this.bizId,
       }
       //初审
-      if(flag === '1' || '2') {
-        this.zjControl.submitFirstAudit(params).then(res=>{
-          this.$message.success(res.msg)
-          this.dialogShow = false
-          this.goParent()
-        })
+      this.zjControl.submitFirstAudit(params).then(res=>{
+        this.$message.success(res.msg)
+        this.dialogShow = false
+        this.goParent()
+      })
+    },
+    reviewConfirm(flag) {
+      let params = {
+        attachList: this.dialogForm.otherAttachList,
+        creditId: this.dialogForm.blContractInfo.creditId,
+        isRiskFlag: this.dialogForm.isRiskFlag,
+        operateFlag: flag,//融资审核操作标志：1-保理公司初审通过 2-保理公司初审驳回 3-保理公司复审通过 4-保理公司复审驳回上一级
+        remark: this.dialogForm.rejectReason,
+        voucherId: this.dialogForm.voucherCreditInfo?this.dialogForm.voucherCreditInfo.voucherId:'',
+        bizId: this.bizId,
       }
       //复审
-      if(flag === '3' || '4') {
-        this.zjControl.submitReviewAudit(params).then(res=>{
-          this.$message.success(res.msg)
-          this.dialogShow = false
-          this.goParent()
-        })
-      }
+      this.zjControl.submitReviewAudit(params).then(res=>{
+        this.$message.success(res.msg)
+        this.dialogShow = false
+        this.goParent()
+      })
     },
     cancel() {
       this.dialogShow = false
