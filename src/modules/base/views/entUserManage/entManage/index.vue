@@ -76,6 +76,7 @@ export default {
     queryEntDictionary() {
       this.zjControl.queryEntDictionary().then((res) => {
         this.dictionary = res.data;
+        this.search()
       });
     },
     // 导出列表
