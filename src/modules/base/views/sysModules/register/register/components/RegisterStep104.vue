@@ -436,32 +436,20 @@ export default {
       //校验操作用户数据是否完整
       if(!this.entInfoObj.form.registerUserList) {
         for(let i of this.registerUserList){
-          let resCheck = (i.certEndDate===''||null) ||
-            (i.certNo===''||null) ||
-            (i.certStartDate===''||null) ||
-            (i.certType===''||null) ||
-            (i.mobileNo===''||null) ||
-            (i.roleId===''||null) ||
-            (i.userId===''||null) ||
-            (i.userName===''||null)
-          if(resCheck){
-            this.$message.error(`请补全操作用户的信息！`)
-            return
+          for(let key in i) {
+            if(i[key] === null || '' && key !== 'roleId' || 'certType') {
+              this.$message.error(`请补全操作用户的信息！`)
+              return
+            }
           }
         }
       }else{
         for(let i of this.entInfoObj.form.registerUserList){
-          let resCheck = (i.certEndDate===''||null) ||
-            (i.certNo===''||null) ||
-            (i.certStartDate===''||null) ||
-            (i.certType===''||null) ||
-            (i.mobileNo===''||null) ||
-            (i.roleId===''||null) ||
-            (i.userId===''||null) ||
-            (i.userName===''||null)
-          if(resCheck){
-            this.$message.error(`请补全操作用户的信息！`)
-            return
+          for(let key in i) {
+            if(i[key] === null || '' && key !== 'roleId' || 'certType') {
+              this.$message.error(`请补全操作用户的信息！`)
+              return
+            }
           }
         }
       }
@@ -664,32 +652,20 @@ export default {
       //下载前需要校验操作用户信息是否完整
       if(!this.entInfoObj.form.registerUserList) {
         for(let i of this.registerUserList){
-          let resCheck = (i.certEndDate===''||null) ||
-            (i.certNo===''||null) ||
-            (i.certStartDate===''||null) ||
-            (i.certType===''||null) ||
-            (i.mobileNo===''||null) ||
-            (i.roleId===''||null) ||
-            (i.userId===''||null) ||
-            (i.userName===''||null)
-          if(resCheck){
-            this.$message.error(`请补全操作用户的信息！`)
-            return
+          for(let key in i) {
+            if(i[key] === null || '' && key !== 'roleId' || 'certType') {
+              this.$message.error(`请补全操作用户的信息！`)
+              return
+            }
           }
         }
       }else{
         for(let i of this.entInfoObj.form.registerUserList){
-          let resCheck = (i.certEndDate===''||null) ||
-            (i.certNo===''||null) ||
-            (i.certStartDate===''||null) ||
-            (i.certType===''||null) ||
-            (i.mobileNo===''||null) ||
-            (i.roleId===''||null) ||
-            (i.userId===''||null) ||
-            (i.userName===''||null)
-          if(resCheck){
-            this.$message.error(`请补全操作用户的信息！`)
-            return
+          for(let key in i) {
+            if(i[key] === null || '' && key !== 'roleId' || 'certType') {
+              this.$message.error(`请补全操作用户的信息！`)
+              return
+            }
           }
         }
       }
