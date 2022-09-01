@@ -100,14 +100,14 @@
               title="订单额度状态"
               :formatter="(obj) => typeMap(dictionary.factoringCredit, obj.cellValue)"/>
             <zj-table-column title="操作" fixed="right">
-              <template v-slot="{ row,rowIndex }">
-                <template v-if="$refs.financeTable.isActiveByRow(row)">
-                  <zj-button type="text" @click="toSave(row,rowIndex)">保存</zj-button>
-                  <zj-button type="text" style="margin-left: 0px" @click="toCancel(row,rowIndex)">取消</zj-button>
+              <template v-slot="scope">
+                <template v-if="$refs.financeTable.isActiveByRow(scope.row)">
+                  <zj-button type="text" @click="toSave(scope.row,scope.rowIndex)">保存</zj-button>
+                  <zj-button type="text" style="margin-left: 0px" @click="toCancel(scope.row,scope.rowIndex)">取消</zj-button>
                 </template>
                 <template v-else>
-                  <zj-button type="text" @click="toReSign(row)">续签</zj-button>
-                  <zj-button type="text" @click="toMaintenance(row)">维护</zj-button>
+                  <zj-button v-if="row.applyType=='EDXQ'" type="text" @click="toReSign(scope.row)">续签</zj-button>
+                  <zj-button v-else-if="row.applyType=='EDBG'" type="text" @click="toMaintenance(scope.row)">维护</zj-button>
                 </template>
               </template>
             </zj-table-column>
@@ -142,8 +142,9 @@ export default {
       zjControl: {
         getDataDirectory: this.$api.businessManage.getDataDirectory,
         getTradeRelationDetail: this.$api.businessManage.getTradeRelationDetail,
-        applyLimit: this.$api.businessManage.applyLimit,
-        checkContractRenewal: this.$api.businessManage.checkContractRenewal
+        applyLimit: this.$api.businessManage.applyLimit, // 额度续签
+        checkContractRenewal: this.$api.businessManage.checkContractRenewal, 
+        applyLimitChange: this.$api.businessManage.applyLimitChange, // 额度变更
       },
       // 字典
       dictionary: {},
@@ -221,7 +222,10 @@ export default {
         id: this.row.id,
         tradeRelationParamModel
       }
-      this.zjControl.applyLimit(params).then(res => {
+      let request = this.row.applyType == 'EDXQ' ?
+                          this.zjControl.applyLimit : 
+                          this.zjControl.applyLimitChange
+      request(params).then(res => {
         this.loading = false;
         //成功，关闭
         if (res.success) {
@@ -250,7 +254,7 @@ export default {
      * 续签订单保理产品
      * @param row
      */
-    toReSign () {
+    toReSign (rowData) {
       this.$refs.quotaReSign.show(this.tradeRelationModel, `额度续签-${this.businessParamModel.sellerName}`,`${this.businessParamModel.ddProductName}额度续签-${this.tradeRelationModel.buyerName}`)
     },
     /**

@@ -130,7 +130,7 @@
       <el-row class="btn-row">
         <zj-button status="primary" @click="pre">上一步</zj-button>
         <zj-button status="primary" @click="save('SAVE')">保存</zj-button>
-        <zj-button status="primary" @click="registerSuccess">完成注册</zj-button>
+        <zj-button type="primary" @click="registerSuccess">完成注册</zj-button>
       </el-row>
     </div>
     <RegisterFooter/>
@@ -433,33 +433,18 @@ export default {
       this.$emit('update:step','103')
     },
     registerSuccess() {
+      console.log(this.registerUserList)
       //校验操作用户数据是否完整
       if(!this.entInfoObj.form.registerUserList) {
         for(let i of this.registerUserList){
-          let resCheck = (i.certEndDate===''||null) ||
-            (i.certNo===''||null) ||
-            (i.certStartDate===''||null) ||
-            (i.certType===''||null) ||
-            (i.mobileNo===''||null) ||
-            (i.roleId===''||null) ||
-            (i.userId===''||null) ||
-            (i.userName===''||null)
-          if(resCheck){
+          if(!i.userId) {
             this.$message.error(`请补全操作用户的信息！`)
             return
           }
         }
       }else{
         for(let i of this.entInfoObj.form.registerUserList){
-          let resCheck = (i.certEndDate===''||null) ||
-            (i.certNo===''||null) ||
-            (i.certStartDate===''||null) ||
-            (i.certType===''||null) ||
-            (i.mobileNo===''||null) ||
-            (i.roleId===''||null) ||
-            (i.userId===''||null) ||
-            (i.userName===''||null)
-          if(resCheck){
+          if(!i.userId) {
             this.$message.error(`请补全操作用户的信息！`)
             return
           }
@@ -592,7 +577,7 @@ export default {
       this.entInfoObj.form.invoicePhone = this.form.invoicePhone
       this.entInfoObj.form.invoiceTaxpayerId = this.form.invoiceTaxpayerId
       this.entInfoObj.form.myBuyers = this.tradeInfoForm.myBuyers
-      this.zjControl.saveEntInfo(this.entInfoObj.form).then(res => {
+      this.zjControl.completeRegister(this.entInfoObj.form).then(res => {
         this.$message.success('提交企业资料成功！')
         let params = Object.assign({},this.entInfoObj)
         params.form.registerUserList = this.registerUserList//操作用户
@@ -664,30 +649,14 @@ export default {
       //下载前需要校验操作用户信息是否完整
       if(!this.entInfoObj.form.registerUserList) {
         for(let i of this.registerUserList){
-          let resCheck = (i.certEndDate===''||null) ||
-            (i.certNo===''||null) ||
-            (i.certStartDate===''||null) ||
-            (i.certType===''||null) ||
-            (i.mobileNo===''||null) ||
-            (i.roleId===''||null) ||
-            (i.userId===''||null) ||
-            (i.userName===''||null)
-          if(resCheck){
+          if(!i.userId) {
             this.$message.error(`请补全操作用户的信息！`)
             return
           }
         }
       }else{
         for(let i of this.entInfoObj.form.registerUserList){
-          let resCheck = (i.certEndDate===''||null) ||
-            (i.certNo===''||null) ||
-            (i.certStartDate===''||null) ||
-            (i.certType===''||null) ||
-            (i.mobileNo===''||null) ||
-            (i.roleId===''||null) ||
-            (i.userId===''||null) ||
-            (i.userName===''||null)
-          if(resCheck){
+          if(!i.userId) {
             this.$message.error(`请补全操作用户的信息！`)
             return
           }

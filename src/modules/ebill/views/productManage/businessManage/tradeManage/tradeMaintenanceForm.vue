@@ -219,6 +219,13 @@ export default {
         if (this.params.orderFactoringModel) {
           this.treeDefaultSelect.push(ProductType.DDBL)
         }
+        // 赋值不触发handleTreeChange，需要将对应的数据push进needMaintenanceProducts
+        this.$nextTick(()=>{
+          this.needMaintenanceProducts = this.treeDefaultSelect.map(item=>{
+            let _item = this.treeData[0].children.find(ele=>ele.code == item)
+            return _item
+          })
+        })
       }
     }
   },
@@ -247,6 +254,7 @@ export default {
      * @param checkedNodes
      */
     handleTreeChange (list,{checkedNodes}) {
+      window.console.log('checkedNodes', checkedNodes);
       this.needMaintenanceProducts = checkedNodes.filter((item) => {
         return item.code !== 'ALL';
       })

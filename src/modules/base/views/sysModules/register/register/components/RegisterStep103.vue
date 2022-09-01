@@ -27,7 +27,7 @@
         <el-row>
           <zj-button status="primary" @click="pre">上一步</zj-button>
           <zj-button status="primary" @click="save('SAVE')">保存</zj-button>
-          <zj-button status="primary" @click="next('NEXT')">下一步</zj-button>
+          <zj-button type="primary" @click="next('NEXT')">下一步</zj-button>
           <zj-button status="primary" @click="testAgain('AGAIN')">重新发起验证</zj-button>
         </el-row>
       </el-row>

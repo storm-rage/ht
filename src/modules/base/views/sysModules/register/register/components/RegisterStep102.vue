@@ -176,10 +176,10 @@
             </zj-table-column>
             <zj-table-column field="bankNo" title="銀行联行号" :edit-render="{name: '$input'}"/>
             <zj-table-column title="操作" fixed="right">
-              <template v-slot="{row}">
+              <template v-slot="{row,rowIndex}">
                 <template v-if="$refs.bankAccnameTable.isActiveByRow(row)">
                   <zj-button type="text" @click="saveRow(row)">保存</zj-button>
-                  <zj-button type="text" @click="cancel(row)">取消</zj-button>
+                  <zj-button type="text" @click="cancel(row,rowIndex)">取消</zj-button>
                 </template>
                 <template v-if="!$refs.bankAccnameTable.isActiveByRow(row)">
                   <zj-button type="text" @click="edit(row)">维护</zj-button>
@@ -210,7 +210,7 @@
       </el-form>
       <el-row class="btn-row">
         <zj-button status="primary" @click="save('SAVE')">保存</zj-button>
-        <zj-button status="primary" @click="next('NEXT')">下一步</zj-button>
+        <zj-button type="primary" @click="next('NEXT')">下一步</zj-button>
       </el-row>
     </div>
     <RegisterFooter/>
@@ -552,13 +552,13 @@ export default {
       console.log(this.entInfoObj.form.entBankInfo)
       let rowIndex = ''
       for(let i of rows) {
-        if(this.entInfoObj.form.entBankInfo.bankAccId === i.bankAccId) {
+        if(this.entInfoObj.form.entBankInfo && this.entInfoObj.form.entBankInfo.bankAccId === i.bankAccId) {
           rowIndex = rows.indexOf(i)
           break
         }
       }
       console.log('银行账户index=='+rowIndex)
-      if (rows && rows.length) {
+      if (rows && rows.length && this.entInfoObj.form.entBankInfo) {
         setTimeout(()=>{
           this.$refs.entBankInfoTable.setRadioRow(rows[rowIndex])
         },0)
@@ -623,11 +623,11 @@ export default {
       })
     },
     //取消
-    cancel(row){
+    cancel(row,rowIndex){
       if(row.bankAccId){
-        this.form.entBankInfoList.splice(0,1,this.oldRowInfo)
+        this.form.entBankInfoList.splice(rowIndex,1,this.oldRowInfo)
       } else{
-        this.form.entBankInfoList.splice(0,1)
+        this.form.entBankInfoList.splice(rowIndex,1)
       }
       this.$refs.bankAccnameTable.clearActived()
     },
@@ -654,9 +654,9 @@ export default {
     },
     //暂存form信息
     save(flag) {
-
+      if(!this.tableEditReport(['bankAccnameTable'])){return}
       //不校验保存注册信息
-      if(this.form.isHtEnterprise === '0') {
+      if(this.form.isHtEnterprise === '0' && this.form.entBankInfoList && this.form.entBankInfoList.length) {
         this.form.entBankInfo = this.form.entBankInfoList[0]
       }
       this.form.registerOperateFlag = flag
@@ -711,8 +711,21 @@ export default {
             this.form.entBankInfo = this.form.entBankInfoList[0]
           }
           console.log(this.form.entBankInfo)
-          if(this.form.confirmBankId !== this.form.entBankInfo.bankName) {
+          if(this.form.isHtEnterprise === '0' && this.form.confirmBankId !== this.form.entBankInfo.bankName) {
             return this.$message.error('请确认开户行一致！')
+          }
+          if(this.form.isHtEnterprise === '1') {
+            this.form.entBankInfo = this.form.entBankInfoList[0]
+            let str = this.form.entBankInfo.bankName.slice(0,4)
+            let res = ''
+            for(let item of this.bankInfoList) {
+              if(item.status === this.form.confirmBankId) {
+                res = item.label
+              }
+            }
+            if(str !== res) {
+              return this.$message.error('请确认开户行一致！')
+            }
           }
           this.form.confirmBankName = this.form.confirmBankId
           this.form.registerOperateFlag = flag

@@ -1,5 +1,5 @@
 import { toDateString, toTimeString, formatNumberRgx,formatNumberRgxNoSymbol, formatBankNum, getPreMonthDate, getPreDayDate, extension, isHasValue, digitUp,
-        tycDate,swArrDate
+        tycDate,swArrDate, formatDate
 } from './index.js'
 export default {
   install (Vue) {
@@ -193,6 +193,9 @@ export default {
     Vue.prototype.ifOrNot = function (val) {
       // 1: '是'    0/其他: '否'
       return val&&val=='1'? '是' : '否'
+    },
+    Vue.prototype.formatDate = function (str) {
+      return formatDate(str)
     }
   }
 }

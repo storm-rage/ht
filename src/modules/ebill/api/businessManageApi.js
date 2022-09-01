@@ -52,6 +52,14 @@ const businessManage = {
     return request.post('/business-manage/check-contract-renewal',params);
   },
   /**
+   * 业务管理-合同额度变更
+   * @param params
+   * @returns {Promise<AxiosResponse<any>>}
+   */
+   applyLimitChange (params) {
+    return request.post('/business-manage/apply-limit-change',params);
+  },
+  /**
    * 业务管理-合同续签申请
    * @param params
    * @returns {Promise<AxiosResponse<any>>}
@@ -60,7 +68,7 @@ const businessManage = {
     return request.post('/business-manage/apply-contract-renewal',params);
   },
   /**
-   * 业务管理-额度管理提交
+   * 业务管理-额度续签提交
    * @param params
    * @returns {Promise<AxiosResponse<any>>}
    */
