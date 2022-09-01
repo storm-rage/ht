@@ -45,8 +45,8 @@
         <zj-table-column field="applyTypeDesc" title="申请类型" v-if="tabAtive === 'agenda'" />
         <zj-table-column field="operateType" title="操作类型" v-else />
         <zj-table-column field="startObject" title="发起方" :formatter="(obj) => typeMap(dictionary.startObjectList, obj.cellValue)" />
-        <zj-table-column field="startTime" title="接收时间" v-if="tabAtive === 'agenda'" />
-        <zj-table-column field="endTime" title="处理时间" v-else />
+        <zj-table-column field="startTime" title="接收时间" :formatter="obj=>formatDate(obj.cellValue)" v-if="tabAtive === 'agenda'" />
+        <zj-table-column field="endTime" title="处理时间" :formatter="obj=>formatDate(obj.cellValue)" v-else />
         <zj-table-column field="workflowStateDesc" title="申请状态" />
         <zj-table-column title="操作" fixed="right" v-if="tabAtive === 'agenda'">
           <template v-slot="{ row }">

@@ -110,12 +110,13 @@
           <zj-table-column field="totalCreditAmount" title="供应商总额度" :formatter="money"/>
           <zj-table-column field="estimatedAnnualProcurementAmount" title="预计年采购金额" :formatter="money"/>
           <zj-table-column field="state" title="贸易关系状态" :formatter="(obj) => typeMap(dictionary.state, obj.cellValue)"/>
-          <zj-table-column title="操作" fixed="right">
+          <zj-table-column width="230" title="操作" fixed="right">
             <template v-slot="{ row }">
               <!--贸易关系状态为“正常”时，才展示维护和额度管理-->
               <template v-if="row.state === '1'">
                 <zj-button type="text" :api="zjBtn.maintainTradeRelation" @click="toMaintenance(row)">维护</zj-button>
-                <zj-button type="text" v-if="isDDBL" :api="zjBtn.applyLimit" @click="toMaintenanceQuota(row)">额度管理</zj-button>
+                <zj-button type="text" v-if="isDDBL" :api="zjBtn.applyLimit" @click="toMaintenanceQuota(row, 'EDXQ')">额度续签</zj-button>
+                <zj-button type="text" v-if="isDDBL" :api="zjBtn.applyLimit" @click="toMaintenanceQuota(row, 'EDBG')">额度变更</zj-button>
               </template>
               <template v-else>
                 ——
@@ -242,8 +243,8 @@ export default {
      * 额度管理
      * @param row
      */
-    toMaintenanceQuota (row) {
-      this.goChild('quotaMaintenance',{id: this.currentContractRow.id,busTradeId:row.busTradeId,tradeId:row.tradeId});
+    toMaintenanceQuota (row,applyType) {
+      this.goChild('quotaMaintenance',{id: this.currentContractRow.id,busTradeId:row.busTradeId,tradeId:row.tradeId, applyType});
     },
   }
 };

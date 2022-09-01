@@ -7,6 +7,7 @@
     <quota-change-audit
       ref="tradeInfo"
       :is-edit="true"
+      :rowData="row"
       :biz-id="row.bizId"></quota-change-audit>
     <!--  操作记录  -->
     <operate-log :log-list="operateLogList"></operate-log>

@@ -77,7 +77,7 @@ export default {
       this.zjControl.submitTradeRecheck({
         id: this.row.bizId,
         notes,
-        controlFlag: this.controlFlag,// 风控标识
+        controlFlag: true,// 风控标识
         operResult: OperResult.PASS
       }).then(res => {
         this.passLoading = false;
