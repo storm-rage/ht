@@ -52,6 +52,7 @@ export default {
           this.$message.success(res.msg)
         })
         this.dialogShow = false
+        this.goParent()
       })
     },
     cancel() {

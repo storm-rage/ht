@@ -120,7 +120,6 @@ export default {
         passBillSign:this.$api.billLssueBillSignFor.passBillSign,//融单签收-审核通过
         getOneBillSignAgreement:this.$api.billLssueBillSignFor.getOneBillSignAgreement,//融单签收-查询融单签收协议信息-单个协议查看
 
-        downloadFile:this.$api.baseCommon.downloadFile,
       },
       detailData: {},
       protocols: [],//协议列表
@@ -143,7 +142,9 @@ export default {
       })
     },
     attaDownload(fileId) {
-      this.zjControl.downloadFile(fileId)
+      this.$api.baseCommon.downloadFile({
+        fileUrl: fileId,
+      })
     },
     confirmSignFor() {
       if(!this.agreeCheck) {

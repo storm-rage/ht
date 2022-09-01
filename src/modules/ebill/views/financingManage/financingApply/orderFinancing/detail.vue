@@ -55,7 +55,7 @@
             </el-form-item>
           </el-col>
           <el-col :span="12">
-            <el-form-item label="融资月利率：">{{form.factoringFinancingMonthRate}}</el-form-item>
+            <el-form-item label="融资月利率：">{{form.factoringFinancingMonthRate?`${form.factoringFinancingMonthRate}%`:''}}</el-form-item>
           </el-col>
         </el-row>
         <el-row>
