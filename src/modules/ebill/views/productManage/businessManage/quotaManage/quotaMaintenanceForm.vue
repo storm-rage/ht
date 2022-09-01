@@ -100,8 +100,8 @@
                   <zj-button type="text" style="margin-left: 0px" @click="toCancel(row,rowIndex)">取消</zj-button>
                 </template>
                 <template v-else>
-                  <zj-button type="text" @click="toReSign(row)">续签</zj-button>
-                  <zj-button type="text" @click="toMaintenance(row)">维护</zj-button>
+                  <zj-button v-if="rowData.applyType=='EDXQ'" type="text" @click="toReSign(row)">续签</zj-button>
+                  <zj-button v-else-if="rowData.applyType=='EDBG'" type="text" @click="toMaintenance(row)">维护</zj-button>
                 </template>
               </template>
             </zj-table-column>
@@ -129,6 +129,7 @@ export default {
     sellerName:String,
     dictionary: Object,
     params: Object,
+    rowData: Object
   },
   components: {
     QuotaReSign

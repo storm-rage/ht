@@ -101,6 +101,7 @@
                                    :title="`${item.label}业务设置-${form.buyerName}`"
                                    :isOnlyMonthRateEdit="true"
                                    :dic="dictionary"
+                                   :isEdit="!form.busTradeId"
                                    :params="form.orderFactoringModel"></order-product-biz-setting>
         <!--  电子凭证产品业务设置    -->
         <bill-product-biz-setting v-if="item.code===constProductType.RD"
