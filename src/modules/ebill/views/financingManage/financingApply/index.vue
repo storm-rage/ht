@@ -1,12 +1,14 @@
 <template>
   <zj-content-container>
     <!--  融资申请  -->
-    <el-tabs v-model="tabs" class="zj-tabs-card zj-p-l-16 zj-p-r-16">
+    <el-tabs v-model="tabs" class="zj-tabs-card zj-p-l-16 zj-p-r-16" @tab-click="tabHandle">
       <el-tab-pane label="订单融资" name="orderTab" v-if="tabInfo.orderTab">
         <orderFinancing :zjControl="zjControl" :dictionary="dictionary" :uBtn="zjBtn" @nextStepParams="handelNextStepParams"/>
       </el-tab-pane>
       <el-tab-pane label="入库融资/凭证融资" name="billTab" v-if="tabInfo.billTab || tabInfo.warehouseTab">
-        <voucherFinancing :zjControl="zjControl" :dictionary="dictionary" :mBtn="zjBtn" @nextStepParams="handelNextStepParams"/>
+        <keep-alive>
+          <voucherFinancing :zjControl="zjControl" :dictionary="dictionary" :mBtn="zjBtn" @nextStepParams="handelNextStepParams"/>
+        </keep-alive>
       </el-tab-pane>
     </el-tabs>
     <zj-content-footer>
@@ -39,7 +41,7 @@ export default {
         submitFinancingOrderApply:this.$api.financingApply.submitFinancingOrderApply,//订单融资提交
         downloadFile:this.$api.baseCommon.downloadFile,
       },
-      tabs:'',
+      tabs:'orderTab',
       dictionary:{},
       nextStepParams:{},
       tabInfo: {
@@ -59,12 +61,12 @@ export default {
     getTabInfo() {
       this.zjControl.getFinancingApplyTab().then(res=>{
         this.tabInfo = res.data
-        for(let key in res.data) {
-          if(res.data[key] === '1') {
-            this.tabs = key
-            break
-          }
-        }
+        // for(let key in res.data) {
+        //   if(res.data[key] === '1') {
+        //     this.tabs = key
+        //     break
+        //   }
+        // }
         console.log(this.tabs)
       })
     },
@@ -89,11 +91,22 @@ export default {
     handelNextStepParams(val) {
       this.nextStepParams = {...val}
     },
+    tableLocal() {
+      if(localStorage.getItem('task') !== null) {
+        this.tabs = localStorage.getItem('task')
+      }
+    },
+    tabHandle(tab) {
+      localStorage.setItem('task',tab.name)
+    },
   },
   created() {
     this.getApi()
     this.getDic()
     this.getTabInfo()
+  },
+  mounted() {
+    this.tableLocal()
   }
 };
 </script>
