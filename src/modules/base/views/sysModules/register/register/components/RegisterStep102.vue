@@ -210,7 +210,7 @@
       </el-form>
       <el-row class="btn-row">
         <zj-button status="primary" @click="save('SAVE')">保存</zj-button>
-        <zj-button status="primary" @click="next('NEXT')">下一步</zj-button>
+        <zj-button type="primary" @click="next('NEXT')">下一步</zj-button>
       </el-row>
     </div>
     <RegisterFooter/>
