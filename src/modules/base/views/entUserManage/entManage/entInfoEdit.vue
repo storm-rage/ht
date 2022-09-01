@@ -197,7 +197,7 @@
       <zj-content-block v-if="isAdd">
         <zj-header title="企业操作员" />
         <zj-content>
-          <zj-button class="append zj-m-b-10" type="primary" @click="sysUserAdd">新增</zj-button>
+          <zj-button class="append zj-m-b-10" type="primary" @click="sysUserAdd" v-if="!isDetail">新增</zj-button>
           <zj-table ref="sysUser" :dataList="sysUserList" :pager="false" keep-source auto-resize :edit-config="{
               trigger: 'manual',
               mode: 'row',
@@ -210,10 +210,7 @@
             <zj-table-column field="mobileNo" title="手机号码" :edit-render="{ name: '$input' }" />
             <zj-table-column field="email" title="邮箱" :edit-render="{ name: '$input' }" />
             <zj-table-column field="htSysCode" title="内部系统账号" :edit-render="{ name: '$input' }" />
-            <zj-table-column field="roleId" title="操作员角色" :edit-render="{
-                name: '$select',
-                options: statementAccountTypeTable,
-              }" />
+            <zj-table-column field="roleId" title="操作员角色" :edit-render="{name: '$select',options: statementAccountTypeTable}" />
             <zj-table-column field="statementAccountType" title="开凭证对账单类型权限" :edit-render="{
                 name: '$select',
                 props: { multiple: true },
@@ -297,7 +294,7 @@
         </el-row>
       </zj-content-block>
       <!--  其他附件    -->
-      <other-file-setting ref="ofileSetting" isEdit></other-file-setting>
+      <other-file-setting ref="ofileSetting" :isEdit="isAdd || isEdit"></other-file-setting>
       <!--  操作记录  -->
       <operate-log ref="operateLog" :logList="logList" v-if="!isAdd"></operate-log>
     </el-form>

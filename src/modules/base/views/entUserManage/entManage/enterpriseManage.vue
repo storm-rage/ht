@@ -2,7 +2,7 @@
   <zj-content-container>
     <zj-top-header :title="pageType === 'add' ? '新增企业申请' : '修改企业申请'" />
     <!-- 表单 -->
-    <ent-info-edit ref="entInfoInit" :form="detailData" @formPass="formPass" />
+    <ent-info-edit ref="entInfoInit" :form.sync="detailData" @formPass="formPass" />
 
     <zj-content-footer>
       <zj-button type="primary" @click="submitForm()" v-if="pageType !== 'detail'">提交申请</zj-button>
@@ -22,7 +22,9 @@ export default {
     return {
       zjControl: this.$api.entInfoManage,
       pageType: this.$route.meta.pageType,
-      detailData: {},
+      detailData: {
+        isDoublePost: '0'
+      },
       dictionary: {},
     };
   },
@@ -30,7 +32,7 @@ export default {
     this.getRow()
     if (this.pageType !== 'add') {
       this.getEnterprise()
-    // 查询操作记录
+      // 查询操作记录
       this.getEbBusinessParamLog()
     }
   },

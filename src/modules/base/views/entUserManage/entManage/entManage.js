@@ -12,7 +12,10 @@ export default {
   props: {
     form: {
       type: Object,
-      default: () => { }
+      default: () => {
+        return {
+        }
+      }
     },
   },
   watch: {
@@ -72,10 +75,10 @@ export default {
           }
         ],
         isHtEnterprise: [
-          { name: '是否海天集团', required: true, message: "请选择是否海天集团" }
+          { name: '是否海天集团', required: true, message: "请选择是否海天集团", trigger: 'blur' }
         ],
         isDoublePost: [
-          { name: '是否双岗', required: true, message: "请选择是否双岗" }
+          { name: '是否双岗', required: true, message: "请选择是否双岗", trigger: 'blur' }
         ],
         registerStartDate: [
           { name: '成立日期', required: true, message: "请输入成立日期", trigger: 'blur' }
@@ -90,10 +93,10 @@ export default {
           { name: '营业执照注册地址', required: true, message: "请输入营业执照注册地址" }
         ],
         entType: [
-          { name: '平台客户类型', required: true, validator: this.radioSelectValidator, trigger: 'change' }
+          { name: '平台客户类型', required: true, validator: this.radioSelectValidator, trigger: 'blur' }
         ],
         supplierType: [
-          { name: '供应商类型', required: true, validator: this.radioSelectValidator, trigger: 'change' }
+          { name: '供应商类型', required: true, validator: this.radioSelectValidator, trigger: 'blur' }
         ],
         sealEntId: [
           { name: '签章企业', required: true, validator: this.radioSelectValidator, trigger: 'change' }
@@ -223,7 +226,11 @@ export default {
         this.projectInfoList = this.dictionary.projectInfoList
         // this.$emit('getDictionary', this.dictionary)
         //   // 新增时
-        if (this.isAdd) {  //设置企业附件
+        if (this.isAdd) {
+          this.form.entType = 'B' // 平台客户类型
+          this.form.isHtEnterprise = '1' // 是否海天集团
+          this.form.isDoublePost = '0' // 是否双岗
+          //设置企业附件
           this.dictionary.sysAttachTypeList.map(item => {
             this.form.pubAttachList.push({
               busType: item.code,
@@ -233,6 +240,7 @@ export default {
           })
         } else {
           this.detailsHandle()
+          this.$refs.form.clearValidate()
         }
       })
     },
@@ -241,8 +249,9 @@ export default {
     detailsHandle() {
       this.$nextTick(() => {
         if (!!this.form.pubAttachList) { // 企业附件回显
-         this.pubAttachList =  this.form.pubAttachList
+          this.pubAttachList = this.form.pubAttachList
         } else {
+          this.pubAttachList = []
           this.dictionary.sysAttachTypeList.map(item => {
             this.pubAttachList.push({
               busType: item.code,
@@ -252,8 +261,7 @@ export default {
           })
         }
         // 其他附件
-        this.$refs.ofileSetting.$data.fileList = this.form.pubOtherAttachList
-        this.$refs.form.clearValidate()
+        this.$refs.ofileSetting.$data.fileList = this.form.pubOtherAttachList || []
       })
     },
 
@@ -324,11 +332,15 @@ export default {
 
     //平台客户类型发生改变
     entTypeChange() {
-      this.sysUserList = []
+      // this.sysUserList = []
       if (this.form.entType === "B") {
+        this.form.isHtEnterprise = '1' // 是否海天集团
+        // this.form.isDoublePost = '1' // 是否双岗
         this.statementAccountTypeTable = this.dictionary.hxqySysRoleListTable
       }
       if (this.form.entType === "BL") {
+        this.form.isHtEnterprise = '1' // 是否海天集团
+        this.form.isDoublePost = '1' // 是否双岗
         this.statementAccountTypeTable = this.dictionary.blSysRoleListTable
       }
     },
@@ -362,6 +374,12 @@ export default {
     },
     //新增企业操作员
     sysUserAdd() {
+      if (this.form.entType === "B") {
+        this.statementAccountTypeTable = this.dictionary.hxqySysRoleListTable //操作角色
+      }
+      if (this.form.entType === "BL") {
+        this.statementAccountTypeTable = this.dictionary.blSysRoleListTable
+      }
       if (this.sysUserIng()) { return }
       let item = {
         userName: '',//用户名
@@ -395,17 +413,16 @@ export default {
         }
       }
       if (flag) {
-        if (!row.userName) { return this.$message.warning('请填写用户名') }
-        let userNameElReg1 = /^_+$/g
-        let userNameElReg = /^[a-zA-Z0-9_]{4,20}$/i
-        if (
-          row.userName && (
-            (row.userName.length < 6 || row.userName.length > 20) ||
-            !userNameElReg.test(row.userName) ||
-            userNameElReg1.test(row.userName)
-          )
-        ) { return this.$message.warning('用户名为6-20位英文字母、数字组成，可包含下划线') }
-
+        // if (!row.userName) { return this.$message.warning('请填写用户名') }
+        // let userNameElReg1 = /^_+$/g
+        // let userNameElReg = /^[a-zA-Z0-9_]{4,20}$/i
+        // if (
+        //   row.userName && (
+        //     (row.userName.length < 6 || row.userName.length > 20) ||
+        //     !userNameElReg.test(row.userName) ||
+        //     userNameElReg1.test(row.userName)
+        //   )
+        // ) { return this.$message.warning('用户名为6-20位英文字母、数字组成，可包含下划线') }
         // if (!loBoo) { return this.$message.error(`用户名为：${row.userName} ，在列表中已存在`) }
         // if (!row.roleId) { return this.$message.warning('请选择操作员角色') }
         // if (!row.userName) { return this.$message.warning('请填写姓名') }
@@ -462,7 +479,7 @@ export default {
             //企业操作员校验
             if (this.sysUserIng()) { return }
             let codeArr = []
-            let sysUserList = params.sysUserList
+            let sysUserList = this.sysUserList
             sysUserList.forEach(item => {
               codeArr.push(item.roleId)
             })
@@ -500,6 +517,7 @@ export default {
           // 其他附件
           params.pubOtherAttachList = this.$refs.ofileSetting.getData()
           // 企业操作员
+          params.sysUserList = this.sysUserList
           if (params.sysUserList) {
             params.sysUserList.forEach(item => {
               if (item.statementAccountType.join) {
@@ -507,7 +525,6 @@ export default {
               }
             })
           }
-          params.sysUserList = this.sysUserList
           // 企业附件
           params.pubAttachList = this.pubAttachList
           // if (params.pubAttachList) {
@@ -535,16 +552,19 @@ export default {
     // 获取暂存
     getEnterpriseConfirm() {
       this.zjControl.getEnterpriseConfirm({ name: this.form.name }).then((res) => {
-        this.form = res.data
-        this.form.sysUserList = [] // 企业操作员
-        this.form.pubAttachList = [] // 企业附件
-        this.dictionary.sysAttachTypeList.map(item => {
-          this.form.pubAttachList.push({
-            busType: item.code,
-            fileId: '',
-            fileName: ''
-          })
-        })
+        // this.form = res.data
+        this.$emit('update:form', res.data)
+        this.sysUserList = res.data.entUserList
+        this.detailsHandle()
+        // this.form.sysUserList = [] // 企业操作员
+        // this.form.pubAttachList = [] // 企业附件
+        // this.dictionary.sysAttachTypeList.map(item => {
+        //   this.form.pubAttachList.push({
+        //     busType: item.code,
+        //     fileId: '',
+        //     fileName: ''
+        //   })
+        // })
       })
     },
     cancel() {

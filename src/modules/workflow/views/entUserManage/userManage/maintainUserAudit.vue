@@ -19,8 +19,8 @@
 
     <zj-content-footer>
       <zj-button type="primary" @click="toPass">复核通过</zj-button>
-      <zj-button @click="toReject" v-if="row.workflowState = 'U002'">驳回上一级</zj-button>
-      <zj-button @click="toReject" v-else-if="row.workflowState = 'U006'">作废</zj-button>
+      <zj-button @click="toReject" v-if="row.workflowState === 'U002'">驳回上一级</zj-button>
+      <zj-button @click="toReject" v-else-if="row.workflowState === 'U006'">作废</zj-button>
       <zj-button @click="toReject" v-else>拒绝</zj-button>
       <zj-button @click="goParent">返回</zj-button>
     </zj-content-footer>
