@@ -21,6 +21,7 @@
 import orderFinancing from "./orderFinancing/orderFinancing";
 import voucherFinancing from "./voucherFinancing/voucherFinancing";
 import financingApply from "../../../api/financingApplyApi";
+import {windowSSStorage} from "@utils/storageUtils";
 export default {
   name: "financingManage",
   components: {
@@ -83,7 +84,7 @@ export default {
           this.$message.error('请选择到期日为同一天的凭证！')
           return
         }
-        if(!this.nextStepParams.nextFlag) {
+        if(this.nextStepParams.entId && this.nextStepParams.idList.length) {
           this.goChild('voucherFinancingDetail', {...this.nextStepParams})
         }
       }
@@ -92,12 +93,12 @@ export default {
       this.nextStepParams = {...val}
     },
     tableLocal() {
-      if(localStorage.getItem('task') !== null) {
-        this.tabs = localStorage.getItem('task')
+      if(windowSSStorage.getItem('task') !== null) {
+        this.tabs = windowSSStorage.getItem('task')
       }
     },
     tabHandle(tab) {
-      localStorage.setItem('task',tab.name)
+      windowSSStorage.setItem('task',tab.name)
     },
   },
   created() {
