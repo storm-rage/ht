@@ -57,7 +57,7 @@ export default {
       this.zjControl.submitTradeRecheck({
         id: this.row.bizId,
         notes,
-        controlFlag: '1',// 风控标识
+        controlFlag: true,// 风控标识
         operResult: OperResult.PASS
       }).then(res => {
         this.passLoading = false;
@@ -78,7 +78,7 @@ export default {
           this.zjControl.submitTradeRecheck({
             id: this.row.bizId,
             notes,
-            controlFlag: '1',//风控标识
+            controlFlag: true,//风控标识
             operResult: OperResult.BACK
           }).then(res => {
             this.rejectLoading = false;
