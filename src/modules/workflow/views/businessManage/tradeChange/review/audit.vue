@@ -39,10 +39,12 @@ export default {
   data () {
     return {
       zjControl: {
-        submitTradeRecheck: this.$api.businessManageWorkflow.submitTradeRecheck
+        submitTradeRecheck: this.$api.businessManageWorkflow.submitTradeRecheck,
+        checkRisk: this.$api.businessManageWorkflow.checkRisk
       },
       rejectLoading: false,
-      passLoading: false
+      passLoading: false,
+      controlFlag: false
     }
   },
   created() {
@@ -51,13 +53,31 @@ export default {
   },
   methods: {
     toPass() {
+      this.zjControl.checkRisk({
+        id: this.row.bizId
+      }).then(res => {
+        this.controlFlag = res.controlFlag;
+        if (this.controlFlag) {
+          this.$confirm(res.msg, '提示', {
+            confirmButtonText: '确定',
+            cancelButtonText: '取消',
+            type: 'warning'
+          }).then(() => {
+            this.passSubmit();
+          })
+        } else {
+          this.passSubmit();
+        }
+      })
+    },
+    passSubmit() {
       this.$refs.auditRemark.getForm().clearValidate();
       const {notes} = this.$refs.auditRemark.getData()
       this.passLoading = true;
       this.zjControl.submitTradeRecheck({
         id: this.row.bizId,
         notes,
-        controlFlag: '1',// 风控标识
+        controlFlag: this.controlFlag,// 风控标识
         operResult: OperResult.PASS
       }).then(res => {
         this.passLoading = false;
@@ -78,7 +98,7 @@ export default {
           this.zjControl.submitTradeRecheck({
             id: this.row.bizId,
             notes,
-            controlFlag: '1',//风控标识
+            controlFlag: true,//风控标识
             operResult: OperResult.BACK
           }).then(res => {
             this.rejectLoading = false;
