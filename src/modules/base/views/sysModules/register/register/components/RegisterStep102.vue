@@ -558,7 +558,7 @@ export default {
         }
       }
       console.log('银行账户index=='+rowIndex)
-      if (rows && rows.length) {
+      if (rows && rows.length && this.entInfoObj.form.entBankInfo) {
         setTimeout(()=>{
           this.$refs.entBankInfoTable.setRadioRow(rows[rowIndex])
         },0)
@@ -656,7 +656,7 @@ export default {
     save(flag) {
       if(!this.tableEditReport(['bankAccnameTable'])){return}
       //不校验保存注册信息
-      if(this.form.isHtEnterprise === '0') {
+      if(this.form.isHtEnterprise === '0' && this.form.entBankInfoList && this.form.entBankInfoList.length) {
         this.form.entBankInfo = this.form.entBankInfoList[0]
       }
       this.form.registerOperateFlag = flag
@@ -714,19 +714,19 @@ export default {
           if(this.form.isHtEnterprise === '0' && this.form.confirmBankId !== this.form.entBankInfo.bankName) {
             return this.$message.error('请确认开户行一致！')
           }
-          // if(this.form.isHtEnterprise === '1') {
-          //   this.form.entBankInfo = this.form.entBankInfoList[0]
-          //   let str = this.form.entBankInfo.bankName.slice(0,3)
-          //   let res = ''
-          //   for(let item of this.bankInfoList) {
-          //     if(item.confirmBankId === this.form.confirmBankId) {
-          //       res = item.confirmBankName
-          //     }
-          //   }
-          //   if(str !== res) {
-          //     return this.$message.error('请确认开户行一致！112313')
-          //   }
-          // }
+          if(this.form.isHtEnterprise === '1') {
+            this.form.entBankInfo = this.form.entBankInfoList[0]
+            let str = this.form.entBankInfo.bankName.slice(0,4)
+            let res = ''
+            for(let item of this.bankInfoList) {
+              if(item.status === this.form.confirmBankId) {
+                res = item.label
+              }
+            }
+            if(str !== res) {
+              return this.$message.error('请确认开户行一致！')
+            }
+          }
           this.form.confirmBankName = this.form.confirmBankId
           this.form.registerOperateFlag = flag
           this.form.legalCertType = this.entInfoObj.form.legalCertType
