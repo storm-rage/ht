@@ -101,6 +101,10 @@ export default {
   },
   methods: {
     entChange(val) {
+      //凭证ID存放本地
+      this.nextParams = {
+        entId: val,
+      }
       let params = {
         ...this.searchForm,
         entId: val,//选择凭证签发人ID/转让企业ID
@@ -108,12 +112,16 @@ export default {
         rows: 10,
       }
       this.zjControl.queryFinancingApplyBillPage(params).then(res=>{
-        this.nextParams = {
-          entId: params.entId,
-        }
         this.billList = res.data.rows
         this.totalAmount = res.data.totalAmount
       })
+      localStorage.setItem('cacheEntInfo',val)
+    },
+    handleEntId() {
+      if(localStorage.getItem('cacheEntInfo')) {
+        this.searchForm.entId = localStorage.getItem('cacheEntInfo')
+      }
+      this.entChange(this.searchForm.entId)
     },
     checkChange() {
       let checkArr = this.$refs.searchTable.getCheckboxRecords()
@@ -128,7 +136,10 @@ export default {
         this.checkedTotalAmount = 0
       }
       console.log(`~`+JSON.stringify(checkArr))
-      let nextStepFlag = false
+      let nextStepFlag = null
+      if(this.searchForm.entId && this.billList && this.billList.length) {
+        nextStepFlag = false
+      }
       //勾选多个凭证时，遍历数组查看选中的凭证是否为同一个到期日
       if(checkArr.length > 1) {
         let expDate = checkArr[0].expireDate
@@ -149,12 +160,12 @@ export default {
       }
       this.$emit('nextStepParams',this.nextParams)
     },
-    toNext() {},
-    toEditQuota (row) {},
-    applyLoan () {},
   },
   created() {
-  }
+  },
+  mounted() {
+    this.handleEntId()
+  },
 };
 </script>
 <style lang="less" scoped>
