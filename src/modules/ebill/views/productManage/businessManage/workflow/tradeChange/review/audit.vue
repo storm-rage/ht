@@ -50,9 +50,13 @@ export default {
       // 字典
       dictionary: {},
       // 客户基本信息
-      businessParamModel: {},
+      businessParamModel: {
+        productType: ""
+      },
       //贸易关系信息
-      tradeRelationModel: {},
+      tradeRelationModel: {
+        cactoringLogo: ""
+      },
       // 产品信息
       prods: []
     };

@@ -66,8 +66,8 @@
         <zj-table-column title="操作" fixed="right">
           <template v-slot="{ row }">
             <zj-button type="text" @click="toCancellation(row.id)" :api="zjBtn.invalidApply" v-if="row.state === 'P000'">作废申请</zj-button>
-            <span v-else>--</span>
-            <zj-button type="text" @click="toRevocation(row.id)" :api="zjBtn.cancelSubmit" v-if="row.state === 'P002'">撤销</zj-button>
+            <zj-button type="text" @click="toRevocation(row.id)" :api="zjBtn.cancelSubmit" v-else-if="row.state === 'P002'">撤销</zj-button>
+            <span v-else>—</span>
           </template>
         </zj-table-column>
       </zj-table>

@@ -16,8 +16,8 @@
 
     <zj-content-footer>
       <zj-button type="primary" @click="toPass">复核通过</zj-button>
-      <zj-button @click="toReject" v-if="row.workflowState = 'E002'">驳回上一级</zj-button>
-      <zj-button @click="toReject" v-else-if="row.workflowState = 'E005'">作废</zj-button>
+      <zj-button @click="toReject" v-if="row.workflowState === 'E002'">驳回上一级</zj-button>
+      <zj-button @click="toReject" v-else-if="row.workflowState === 'E005'">作废</zj-button>
       <zj-button @click="toReject" v-else>拒绝</zj-button>
       <zj-button @click="goParent">返回</zj-button>
     </zj-content-footer>
@@ -128,10 +128,12 @@ export default {
       }
     },
     formPass(params) {
+      if (this.row.workflowState !== 'E005') {
+        params = { serialNo: params.serialNo }
+      }
       if (this.state === 'pass') {
         this.$refs.auditRemark.getForm().clearValidate();
         const { notes } = this.$refs.auditRemark.getData()
-
         this.passLoading = true;
         this.zjControl.todoEnterpriseSubmit({
           flag: '1',
@@ -167,6 +169,8 @@ export default {
             }).catch(() => {
               this.rejectLoading = false;
             })
+          } else {
+            this.$message.warning('请选输入审核意见!')
           }
         })
       }

@@ -12,7 +12,10 @@ export default {
   props: {
     form: {
       type: Object,
-      default: () => { }
+      default: () => {
+        return {
+        }
+      }
     },
   },
   watch: {
@@ -72,10 +75,10 @@ export default {
           }
         ],
         isHtEnterprise: [
-          { name: '是否海天集团', required: true, message: "请选择是否海天集团" }
+          { name: '是否海天集团', required: true, message: "请选择是否海天集团", trigger: 'blur' }
         ],
         isDoublePost: [
-          { name: '是否双岗', required: true, message: "请选择是否双岗" }
+          { name: '是否双岗', required: true, message: "请选择是否双岗", trigger: 'blur' }
         ],
         registerStartDate: [
           { name: '成立日期', required: true, message: "请输入成立日期", trigger: 'blur' }
@@ -90,10 +93,10 @@ export default {
           { name: '营业执照注册地址', required: true, message: "请输入营业执照注册地址" }
         ],
         entType: [
-          { name: '平台客户类型', required: true, validator: this.radioSelectValidator, trigger: 'change' }
+          { name: '平台客户类型', required: true, validator: this.radioSelectValidator, trigger: 'blur' }
         ],
         supplierType: [
-          { name: '供应商类型', required: true, validator: this.radioSelectValidator, trigger: 'change' }
+          { name: '供应商类型', required: true, validator: this.radioSelectValidator, trigger: 'blur' }
         ],
         sealEntId: [
           { name: '签章企业', required: true, validator: this.radioSelectValidator, trigger: 'change' }
@@ -223,25 +226,23 @@ export default {
         this.projectInfoList = this.dictionary.projectInfoList
         // this.$emit('getDictionary', this.dictionary)
         //   // 新增时
-        if (this.isAdd) {  //设置企业附件
-          this.dictionary.sysAttachTypeList.map(item => {
-            this.form.pubAttachList.push({
-              busType: item.code,
-              fileId: '',
-              fileName: ''
-            })
-          })
+        if (this.isAdd) {
+          this.form.entType = 'B' // 平台客户类型
+          this.form.isHtEnterprise = '1' // 是否海天集团
+          this.form.isDoublePost = '0' // 是否双岗
         } else {
           this.detailsHandle()
+          this.$refs.form.clearValidate()
         }
       })
     },
 
     //获取详情处理
     detailsHandle() {
+      this.pubAttachList = []
       this.$nextTick(() => {
         if (!!this.form.pubAttachList) { // 企业附件回显
-         this.pubAttachList =  this.form.pubAttachList
+          this.pubAttachList = this.form.pubAttachList
         } else {
           this.dictionary.sysAttachTypeList.map(item => {
             this.pubAttachList.push({
@@ -252,9 +253,14 @@ export default {
           })
         }
         // 其他附件
-        this.$refs.ofileSetting.$data.fileList = this.form.pubOtherAttachList
-        console.log(this.$refs.ofileSetting.$data.fileList)
-        this.$refs.form.clearValidate()
+        this.$refs.ofileSetting.$data.fileList = this.form.pubOtherAttachList || []
+        // 企业操作员
+        if (this.form.entType === "B") {
+          this.statementAccountTypeTable = this.dictionary.hxqySysRoleListTable //操作角色
+        }
+        if (this.form.entType === "BL") {
+          this.statementAccountTypeTable = this.dictionary.blSysRoleListTable
+        }
       })
     },
 
@@ -325,11 +331,15 @@ export default {
 
     //平台客户类型发生改变
     entTypeChange() {
-      this.sysUserList = []
+      // this.sysUserList = []
       if (this.form.entType === "B") {
+        this.form.isHtEnterprise = '1' // 是否海天集团
+        // this.form.isDoublePost = '1' // 是否双岗
         this.statementAccountTypeTable = this.dictionary.hxqySysRoleListTable
       }
       if (this.form.entType === "BL") {
+        this.form.isHtEnterprise = '1' // 是否海天集团
+        this.form.isDoublePost = '1' // 是否双岗
         this.statementAccountTypeTable = this.dictionary.blSysRoleListTable
       }
     },
@@ -363,6 +373,12 @@ export default {
     },
     //新增企业操作员
     sysUserAdd() {
+      if (this.form.entType === "B") {
+        this.statementAccountTypeTable = this.dictionary.hxqySysRoleListTable //操作角色
+      }
+      if (this.form.entType === "BL") {
+        this.statementAccountTypeTable = this.dictionary.blSysRoleListTable
+      }
       if (this.sysUserIng()) { return }
       let item = {
         userName: '',//用户名
@@ -378,8 +394,12 @@ export default {
     },
     //修改企业操作员
     sysUserEdit(row) {
+      if (!Array.isArray(row.statementAccountType)) {
+        row.statementAccountType = row.statementAccountType.split(',')
+      }
       if (this.sysUserIng()) { return }
       this.oldRow = JSON.parse(JSON.stringify(row))
+      console.log(row)
       this.$refs.sysUser.setActiveRow(row)
     },
     //删除企业操作员
@@ -389,50 +409,52 @@ export default {
     },
     //保存企业操作员
     sysUserSave(row, rowIndex) {
-      let flag = false
-      for (let key in row) {
-        if (key !== '_XID' && key !== 'statementAccountType' && typeof (row[key]) !== 'boolean' && row[key].trim()) {
-          flag = true
-        }
-      }
-      if (flag) {
-        if (!row.userName) { return this.$message.warning('请填写用户名') }
-        let userNameElReg1 = /^_+$/g
-        let userNameElReg = /^[a-zA-Z0-9_]{4,20}$/i
-        if (
-          row.userName && (
-            (row.userName.length < 6 || row.userName.length > 20) ||
-            !userNameElReg.test(row.userName) ||
-            userNameElReg1.test(row.userName)
-          )
-        ) { return this.$message.warning('用户名为6-20位英文字母、数字组成，可包含下划线') }
+      row.save = true
+      this.$refs.sysUser.clearActived()
 
-        // if (!loBoo) { return this.$message.error(`用户名为：${row.userName} ，在列表中已存在`) }
-        // if (!row.roleId) { return this.$message.warning('请选择操作员角色') }
-        // if (!row.userName) { return this.$message.warning('请填写姓名') }
-        // if (row.userName && row.userName.length > 50) { return this.$message.warning('姓名不可超过50字符') }
-        // if (!row.certNo) { return this.$message.warning('请填写证件号码') }
-        // let idReg = /^[1-9]\d{7}((0\d)|(1[0-2]))(([0|1|2]\d)|3[0-1])\d{3}$|^[1-9]\d{5}[1-9]\d{3}((0\d)|(1[0-2]))(([0|1|2]\d)|3[0-1])\d{3}([0-9]|X)$/
-        // if (row.certType === '01' && !idReg.test(row.certNo)) { return this.$message.warning('请填写正确身份证号码') }
-        // if (row.certType !== '01' && row.certNo.length > 50) { return this.$message.warning('证件号码不可超过50字符') }
-        // if (!row.mobileNo) { return this.$message.warning('请填写手机号码') }
-        // let phoneReg = /^((\(\d{3}\))|(\d{3}\u002d))?(1[3456789]\d{9})$/i
-        // if (row.mobileNo && !phoneReg.test(row.mobileNo)) { return this.$message.warning('手机号码格式不正确') }
-        // if (!row.email) { return this.$message.warning('请填写电子邮箱') }
-        // let emailReg = /^[0-9A-Za-z_-]+[@][0-9A-Za-z]+([.][0-9A-Za-z]+){1,2}$/
-        // if (row.email && !emailReg.test(row.email)) { return this.$message.warning('邮箱号码格式不正确') }
-        this.$refs.sysUser.clearActived()
-        return
-      } else {
-        this.sysUserDel(rowIndex)
-      }
+      // let flag = false
+      // for (let key in row) {
+      //   if (key !== '_XID' && key !== 'statementAccountType' && typeof (row[key]) !== 'boolean' && row[key].trim()) {
+      //     flag = true
+      //   }
+      // }
+      // if (flag) {
+      // if (!row.userName) { return this.$message.warning('请填写用户名') }
+      // let userNameElReg1 = /^_+$/g
+      // let userNameElReg = /^[a-zA-Z0-9_]{4,20}$/i
+      // if (
+      //   row.userName && (
+      //     (row.userName.length < 6 || row.userName.length > 20) ||
+      //     !userNameElReg.test(row.userName) ||
+      //     userNameElReg1.test(row.userName)
+      //   )
+      // ) { return this.$message.warning('用户名为6-20位英文字母、数字组成，可包含下划线') }
+      // if (!loBoo) { return this.$message.error(`用户名为：${row.userName} ，在列表中已存在`) }
+      // if (!row.roleId) { return this.$message.warning('请选择操作员角色') }
+      // if (!row.userName) { return this.$message.warning('请填写姓名') }
+      // if (row.userName && row.userName.length > 50) { return this.$message.warning('姓名不可超过50字符') }
+      // if (!row.certNo) { return this.$message.warning('请填写证件号码') }
+      // let idReg = /^[1-9]\d{7}((0\d)|(1[0-2]))(([0|1|2]\d)|3[0-1])\d{3}$|^[1-9]\d{5}[1-9]\d{3}((0\d)|(1[0-2]))(([0|1|2]\d)|3[0-1])\d{3}([0-9]|X)$/
+      // if (row.certType === '01' && !idReg.test(row.certNo)) { return this.$message.warning('请填写正确身份证号码') }
+      // if (row.certType !== '01' && row.certNo.length > 50) { return this.$message.warning('证件号码不可超过50字符') }
+      // if (!row.mobileNo) { return this.$message.warning('请填写手机号码') }
+      // let phoneReg = /^((\(\d{3}\))|(\d{3}\u002d))?(1[3456789]\d{9})$/i
+      // if (row.mobileNo && !phoneReg.test(row.mobileNo)) { return this.$message.warning('手机号码格式不正确') }
+      // if (!row.email) { return this.$message.warning('请填写电子邮箱') }
+      // let emailReg = /^[0-9A-Za-z_-]+[@][0-9A-Za-z]+([.][0-9A-Za-z]+){1,2}$/
+      // if (row.email && !emailReg.test(row.email)) { return this.$message.warning('邮箱号码格式不正确') }
+      //   this.$refs.sysUser.clearActived()
+      //   return
+      // } else {
+      //   this.sysUserDel(rowIndex)
+      // }
     },
     //取消企业操作员
     sysUserCancel(row, rowIndex) {
-      if (!row.save) {
-        this.sysUserList.splice(rowIndex, 1)
-      } else {
+      if (row.id || row.save) {
         this.sysUserList.splice(rowIndex, 1, JSON.parse(JSON.stringify(this.oldRow)))
+      } else {
+        this.sysUserList.splice(rowIndex, 1)
       }
       this.$refs.sysUser.clearActived()
     },
@@ -463,7 +485,7 @@ export default {
             //企业操作员校验
             if (this.sysUserIng()) { return }
             let codeArr = []
-            let sysUserList = params.sysUserList
+            let sysUserList = this.sysUserList
             sysUserList.forEach(item => {
               codeArr.push(item.roleId)
             })
@@ -501,6 +523,7 @@ export default {
           // 其他附件
           params.pubOtherAttachList = this.$refs.ofileSetting.getData()
           // 企业操作员
+          params.sysUserList = this.sysUserList
           if (params.sysUserList) {
             params.sysUserList.forEach(item => {
               if (item.statementAccountType.join) {
@@ -508,7 +531,6 @@ export default {
               }
             })
           }
-          params.sysUserList = this.sysUserList
           // 企业附件
           params.pubAttachList = this.pubAttachList
           // if (params.pubAttachList) {
@@ -536,16 +558,10 @@ export default {
     // 获取暂存
     getEnterpriseConfirm() {
       this.zjControl.getEnterpriseConfirm({ name: this.form.name }).then((res) => {
-        this.form = res.data
-        this.form.sysUserList = [] // 企业操作员
-        this.form.pubAttachList = [] // 企业附件
-        this.dictionary.sysAttachTypeList.map(item => {
-          this.form.pubAttachList.push({
-            busType: item.code,
-            fileId: '',
-            fileName: ''
-          })
-        })
+        // this.form = res.data
+        this.$emit('update:form', res.data)
+        this.sysUserList = res.data.entUserList || []
+        this.detailsHandle()
       })
     },
     cancel() {

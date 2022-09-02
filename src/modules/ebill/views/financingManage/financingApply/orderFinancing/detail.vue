@@ -55,7 +55,7 @@
             </el-form-item>
           </el-col>
           <el-col :span="12">
-            <el-form-item label="融资月利率：">{{form.factoringFinancingMonthRate}}</el-form-item>
+            <el-form-item label="融资月利率：">{{form.factoringFinancingMonthRate?`${form.factoringFinancingMonthRate}%`:''}}</el-form-item>
           </el-col>
         </el-row>
         <el-row>
@@ -214,7 +214,7 @@ export default {
     },
     expireDateDisabledDate(date) {
       if (this.form.expireDate) {
-        return date.getTime() > this.$moment(this.form.expireDate)
+        return date.getTime() < this.$moment(this.form.applyDatetime)
       }
     },
     submit(){

@@ -2,8 +2,8 @@
   <zj-content-container>
     <zj-top-header title="企业注册审核"></zj-top-header>
     <el-form label-width="160px">
-      <!-- 业务申请信息 -->
       <zj-content-block v-show="workflow === 'sqxx'">
+        <!-- 业务申请信息 -->
         <zj-content-block>
           <zj-header title="业务申请信息" />
           <zj-content>
@@ -41,7 +41,135 @@
           </zj-content>
         </zj-content-block>
         <!-- 企业基础信息 -->
-        <ent-info ref="entInfo">
+        <zj-content-block>
+          <zj-header title="企业基础信息" />
+          <zj-content>
+            <!-- 企业信息 -->
+            <zj-collapse title="企业信息">
+              <el-form ref="form" label-width="160px">
+                <el-row>
+                  <el-col :span="8">
+                    <el-form-item label="企业名称：">
+                      <span>{{ detailData.name | value }}</span>
+                    </el-form-item>
+                  </el-col>
+                  <el-col :span="8">
+                    <el-form-item label="企业简称：">
+                      <span>{{ detailData.shortName | value }}</span>
+                    </el-form-item>
+                  </el-col>
+                  <el-col :span="8">
+                    <el-form-item label="曾用名：">
+                      <span>{{ detailData.beforeName | value }}</span>
+                    </el-form-item>
+                  </el-col>
+                  <el-col :span="8">
+                    <el-form-item label="平台客户类型：">
+                      <span>{{
+                    typeMap(dictionary.entTypeList, detailData.entType)
+                  }}</span>
+                    </el-form-item>
+                  </el-col>
+                  <el-col :span="8">
+                    <el-form-item label="是否海天集团：">
+                      <span>{{
+                    typeMap(
+                      dictionary.isHtEnterpriseList,
+                      detailData.isHtEnterprise
+                    )
+                  }}</span>
+                    </el-form-item>
+                  </el-col>
+                  <el-col :span="8">
+                    <el-form-item label="客户业务系统编码：">
+                      <span>{{ detailData.customCode | value }}</span>
+                    </el-form-item>
+                  </el-col>
+                  <el-col :span="8">
+                    <el-form-item label="统一社会信用代码：">
+                      <span>{{ detailData.bizLicence | value }}</span>
+                    </el-form-item>
+                  </el-col>
+
+                  <el-col :span="8">
+                    <el-form-item label="成立日期：">
+                      <span>{{ detailData.registerStartDate | value }}</span>
+                    </el-form-item>
+                  </el-col>
+                  <el-col :span="8">
+                    <el-form-item label="注册资本：">
+                      <span>{{ detailData.registerCapital | value }}</span>
+                    </el-form-item>
+                  </el-col>
+                  <el-col :span="8">
+                    <el-form-item label="企业注册地址：">
+                      <span>{{ detailData.address | value }}</span>
+                    </el-form-item>
+                  </el-col>
+                  <el-col :span="8">
+                    <el-form-item label="企业规模：">
+                      <span>{{
+                    typeMap(dictionary.scaleList, detailData.scale)
+                  }}</span>
+                    </el-form-item>
+                  </el-col>
+                  <el-col :span="8">
+                    <el-form-item label="企业经营类型：">
+                      <span>{{ detailData.custType | value }}</span>
+                    </el-form-item>
+                  </el-col>
+                </el-row>
+              </el-form>
+            </zj-collapse>
+
+            <!-- 法人信息 -->
+            <legal-person ref="legalPerson" :detailData="detailData" />
+
+            <!-- 企业联系人 -->
+            <ent-linkman ref="entLinkman" :detailData="detailData" />
+
+            <!-- 银行账户 -->
+            <bank-account ref="bankAccount" :dataList="detailData.entBanksList" />
+
+            <!-- 天眼查信息 -->
+            <zj-collapse title="天眼查信息" v-if="$route.name === 'registerAuditApplyAudit'">
+              <zj-button type="text" @click="activeEyeSky = !activeEyeSky" ref="EyeSkyBtn">{{ activeEyeSky ? "收起" : "展开" }}</zj-button>
+              <zj-button @click="getEyeSky">一键获取天眼查信息</zj-button>
+
+              <zj-eye-sky :mountKey="true" ref="eyesky" :show="activeEyeSky" :entId="row.id" @eyeSkyChange="eyeSkyChange" />
+            </zj-collapse>
+          </zj-content>
+        </zj-content-block>
+        <!-- 操作用户信息 -->
+        <zj-content-block>
+          <zj-header title="操作用户信息" />
+          <zj-content>
+            <zj-table :pager="false" :dataList="detailData.entUserList">
+              <zj-table-column field="roleName" title="操作员类型" />
+              <zj-table-column field="userName" title="姓名" />
+              <zj-table-column field="certNo" title="身份证号" />
+              <zj-table-column title="证件有效期">
+                <template v-slot="{ row }">
+                  {{ date(row.certStartDate)
+                }}{{ row.certStartDate && row.certEndDate ? "~" : "" }}
+                  {{ date(row.certEndDate) }}
+                </template>
+              </zj-table-column>
+              <zj-table-column field="mobileNo" title="手机号码" />
+              <zj-table-column field="email" title="邮箱" />
+              <zj-table-column field="bankAcctNo" title="银行卡号" />
+              <zj-table-column field="htSysCode" title="海天业务系统账号" />
+              <zj-table-column field="idCheckState" title="核查方式" />
+            </zj-table>
+          </zj-content>
+        </zj-content-block>
+        <!-- 相关资料附件 -->
+        <related-attach :infoBar="attachInfo.infoBar" :infoList="attachInfo.infoList" :infoViewList="attachInfo.infoViewList" />
+
+        <!-- 其他信息 -->
+        <ent-else-info :detailData="detailData" />
+
+        <!-- <ent-info ref="entInfo" :detailData="detailData" :dictionary="dictionary">
           <template slot="entInfo">
             <zj-collapse title="企业信息">
               <el-form label-width="160px">
@@ -96,7 +224,7 @@
               </el-form>
             </zj-collapse>
           </template>
-        </ent-info>
+        </ent-info> -->
       </zj-content-block>
 
       <!-- 审批信息 -->
@@ -121,7 +249,7 @@
             <zj-collapse title="审核信息">
               <el-form-item label="平台客户类型：" prop="entType">
                 <el-radio-group v-model="form.entType">
-                  <el-radio v-for="item in dictionary.platFormAuditEntTypeList" :key="item.code" :label="item.code">{{ item.desc }}</el-radio>
+                  <el-radio v-for="item in dictionary.platFormAuditEntTypeList" :key="item.code" :label="item.code" :disabled="item.code === 'B'">{{ item.desc }}</el-radio>
                 </el-radio-group>
               </el-form-item>
               <el-form-item label="是否海天集团：" prop="isHtEnterprise">
@@ -186,18 +314,23 @@
 import protocolAudit from "./commom/protocolAudit.js";
 import view from "@pubComponent/preview/view.js";
 import AuditRemark from "@modules/workflow/views/components/auditRemark";
-import entInfo from "@modules/base/views/entUserManage/entManage/detail/entInfo.vue";
+import legalPerson from "@modules/base/views/entUserManage/entManage/components/legalPerson";
+import entLinkman from "@modules/base/views/entUserManage/entManage/components/entLinkman";
+import bankAccount from "@modules/base/views/entUserManage/entManage/components/bankAccount";
+import entElseInfo from "@modules/base/views/entUserManage/entManage/components/entElseInfo";
+import relatedAttach from "@modules/base/views/entUserManage/entManage/components/relatedAttach";
 import { windowSSStorage } from "@utils/storageUtils";
 export default {
   components: {
     AuditRemark,
-    entInfo,
+    legalPerson,
+    entLinkman,
+    bankAccount,
+    entElseInfo,
+    relatedAttach
   },
   mixins: [
-    // applyAudit,
     protocolAudit,
-    // registerAuditAttach,
-    // project,
     view,
   ],
   data() {
@@ -217,20 +350,31 @@ export default {
       form: {},
       rules: {
         shortName: [
-          { required: true, message: "请填写企业简称", trigger: "change" },
-          { max: 100, message: "企业简称不可超过100字符", trigger: "change" },
+          { required: true, message: "请填写企业简称", trigger: "blur" },
+          { max: 100, message: "企业简称不可超过100字符", trigger: "blur" },
         ],
         entType: [
-          { required: true, message: "请选择平台客户类型", trigger: "change" },
+          { required: true, message: "请选择平台客户类型", trigger: "blur" },
         ],
         supplierType: [
           {
             required: true,
             message: "请选择供应商类型",
-            trigger: "change",
+            trigger: "blur",
           },
         ],
       },
+      //相关附件资料
+      attachInfo: {},
+
+      //天眼查
+      nameSuccess: true,//企业名称
+      bizLicenceSuccess: true,//信用代码
+      legalPersonNameSuccess: true,//法定代表人姓名
+      pcaSuccess: true,//企业注册地址
+      activeEyeSky: false,//天眼查打开控制
+      eyeSkyId: '',//天眼查企业id
+      usedViewer: true, // 采用图片查看器
     };
   },
   created() {
@@ -259,16 +403,54 @@ export default {
     getAuditDetail() {
       this.zjControl.getAuditDetail({ id: this.row.id }).then((res) => {
         this.detailData = res.data;
-        //企业基础信息
-        let entInfoDom = this.$refs.entInfo;
-        entInfoDom.detailData = res.data;
-        // 银行账户
-        entInfoDom.$refs.bankAccount.dataList = res.data.entBanksList;
-
         //审核信息
         this.form = this.detailData;
         this.form.id = this.row.id;
+        this.handleAttach()
       });
+    },
+    // 处理附件信息
+    handleAttach() {
+      let jb = this.detailData.entUserList.find(item => item.roleId == '5') || {}
+      let fh = this.detailData.entUserList.find(item => item.roleId == '6') || {}
+      let fx = this.detailData.entUserList.find(item => item.roleId == '7') || {}
+      this.attachInfo.infoBar = ['营业执照', '法定代表人身份证', '操作用户经办员', '操作用户复核员', '风险信息接收人', '委托授权书'] //导航栏
+      this.attachInfo.infoList = [
+        [
+          { label: '统一社会信用代码：', value: this.detailData.bizLicence },
+          { label: '工商有效期：', value: this.date(this.detailData.registerStartDate) + ' 至 ' + this.date(this.detailData.registerEndDate) },
+          { label: '注册资本：', value: this.detailData.registerCapital }
+        ],
+        [
+          { label: '法定代表人姓名：', value: this.detailData.legalPersonName },
+          { label: '证件号码：', value: this.detailData.legalCertNo },
+          { label: '证件有效期：', value: this.date(this.detailData.legalCertRegDate) + ' 至 ' + this.date(this.detailData.legalCertExpireDate) }
+        ],
+        [
+          { label: '经办员姓名:', value: jb.userName },
+          { label: '经办员身份证号码：', value: jb.certNo },
+          { label: '证件有效期：', value: this.date(jb.certStartDate) + ' 至 ' + this.date(jb.certEndDate) }
+        ],
+        [
+          { label: '操作用户复核员：', value: fh.userName },
+          { label: '证件号码：', value: fh.certNo },
+          { label: '证件有效期：', value: this.date(fh.certStartDate) + ' 至 ' + this.date(fh.certEndDate) }
+        ],
+        [
+          { label: '风险信息接收人：', value: fx.userName },
+          { label: '证件号码：', value: fx.certNo },
+          { label: '证件有效期：', value: this.date(fx.certStartDate) + ' 至 ' + this.date(fx.certEndDate) }
+        ],
+        [{}]
+      ]
+      this.attachInfo.infoViewList = [
+        { fileId: this.detailData.qyyzFileId, fileName: this.detailData.qyyzAttachName },
+        { fileId: this.detailData.qyfrzjFileId, fileName: this.detailData.qyfrzjAttachName },
+        { fileId: jb.fileId, fileName: jb.attachName },
+        { fileId: fh.fileId, fileName: fh.attachName },
+        { fileId: fx.fileId, fileName: fx.attachName },
+        { fileId: this.detailData.qywtsqsFileId, fileName: this.detailData.qywtsqsAttachName },
+      ]
     },
     // 提交表单 1-暂存 2-审核通过 3-审核驳回 4-审核拒绝
     submitAudit(type) {
@@ -324,6 +506,32 @@ export default {
           });
         }
       });
+    },
+    //一键获取天眼查信息
+    getEyeSky() {
+      this.activeEyeSky = true
+      this.$refs.eyesky.resetIsOne()
+      this.$refs.eyesky.getTycList()
+    },
+    //重新获取天眼查信息
+    eyeSkyChange(res) {
+      if (res && res.modelName === 'basicInfo') {
+        //报红检测
+        if (res.data) {
+          this.nameSuccess = true
+          this.bizLicenceSuccess = this.detailData.bizLicence === res.data.creditCode
+          this.legalPersonNameSuccess = this.detailData.legalPersonName === res.data.legalPersonName
+          // let newPac = this.detailData.provinceZh+'  '+this.detailData.cityZh+'  '+this.detailData.address
+          let newPac = this.detailData.address
+          let tycPac = res.data.legalPersonName + ''
+          this.pcaSuccess = newPac.trim() === tycPac.trim()
+        } else {
+          this.nameSuccess = false
+          this.bizLicenceSuccess = true
+          this.legalPersonNameSuccess = true
+          this.pcaSuccess = true
+        }
+      }
     },
   },
 };

@@ -26,20 +26,20 @@
       <zj-header>电子债权凭证信息</zj-header>
       <zj-content>
         <zj-table :dataList="detailData.getEbBillBasicInfoList">
-          <zj-table-column field="rootCode" title="原始凭证编号">
+          <zj-table-column field="rootCode" title="原始海e单编号">
           </zj-table-column>
-          <zj-table-column field="ebillCode" title="凭证编号" />
-          <zj-table-column field="payEntName" title="签发人" :formatter="money" />
-          <zj-table-column field="receiptEntName" title="原始持有人" :formatter="money" />
-          <zj-table-column field="payableIssuanceDate" title="凭证签发日" :formatter="money" />
-          <zj-table-column field="payableExpireDate" title="凭证到期日" :formatter="date" />
-          <zj-table-column field="holderName" title="转让企业" :formatter="date" />
-          <zj-table-column field="ebillAmt" title="凭证金额" :formatter="date" />
-          <zj-table-column field="holderDate" title="凭证签收日" :formatter="date" />
+          <zj-table-column field="ebillCode" title="海e单编号" />
+          <zj-table-column field="payEntName" title="签发人" />
+          <zj-table-column field="receiptEntName" title="原始持有人"/>
+          <zj-table-column field="payableIssuanceDate" title="海e单签发日" :formatter="date" />
+          <zj-table-column field="payableExpireDate" title="海e单到期日" :formatter="date" />
+          <zj-table-column field="holderName" title="转让企业" />
+          <zj-table-column field="ebillAmt" title="海e单金额" :formatter="money" />
+          <zj-table-column field="holderDate" title="海e单签收日" :formatter="date" />
           <zj-table-column field="stateDesc" title="凭证状态" />
           <zj-table-column title="操作" fixed="right">
             <template v-slot="{ row }">
-              <zj-button type="text" @click="goChild('entManageDetail', row)" :api="zjBtn.getEnterprise">贸易背景</zj-button>
+              <zj-button type="text" :api="zjBtn.getEnterprise" @click="openDialog(row)">贸易背景</zj-button>
             </template>
           </zj-table-column>
         </zj-table>
@@ -50,7 +50,7 @@
       <zj-header>转让信息</zj-header>
       <zj-content>
         <zj-table :dataList="detailData.getEbBillBankInfoList">
-          <zj-table-column field="ebillCode" title="凭证编号" />
+          <zj-table-column field="ebillCode" title="海e单编号" />
           <zj-table-column field="receiptEntName" title="被转让人名称">
           </zj-table-column>
           <zj-table-column field="tranAmt" title="转让金额" :formatter="money" />
@@ -61,7 +61,7 @@
           <zj-table-column field="remark" title="备注" />
           <zj-table-column title="操作" fixed="right">
             <template v-slot="{ row }">
-              <zj-button type="text" @click="goChild('entManageDetail', row)" :api="zjBtn.getEnterprise">相关协议</zj-button>
+              <zj-button type="text" @click="previewAgreement(row)">相关协议</zj-button>
             </template>
           </zj-table-column>
         </zj-table>
@@ -72,19 +72,34 @@
       <span style="display: inline-block; margin-right: 10px">
         <el-checkbox v-model="agreeCheck" class="check-text">已阅读并同意以上相关协议</el-checkbox>
       </span>
-      <zj-button type="primary" @click="toReview">复核通过</zj-button>
-      <zj-button @click="toReject">拒绝</zj-button>
+      <zj-button type="primary" :disabled="!agreeCheck" @click="toReview">复核通过</zj-button>
+      <zj-button :disabled="!agreeCheck" @click="toReject">拒绝</zj-button>
       <zj-button @click="goParent">返回</zj-button>
     </zj-content-footer>
     <!--  拒绝弹框  -->
     <zj-reject-dialog ref="rejectDialog" @reject="reviewReject" title="提前还款复核拒绝" label="拒绝原因" message="请输入拒绝原因" :max="100"></zj-reject-dialog>
     <!-- 云证书签章 -->
     <zj-certuficate ref="certuficate" @confirm="confirm" />
+    <trade-bj-dialog ref="tradeBjDialog" v-if="tradeBjShow" :visible.sync="tradeBjShow" :rowData="rowData" :isEdit="false"/>
+    <!-- 查看器 -->
+    <zj-preview :visible.sync="viewShow" :showFooter="false" :title="agreementObj.agreementName" :htmlStr="agreementObj.agreementContent" fileType="html" @close="viewShow=false"/>
   </zj-content-container>
 </template>
 
 <script>
+import tradeBjDialog from '../billassignApply/dialog/tradeBjDialog'
+import view from "@pubComponent/preview/view";
+import { mapState } from 'vuex'
 export default {
+  components: {
+    tradeBjDialog
+  },
+  computed: {
+    ...mapState({
+      entInfo: state => state.enterprise.entInfo,
+    })
+  },
+  mixins:[view],
   data() {
     return {
       zjControl: this.$api.billAssignReview,
@@ -93,6 +108,12 @@ export default {
         getEbBillBankInfoList: [],
         getEbBillBasicInfoList: [],
         getEbBillTranferInfo: {}
+      },
+      tradeBjShow: false, // 贸易背景
+      rowData: {},
+      agreementObj: {
+        agreementName: "",
+        agreementContent: "",
       },
     };
   },
@@ -111,7 +132,8 @@ export default {
       if (this.agreeCheck) {
         this.$confirm(
           `您本次申请转让<b style="font-size: 18px;">${this.detailData.getEbBillTranferInfo.tranNumber}</b>笔电子债权凭证,共计：
-          <b style="font-size: 18px;">${this.detailData.getEbBillTranferInfo.tranAmt}</b>元，请确认`,
+          <b style="font-size: 18px;">${this.detailData.getEbBillTranferInfo.tranAmt}</b>元，<br/>
+          请确认`,
           "转让复核确认",
           {
             dangerouslyUseHTMLString: true,
@@ -153,6 +175,28 @@ export default {
     toReject() {
       this.$refs.rejectDialog.open();
     },
+    openDialog(row) {
+      this.rowData = row
+      this.tradeBjShow = true
+    },
+    // 相关协议
+    previewAgreement(row) {
+      let params = {
+        ebillCode: row.ebillCode,
+        fromEntId: this.entInfo.entId,
+        fromEntName: this.entInfo.entName,
+        holderName : row.receiptEntName || row.sellerEntName,
+        payableExpireDate: this.detailData.getEbBillBasicInfoList[0].payableExpireDate,
+        payEntName: this.detailData.getEbBillBasicInfoList[0].payEntName,
+        tranAmt: row.tranAmt,
+      }
+      this.zjControl.getEbBillAgreementReviewDetail(params).then(res=>{
+        this.agreementObj = res.data || {}
+        this.viewShow = true
+      }).catch(()=>{
+
+      })
+    }
   },
 };
 </script>

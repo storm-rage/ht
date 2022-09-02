@@ -2,7 +2,7 @@
   <zj-content-container>
     <zj-top-header :title="pageType === 'add' ? '新增企业申请' : '修改企业申请'" />
     <!-- 表单 -->
-    <ent-info-edit ref="entInfoInit" :form="detailData" @formPass="formPass" />
+    <ent-info-edit ref="entInfoInit" :form.sync="detailData" @formPass="formPass" />
 
     <zj-content-footer>
       <zj-button type="primary" @click="submitForm()" v-if="pageType !== 'detail'">提交申请</zj-button>
@@ -22,7 +22,9 @@ export default {
     return {
       zjControl: this.$api.entInfoManage,
       pageType: this.$route.meta.pageType,
-      detailData: {},
+      detailData: {
+        isDoublePost: '0'
+      },
       dictionary: {},
     };
   },
@@ -30,9 +32,7 @@ export default {
     this.getRow()
     if (this.pageType !== 'add') {
       this.getEnterprise()
-    }
-    // 查询操作记录
-    if (!this.isAdd) {
+      // 查询操作记录
       this.getEbBusinessParamLog()
     }
   },
@@ -53,8 +53,8 @@ export default {
           type: 'confirm',
           content: '确认后将新增企业！',
           messageResolve: () => {
-            this.zjControl.addEnterprise(params).then(() => {
-              this.$message.success('企业新增成功！')
+            this.zjControl.addEnterprise(params).then((res) => {
+              this.$message.success(res.msg)
               this.goParent()
             })
           }
@@ -66,8 +66,8 @@ export default {
           type: 'confirm',
           content: '确认后将更新企业信息！',
           messageResolve: () => {
-            this.zjControl.updateEnterprise(params).then(() => {
-              this.$message.success('企业信息修改成功！')
+            this.zjControl.updateEnterprise(params).then((res) => {
+              this.$message.success(res.msg)
               this.goParent()
             })
           }

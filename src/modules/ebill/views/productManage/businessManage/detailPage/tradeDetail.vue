@@ -75,13 +75,18 @@
                   <el-date-picker v-model="currentTrade.orderFactoringModel.accountEndDate" value-format="yyyyMMdd"  disabled></el-date-picker>&nbsp;共{{cacluateAccountDays}}天
                 </el-form-item>
               </el-col>
-              <el-col :span="24">
+              <el-col :span="12">
                 <el-form-item label="订单融资月利率：">
                   <el-input disabled v-model="currentTrade.orderFactoringModel.factoringFinancingMonthRate">
                     <template slot="append">%</template>
-                  </el-input>&nbsp;<zj-text-tip text="注：订单融资日利率=订单融资月利率/30"></zj-text-tip>
+                  </el-input><br/><zj-text-tip text="注：订单融资日利率=订单融资月利率/30"></zj-text-tip>
                 </el-form-item>
               </el-col>
+              <el-col :span="12">
+            <el-form-item label="订单保理额度：">
+                <zj-number-input disabled :precision="2" v-model.trim="currentTrade.factoringCreditAmount"></zj-number-input>        
+            </el-form-item>
+          </el-col>
             </el-row>
           </div>
         </zj-content>

@@ -25,7 +25,7 @@
           <zj-button type="primary" icon="el-icon-download" @click="exportList" :api="zjBtn.exportEnterpriseList">导出数据</zj-button>
         </zj-content>
       </template>
-      <zj-table ref="searchTable" :params="searchForm" :api="zjControl.tableApi">
+      <zj-table ref="searchTable" v-if="Object.keys(dictionary).length" :params="searchForm" :api="zjControl.tableApi">
         <zj-table-column title="企业编码">
           <template v-slot="{ row }">
             <span class="table-elbill-code" @click="goChild('entDetail', row)">{{ row.code }}</span>
@@ -76,6 +76,7 @@ export default {
     queryEntDictionary() {
       this.zjControl.queryEntDictionary().then((res) => {
         this.dictionary = res.data;
+        this.search()
       });
     },
     // 导出列表

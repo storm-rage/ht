@@ -20,26 +20,24 @@
             <td colspan="2">{{ dataForm.receiptEntName }}</td>
           </tr>
           <tr>
-            <td colspan="1">统一社会信用代码</td>
-            <td colspan="2"></td>
+            <td colspan="1" rowspan="2">统一社会信用代码</td>
+            <td colspan="2" rowspan="2">{{ dataForm.payBizLicence }}</td>
             <td>统一社会信用代码</td>
-            <td colspan="2"></td>
+            <td colspan="2">{{ dataForm.receiptBizLicence }}</td>
           </tr>
           <tr>
-            <td>业务方</td>
-            <td colspan="2">{{ dataForm.createEntName }}</td>
             <td>开户行</td>
             <td colspan="2">{{ dataForm.receiptBankName }}</td>
           </tr>
           <tr>
             <td colspan="2">开单日期</td>
-            <td colspan="2">{{ dataForm.openDate }}</td>
+            <td colspan="2">{{ dataForm.openDate?date(dataForm.openDate):'' }}</td>
             <td>银行账号</td>
             <td colspan="2">{{ dataForm.receiptBankAccno }}</td>
           </tr>
           <tr>
             <td colspan="2">到期日期</td>
-            <td colspan="2">{{ dataForm.expireDate }}</td>
+            <td colspan="2">{{ dataForm.expireDate?date(dataForm.expireDate):'' }}</td>
             <td>联行号</td>
             <td colspan="2">{{ dataForm.receiptBankNo }}</td>
           </tr>

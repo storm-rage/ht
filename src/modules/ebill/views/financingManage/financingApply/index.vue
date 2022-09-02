@@ -1,16 +1,18 @@
 <template>
   <zj-content-container>
     <!--  融资申请  -->
-    <el-tabs v-model="tabs" class="zj-tabs-card zj-p-l-16 zj-p-r-16">
+    <el-tabs v-model="tabs" class="zj-tabs-card zj-p-l-16 zj-p-r-16" @tab-click="tabHandle">
       <el-tab-pane label="订单融资" name="orderTab" v-if="tabInfo.orderTab">
         <orderFinancing :zjControl="zjControl" :dictionary="dictionary" :uBtn="zjBtn" @nextStepParams="handelNextStepParams"/>
       </el-tab-pane>
       <el-tab-pane label="入库融资/凭证融资" name="billTab" v-if="tabInfo.billTab || tabInfo.warehouseTab">
-        <voucherFinancing :zjControl="zjControl" :dictionary="dictionary" :mBtn="zjBtn" @nextStepParams="handelNextStepParams"/>
+        <keep-alive>
+          <voucherFinancing :zjControl="zjControl" :dictionary="dictionary" :mBtn="zjBtn" @nextStepParams="handelNextStepParams"/>
+        </keep-alive>
       </el-tab-pane>
     </el-tabs>
     <zj-content-footer>
-      <zj-button type="primary" @click="toNext">下一步</zj-button>
+      <zj-button type="primary" @click="toNext" v-if="tabInfo.orderTab !== '' || tabInfo.billTab !== '' || tabInfo.warehouseTab !== ''">下一步</zj-button>
     </zj-content-footer>
 
   </zj-content-container>
@@ -19,6 +21,7 @@
 import orderFinancing from "./orderFinancing/orderFinancing";
 import voucherFinancing from "./voucherFinancing/voucherFinancing";
 import financingApply from "../../../api/financingApplyApi";
+import {windowSSStorage} from "@utils/storageUtils";
 export default {
   name: "financingManage",
   components: {
@@ -39,7 +42,7 @@ export default {
         submitFinancingOrderApply:this.$api.financingApply.submitFinancingOrderApply,//订单融资提交
         downloadFile:this.$api.baseCommon.downloadFile,
       },
-      tabs:'',
+      tabs:'orderTab',
       dictionary:{},
       nextStepParams:{},
       tabInfo: {
@@ -59,12 +62,12 @@ export default {
     getTabInfo() {
       this.zjControl.getFinancingApplyTab().then(res=>{
         this.tabInfo = res.data
-        for(let key in res.data) {
-          if(res.data[key] === '1') {
-            this.tabs = key
-            break
-          }
-        }
+        // for(let key in res.data) {
+        //   if(res.data[key] === '1') {
+        //     this.tabs = key
+        //     break
+        //   }
+        // }
         console.log(this.tabs)
       })
     },
@@ -81,19 +84,32 @@ export default {
           this.$message.error('请选择到期日为同一天的凭证！')
           return
         }
-        if(!this.nextStepParams.nextFlag) {
+        if(this.nextStepParams.entId && this.nextStepParams.idList && this.nextStepParams.idList.length) {
           this.goChild('voucherFinancingDetail', {...this.nextStepParams})
+        } else {
+          this.$message.error('请选择海e单开单人/转让企业，并选择凭证信息!')
         }
       }
     },
     handelNextStepParams(val) {
       this.nextStepParams = {...val}
     },
+    tableLocal() {
+      if(windowSSStorage.getItem('task') !== null) {
+        this.tabs = windowSSStorage.getItem('task')
+      }
+    },
+    tabHandle(tab) {
+      windowSSStorage.setItem('task',tab.name)
+    },
   },
   created() {
     this.getApi()
     this.getDic()
     this.getTabInfo()
+  },
+  mounted() {
+    this.tableLocal()
   }
 };
 </script>

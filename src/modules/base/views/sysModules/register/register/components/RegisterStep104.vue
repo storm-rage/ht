@@ -23,7 +23,7 @@
           <zj-table-column field="email" title="邮箱"/>
           <zj-table-column field="bankAcctNo" title="银行卡号"/>
           <zj-table-column field="htSysCode" title="海天业务系统账号" v-if="form.isHtEnterprise == '1'"/>
-          <zj-table-column field="idCheckState" title="是否完成身份核验" v-if="form.isHtEnterprise == '1'" :formatter="obj=>typeMap(dictionary.idCheckStateList,obj.cellValue)"/>
+          <zj-table-column field="idCheckState" title="是否完成身份核验" v-if="form.isHtEnterprise == '1'" />
           <zj-table-column  title="操作" fixed="right">
             <template v-slot="{row}">
               <zj-button type="text" @click="maintainOperator(row)">维护</zj-button>
@@ -130,7 +130,7 @@
       <el-row class="btn-row">
         <zj-button status="primary" @click="pre">上一步</zj-button>
         <zj-button status="primary" @click="save('SAVE')">保存</zj-button>
-        <zj-button status="primary" @click="registerSuccess">完成注册</zj-button>
+        <zj-button type="primary" @click="registerSuccess">完成注册</zj-button>
       </el-row>
     </div>
     <RegisterFooter/>
@@ -433,33 +433,18 @@ export default {
       this.$emit('update:step','103')
     },
     registerSuccess() {
+      console.log(this.registerUserList)
       //校验操作用户数据是否完整
       if(!this.entInfoObj.form.registerUserList) {
         for(let i of this.registerUserList){
-          let resCheck = (i.certEndDate===''||null) ||
-            (i.certNo===''||null) ||
-            (i.certStartDate===''||null) ||
-            (i.certType===''||null) ||
-            (i.mobileNo===''||null) ||
-            (i.roleId===''||null) ||
-            (i.userId===''||null) ||
-            (i.userName===''||null)
-          if(resCheck){
+          if(!i.userId) {
             this.$message.error(`请补全操作用户的信息！`)
             return
           }
         }
       }else{
         for(let i of this.entInfoObj.form.registerUserList){
-          let resCheck = (i.certEndDate===''||null) ||
-            (i.certNo===''||null) ||
-            (i.certStartDate===''||null) ||
-            (i.certType===''||null) ||
-            (i.mobileNo===''||null) ||
-            (i.roleId===''||null) ||
-            (i.userId===''||null) ||
-            (i.userName===''||null)
-          if(resCheck){
+          if(!i.userId) {
             this.$message.error(`请补全操作用户的信息！`)
             return
           }
@@ -592,7 +577,7 @@ export default {
       this.entInfoObj.form.invoicePhone = this.form.invoicePhone
       this.entInfoObj.form.invoiceTaxpayerId = this.form.invoiceTaxpayerId
       this.entInfoObj.form.myBuyers = this.tradeInfoForm.myBuyers
-      this.zjControl.saveEntInfo(this.entInfoObj.form).then(res => {
+      this.zjControl.completeRegister(this.entInfoObj.form).then(res => {
         this.$message.success('提交企业资料成功！')
         let params = Object.assign({},this.entInfoObj)
         params.form.registerUserList = this.registerUserList//操作用户
@@ -606,8 +591,8 @@ export default {
       this.formModel.id = this.entInfoObj.form.id
       this.formModel.userId = this.formModel.userId ? this.formModel.userId : ''
       this.formModel.isHtEnterprise  = this.entInfoObj.form.isHtEnterprise
-      this.formModel.certStartDate = this.formModel.certStartDate.replace(/-/g,'')
-      this.formModel.certEndDate = this.formModel.certEndDate.replace(/-/g,'')
+      this.formModel.certStartDate = this.formModel.certStartDate?this.formModel.certStartDate.replace(/-/g,''):''
+      this.formModel.certEndDate = this.formModel.certEndDate?this.formModel.certEndDate.replace(/-/g,''):''
       this.zjControl.saveRegisterEntUser(this.formModel).then( res => {
         //更新列表数据
         this.operatorTable = false
@@ -664,30 +649,14 @@ export default {
       //下载前需要校验操作用户信息是否完整
       if(!this.entInfoObj.form.registerUserList) {
         for(let i of this.registerUserList){
-          let resCheck = (i.certEndDate===''||null) ||
-            (i.certNo===''||null) ||
-            (i.certStartDate===''||null) ||
-            (i.certType===''||null) ||
-            (i.mobileNo===''||null) ||
-            (i.roleId===''||null) ||
-            (i.userId===''||null) ||
-            (i.userName===''||null)
-          if(resCheck){
+          if(!i.userId) {
             this.$message.error(`请补全操作用户的信息！`)
             return
           }
         }
       }else{
         for(let i of this.entInfoObj.form.registerUserList){
-          let resCheck = (i.certEndDate===''||null) ||
-            (i.certNo===''||null) ||
-            (i.certStartDate===''||null) ||
-            (i.certType===''||null) ||
-            (i.mobileNo===''||null) ||
-            (i.roleId===''||null) ||
-            (i.userId===''||null) ||
-            (i.userName===''||null)
-          if(resCheck){
+          if(!i.userId) {
             this.$message.error(`请补全操作用户的信息！`)
             return
           }

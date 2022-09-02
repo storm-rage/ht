@@ -5,6 +5,7 @@
     <biz-apply-info :biz-info="applyModel"></biz-apply-info>
     <!--  具体业务信息  -->
     <quota-change-audit
+      ref="quotaChangeAudit"
       :is-edit="false"
       :biz-id="row.bizId"></quota-change-audit>
     <!--  操作记录  -->
@@ -39,7 +40,8 @@ export default {
   data () {
     return {
       zjControl: {
-        recheckLimit: this.$api.businessManageWorkflow.recheckLimit
+        recheckLimit: this.$api.businessManageWorkflow.recheckLimit, // 额度续签复核
+        recheckLimitChange: this.$api.businessManageWorkflow.recheckLimitChange, // 额度变更复核
       },
       rejectLoading: false,
       passLoading: false
@@ -54,10 +56,13 @@ export default {
       this.$refs.auditRemark.getForm().clearValidate();
       const {notes} = this.$refs.auditRemark.getData()
       this.passLoading = true;
-      this.zjControl.recheckLimit({
+      let request = this.row.applyType == 'EDXQ' ?
+                          this.zjControl.recheckLimit : 
+                          this.zjControl.recheckLimitChange 
+      request({
         id: this.row.bizId,
         notes,
-        busTradeId: '1',
+        busTradeId: this.$refs.quotaChangeAudit?.tradeRelationModel?.busTradeId,
         operResult: OperResult.PASS
       }).then(res => {
         this.passLoading = false;
@@ -75,10 +80,13 @@ export default {
         if (valid) {
           const {notes} = this.$refs.auditRemark.getData()
           this.rejectLoading = true;
-          this.zjControl.recheckLimit({
+          let request = this.row.applyType == 'EDXQ' ?
+                          this.zjControl.recheckLimit : 
+                          this.zjControl.recheckLimitChange 
+          request({
             id: this.row.bizId,
             notes,
-            busTradeId: '1',
+            busTradeId: this.$refs.quotaChangeAudit?.tradeRelationModel?.busTradeId,
             operResult: OperResult.BACK
           }).then(res => {
             this.rejectLoading = false;
