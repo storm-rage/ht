@@ -23,7 +23,7 @@
           <zj-table-column field="email" title="邮箱"/>
           <zj-table-column field="bankAcctNo" title="银行卡号"/>
           <zj-table-column field="htSysCode" title="海天业务系统账号" v-if="form.isHtEnterprise == '1'"/>
-          <zj-table-column field="idCheckState" title="是否完成身份核验" v-if="form.isHtEnterprise == '1'" :formatter="obj=>typeMap(dictionary.idCheckStateList,obj.cellValue)"/>
+          <zj-table-column field="idCheckState" title="是否完成身份核验" v-if="form.isHtEnterprise == '1'" />
           <zj-table-column  title="操作" fixed="right">
             <template v-slot="{row}">
               <zj-button type="text" @click="maintainOperator(row)">维护</zj-button>

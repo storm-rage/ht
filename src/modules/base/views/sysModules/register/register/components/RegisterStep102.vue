@@ -561,9 +561,15 @@ export default {
       }
       console.log('银行账户index=='+rowIndex)
       if (rows && rows.length && this.entInfoObj.form.entBankInfo) {
+          console.log(this.$refs)
+          console.log(this.$refs.entBankInfoTable)
         setTimeout(()=>{
-          this.$refs.entBankInfoTable.setRadioRow(rows[rowIndex])
-        },0)
+          this.$nextTick(()=>{
+            if(this.$refs.entBankInfoTable) {
+              this.$refs.entBankInfoTable.setRadioRow(rows[rowIndex])
+            }
+          })
+        },100)
         this.handleRadioChange({row: rows[rowIndex]})
       }
     },
