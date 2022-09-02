@@ -48,9 +48,9 @@
         </tr>
         <tr>
           <td colspan="2">开立日期</td>
-          <td colspan="3">{{ detailData.openDate }}</td>
+          <td colspan="3">{{ detailData.openDate?date(detailData.openDate):'' }}</td>
           <td colspan="3">到期日期</td>
-          <td colspan="3">{{ detailData.expireDate }}</td>
+          <td colspan="3">{{ detailData.expireDate?date(detailData.expireDate):'' }}</td>
         </tr>
         <tr>
           <td colspan="12">我司同意按照
@@ -129,6 +129,20 @@ export default {
       idChecked: false,//是否验证云证书
     };
   },
+  watch: {
+    idChecked() {
+      if(this.idChecked) {
+        let params = {
+          id: this.row.id,
+          protocols: this.protocols,
+          state: this.row.state,
+        }
+        this.zjControl.passBillSign(params).then(res => {
+          this.$message.success(res.msg)
+        })
+      }
+    }
+  },
   methods: {
     //收单通知书查看
     getOneBillSignAgreement(item) {
@@ -153,16 +167,6 @@ export default {
       // 调用云证书验证
       this.$refs.zjCertuficte.open()
 
-      if(this.idChecked) {
-        let params = {
-          id: this.row.id,
-          protocols: this.protocols,
-          state: this.row.state,
-        }
-        this.zjControl.passBillSign(params).then(res => {
-          this.$message.success(res.msg)
-        })
-      }
     },
     getBillSignBillInfoDetail() {
       let params = {
