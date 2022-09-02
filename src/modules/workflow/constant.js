@@ -226,7 +226,7 @@ export const myItemsPath = {
 
   // 贸易关系管理
   MYGXGL: {
-    auditPath: '',
-    detailPath: ''
+    auditPath: 'tradeRelationsAudit',
+    detailPath: 'tradeRelationsDetail'
   }
 }

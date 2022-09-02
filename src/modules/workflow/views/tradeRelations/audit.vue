@@ -164,8 +164,8 @@ export default {
     pass() {
       let params = {
         notes: this.notes,
-        // serialNo: row.serialNo
-        serialNo: this.serialNo
+        serialNo: row.serialNo
+        // serialNo: this.serialNo
       }
       this.zjControl.pass(params).then((res) => {
         this.back()
