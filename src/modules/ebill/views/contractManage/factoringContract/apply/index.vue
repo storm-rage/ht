@@ -81,6 +81,9 @@ export default {
     this.getApi();
     this.getDic();
   },
+  activated() {
+    Object.keys(this.dictionary).length && this.$refs.searchTable.getList()
+  },
   methods: {
     getDic() {
       this.zjControl.getDirectory().then((res) => {
@@ -89,7 +92,7 @@ export default {
     },
     toSign(row) {
       this.goChild('contractSignApply',{serialNo: row.serialNo})
-    }
+    },
   }
 };
 </script>

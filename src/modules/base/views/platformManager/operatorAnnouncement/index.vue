@@ -3,15 +3,15 @@
     <zj-list-layout>
       <template slot="searchForm">
         <el-form ref="searchForm" :model="searchForm">
-          <el-form-item label="类型：" class="col-center">
+          <el-form-item label="对象：" class="col-center">
             <el-select
-              v-model="typeListRes"
+              v-model="searchForm.target"
               placeholder="请选择"
               clearable
               :popper-append-to-body="false"
             >
               <el-option
-                v-for="(item, index) in typeList"
+                v-for="(item, index) in dictionary.targetList"
                 :key="index"
                 :label="item.desc"
                 :value="item.code"
@@ -19,16 +19,16 @@
               </el-option>
             </el-select>
           </el-form-item>
-          <el-form-item label="转让申请日期：" class="col-right">
+          <el-form-item label="创建日期：" class="col-right">
             <zj-date-range-picker
-              :startDate.sync="searchForm.expireDateStart"
-              :endDate.sync="searchForm.expireDateEnd"
+              :startDate.sync="searchForm.createDateStart"
+              :endDate.sync="searchForm.createDateEnd"
             />
           </el-form-item>
-          <el-form-item label="申请流水号：">
-            <el-input
-              v-model="searchForm.issueEntName"
-              @keyup.enter.native="enterSearch"
+          <el-form-item label="有效期：" class="col-right">
+            <zj-date-range-picker
+              :startDate.sync="searchForm.validStartDate"
+              :endDate.sync="searchForm.validEndDate"
             />
           </el-form-item>
         </el-form>
@@ -44,27 +44,30 @@
         :params="searchForm"
         :api="zjControl.sysNoticeAddPage"
       >
-        <zj-table-column field="type" title="类型" />
+        <zj-table-column field="type" title="类型" width="100" />
         <zj-table-column field="theme" title="标题" />
-        <zj-table-column field="target" title="对象" />
+        <zj-table-column field="target" title="对象"  width="80" />
         <zj-table-column field="content" title="内容" />
         <zj-table-column
           field="validStartDatetime"
           title="有效期起始时间"
           :formatter="date"
+          width="160"
         />
         <zj-table-column
           field="validEndDatetime"
           title="有效期截止时间"
           :formatter="date"
+          width="160"
         />
-        <zj-table-column field="state" title="开关状态" />
+        <zj-table-column field="state" title="开关状态" width="80" />
         <zj-table-column
           field="createDatetime"
           title="创建时间"
           :formatter="date"
+          width="160"
         />
-        <zj-table-column title="操作" fixed="right">
+        <zj-table-column width="200" title="操作" fixed="right">
           <template v-slot="{ row }">
             <zj-button
               type="text"
@@ -102,6 +105,7 @@
         :rules="formRules"
         :class="editFlag ? '' : 'nmb0'"
         label-width="140px"
+        :disabled="!type"
       >
         <el-form-item
           label="类型："
@@ -157,13 +161,13 @@
           />
           <p v-else>内容内容内容内容内容</p>
         </el-form-item>
-        <el-form-item
+        <!-- <el-form-item
           label="图片："
           prop="invoiceBankInfo"
           :class="{ 'zj-m-b-5': !editFlag }"
         >
           <zj-upload />
-        </el-form-item>
+        </el-form-item> -->
         <el-form-item
           label="有效期："
           prop="invoiceBankAccno"
@@ -206,15 +210,22 @@ export default {
         sysNoticeAddAller: this.$api.operatorAnnouncement.sysNoticeAddAller, //修改系统公告
         sysNoticeAddDetails: this.$api.operatorAnnouncement.sysNoticeAddDetails, //系统公告详情
       },
-      searchForm: {},
+      searchForm: {
+        // target: "",
+        // createDateStart: "",
+        // createDateEnd: "",
+        // validStartDate: "",
+        // validEndDate: "",
+      },
       dialogVisible: false,
       type: "info",
       tableData: [{ id: 1 }],
       formModel: {},
       editFlag: "1",
       formRules: {},
-      typeListRes: "",
       typeList: [],
+      // 字典
+      dictionary: {}
     };
   },
   created() {
@@ -230,13 +241,9 @@ export default {
   },
   methods: {
     apiDic() {
-      let params = {
-        id: "1",
-      };
-      this.zjControl.sysNoticeAddDirectory(params).then((res) => {
+      this.zjControl.sysNoticeAddDirectory().then((res) => {
         if (res.code === 200) {
-          // console.log(res.data.typeList, "=====字典======");
-          this.typeList = res.data.typeList;
+          this.dictionary = res.data;
         }
       });
     },
