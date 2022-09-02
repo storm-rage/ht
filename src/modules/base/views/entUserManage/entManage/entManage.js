@@ -230,14 +230,6 @@ export default {
           this.form.entType = 'B' // 平台客户类型
           this.form.isHtEnterprise = '1' // 是否海天集团
           this.form.isDoublePost = '0' // 是否双岗
-          //设置企业附件
-          this.dictionary.sysAttachTypeList.map(item => {
-            this.form.pubAttachList.push({
-              busType: item.code,
-              fileId: '',
-              fileName: ''
-            })
-          })
         } else {
           this.detailsHandle()
           this.$refs.form.clearValidate()
@@ -247,11 +239,11 @@ export default {
 
     //获取详情处理
     detailsHandle() {
+      this.pubAttachList = []
       this.$nextTick(() => {
         if (!!this.form.pubAttachList) { // 企业附件回显
           this.pubAttachList = this.form.pubAttachList
         } else {
-          this.pubAttachList = []
           this.dictionary.sysAttachTypeList.map(item => {
             this.pubAttachList.push({
               busType: item.code,
@@ -570,15 +562,6 @@ export default {
         this.$emit('update:form', res.data)
         this.sysUserList = res.data.entUserList || []
         this.detailsHandle()
-        // this.form.sysUserList = [] // 企业操作员
-        // this.form.pubAttachList = [] // 企业附件
-        // this.dictionary.sysAttachTypeList.map(item => {
-        //   this.form.pubAttachList.push({
-        //     busType: item.code,
-        //     fileId: '',
-        //     fileName: ''
-        //   })
-        // })
       })
     },
     cancel() {
