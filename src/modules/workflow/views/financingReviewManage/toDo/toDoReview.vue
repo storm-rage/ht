@@ -186,7 +186,10 @@ export default {
     operateRecordList,
   },
   props: {
-    isEdit: Boolean,
+    isEdit: {
+      type: Boolean,
+      default: true,
+    },
     bizId: String,
     titleHandle: Boolean,
   },
