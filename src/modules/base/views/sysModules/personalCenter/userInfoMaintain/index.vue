@@ -314,8 +314,9 @@ export default {
         if (valid) {
           let params = {
             userInfo: this.form,
-            templateType: "WTSQS"
+            templateType: "YHSQRYBG",
           }
+          params.userInfo.roleId = this.roleId
           this.zjControl.downloadTemplate(params)
         }
       })

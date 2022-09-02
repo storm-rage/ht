@@ -128,10 +128,12 @@ export default {
       }
     },
     formPass(params) {
+      if (this.row.workflowState !== 'E005') {
+        params = { serialNo: params.serialNo }
+      }
       if (this.state === 'pass') {
         this.$refs.auditRemark.getForm().clearValidate();
         const { notes } = this.$refs.auditRemark.getData()
-
         this.passLoading = true;
         this.zjControl.todoEnterpriseSubmit({
           flag: '1',
@@ -167,6 +169,8 @@ export default {
             }).catch(() => {
               this.rejectLoading = false;
             })
+          } else {
+            this.$message.warning('请选输入审核意见!')
           }
         })
       }
