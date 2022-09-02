@@ -592,7 +592,7 @@ export default {
       this.formModel.userId = this.formModel.userId ? this.formModel.userId : ''
       this.formModel.isHtEnterprise  = this.entInfoObj.form.isHtEnterprise
       this.formModel.certStartDate = this.formModel.certStartDate?this.formModel.certStartDate.replace(/-/g,''):''
-      this.formModel.certEndDate = this.formModel.certEndDate.replace(/-/g,'')
+      this.formModel.certEndDate = this.formModel.certEndDate?this.formModel.certEndDate.replace(/-/g,''):''
       this.zjControl.saveRegisterEntUser(this.formModel).then( res => {
         //更新列表数据
         this.operatorTable = false

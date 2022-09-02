@@ -12,7 +12,7 @@
       </el-tab-pane>
     </el-tabs>
     <zj-content-footer>
-      <zj-button type="primary" @click="toNext">下一步</zj-button>
+      <zj-button type="primary" @click="toNext" v-if="tabInfo.orderTab !== '' || tabInfo.billTab !== '' || tabInfo.warehouseTab !== ''">下一步</zj-button>
     </zj-content-footer>
 
   </zj-content-container>
@@ -84,8 +84,10 @@ export default {
           this.$message.error('请选择到期日为同一天的凭证！')
           return
         }
-        if(this.nextStepParams.entId && this.nextStepParams.idList.length) {
+        if(this.nextStepParams.entId && this.nextStepParams.idList && this.nextStepParams.idList.length) {
           this.goChild('voucherFinancingDetail', {...this.nextStepParams})
+        } else {
+          this.$message.error('请选择海e单开单人/转让企业，并选择凭证信息!')
         }
       }
     },
