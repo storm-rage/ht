@@ -26,7 +26,7 @@
           <el-form-item label="融资月利率：">{{form.interestRate}}</el-form-item>
         </el-col>
         <el-col :span="8" v-if="proType === '0'">
-          <el-form-item label="融资开始日：">{{form.loanDate}}</el-form-item>
+          <el-form-item label="融资开始日：">{{form.loanDate?date(form.loanDate):''}}</el-form-item>
         </el-col>
         <el-col :span="8" v-if="proType !== '0'">
           <el-form-item label="预计融资期限：">
