@@ -47,10 +47,11 @@
         <zj-table-column field="startObject" title="发起方" :formatter="(obj) => typeMap(dictionary.startObjectList, obj.cellValue)" />
         <zj-table-column field="startTime" title="接收时间" :formatter="obj=>formatDate(obj.cellValue)" v-if="tabAtive === 'agenda'" />
         <zj-table-column field="endTime" title="处理时间" :formatter="obj=>formatDate(obj.cellValue)" v-else />
-        <zj-table-column field="workflowStateDesc" title="申请状态" />
+        <zj-table-column field="workflowState" title="申请状态" :formatter="(obj) => typeMap(dictionary.workflowStateList, obj.cellValue)" />
         <zj-table-column title="操作" fixed="right" v-if="tabAtive === 'agenda'">
           <template v-slot="{ row }">
-            <zj-button type="text" @click="toHandle(row)">处理</zj-button>
+            <zj-button type="text" @click="toHandle(row)" v-if="!['A000','D010','E000','S001','U000'].includes(row.workflowState)">处理</zj-button>
+            <span v-else>—</span>
             <zj-button type="text" @click="toCancellation(row)" v-if="['E005','U006','S004'].includes(row.workflowState) && row.startObject === 'PT'">作废</zj-button>
           </template>
         </zj-table-column>
