@@ -1,6 +1,6 @@
 <template>
   <zj-content-container>
-    <zj-top-header title="供应商额度管理"></zj-top-header>
+    <zj-top-header :title="`供应商额度${row.applyType=='EDXQ'?'续签':'变更'}`"></zj-top-header>
     <el-form ref="form" label-width="160px">
       <!--  供应商基本信息  -->
       <supplier-base-info title="供应商基本信息"

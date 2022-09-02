@@ -76,7 +76,7 @@
                               :disabled="!isEdit"/>&nbsp;共{{cacluateAccountDays}}天
             </el-form-item>
           </el-col>
-          <el-col :span="24">
+          <el-col :span="12">
             <el-form-item label="订单融资月利率："
                           prop="factoringFinancingMonthRate"
                           :rules="[
@@ -84,7 +84,16 @@
                         ]">
               <zj-number-input :disabled="!isEdit&&!isOnlyMonthRateEdit" :max="100" :precision="4" v-model.trim="form.factoringFinancingMonthRate">
                 <template slot="append">%</template>
-              </zj-number-input>&nbsp;<zj-text-tip text="注：订单融资日利率=订单融资月利率/30"></zj-text-tip>
+              </zj-number-input><br/><zj-text-tip text="注：订单融资日利率=订单融资月利率/30"></zj-text-tip>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="订单保理额度："
+                          prop="factoringCreditAmount"
+                          :rules="[
+                          {required: true,message: '请输入订单保理额度',trigger: ['change','blur']}
+                        ]">
+                <zj-number-input :disabled="!isEdit" :precision="2" v-model.trim="form.factoringCreditAmount"></zj-number-input>        
             </el-form-item>
           </el-col>
         </el-row>
@@ -146,7 +155,8 @@ export default {
         factoringCreditStartDate: '',
         factoringCreditEndDate: '',
         accountStartDate: '',
-        accountEndDate: ''
+        accountEndDate: '',
+        factoringCreditAmount: ""
       },
       accountStartDateConfig: {
         disabledDate:(time)=>{

@@ -118,7 +118,7 @@ export default {
         }
       } else {
         // 已办和已办结
-        this.goChild(myItemsPath[row.busType][row.applyType].doneDetailPath, row);
+        this.goChild(myItemsPath[row.busType][row.applyType].doneDetailPath, {...row, tabAtive: this.tabAtive});
       }
 
     },

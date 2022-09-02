@@ -81,7 +81,7 @@ export const myItemsPath = {
       // 已办和办结状态
       doneDetailPath: 'tradeChangeReviewAuditDetail',
     },
-    // 业务管理-额度管理
+    // 业务管理-额度续签
     EDXQ: {
       // 复审状态
       'C003': {
@@ -96,6 +96,7 @@ export const myItemsPath = {
       // 已办和办结状态
       doneDetailPath: 'quotaChangeReviewAuditDetail',
     },
+    // 业务管理-额度变更
     EDBG: {
       // 复审状态
       'C003': {

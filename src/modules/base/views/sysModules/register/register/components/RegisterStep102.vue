@@ -549,6 +549,8 @@ export default {
     handleDataChange() {
       //回显 勾选之前选中的银行账户
       let rows = this.form.entBankInfoList
+      let checkedBankInfo = rows.filter(item=>item.platExist === true)//platExist为true的账户为之前选中的账户
+      this.entInfoObj.form.entBankInfo = {...checkedBankInfo[0]}
       console.log(this.entInfoObj.form.entBankInfo)
       let rowIndex = ''
       for(let i of rows) {
@@ -715,14 +717,16 @@ export default {
             return this.$message.error('请确认开户行一致！')
           }
           if(this.form.isHtEnterprise === '1') {
-            this.form.entBankInfo = this.form.entBankInfoList[0]
+            // this.form.entBankInfo = this.form.entBankInfoList[0]
             let str = this.form.entBankInfo.bankName.slice(0,4)
             let res = ''
             for(let item of this.bankInfoList) {
               if(item.status === this.form.confirmBankId) {
-                res = item.label
+                res = item.label.slice(0,4)
               }
             }
+            console.log(str)
+            console.log(res)
             if(str !== res) {
               return this.$message.error('请确认开户行一致！')
             }

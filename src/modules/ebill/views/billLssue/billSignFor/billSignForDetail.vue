@@ -48,9 +48,9 @@
         </tr>
         <tr>
           <td colspan="2">开立日期</td>
-          <td colspan="3">{{ detailData.openDate }}</td>
+          <td colspan="3">{{ detailData.openDate?date(detailData.openDate):'' }}</td>
           <td colspan="3">到期日期</td>
-          <td colspan="3">{{ detailData.expireDate }}</td>
+          <td colspan="3">{{ detailData.expireDate?date(detailData.expireDate):'' }}</td>
         </tr>
         <tr>
           <td colspan="12">我司同意按照
@@ -120,7 +120,6 @@ export default {
         passBillSign:this.$api.billLssueBillSignFor.passBillSign,//融单签收-审核通过
         getOneBillSignAgreement:this.$api.billLssueBillSignFor.getOneBillSignAgreement,//融单签收-查询融单签收协议信息-单个协议查看
 
-        downloadFile:this.$api.baseCommon.downloadFile,
       },
       detailData: {},
       protocols: [],//协议列表
@@ -129,6 +128,20 @@ export default {
       dialogHtml: '',
       idChecked: false,//是否验证云证书
     };
+  },
+  watch: {
+    idChecked() {
+      if(this.idChecked) {
+        let params = {
+          id: this.row.id,
+          protocols: this.protocols,
+          state: this.row.state,
+        }
+        this.zjControl.passBillSign(params).then(res => {
+          this.$message.success(res.msg)
+        })
+      }
+    }
   },
   methods: {
     //收单通知书查看
@@ -143,7 +156,9 @@ export default {
       })
     },
     attaDownload(fileId) {
-      this.zjControl.downloadFile(fileId)
+      this.$api.baseCommon.downloadFile({
+        fileUrl: fileId,
+      })
     },
     confirmSignFor() {
       if(!this.agreeCheck) {
@@ -152,16 +167,6 @@ export default {
       // 调用云证书验证
       this.$refs.zjCertuficte.open()
 
-      if(this.idChecked) {
-        let params = {
-          id: this.row.id,
-          protocols: this.protocols,
-          state: this.row.state,
-        }
-        this.zjControl.passBillSign(params).then(res => {
-          this.$message.success(res.msg)
-        })
-      }
     },
     getBillSignBillInfoDetail() {
       let params = {
