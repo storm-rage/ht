@@ -15,7 +15,7 @@ const multistageAgreementManageRouter = [
   {
     path: '/multistageAgreementMaintain',
     name: 'multistageAgreementMaintain',
-    component: () => import('../views/multistageAgreementManage/multistageAgreementSearch/maintain/index'),
+    component: () => import('../views/multistageAgreementManage/multistageAgreementSearch/maintain/index.vue'),
     meta: {
       isMock: true,
       title: '阶段性协议维护',
