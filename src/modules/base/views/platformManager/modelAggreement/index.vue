@@ -88,7 +88,13 @@ export default {
         getDirectory: this.$api.modelAggreement.getDirectory, //基础协议模板查询-数据字典
         agreementList: this.$api.modelAggreement.agreementList, //基础协议模板-列表查询
       },
-      searchForm: {},
+      searchForm: {
+        agreementType: "",
+        agreementTypeName: "",
+        modifyDatetimeBegin: "",
+        modifyDatetimeEnd: "",
+        isEffective: "",
+      },
       dialogVisible: false,
       type: "info",
       tableData: [{ id: 1 }],
