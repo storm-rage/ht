@@ -146,8 +146,8 @@ export default {
       },
       xq: {},
       notes: "",
-      serialNo: "1533483500706979840",
-      // 1533450545422729216
+      // serialNo: "1533483500706979840",
+      // // 1533450545422729216
       // 1533450558307631104
       // 1533453571227164672
       // 1533453914824548352
@@ -164,7 +164,7 @@ export default {
     pass() {
       let params = {
         notes: this.notes,
-        serialNo: row.serialNo
+        serialNo: this.row.serialNo
         // serialNo: this.serialNo
       }
       this.zjControl.pass(params).then((res) => {
@@ -176,8 +176,8 @@ export default {
       if (this.notes) {
         let params = {
           notes: this.notes,
-          // serialNo: row.serialNo
-          serialNo: this.serialNo
+          serialNo: this.row.serialNo
+          // serialNo: this.serialNo
         }
         this.zjControl.refuse(params).then((res) => {
           this.back()
@@ -208,7 +208,7 @@ export default {
       console.log(this.row.id);
       let params = {
         // serialNo: this.serialNo
-        serialNo: row.serialNo
+        serialNo: this.row.serialNo
       }
       this.zjControl.auditDetail(params).then((res) => {
         this.xq = res.data;
