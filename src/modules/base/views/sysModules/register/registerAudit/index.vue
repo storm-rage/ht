@@ -11,8 +11,8 @@
           </el-form-item>
           <el-form-item label="平台客户类型：" class="col-right">
             <el-select v-model="searchForm.entType" filterable placeholder="请选择" :popper-append-to-body="false">
-              <el-option v-for="item in platFormAuditEntTypeList" :key="item.code" :label="item.desc" :value="item.code">
-              </el-option>
+              <el-option label="全部" value=""/>
+              <el-option v-for="item in platFormAuditEntTypeList" :key="item.code" :label="item.desc" :value="item.code"/>
             </el-select>
           </el-form-item>
           <el-form-item label="申请流水号：">
@@ -20,6 +20,7 @@
           </el-form-item>
           <el-form-item label="企业注册状态：" class="col-right">
             <el-select v-model="searchForm.registerState" filterable placeholder="请选择" :popper-append-to-body="false">
+              <el-option label="全部" value=""/>
               <el-option v-for="item in registerStateList" :key="item.code" :label="item.desc" :value="item.code">
               </el-option>
             </el-select>

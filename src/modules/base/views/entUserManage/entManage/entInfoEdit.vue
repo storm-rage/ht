@@ -61,25 +61,25 @@
             </el-form-item>
           </el-col>
           <el-col :span="8">
-            <el-form-item label="统一社会信用代码：" prop="bizLicence" class="bizLicence">
+            <el-form-item label="统一社会信用代码：">
               <template>
-                <el-input v-model="form.bizLicence" :maxLength="18" :disabled="isDetail || isEdit" />
+                <el-input v-model="form.bizLicence" :maxLength="18" disabled />
               </template>
             </el-form-item>
           </el-col>
           <el-col :span="8">
-            <el-form-item label="纳税人识别号：" prop="invoiceTaxpayerId">
-              <el-input v-model="form.invoiceTaxpayerId" :disabled="isDetail || isEdit" />
+            <el-form-item label="纳税人识别号：">
+              <el-input v-model="form.invoiceTaxpayerId" disabled />
             </el-form-item>
           </el-col>
           <el-col :span="8">
-            <el-form-item label="成立日期：" prop="registerStartDate">
-              <zj-date-picker :date.sync="form.registerStartDate" :disabled="isDetail || isEdit" />
+            <el-form-item label="成立日期：">
+              <zj-date-picker :date.sync="form.registerStartDate" disabled />
             </el-form-item>
           </el-col>
           <el-col :span="8">
-            <el-form-item label="注册资本：" prop="registerCapital">
-              <el-input v-model="form.registerCapital" :disabled="isDetail || isEdit" />
+            <el-form-item label="注册资本：">
+              <el-input v-model="form.registerCapital" disabled />
             </el-form-item>
           </el-col>
           <el-col :span="8">
@@ -100,8 +100,8 @@
             </el-form-item>
           </el-col>
           <el-col :span="16">
-            <el-form-item label="营业执照注册地址：" prop="address">
-              <el-input v-model="form.address" :disabled="isDetail || isEdit" />
+            <el-form-item label="营业执照注册地址：">
+              <el-input v-model="form.address" disabled />
             </el-form-item>
           </el-col>
         </el-row>
@@ -126,8 +126,8 @@
         <el-row>
           <h4 class="bl zj-m-l-20 mb-10">法人信息</h4>
           <el-col :span="8">
-            <el-form-item label="法定代表人姓名：" prop="legalPersonName">
-              <el-input v-model="form.legalPersonName" :disabled="isDetail || isEdit" />
+            <el-form-item label="法定代表人姓名：">
+              <el-input v-model="form.legalPersonName" disabled />
             </el-form-item>
           </el-col>
 

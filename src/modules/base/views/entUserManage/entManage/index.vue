@@ -14,6 +14,7 @@
           </el-form-item>
           <el-form-item label="平台客户类型：">
             <el-select v-model="searchForm.entType" :popper-append-to-body="false">
+               <el-option label="全部" value=""/>
               <el-option v-for="(item, index) in dictionary.entTypeList" :key="index" :value="item.code" :label="item.desc"></el-option>
             </el-select>
           </el-form-item>
