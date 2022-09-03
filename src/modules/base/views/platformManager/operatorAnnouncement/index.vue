@@ -211,11 +211,11 @@ export default {
         sysNoticeAddDetails: this.$api.operatorAnnouncement.sysNoticeAddDetails, //系统公告详情
       },
       searchForm: {
-        // target: "",
-        // createDateStart: "",
-        // createDateEnd: "",
-        // validStartDate: "",
-        // validEndDate: "",
+        target: "0",
+        createDateStart: "",
+        createDateEnd: "",
+        validStartDate: "",
+        validEndDate: "",
       },
       dialogVisible: false,
       type: "info",
@@ -297,7 +297,8 @@ export default {
         content: "您确定要删除吗",
       }).then(() => {
         this.zjControl.sysNoticeAddDelete({ id: row.id }).then(() => {
-          alert("已删除");
+          this.$message.success("删除成功！");
+          this.$refs.searchTable.getList()
         });
       }).catch(()=>{})
     },
