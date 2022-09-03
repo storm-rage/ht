@@ -131,9 +131,9 @@ export default {
       if (this.tabAtive === 'agenda') {
         // 代办
         if (myItemsPath[row.busType].auditPath) {
-          this.goChild(myItemsPath[row.busType].auditPath, row);
+          this.goChild(myItemsPath[row.busType].auditPath, row, 'todo');
         } else if (myItemsPath[row.busType][row.applyType][row.workflowState].auditPath) {
-          this.goChild(myItemsPath[row.busType][row.applyType][row.workflowState].auditPath, row);
+          this.goChild(myItemsPath[row.busType][row.applyType][row.workflowState].auditPath, row , 'todo');
         }
       }
     },

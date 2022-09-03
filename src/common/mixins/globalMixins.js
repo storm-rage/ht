@@ -123,15 +123,19 @@ export default {
             }
           }
         },
-        goChild(routerName,row = {}){
+        goChild(routerName,row = {}, type){
           if(this.beforeGoChild && typeof(this.beforeGoChild) === 'function'){
             this.beforeGoChild()
           }
+          let fromRouteName = this.$route.name
           this.$router.push({
             name:routerName,
             params:{
               rowData:row
             }
+          }).then(()=>{
+            // 是否是待办里点处理，此时的route已是跳转后的route
+            if(type=='todo') this.$route.meta.newParent = fromRouteName
           })
           this.$nextTick(() => {
             this.tabRefresh()
@@ -155,7 +159,7 @@ export default {
           if(this.beforeGoParent && typeof(this.beforeGoParent) === 'function'){
             this.beforeGoParent()
           }
-          //父,todo:需要改造
+          //父,todo:需要改造，上面goChild已改造
           let rItem = {
             name: typeof(parentName) !== 'object' && parentName ? parentName : this.row.parent ||  this.$route.meta.newParent || this.$route.meta.parent,
             meta:Object.assign({},this.$route.meta),
