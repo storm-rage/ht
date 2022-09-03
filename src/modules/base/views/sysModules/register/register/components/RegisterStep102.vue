@@ -785,11 +785,14 @@ export default {
           this.zjControl.saveEntInfo(this.form).then(res => {
             this.$message.success('提交企业资料成功！')
             this.entInfoObj.form.id = res.data.id
-            this.entInfoObj.form.entBankInfo = this.form.entBankInfo
-            this.entInfoObj.form.isSelectEntBankInfo = this.form.isSelectEntBankInfo
-            this.entInfoObj.form.defaultSelectRowId = this.form.defaultSelectRowId
-            this.entInfoObj.form.confirmBankId = this.form.confirmBankId
-            this.entInfoObj.form.confirmBankName = this.form.confirmBankName
+            this.entInfoObj.form = this.form
+            // this.entInfoObj.form.entBankInfo = this.form.entBankInfo
+            // this.entInfoObj.form.isSelectEntBankInfo = this.form.isSelectEntBankInfo
+            // this.entInfoObj.form.defaultSelectRowId = this.form.defaultSelectRowId
+            // this.entInfoObj.form.confirmBankId = this.form.confirmBankId
+            // this.entInfoObj.form.confirmBankName = this.form.confirmBankName
+            // this.entInfoObj.form.term = this.form.term
+            // this.entInfoObj.form.legalCertTerm = this.form.legalCertTerm
             this.entInfoObj.form.token = res.data.token
             let params = Object.assign({},this.entInfoObj)
             params.form = params.form ? params.form : this.form
