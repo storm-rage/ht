@@ -65,6 +65,7 @@
           ref="contractTable"
           :dataList="contractData"
           :pager="false"
+          :editRules="contractEditRules"
           :edit-config="{
             trigger: 'manual',
             mode: 'row',
@@ -105,33 +106,37 @@
             field="contractAmt"
             title="合同金额"
             :formatter="money"
+            :edit-render="{
+              name: 'input',
+              immediate: true
+            }"
           >
-            <template v-slot="{ row }">
-              <div v-if="$refs.contractTable.isActiveByRow(row)">
+            <template v-slot:edit="scope">
                 <vxe-input
-                  v-model="row.contractAmt"
+                  v-model="scope.row.contractAmt"
                   type="float"
                   digits="2"
                   :controls="false"
+                  @change="$refs.contractTable.updateStatus(scope)"
                   style="width: 100%;"
                 ></vxe-input>
-              </div>
-              <div v-else>{{ money(row.contractAmt) }}</div>
             </template>
           </zj-table-column>
           <zj-table-column
             field="signDate"
             title="合同签订日期"
             :formatter="date"
+            :edit-render="{
+              name: 'input',
+              immediate: true
+            }"
           >
-            <template v-slot="{ row }">
-              <div v-if="$refs.contractTable.isActiveByRow(row)">
+            <template v-slot:edit="scope">
                 <zj-date-picker
                   class="table-date-picker"
-                  :date.sync="row.signDate"
+                  :date.sync="scope.row.signDate"
+                  @change="$refs.contractTable.updateStatus(scope)"
                 />
-              </div>
-              <div v-else>{{ date(row.signDate) }}</div>
             </template>
           </zj-table-column>
           <zj-table-column field="fileName" title="附件" />
@@ -225,7 +230,8 @@
             title="发票号码"
             :edit-render="{
               name: 'input',
-              immediate: true
+              immediate: true,
+              events: { input: inputChange }
             }"
           />
           <zj-table-column
@@ -380,6 +386,7 @@
           ref="otherTable"
           :dataList="otherData"
           :pager="false"
+          :editRules="{attachTheme: [{ required: true, message: '不能为空', trigger: 'change' }]}"
           :edit-config="{
             trigger: 'manual',
             mode: 'row',
@@ -442,7 +449,7 @@
       </el-collapse-item>
     </el-collapse>
     <ZjContentFooter>
-      <!-- <zj-button type="primary">提交复核</zj-button> -->
+      <zj-button type="primary" @click="onConfirm">保存</zj-button>
       <zj-button class="back" @click="handleBack" :api="zjBtn.passBillSignBatch"
         >返回</zj-button
       ></ZjContentFooter
@@ -469,6 +476,12 @@ export default {
       contractRow: {}, // 当前编辑的合同表格行
       billData: [], // 发票表格数据
       billRow: {},
+      contractEditRules: {
+        contractNo: [{ required: true, message: '不能为空', trigger: 'change' }],
+        contractName: [{ required: true, message: '不能为空', trigger: 'change' }],
+        contractAmt: [{ required: true, message: '不能为空', trigger: 'change' }],
+        signDate: [{ required: true, message: '不能为空', trigger: 'change' }]
+      },
       billEditRules: {
         invoiceType: [
           { required: true, message: '不能为空', trigger: 'change' }
@@ -522,7 +535,11 @@ export default {
     handleAdd (type) {
       let defaultData = {
         contract: {
-          contractType: '',
+          contractType: this.contractData.some(
+            item => item.contractType == '0'
+          )
+            ? '1'
+            : '0',
           contractNo: '',
           contractName: '',
           contractAmt: '',
@@ -600,45 +617,53 @@ export default {
       return key
     },
     save (type, row) {
-      this.$refs[type + 'Table']
-        .validate(row)
-        .then(() => {
-          let saveType = {
-            contract: {
-              url: this.zjControl.maintainContract,
-              valueProp: 'contractInfo'
-            },
-            bill: {
-              url: this.zjControl.maintainInvoice,
-              valueProp: 'invoice'
-            },
-            other: {
-              url: this.zjControl.maintainOther,
-              valueProp: 'otherAttach'
-            }
-          }
-          let request = saveType[type].url
-          request({
-            acctId: this.row.id,
-            [saveType[type].valueProp]: {
-              ...row,
-              operateType: row.id ? 'MOD' : 'ADD',
-              ebillCode: this.detailData.ebillCode
-            }
-          })
-            .then(res => {
-              this.$refs[type + 'Table'].clearActived()
-              !row.id ? (row.id = res.data.id) : ''
-              this.$message.success('保存成功!')
-            })
-            .catch(() => {})
-        })
-        .catch(err => {})
+       return new Promise((resove,reject)=>{
+         this.$refs[type + 'Table']
+           .validate(row)
+           .then(() => {
+             let saveType = {
+               contract: {
+                 url: this.zjControl.maintainContract,
+                 valueProp: 'contractInfo'
+               },
+               bill: {
+                 url: this.zjControl.maintainInvoice,
+                 valueProp: 'invoice'
+               },
+               other: {
+                 url: this.zjControl.maintainOther,
+                 valueProp: 'otherAttach'
+               }
+             }
+             let request = saveType[type].url
+             request({
+               acctId: this.row.id,
+               [saveType[type].valueProp]: {
+                 ...row,
+                 operateType: row.id ? 'MOD' : 'ADD',
+                 ebillCode: this.detailData.ebillCode
+               }
+             })
+               .then(res => {
+                 this.$refs[type + 'Table'].clearActived()
+                 !row.id ? (row.id = res.data.id) : ''
+                 this.$message.success('保存成功!')
+                 resove(res)
+               })
+               .catch(() => {
+                  reject(err)
+               })
+           })
+           .catch(err => {
+              reject(err)
+           })
+       })
     },
     cancel (type, row) {
       row = JSON.parse(JSON.stringify(this[type + 'Row']))
     },
     del (type, row) {
+      if(!row.id) return this.$refs[type + 'Table'].remove(row)
       let saveType = {
         contract: {
           url: this.zjControl.maintainContract,
@@ -693,6 +718,43 @@ export default {
         .catch(() => {
           this.loading = false
         })
+    },
+    inputChange ({ row }) {
+      row.invoiceNumber = row.invoiceNumber.replace(/[^\d]/, '')
+      if (row.invoiceNumber.length > 6) {
+        row.invoiceNumber = row.invoiceNumber.slice(0, 6)
+      }
+    },
+    onConfirm() {
+      let types = ['contract','bill','other']
+      let prosimeAll =  types.map((type,index)=>{
+        return new Promise((resove,reject)=>{
+          let tableActiveRow = this.$refs[type+'Table'] && this.$refs[type+'Table'].getActiveRecord()
+          if(tableActiveRow) {
+            // 有未保存的数据，未保存的数据是否必填完
+            this.$refs[type + 'Table']
+              .validate(tableActiveRow.row)
+              .then(()=>{
+                // this.save(type, tableActiveRow.row).then(res=>{
+                //   resove(res)
+                // })
+                resove({type, row: tableActiveRow.row})
+              })
+              .catch(()=>{
+                reject()
+              })
+          } else {
+            resove()
+          }
+        })
+      })
+      Promise.all(prosimeAll).then((res)=>{
+        // window.console.log('res', res);
+        res.map(item=>item&&this.save(item.type, item.row))
+        // this.cancel()
+      }).catch((err)=>{
+        // window.console.log('err',err);
+      })
     }
   }
 }
