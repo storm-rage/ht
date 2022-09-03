@@ -3,7 +3,7 @@
     <!--  凭证融资  -->
       <div class="zj-search-condition zj-m-b-20" style="border-bottom: none;">
         <zj-header title="请选择海e单开单人/转让企业"/>
-        <el-form ref="searchForm" :model="searchForm">
+        <el-form ref="searchFormEnt" :model="searchForm">
           <el-form-item label="海e单开单人/转让企业：">
             <el-select v-model="searchForm.entId" @change="entChange">
               <el-option
@@ -18,8 +18,8 @@
         <zj-list-layout>
           <zj-header title="凭证信息"/>
           <template slot="rightBtns">
-            <vxe-button class="reset" icon="el-icon-refresh" @click="resetSearch()">重置</vxe-button>
-            <vxe-button class="search" icon="el-icon-search" @click="search()">查询</vxe-button>
+            <vxe-button class="reset" icon="el-icon-refresh" @click="reset(nextParams.entId)">重置</vxe-button>
+            <vxe-button class="search" icon="el-icon-search" @click="entChange(nextParams.entId)">查询</vxe-button>
           </template>
           <template slot="searchForm">
             <el-form ref="searchForm" :model="searchForm">
@@ -39,11 +39,11 @@
                 <zj-amount-range
                   :startAmt.sync="searchForm.ebillAmtStart"
                   :endAmt.sync="searchForm.ebillAmtEnd"
-                  @keyupEnterNative="enterSearch"
+                  @keyupEnterNative="entChange(nextParams.entId)"
                 />
               </el-form-item>
               <el-form-item label="凭证编号：">
-                <el-input v-model="searchForm.ebillCodeLike" @keyup.enter.native="search"/>
+                <el-input v-model="searchForm.ebillCodeLike" @keyup.enter.native="entChange(nextParams.entId)"/>
               </el-form-item>
             </el-form>
           </template>
@@ -51,7 +51,6 @@
                     :dataList="billList"
                     @checkbox-change="checkChange"
                     @checkbox-all="checkChange"
-                    :radio-config="{highlight: true}"
           >
             <zj-table-column type="checkbox" width="40"/>
             <zj-table-column field="ebillCode" title="债权凭证编号"/>
@@ -72,6 +71,7 @@
   </zj-content-container>
 </template>
 <script>
+import {windowSSStorage} from "@utils/storageUtils";
 export default {
   name: 'voucherFinancing',
   props: {
@@ -115,17 +115,21 @@ export default {
         this.billList = res.data.rows
         this.totalAmount = res.data.totalAmount
       })
-      localStorage.setItem('cacheEntInfo',val)
+      windowSSStorage.setItem('cacheEntInfo',val)
+      this.$emit('nextStepParams',this.nextParams)
     },
     handleEntId() {
-      if(localStorage.getItem('cacheEntInfo')) {
-        this.searchForm.entId = localStorage.getItem('cacheEntInfo')
+      if(windowSSStorage.getItem('cacheEntInfo')) {
+        this.searchForm.entId = windowSSStorage.getItem('cacheEntInfo')
+        this.entChange(this.searchForm.entId)
       }
-      this.entChange(this.searchForm.entId)
     },
     checkChange() {
       let checkArr = this.$refs.searchTable.getCheckboxRecords()
+      windowSSStorage.setItem('cacheBillCheck',checkArr)
+
       let newCheckArr = checkArr.map(item=>item.ebillAmt)
+      //已勾选凭证金额合计
       if(checkArr.length > 1 ) {
         this.checkedTotalAmount = newCheckArr.reduce((a,b)=>{
           return Number(a)+Number(b)
@@ -136,16 +140,11 @@ export default {
         this.checkedTotalAmount = 0
       }
       console.log(`~`+JSON.stringify(checkArr))
-      let nextStepFlag = null
-      if(this.searchForm.entId && this.billList && this.billList.length) {
-        nextStepFlag = false
-      }
       //勾选多个凭证时，遍历数组查看选中的凭证是否为同一个到期日
       if(checkArr.length > 1) {
         let expDate = checkArr[0].expireDate
         for(let i of checkArr) {
           if(i.expireDate !== expDate.expireDate) {
-            nextStepFlag = true
             this.$message.error('请选择到期日为同一天的凭证！')
             break
           }
@@ -156,15 +155,25 @@ export default {
       this.nextParams = {
         ...this.nextParams,
         idList: selectBillId,
-        nextFlag: nextStepFlag,
       }
       this.$emit('nextStepParams',this.nextParams)
     },
+    reset(val) {
+      this.searchForm.holderDateStart = ''
+      this.searchForm.holderDateEnd = ''
+      this.searchForm.expireDateStart = ''
+      this.searchForm.expireDateEnd = ''
+      this.searchForm.ebillAmtStart = ''
+      this.searchForm.ebillAmtEnd = ''
+      this.searchForm.ebillCodeLike = ''
+      this.entChange(val)
+    }
   },
   created() {
   },
   mounted() {
     this.handleEntId()
+    console.log(this.billList)
   },
 };
 </script>
