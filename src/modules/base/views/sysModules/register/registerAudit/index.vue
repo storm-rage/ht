@@ -21,7 +21,7 @@
           <el-form-item label="企业注册状态：" class="col-right">
             <el-select v-model="searchForm.registerState" filterable placeholder="请选择" :popper-append-to-body="false">
               <el-option label="全部" value=""/>
-              <el-option v-for="item in registerStateList" :key="item.code" :label="item.desc" :value="item.code">
+              <el-option v-for="item in directory.platFormEntStateList" :key="item.code" :label="item.desc" :value="item.code">
               </el-option>
             </el-select>
           </el-form-item>
@@ -74,7 +74,7 @@
         </zj-table-column>
         <zj-table-column field="applyDatetime" title="申请时间" :formatter="formatterCellVal" />
         <zj-table-column field="registerState" title="企业注册状态" :formatter="
-            (obj) => typeMap(directory.registerStateList, obj.cellValue)
+            (obj) => typeMap(directory.platFormEntStateList, obj.cellValue)
           " />
         <zj-table-column title="操作" fixed="right">
           <template v-slot="{ row }">
@@ -92,6 +92,7 @@
 
 <script>
 import certificate from "./commom/certificate.vue";
+
 export default {
   components: { certificate },
   data() {
@@ -129,7 +130,7 @@ export default {
         console.log(res.data.platFormEntStateListCheList);
         this.directory = res.data;
         this.getEntTypeList(this.directory.platFormAuditEntTypeList || []);
-        this.getRegisterStateList(this.directory.registerStateList || []);
+        // this.getRegisterStateList(this.directory.registerStateList || []);
         this.search()
       });
     },
@@ -140,15 +141,15 @@ export default {
       });
     },
     // 企业注册状态
-    getRegisterStateList(data) {
-      data.forEach((item, index) => {
-        if (index !== 0 && index !== 1) {
-          //2-待平台初审 3-待平台复审 4-待发证 5-注册拒绝 6-平台拒绝
-          this.registerStateList.push(item);
-        }
-        console.log(this.registerStateList);
-      });
-    },
+    // getRegisterStateList(data) {
+    //   data.forEach((item, index) => {
+    //     if (index !== 0 && index !== 1) {
+    //       //2-待平台初审 3-待平台复审 4-待发证 5-注册拒绝 6-平台拒绝
+    //       this.registerStateList.push(item);
+    //     }
+    //     console.log(this.registerStateList);
+    //   });
+    // },
     //发证
     certificate(row) {
       if (typeof row === "object") {

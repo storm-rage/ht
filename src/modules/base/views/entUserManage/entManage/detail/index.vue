@@ -75,7 +75,9 @@
               </el-col>
               <el-col :span="8">
                 <el-form-item label="企业经营类型：">
-                  <span>{{ detailData.custType | value }}</span>
+                  <span>{{
+                        typeMap(dictionary.custTypeList, detailData.custType)
+                      }}</span>
                 </el-form-item>
               </el-col>
             </el-row>
