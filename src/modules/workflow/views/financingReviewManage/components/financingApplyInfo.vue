@@ -92,7 +92,7 @@
           </zj-table-column>
         </zj-table>
         <el-row class="zj-m-l-10 zj-m-t-10" >
-          订单预估总额合计：{{moneyNoSynbol(totalAccount)}}
+          订单预估总额合计：{{moneyNoSynbol(ddTotalAmt)}}
         </el-row>
       </zj-content-block>
       <zj-content-block v-if="proType !== '0'">
@@ -109,7 +109,7 @@
           <zj-table-column field="expireDate" title="海e单到期日" :formatter="date"/>
         </zj-table>
         <el-row class="zj-m-l-10 zj-m-t-10" >
-          海e单金额合计：{{moneyNoSynbol(totalAccount)}}
+          海e单金额合计：{{moneyNoSynbol(ddTotalAmt)}}
         </el-row>
       </zj-content-block>
 
@@ -126,6 +126,7 @@ export default {
     phasedAgreementList: Array,
     proType: String,
     dictionary: Object,
+    ddTotalAmt: String,
   },
   computed: {
     totalAccount() {

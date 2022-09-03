@@ -515,6 +515,7 @@ export default {
       this.formModel.certType = row.certType
       this.formModel.certStartDate = row.certStartDate
       this.formModel.certEndDate = row.certEndDate
+      this.formModel.term = row.term
       this.formModel.mobileNo = row.mobileNo
       this.formModel.email = row.email
       this.formModel.bankAcctNo = row.bankAcctNo
