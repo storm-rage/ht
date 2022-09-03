@@ -28,13 +28,13 @@
           </el-form-item>
           <el-form-item label="最近维护日期：" class="col-right">
             <zj-date-range-picker
-              :startDate.sync="searchForm.expireDateStart"
-              :endDate.sync="searchForm.expireDateEnd"
+              :startDate.sync="searchForm.modifyDatetimeBegin"
+              :endDate.sync="searchForm.modifyDatetimeEnd"
             />
           </el-form-item>
           <el-form-item label="模板状态：" class="col-center">
             <el-select
-              v-model="targetListSrc"
+              v-model="searchForm.isEffective"
               placeholder="请选择"
               clearable
               :popper-append-to-body="false"
@@ -88,12 +88,17 @@ export default {
         getDirectory: this.$api.modelAggreement.getDirectory, //基础协议模板查询-数据字典
         agreementList: this.$api.modelAggreement.agreementList, //基础协议模板-列表查询
       },
-      searchForm: {},
+      searchForm: {
+        agreementType: "",
+        agreementTypeName: "",
+        modifyDatetimeBegin: "",
+        modifyDatetimeEnd: "",
+        isEffective: "",
+      },
       dialogVisible: false,
       type: "info",
       tableData: [{ id: 1 }],
       formModel: {},
-      targetListSrc: "",
       dictionary: {
         agreementTypeList: [],
         isEffectiveFlagList: []

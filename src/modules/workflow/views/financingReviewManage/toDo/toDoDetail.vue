@@ -9,6 +9,8 @@
                                   :voucherList="form.voucherList"
                                   :proType="form.transInfo.financingProductType"
                                   :phasedAgreementList="form.phasedAgreementList"
+                                  :dictionary="dictionary"
+                                  :ddTotalAmt="form.ddTotalAmt"
             />
             <agreement-info-list :dataList="form.agreementInfoList"/>
 
@@ -183,6 +185,7 @@ export default {
         phasedAgreementList: [],
         agreementInfoList: [],
         blContractInfo: {},
+        ddTotalAmt:'',
       },
       tabs:'tradeContract',
       dictionary:{},

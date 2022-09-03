@@ -50,8 +50,8 @@
         <zj-table-column
           field="contractName"
           title="合同名称"/>
-        <zj-table-column field="applyStatusDesc" title="申请状态"/>
-        <zj-table-column field="applyDate" title="申请时间"/>
+        <zj-table-column field="contractSignStatusDesc" title="申请状态"/>
+        <zj-table-column field="contractGenerateDate" title="申请时间"/>
         <zj-table-column title="操作" fixed="right">
           <template v-slot="{ row }">
             <zj-button

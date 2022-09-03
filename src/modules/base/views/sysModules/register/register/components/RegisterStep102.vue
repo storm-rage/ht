@@ -26,8 +26,13 @@
         <el-form-item label="注册资本：" prop="registerCapital">
           <el-input v-model="form.registerCapital" :disabled="form.isHtEnterprise == '1'"/>
         </el-form-item>
-        <el-form-item label="企业工商有效期：" prop="registerEndDate">
-          <zj-date-picker :date.sync="form.registerEndDate" :overNow="true" :format="'yyyy年MM月dd日'"/>
+        <el-form-item label="企业工商有效期：" required>
+          <el-form-item prop="registerEndDate">
+            <zj-date-picker :date.sync="form.registerEndDate" :overNow="true" :format="'yyyy年MM月dd日'" :disabled="form.term" />
+          </el-form-item>
+          <el-row>
+            <el-checkbox v-model="form.term" @change="isChecked">长期有效</el-checkbox>
+          </el-row>
         </el-form-item>
         <!-- 企业 -->
         <el-form-item label="企业规模：" prop="scale" class="no-required entType">
@@ -131,14 +136,21 @@
         <el-form-item label="法人手机号码：" prop="registerPhone" class="required">
           <el-input v-model="form.registerPhone" maxLength="50" placeholder="请输入法人手机号码" :disabled="true"/>
         </el-form-item>
-        <el-form-item label="证件有效期：" class="zj-h-28 card-validity required">
-            <el-form-item prop="legalCertRegDate" class="zj-inline">
-              <zj-date-picker placeholder="年/月/日"  :date.sync="form.legalCertRegDate" :pickerOptions="{ disabledDate:legalCertRegDateDisabledDate }" ></zj-date-picker>
-            </el-form-item>
-            <div class="zj-inline zj-center zj-w-20">至</div>
-            <el-form-item prop="legalCertExpireDate" class="zj-inline">
-              <zj-date-picker placeholder="年/月/日"  :date.sync="form.legalCertExpireDate" :pickerOptions="{ disabledDate: legalCertExpireDateDisabledDate }" ></zj-date-picker>
-            </el-form-item>
+        <el-form-item label="证件有效期：" class="card-validity required">
+          <el-form-item prop="legalCertRegDate" class="zj-inline">
+            <zj-date-picker placeholder="年/月/日"  :date.sync="form.legalCertRegDate"
+                            :lessNow="true"
+            ></zj-date-picker>
+          </el-form-item>
+          <div class="zj-inline zj-center zj-w-20">至</div>
+          <el-form-item prop="legalCertExpireDate" class="zj-inline">
+            <zj-date-picker placeholder="年/月/日"  :date.sync="form.legalCertExpireDate" :disabled="form.legalCertTerm"
+                            :pickerOptions="{ disabledDate: legalCertExpireDateDisabledDate }"
+            ></zj-date-picker>
+          </el-form-item>
+          <el-row>
+            <el-checkbox v-model="form.legalCertTerm" @change="isLegalCertChecked">长期有效</el-checkbox>
+          </el-row>
         </el-form-item>
 
         <!--   银行账户信息     -->
@@ -174,7 +186,7 @@
                              :edit-render="{name: '$select', options: bankInfoList ,optionProps: {value:'status', label:'label', key: 'status' }}"
             >
             </zj-table-column>
-            <zj-table-column field="bankNo" title="銀行联行号" :edit-render="{name: '$input'}"/>
+            <zj-table-column field="bankNo" title="银行联行号" :edit-render="{name: '$input'}"/>
             <zj-table-column title="操作" fixed="right">
               <template v-slot="{row,rowIndex}">
                 <template v-if="$refs.bankAccnameTable.isActiveByRow(row)">
@@ -289,6 +301,7 @@ export default {
         invoiceTaxpayerId: '',
         isHtEnterprise: '',//是否海天集团/(是否海天一级供应商)：0-否 1-是
         legalCertExpireDate: '',
+        legalCertTerm: false,
         legalCertNo: '',
         legalCertRegDate: '',
         legalCertType: '',
@@ -299,6 +312,7 @@ export default {
         provinceZh: '',
         registerCapital: '',
         registerEndDate: '',
+        term: false,
         registerOperateFlag: '',
         registerPhone: '',
         registerStartDate: '',
@@ -322,7 +336,15 @@ export default {
           { required: true, message: '请选择成立日期', trigger: ['blur'] }
         ],
         registerEndDate: [
-          { required: true, message: '请填写企业工商有效期', trigger: ['blur'] }
+          { message: '请填写企业工商有效期', trigger: ['blur'] },
+          { validator:(rule, value, callback) => {
+              let reqHandle = this.form.term ? false : true
+              if (!value && reqHandle) {
+                callback(new Error('请填写企业工商有效期'))
+              } else {
+                callback()
+              }
+            }, trigger: 'blur'},
         ],
         registerCapital: [
           { required: true, message: '请填写注册资本', trigger: ['blur'] }
@@ -358,7 +380,15 @@ export default {
           { required: true, message: '请选择证件有效期起始日', trigger: ['blur'] }
         ],
         legalCertExpireDate: [
-          { required: true, message: '请选择证件有效期截止日', trigger: ['blur'] }
+          { message: '请选择证件有效期截止日', trigger: ['blur'] },
+          { validator:(rule, value, callback) => {
+              let reqHandle = this.form.legalCertTerm ? false : true
+              if (!value && reqHandle) {
+                callback(new Error('请选择证件有效期截止日'))
+              } else {
+                callback()
+              }
+            }, trigger: 'blur'},
         ],
         confirmBankId: [
           { required: true, message: '请确认开户行', trigger: ['blur'] }
@@ -392,6 +422,16 @@ export default {
     this.handleDataChange()
   },
   methods: {
+    isChecked() {
+      if(this.form.term === true) {
+        this.form.registerEndDate = ''
+      }
+    },
+    isLegalCertChecked() {
+      if(this.form.legalCertTerm === true) {
+        this.form.legalCertExpireDate = ''
+      }
+    },
     //回显form
     setFormValue(){
       this.form = {
@@ -498,7 +538,9 @@ export default {
     },
     legalCertExpireDateDisabledDate (date) {
       if (this.form.legalCertRegDate) {
-        return date.getTime() < this.$moment(this.form.legalCertRegDate)
+        return date.getTime() <= this.$moment(this.form.legalCertRegDate)
+      } else {
+        return date.getTime()
       }
     },
     //附件下载
@@ -561,9 +603,15 @@ export default {
       }
       console.log('银行账户index=='+rowIndex)
       if (rows && rows.length && this.entInfoObj.form.entBankInfo) {
+          console.log(this.$refs)
+          console.log(this.$refs.entBankInfoTable)
         setTimeout(()=>{
-          this.$refs.entBankInfoTable.setRadioRow(rows[rowIndex])
-        },0)
+          this.$nextTick(()=>{
+            if(this.$refs.entBankInfoTable) {
+              this.$refs.entBankInfoTable.setRadioRow(rows[rowIndex])
+            }
+          })
+        },100)
         this.handleRadioChange({row: rows[rowIndex]})
       }
     },
@@ -737,11 +785,14 @@ export default {
           this.zjControl.saveEntInfo(this.form).then(res => {
             this.$message.success('提交企业资料成功！')
             this.entInfoObj.form.id = res.data.id
-            this.entInfoObj.form.entBankInfo = this.form.entBankInfo
-            this.entInfoObj.form.isSelectEntBankInfo = this.form.isSelectEntBankInfo
-            this.entInfoObj.form.defaultSelectRowId = this.form.defaultSelectRowId
-            this.entInfoObj.form.confirmBankId = this.form.confirmBankId
-            this.entInfoObj.form.confirmBankName = this.form.confirmBankName
+            this.entInfoObj.form = this.form
+            // this.entInfoObj.form.entBankInfo = this.form.entBankInfo
+            // this.entInfoObj.form.isSelectEntBankInfo = this.form.isSelectEntBankInfo
+            // this.entInfoObj.form.defaultSelectRowId = this.form.defaultSelectRowId
+            // this.entInfoObj.form.confirmBankId = this.form.confirmBankId
+            // this.entInfoObj.form.confirmBankName = this.form.confirmBankName
+            // this.entInfoObj.form.term = this.form.term
+            // this.entInfoObj.form.legalCertTerm = this.form.legalCertTerm
             this.entInfoObj.form.token = res.data.token
             let params = Object.assign({},this.entInfoObj)
             params.form = params.form ? params.form : this.form

@@ -23,7 +23,7 @@
           <zj-table-column field="email" title="邮箱"/>
           <zj-table-column field="bankAcctNo" title="银行卡号"/>
           <zj-table-column field="htSysCode" title="海天业务系统账号" v-if="form.isHtEnterprise == '1'"/>
-          <zj-table-column field="idCheckState" title="是否完成身份核验" v-if="form.isHtEnterprise == '1'" :formatter="obj=>typeMap(dictionary.idCheckStateList,obj.cellValue)"/>
+          <zj-table-column field="idCheckState" title="是否完成身份核验" v-if="form.isHtEnterprise == '1'" />
           <zj-table-column  title="操作" fixed="right">
             <template v-slot="{row}">
               <zj-button type="text" @click="maintainOperator(row)">维护</zj-button>
@@ -159,7 +159,7 @@
         </el-form-item>
         <el-form-item label="证件有效期：" class="card-validity required" >
           <el-form-item prop="certStartDate" class="zj-inline">
-            <zj-date-picker placeholder="年/月/日" :date.sync="formModel.certStartDate" :pickerOptions="{ disabledDate:certStartDateDisabledDate }" ></zj-date-picker>
+            <zj-date-picker placeholder="年/月/日" :date.sync="formModel.certStartDate" :lessNow="true" ></zj-date-picker>
           </el-form-item>
           <div class="zj-inline zj-center zj-w-20">至</div>
           <el-form-item prop="certEndDate" class="zj-inline">
@@ -256,6 +256,7 @@ export default {
         invoiceTaxpayerId: this.entInfoObj.form.bizLicence,//开票信息
         isHtEnterprise: '',
         legalCertExpireDate: '',
+        legalCertTerm: false,
         legalCertNo: '',
         legalCertRegDate: '',
         legalCertType: '',
@@ -266,6 +267,7 @@ export default {
         provinceZh: '',
         registerCapital: '',
         registerEndDate: '',
+        term: false,
         registerOperateFlag: '',
         registerPhone: '',
         registerStartDate: '',
@@ -513,6 +515,7 @@ export default {
       this.formModel.certType = row.certType
       this.formModel.certStartDate = row.certStartDate
       this.formModel.certEndDate = row.certEndDate
+      this.formModel.term = row.term
       this.formModel.mobileNo = row.mobileNo
       this.formModel.email = row.email
       this.formModel.bankAcctNo = row.bankAcctNo
@@ -618,6 +621,8 @@ export default {
     certEndDateDisabledDate (date) {
       if (this.formModel.certStartDate) {
         return date.getTime() < this.$moment(this.formModel.certStartDate)
+      } else {
+        return date.getTime()
       }
     },
     //上传影像资料附件
