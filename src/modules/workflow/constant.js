@@ -17,13 +17,19 @@ export const myItemsPath = {
     // 审核路由
     auditPath: 'entApplyAudit',
     // 详情路由
-    detailPath: 'entApplyAuditDetail'
+    detailPath: 'entApplyAuditDetail',
+    // 已办和办结状态
+    doneDetailPath: 'entApplyAuditDetail',
   },
 
   // 用户管理
   YHGL: {
+    // 审核路由
     auditPath: 'maintainUserAudit',
-    detailPath: 'maintainUserDetail'
+    // 详情路由
+    detailPath: 'maintainUserDetail',
+    // 已办和办结状态
+    doneDetailPath: 'maintainUserDetail',
   },
 
   // 产品开通申请
@@ -51,7 +57,7 @@ export const myItemsPath = {
   },
   // 业务管理
   HTXQ: {
-// 业务管理-合同续签
+    // 业务管理-合同续签
     HTXQ: {
       // 复审状态
       'C003': {
@@ -160,7 +166,7 @@ export const myItemsPath = {
   },
 
   // 融资审核
-  RZSHGL:{
+  RZSHGL: {
     auditPath: 'financingReviewToDoReview',
     detailPath: 'financingReviewToDoDetail',
     // 已办和办结状态
@@ -242,6 +248,7 @@ export const myItemsPath = {
   // 贸易关系管理
   MYGXGL: {
     auditPath: 'tradeRelationsAudit',
-    detailPath: 'tradeRelationsDetail'
+    detailPath: 'tradeRelationsDetail',
+    doneDetailPath: 'tradeRelationsDetail',
   }
 }

@@ -225,32 +225,31 @@ export default {
         this.dictionary = Object.assign(tableDic, res.data)
         this.projectInfoList = this.dictionary.projectInfoList
         // this.$emit('getDictionary', this.dictionary)
+        //设置企业附件
+        this.pubAttachList = []
+        this.dictionary.sysAttachTypeList.map(item => {
+          this.pubAttachList.push({
+            busType: item.code,
+            fileId: '',
+            fileName: ''
+          })
+        })
         //   // 新增时
         if (this.isAdd) {
           this.form.entType = 'B' // 平台客户类型
           this.form.isHtEnterprise = '1' // 是否海天集团
           this.form.isDoublePost = '0' // 是否双岗
-        } else {
-          this.detailsHandle()
-          this.$refs.form.clearValidate()
         }
+        this.detailsHandle()
+        this.$refs.form.clearValidate()
       })
     },
 
     //获取详情处理
     detailsHandle() {
-      this.pubAttachList = []
       this.$nextTick(() => {
         if (!!this.form.pubAttachList) { // 企业附件回显
           this.pubAttachList = this.form.pubAttachList
-        } else {
-          this.dictionary.sysAttachTypeList.map(item => {
-            this.pubAttachList.push({
-              busType: item.code,
-              fileId: '',
-              fileName: ''
-            })
-          })
         }
         // 其他附件
         this.$refs.ofileSetting.$data.fileList = this.form.pubOtherAttachList || []
@@ -477,6 +476,10 @@ export default {
 
     //保存
     async handleForm() {
+      if (!this.form.bizLicence || this.form.bizLicence === '') {
+        this.$message.error('请先搜索企业！')
+        return
+      }
       let params = JSON.parse(JSON.stringify(this.form))
       //1.校验表单
       this.$refs.form.validate(boo => {
@@ -550,15 +553,18 @@ export default {
     },
     // 暂存
     saveEnterprise() {
-      this.zjControl.saveEnterprise(this.form).then(() => {
-        this.$message.success('暂存成功！')
-        this.goParent()
-      })
+      if (!!this.form.bizLicence) {
+        this.zjControl.saveEnterprise(this.form).then(() => {
+          this.$message.success('暂存成功！')
+          this.goParent()
+        })
+      } else {
+        this.$message.error('请先搜索企业！')
+      }
     },
     // 获取暂存
     getEnterpriseConfirm() {
       this.zjControl.getEnterpriseConfirm({ name: this.form.name }).then((res) => {
-        // this.form = res.data
         this.$emit('update:form', res.data)
         this.sysUserList = res.data.entUserList || []
         this.detailsHandle()

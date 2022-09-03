@@ -113,14 +113,18 @@ export default {
         // 代办
         if (myItemsPath[row.busType].detailPath) {
           this.goChild(myItemsPath[row.busType].detailPath, row);
-        } else if (myItemsPath[row.busType][row.applyType][row.workflowState].detailPath) {
+        }
+        else if (myItemsPath[row.busType][row.applyType][row.workflowState].detailPath) {
           this.goChild(myItemsPath[row.busType][row.applyType][row.workflowState].detailPath, row);
         }
       } else {
         // 已办和已办结
-        this.goChild(myItemsPath[row.busType][row.applyType].doneDetailPath, {...row, tabAtive: this.tabAtive});
+        if (myItemsPath[row.busType].doneDetailPath) {
+          this.goChild(myItemsPath[row.busType].doneDetailPath, row);
+        } else {
+          this.goChild(myItemsPath[row.busType][row.applyType].doneDetailPath, { ...row, tabAtive: this.tabAtive });
+        }
       }
-
     },
     // 跳转对应的审核
     toHandle(row) {

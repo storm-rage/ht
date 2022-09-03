@@ -60,6 +60,8 @@
         </div>
       </div>
     </div>
+    <!--   查看器 -->
+    <zj-preview :visible.sync="viewShow" :fileUrl="viewItemUrl" :showFooter="false" :fileType="viewItemType" @close="viewShow = false" />
   </zj-content-block>
 </template>
 <script>
@@ -109,6 +111,7 @@ export default {
       viewItemType: 'image',
       currentPage: 1,
       pageTotal: 0,
+      viewShow: false
     };
   },
   methods: {
@@ -121,6 +124,7 @@ export default {
       console.log(this.infoViewitem)
       if (!this.infoViewitem.fileId) {
         this.infoViewitem = { fileId: null, fileName: null }
+        this.viewItemUrl = ''
         return
       }
       //判断类型
@@ -238,6 +242,9 @@ export default {
           this.viewItemType = ''
         })
       }
+    },
+    previewFile() {
+      this.viewShow = true
     }
   }
 };
