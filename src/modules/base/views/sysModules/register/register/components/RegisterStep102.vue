@@ -183,7 +183,7 @@
             <zj-table-column field="bankAccname" title="银行账户名称" :edit-render="{name: '$input'}"/>
             <zj-table-column field="bankAccno" title="银行账号" :edit-render="{name: '$input'}"/>
             <zj-table-column field="bankName" title="开户行"
-                             :edit-render="{name: '$select', options: bankInfoList ,optionProps: {value:'status', label:'label', key: 'status' }}"
+                             :edit-render="{name: '$select', options: bankInfoList ,optionProps: {value:'label', label:'label', key: 'status' }}"
             >
             </zj-table-column>
             <zj-table-column field="bankNo" title="银行联行号" :edit-render="{name: '$input'}"/>
@@ -201,8 +201,8 @@
           </zj-table>
         </el-row>
         <el-row class="zj-m-t-20">
-          <el-form-item label="请确认开户行" prop="confirmBankId">
-            <el-select v-model="form.confirmBankId"
+          <el-form-item label="请确认开户行" prop="confirmBankName">
+            <el-select v-model="form.confirmBankName"
                        filterable
                        placeholder="请选择" class="sw-year-select register102-legalCertType"
                        :popper-append-to-body="false"
@@ -211,7 +211,7 @@
               <el-option
                 v-for="item in bankInfoList"
                 :label="item.label"
-                :value="item.status"
+                :value="item.label"
                 :key="item.status"
               />
             </el-select>
@@ -390,7 +390,7 @@ export default {
               }
             }, trigger: 'blur'},
         ],
-        confirmBankId: [
+        confirmBankName: [
           { required: true, message: '请确认开户行', trigger: ['blur'] }
         ],
         //-----------------  企业
@@ -415,10 +415,10 @@ export default {
     this.zjControl.querySysDistrictDictList().then(res=>{
       this.provinceList = res.data.sysDistrictDictList
     })
-    this.setFormValue()
     this.getOpenBankInfo()
   },
   mounted(){
+    this.setFormValue()
     this.handleDataChange()
   },
   methods: {
@@ -436,6 +436,12 @@ export default {
     setFormValue(){
       this.form = {
         ...this.entInfoObj.form
+      }
+      console.log(this.bankInfoList)
+      for(let i of this.bankInfoList) {
+        if(i.status === this.form.confirmBankId) {
+          this.form.confirmBankName = i.label
+        }
       }
     },
     //企业注册-获取开户行信息
@@ -721,6 +727,7 @@ export default {
     },
     //下一步按钮
     next(flag) {
+      if(!this.tableEditReport(['bankAccnameTable'])){return}
       let valiArr = []
       let key = true
       for(let nm in this.rules){
@@ -761,15 +768,14 @@ export default {
             this.form.entBankInfo = this.form.entBankInfoList[0]
           }
           console.log(this.form.entBankInfo)
-          if(this.form.isHtEnterprise === '0' && this.form.confirmBankId !== this.form.entBankInfo.bankName) {
+          if(this.form.isHtEnterprise === '0' && this.form.confirmBankName !== this.form.entBankInfo.bankName) {
             return this.$message.error('请确认开户行一致！')
           }
           if(this.form.isHtEnterprise === '1') {
-            // this.form.entBankInfo = this.form.entBankInfoList[0]
             let str = this.form.entBankInfo.bankName.slice(0,4)
             let res = ''
             for(let item of this.bankInfoList) {
-              if(item.status === this.form.confirmBankId) {
+              if(item.label === this.form.confirmBankName) {
                 res = item.label.slice(0,4)
               }
             }
@@ -779,7 +785,12 @@ export default {
               return this.$message.error('请确认开户行一致！')
             }
           }
-          this.form.confirmBankName = this.form.confirmBankId
+          for(let i of this.bankInfoList) {
+            if(i.label === this.form.confirmBankName) {
+              this.form.confirmBankId = i.status
+              this.form.confirmBankName = i.label
+            }
+          }
           this.form.registerOperateFlag = flag
           this.form.legalCertType = this.entInfoObj.form.legalCertType
           this.zjControl.saveEntInfo(this.form).then(res => {
