@@ -23,8 +23,8 @@
                 <el-form-item label="统一社会信用代码：" prop="bizLicence" class="required">
                   <el-input v-model="form.bizLicence" maxLength="25" placeholder="请输入统一社会信用代码" />
                 </el-form-item>
-                <el-form-item label="法定代表人姓名：" prop="legalPersonName" class="required">
-                  <el-input v-model="form.legalPersonName" maxLength="50" placeholder="请输入法定代表人姓名" />
+                <el-form-item label="企业法人姓名：" prop="legalPersonName" class="required">
+                  <el-input v-model="form.legalPersonName" maxLength="50" placeholder="请输入企业法人姓名" />
                 </el-form-item>
                 <el-form-item label="法人证件类型：" prop="legalCertType" class="zj-inline required">
                   <el-select v-model="form.legalCertType" placeholder="请选择法人证件类型" class="register102-legalCertType"
@@ -191,11 +191,11 @@ export default {
           }
         ],
         legalPersonName: [
-          { message: '请输入法定代表人姓名', trigger: ['blur'] },
+          { message: '请输入企业法人姓名', trigger: ['blur'] },
           { validator:(rule, value, callback)=>{
               rule.required = this.form.isHtEnterprise == '0'? true:false
               if (!value && rule.required) {
-                callback(new Error('请输入法定代表人姓名'))
+                callback(new Error('请输入企业法人姓名'))
               } else {
                 callback()
               }

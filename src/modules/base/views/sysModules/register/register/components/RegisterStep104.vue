@@ -159,7 +159,7 @@
         </el-form-item>
         <el-form-item label="证件有效期：" class="card-validity required" >
           <el-form-item prop="certStartDate" class="zj-inline">
-            <zj-date-picker placeholder="年/月/日" :date.sync="formModel.certStartDate" :pickerOptions="{ disabledDate:certStartDateDisabledDate }" ></zj-date-picker>
+            <zj-date-picker placeholder="年/月/日" :date.sync="formModel.certStartDate" :lessNow="true" ></zj-date-picker>
           </el-form-item>
           <div class="zj-inline zj-center zj-w-20">至</div>
           <el-form-item prop="certEndDate" class="zj-inline">
@@ -256,6 +256,7 @@ export default {
         invoiceTaxpayerId: this.entInfoObj.form.bizLicence,//开票信息
         isHtEnterprise: '',
         legalCertExpireDate: '',
+        legalCertTerm: false,
         legalCertNo: '',
         legalCertRegDate: '',
         legalCertType: '',
@@ -266,6 +267,7 @@ export default {
         provinceZh: '',
         registerCapital: '',
         registerEndDate: '',
+        term: false,
         registerOperateFlag: '',
         registerPhone: '',
         registerStartDate: '',
@@ -618,6 +620,8 @@ export default {
     certEndDateDisabledDate (date) {
       if (this.formModel.certStartDate) {
         return date.getTime() < this.$moment(this.formModel.certStartDate)
+      } else {
+        return date.getTime()
       }
     },
     //上传影像资料附件
