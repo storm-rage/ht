@@ -15,10 +15,12 @@
     <audit-remark ref="auditRemark" v-if="$route.name === 'entApplyAudit'"></audit-remark>
 
     <zj-content-footer>
-      <zj-button type="primary" @click="toPass">复核通过</zj-button>
-      <zj-button @click="toReject" v-if="row.workflowState === 'E002'">驳回上一级</zj-button>
-      <zj-button @click="toReject" v-else-if="row.workflowState === 'E005'">作废</zj-button>
-      <zj-button @click="toReject" v-else>拒绝</zj-button>
+      <template v-if="pageType !== 'detail'">
+        <zj-button type="primary" @click="toPass">复核通过</zj-button>
+        <zj-button @click="toReject" v-if="row.workflowState === 'E002'">驳回上一级</zj-button>
+        <zj-button @click="toReject" v-else-if="row.workflowState === 'E005'">作废</zj-button>
+        <zj-button @click="toReject" v-else>拒绝</zj-button>
+      </template>
       <zj-button @click="goParent">返回</zj-button>
     </zj-content-footer>
   </zj-content-container>
@@ -43,6 +45,7 @@ export default {
   data() {
     return {
       zjControl: this.$api.entUserManage,
+      pageType: this.$route.meta.pageType,
       detailData: {},
       dictionary: {},
       passLoading: {},

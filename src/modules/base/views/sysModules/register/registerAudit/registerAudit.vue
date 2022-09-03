@@ -100,7 +100,7 @@
             <ent-linkman ref="entLinkman" :detailData="detailData" />
 
             <!-- 银行账户 -->
-            <bank-account ref="bankAccount" :dataList="detailData.entBanksList" />
+            <bank-account ref="bankAccount" :dataList="detailData.entBanksList" :dictionary="dictionary"/>
 
             <!-- 天眼查信息 -->
             <zj-collapse title="天眼查信息">
@@ -130,7 +130,7 @@
               <zj-table-column field="email" title="邮箱" />
               <zj-table-column field="bankAcctNo" title="银行卡号" />
               <zj-table-column field="htSysCode" title="海天业务系统账号" />
-              <zj-table-column field="idCheckState" title="核查方式" />
+              <zj-table-column field="checkType" title="核查方式" :formatter="(obj) => typeMap(dictionary.checkType, obj.cellValue)" />
             </zj-table>
           </zj-content>
         </zj-content-block>
@@ -325,9 +325,9 @@ export default {
     },
     // 处理附件信息
     handleAttach() {
-      let jb = this.detailData.entUserList.find(item => item.roleId == '5') || {}
-      let fh = this.detailData.entUserList.find(item => item.roleId == '6') || {}
-      let fx = this.detailData.entUserList.find(item => item.roleId == '7') || {}
+      let jb = this.detailData.entUserList.find(item => item.roleId == '2' || item.roleId == '5') || {}
+      let fh = this.detailData.entUserList.find(item => item.roleId == '3' || item.roleId == '6') || {}
+      let fx = this.detailData.entUserList.find(item => item.roleId == '4' || item.roleId == '7') || {}
       this.attachInfo.infoBar = ['营业执照', '法定代表人身份证', '操作用户经办员', '操作用户复核员', '风险信息接收人', '委托授权书'] //导航栏
       this.attachInfo.infoList = [
         [
