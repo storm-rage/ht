@@ -83,7 +83,10 @@ export default {
       })
     },
     attaDownload(row) {
-      this.zjControl.downloadFile(row)
+      this.zjControl.downloadFile({
+        fileId: row.fileId,
+        fileName: row.fileName,
+      })
     },
     getPhasedAgreeDirectory() {
       this.zjControl.getPhasedAgreeDirectory().then(res=>{

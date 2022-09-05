@@ -54,7 +54,7 @@
         </tr>
         <tr>
           <td colspan="12">我司同意按照
-            <zj-button type="text" @click="attaDownload(detailData.kdProtocolFileId)">《{{ detailData.kdProtocolName }}》</zj-button>
+            <zj-button type="text" @click="attaDownload()">《{{ detailData.kdProtocolName }}》</zj-button>
             的约定，到期无条件向融单最终持有人兑付融单项下全部应付款项。</td>
         </tr>
         <tr>
@@ -156,9 +156,10 @@ export default {
         this.dialogShow = true
       })
     },
-    attaDownload(fileId) {
+    attaDownload() {
       this.$api.baseCommon.downloadFile({
-        fileUrl: fileId,
+        fileId: this.detailData.kdProtocolFileId,
+        fileName: this.detailData.kdProtocolTypeName,
       })
     },
     confirmSignFor() {
