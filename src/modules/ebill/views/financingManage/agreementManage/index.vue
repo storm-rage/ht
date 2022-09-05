@@ -53,24 +53,42 @@ export default {
   methods: {
     submit() {
       console.log(JSON.stringify(this.contractInfo))
-      let params = {
-        busTradeId : this.contractInfo.busTradeId,
-        buyerId : this.contractInfo.buyerId,
-        buyerName : this.contractInfo.buyerName,
-        contractInfoList : this.contractInfo.contractInfoList,
-        recordId : this.contractInfo.recordId || '',
-        tradeId : this.contractInfo.tradeId,
-      }
-      this.zjControl.submitPhasedAgree(params).then(res => {
-        this.$message.success('提交成功！')
-        let rowParams = {
+      new Promise((resolve,reject)=>{
+        let attaTableActiveRow = this.$refs.mulAgreeMaintain.$refs.attaTable.getActiveRecord()
+        if (attaTableActiveRow) {
+          if (attaTableActiveRow.row.fileName && attaTableActiveRow.row.fileRemark) {
+            this.$refs.mulAgreeMaintain.saveRow(attaTableActiveRow.row).then(res=>{
+              resolve(res)
+            })
+          } else {
+            this.$messageBox({type:'info',content:'请输入附件说明及上传附件'})
+            reject()
+          }
+        } else {
+          resolve()
+        }
+      }).then(()=>{
+        let params = {
           busTradeId : this.contractInfo.busTradeId,
-          coreCompanyName : this.contractInfo.buyerName,
-          tradeId : this.contractInfo.tradeId,
           buyerId : this.contractInfo.buyerId,
           buyerName : this.contractInfo.buyerName,
+          contractInfoList : this.contractInfo.contractInfoList,
+          recordId : this.contractInfo.recordId || '',
+          tradeId : this.contractInfo.tradeId,
         }
-        this.$refs.mulAgreeMaintain.handleRadioChange({row: {...rowParams}})
+        this.zjControl.submitPhasedAgree(params).then(res => {
+          this.$message.success('提交成功！')
+          let rowParams = {
+            busTradeId : this.contractInfo.busTradeId,
+            coreCompanyName : this.contractInfo.buyerName,
+            tradeId : this.contractInfo.tradeId,
+            buyerId : this.contractInfo.buyerId,
+            buyerName : this.contractInfo.buyerName,
+          }
+          this.$refs.mulAgreeMaintain.handleRadioChange({row: {...rowParams}})
+        })
+      }).catch(()=>{
+
       })
     },
     handleContractInfo(val) {
