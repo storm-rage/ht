@@ -55,8 +55,7 @@
               <zj-table-column field="repaymentPrincipalAmt" title="偿还本金" :formatter="money"/>
               <zj-table-column field="repaymentInterestAmt" title="偿还利息" :formatter="money"/>
               <zj-table-column field="unrepaymentPrincipalAmt" title="未偿还本金" :formatter="money"/>
-              <zj-table-column field="isHbkPush" title="年化本金" :formatter="money"/><!-- 少字段 -->
-
+              <zj-table-column field="yearAmt" title="年化本金" :formatter="money"/><!-- 少字段 -->
             </zj-table>
           </zj-list-layout>
         </div>
