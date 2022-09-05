@@ -125,6 +125,9 @@ export default {
           console.log(JSON.parse(cacheCheck))
           this.$refs.searchTable.setCheckboxRow(JSON.parse(cacheCheck), true)
           this.$refs.searchTable.updateData()
+
+          let list = [...JSON.parse(cacheCheck)]
+          this.checkChange([...list])
         }
       })
       windowSSStorage.setItem('cacheEntInfo',val)
@@ -136,8 +139,13 @@ export default {
         this.entChange(this.searchForm.entId)
       }
     },
-    checkChange() {
-      let checkArr = this.$refs.searchTable.getCheckboxRecords()
+    checkChange(billList) {
+      console.log(billList)
+      let objArr = billList.row
+      console.log('objArr')
+      this.$refs.searchTable.updateData()
+      let checkArr = this.$refs.searchTable.getCheckboxRecords().length?this.$refs.searchTable.getCheckboxRecords() : objArr
+      console.log(`~`+JSON.stringify(checkArr))
       windowSSStorage.setItem('cacheBillCheck',JSON.stringify(checkArr))
       let newCheckArr = checkArr.map(item=>item.ebillAmt)
       //已勾选凭证金额合计
@@ -150,7 +158,6 @@ export default {
       } else {
         this.checkedTotalAmount = 0
       }
-      console.log(`~`+JSON.stringify(checkArr))
       //勾选多个凭证时，遍历数组查看选中的凭证是否为同一个到期日
       let nextFlag = false
       if(checkArr.length > 1) {

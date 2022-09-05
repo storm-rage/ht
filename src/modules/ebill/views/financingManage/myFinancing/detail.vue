@@ -132,7 +132,7 @@ export default {
     },
     attaDownLoad(row) {
       this.zjControl.downloadFile({
-        fileUrl: row.fileId,
+        fileId: row.fileId,
         fileName: row.fileName,
       })
     },
