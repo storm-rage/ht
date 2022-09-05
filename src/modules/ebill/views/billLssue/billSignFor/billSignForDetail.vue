@@ -139,6 +139,7 @@ export default {
         }
         this.zjControl.passBillSign(params).then(res => {
           this.$message.success(res.msg)
+          this.goParent()
         })
       }
     }
