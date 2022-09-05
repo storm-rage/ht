@@ -1,151 +1,71 @@
 <template>
-  <div id="voucherPrint-collect">
-    <div class="zj-search-condition">
-      <el-row class="checkbox-row">
-        <zj-checkbox :list="dictionary.voucherTypeCheckList" :value.sync="checkList" @handleCheckedChange="handleCheckedChange"/>
-      </el-row>
-      <el-row class="button-row">
-        <vxe-button class="reset" icon="el-icon-refresh" @click="resetSearch">重置</vxe-button>
-        <vxe-button class="search" icon="el-icon-search" @click="search">查询</vxe-button>
-      </el-row>
-      <el-form ref="searchForm" :model="searchForm">
-        <el-form-item label="凭证生成日期：">
-          <zj-date-range-picker :startDate.sync="searchForm.createDatetimeStart" :endDate.sync="searchForm.createDatetimeEnd"/>
-        </el-form-item>
-        <el-form-item :label="$i18n.messages[$i18n.locale].lang.financingName+'到期日期：'">
-          <zj-date-range-picker
-            :startDate.sync="searchForm.dataDateStart"
-            :endDate.sync="searchForm.dataDateEnd"
-          />
-        </el-form-item>
-        <el-form-item label="凭证号：">
-          <el-input v-model="searchForm.voucherNo" @keyup.enter.native="enterSearch"/>
-        </el-form-item>
-        <el-form-item label="开单企业：">
-          <el-input v-model="searchForm.payEndNameLike" @keyup.enter.native="enterSearch"/>
-        </el-form-item>
-      </el-form>
-    </div>
-    <div class="zj-search-response">
-      <zj-table ref="searchTable"
-                :api="zjControl.tableApi" :params="searchForm"
-                v-if="tableFlag" @before-load="tableDataChange"
-                @checkbox-change="tableCheckChange" @checkbox-all="tableCheckChange"
-      >
-        <zj-table-column fixed="left" type="checkbox" width="30"/>
-        <zj-table-column field="voucherNo" title="凭证号"/>
-        <zj-table-column field="voucherType" title="凭证类型" :formatter="(obj) => typeMap(dictionary.morePrintVOucherType,obj.cellValue)"/>
-        <zj-table-column field="payEntName" title="开单企业"/>
-        <zj-table-column field="createEntName" title="业务方"/>
-        <zj-table-column field="fundingEntName" title="资金方"/>
-        <zj-table-column field="dataDate" :title="$i18n.messages[$i18n.locale].lang.financingName+'到期日期'" :formatter="date"/>
-        <zj-table-column field="createDatetime" title="凭证生成日期" :formatter="date"/>
-        <zj-table-column field="printNum" title="打印次数" />
-        <zj-table-column  title="操作" fixed="right" v-if="zjBtn.voucherPrint">
-          <template v-slot="{row}">
-            <zj-button type="text" @click="printVoucher(row)">打印预览</zj-button>
+  <div>
+    <zj-content-container>
+      <div class="zj-search-condition">
+        <zj-list-layout>
+          <template slot="searchForm">
+            <el-form ref="searchForm" :model="searchForm">
+              <el-form-item label="凭据类型：" class="col-center">
+                <el-select v-model="searchForm.voucherType"placeholder="请选择" clearable :popper-append-to-body="false">
+                  <el-option label="全部" value=""/>
+                  <el-option v-for="item in dictionary.voucherType" :label="item.desc" :value="item.code" :key="item.code" />
+                </el-select>
+              </el-form-item>
+              <el-form-item label="打印状态：" class="col-center">
+                <el-select v-model="searchForm.printState" placeholder="请选择" clearable :popper-append-to-body="false">
+                  <el-option value="" label="全部"></el-option>
+                   <el-option v-for="item in dictionary.printState" :key="item.code" :label="item.desc" :value="item.code">
+                </el-option>
+                </el-select>
+              </el-form-item>
+              <el-form-item label="凭证生成日期：">
+                <zj-date-range-picker :startDate.sync="searchForm.createDatetimeStart" :endDate.sync="searchForm.createDatetimeEnd"/>
+              </el-form-item>
+              <el-form-item label="凭证编号：">
+                <el-input v-model="searchForm.voucherNo" @keyup.enter.native="enterSearch"/>
+              </el-form-item>
+              <el-form-item label="开单人：">
+                <el-input v-model="searchForm.payEntNameLike" @keyup.enter.native="enterSearch"/>
+              </el-form-item>
+              <el-form-item label="收单人：">
+                <el-input v-model="searchForm.receiptEntNameLike" @keyup.enter.native="enterSearch"/>
+              </el-form-item>
+            </el-form>
           </template>
-        </zj-table-column>
-      </zj-table>
-      <el-row class="ta-c w85 zj-p-b-15" v-show="btnFlag">
-        <zj-button :class="printFlag ? 'confirm' : 'back'"
-                   :title="!printFlag ?'请选择需要打印的凭证' : ''"
-                   :disabled="!printFlag"
-                   :api="zjBtn.voucherPrint"
-                   @click="printVoucher">打印</zj-button>
-      </el-row>
-      <zj-list-layout>
-        <template slot="searchForm">
-          <el-form ref="searchForm" :model="searchForm">
-            <el-form-item label="凭证生成日期：">
-              <zj-date-range-picker
-                :startDate.sync="searchForm.createDatetimeStart"
-                :endDate.sync="searchForm.createDatetimeEnd"
-              />
-            </el-form-item>
-            <el-form-item
-              :label="
-                $i18n.messages[$i18n.locale].lang.financingName + '到期日期：'
-              "
-            >
-              <zj-date-range-picker
-                :startDate.sync="searchForm.dataDateStart"
-                :endDate.sync="searchForm.dataDateEnd"
-              />
-            </el-form-item>
-            <el-form-item label="凭证号：">
-              <el-input
-                v-model="searchForm.voucherNo"
-                @keyup.enter.native="enterSearch"
-              />
-            </el-form-item>
-            <el-form-item label="开单企业：">
-              <el-input
-                v-model="searchForm.payEndNameLike"
-                @keyup.enter.native="enterSearch"
-              />
-            </el-form-item>
-          </el-form>
-        </template>
 
-        <div class="zj-search-response">
-          <zj-table
-            ref="searchTable"
-            :api="zjControl.updateRolePower"
-            :params="searchForm"
-            v-if="tableFlag"
-            @dataChange="tableDataChange"
-            @checkbox-change="tableCheckChange"
-            @checkbox-all="tableCheckChange"
-          >
-            <zj-table-column fixed="left" type="checkbox" width="30" />
-            <zj-table-column field="voucherNo" title="凭证号" />
-            <zj-table-column
-              field="voucherType"
-              title="凭证类型"
-              :formatter="
-                (obj) => typeMap(dictionary.morePrintVOucherType, obj.cellValue)
-              "
-            />
-            <zj-table-column field="payEntName" title="开单企业" />
-            <zj-table-column field="createEntName" title="业务方" />
-            <zj-table-column field="fundingEntName" title="资金方" />
-            <zj-table-column
-              field="dataDate"
-              :title="
-                $i18n.messages[$i18n.locale].lang.financingName + '到期日期'
-              "
-              :formatter="date"
-            />
-            <zj-table-column
-              field="createDatetime"
-              title="凭证生成日期"
-              :formatter="date"
-            />
-            <zj-table-column field="printNum" title="打印次数" />
-            <zj-table-column
-              title="操作"
-              fixed="right"
+          <div class="zj-search-response">
+            <el-row style="padding: 3px" v-show="btnFlag">
+              <zj-button class="export" icon="iconfont icon-dayin" :class="printFlag ? 'confirm' : 'back'" :title="!printFlag ? '请选择需要打印的凭证' : ''" :disabled="!printFlag" @click="printVoucher">
+                打印
+              </zj-button>
+            </el-row>
+            <zj-table ref="searchTable" :api="zjControl.queryVoucherList" :params="searchForm" v-if="tableFlag"
+              @after-load="tableDataChange"
+              @checkbox-change="tableCheckChange"
+              @checkbox-all="tableCheckChange"
             >
-              <template v-slot="{ row }">
-                <zj-button type="text" @click="printVoucher(row)"
-                  >打印预览</zj-button
-                >
-              </template>
-            </zj-table-column>
-          </zj-table>
-          <el-row class="ta-c w85 zj-p-b-15" v-show="btnFlag">
-            <zj-button
-              :class="printFlag ? 'confirm' : 'back'"
-              :title="!printFlag ? '请选择需要打印的凭证' : ''"
-              :disabled="!printFlag"
-              @click="printVoucher"
-              >打印</zj-button
-            >
-          </el-row>
-        </div>
-      </zj-list-layout>
-    </div>
+              <zj-table-column fixed="left" type="checkbox" width="30"/>
+              <zj-table-column field="voucherNo" title="凭证编号"/>
+              <zj-table-column field="voucherType" title="凭证类型" :formatter="(obj) => typeMap(dictionary.voucherType, obj.cellValue)"/>
+              <zj-table-column field="ebillCode" title="海e单编号"/>
+              <zj-table-column field="payEntName" title="开单人"/>
+              <zj-table-column field="receiptEntName" title="收单人"/>
+              <zj-table-column field="createDatetime" title="凭证生成时间" :formatter="date"/>
+              <zj-table-column field="printState" title="打印状态" :formatter="(obj) => typeMap(dictionary.printState, obj.cellValue)"/>
+              <zj-table-column field="printNum" title="打印次数"/>
+              <zj-table-column title="操作" fixed="right">
+                <template v-slot="{ row }">
+                  <zj-button type="text" @click="printVoucher(row)"
+                  >打印预览
+                  </zj-button
+                  >
+                </template>
+              </zj-table-column>
+            </zj-table>
+          </div>
+        </zj-list-layout>
+      </div>
+    </zj-content-container>
   </div>
 </template>
 
@@ -158,25 +78,24 @@ export default {
   data() {
     return {
       zjControl: {
-        updateRolePower:this.$api.voucherPrint.updateRolePower,//凭据打印-查询
-        // getDictionary:this.$api.collectPrint.getDictionary,//字典
-        // tableApi:this.$api.collectPrint.tableApi,//表格
-        // voucherPrint:this.$api.collectPrint.voucherPrint,//打印
-        // printNum:this.$api.collectPrint.printNum,//次数
+        queryVoucherList:this.$api.voucherPrint.queryVoucherList,//凭据打印-查询
+        getSingleVoucherDirectory:this.$api.voucherPrint.getSingleVoucherDirectory,//字典
+        //tableApi:this.$api.collectPrint.tableApi,//表格
+        getVoucherPrint:this.$api.voucherPrint.getVoucherPrint,//打印
+        printNum:this.$api.voucherPrint.updateVoucherPrintTimes,//次数
       },
       searchForm: {
-        voucherTypes: [],
+        voucherType: "",
+        printState: "",
         createDatetimeStart: "",
         createDatetimeEnd: "",
-        dataDateStart: "",
-        dataDateEnd: "",
         voucherNo: "",
-        payEndNameLike: "",
+        payEntNameLike: "",
+        receiptEntNameLike: "",
       },
       dictionary: {},
       tableFlag: true,
       btnFlag: false,
-      checkList: [], //凭证类型
       dataList: [],
       //打印
       printFlag: false,
@@ -217,46 +136,47 @@ export default {
     beforeSearch() {
       this.printFlag = false;
       this.printData = [];
-      // this.checkList = []
       this.btnFlag = false;
     },
     beforeResetSearch() {
       this.printFlag = false;
       this.printData = [];
-      this.checkList = [];
       this.btnFlag = false;
     },
     afterResetSearch() {
-      this.searchForm.voucherTypes = [];
-      this.dictionary.morePrintVOucherType.map((item) => {
-        this.searchForm.voucherTypes.push(item.code);
-      });
+      this.voucherType = "";
+      this.printState = "";
+      this.createDatetimeStart = "";
+      this.createDatetimeEnd = "";
+      this.voucherNo = "";
+      this.payEntNameLike = "";
+      this.receiptEntNameLike = "";
     },
     //表格
     tableCheckChange({ records }) {
       this.printFlag = records.length > 0;
     },
     tableDataChange(data) {
-      this.btnFlag = data && data.rows && data.rows.length;
+      this.btnFlag = data.length > 0;
     },
     //字典
     getDictionary() {
-      // this.zjControl.getDictionary().then(res => {
-      //   const productName = this.$store.getters['project/productName'];
-      //   res.data.morePrintVOucherType = JSON.parse(
-      //     JSON.stringify(res.data.morePrintVOucherType).replace(new RegExp("融单","g"), productName)
-      //   )
-      //   res.data.voucherTypeCheckList = JSON.parse(
-      //     JSON.stringify(res.data.morePrintVOucherType).replace(/code/g,'key').replace(/desc/g,'label')
-      //   )
-      //   this.dictionary = res.data
-      //   //初始查询
-      //   this.searchForm.voucherTypes = []
-      //   res.data.morePrintVOucherType.map(item => {
-      //     this.searchForm.voucherTypes.push(item.code)
-      //   })
-      //   this.tableFlag = true
-      // })
+      this.zjControl.getSingleVoucherDirectory().then(res => {
+        const productName = this.$store.getters['project/productName'];
+        // res.data.morePrintVOucherType = JSON.parse(
+        //   JSON.stringify(res.data.voucherType).replace(new RegExp("融单","g"), productName)
+        // )
+        // res.data.voucherTypeCheckList = JSON.parse(
+        //   JSON.stringify(res.data.voucherType).replace(/code/g,'key').replace(/desc/g,'label')
+        // )
+        this.dictionary = res.data
+        //初始查询
+        // this.searchForm.voucherTypes = []
+        // res.data.voucherType.map(item => {
+        //   this.searchForm.voucherTypes.push(item.code)
+        // })
+        this.tableFlag = true
+      })
     },
 
     //类型变化
@@ -288,7 +208,7 @@ export default {
           });
         }
       }
-      // let res = await this.zjControl.voucherPrint(params).catch(() => {})
+      let res = await this.zjControl.getVoucherPrint(params).catch(() => {})
       res.data.voucherModels.map((item) => {
         item.id = uuid();
       });
@@ -350,9 +270,9 @@ export default {
           if (that.printStatus !== -1) {
             if (that.printStatus > 0) {
               //增加次数
-              // that.zjControl.printNum(params).then(()=>{
-              //   that.search(false)
-              // })
+               that.zjControl.updateVoucherPrintTimes(params).then(()=>{
+                 that.search(false)
+               })
             }
           }
         };
