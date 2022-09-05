@@ -25,6 +25,11 @@ export default {
     }
   },
   data() {
+    const nameValid = ({ cellValue }) => {
+      if (cellValue && !/^(13[0-9]|14[579]|15[0-3,5-9]|16[6]|17[0135678]|18[0-9]|19[89])\d{8}$/.test(cellValue)) {
+        return new Error('手机号格式不正确')
+      }
+    }
     return {
       zjControl: this.$api.entInfoManage,
       pageType: this.$route.meta.pageType,
@@ -32,6 +37,17 @@ export default {
       old_projectInfoList: [],
       statementAccountTypeTable: [],
       sysUserList: [], // 企业操作员信息
+      validRules: { // 企业操作员校验
+        htSysCode: [
+          { required: true, message: '娅米账号/业务系统账号必须填写', trigger: 'blur' }
+        ],
+        mobileNo: [
+          { required: true, message: '手机号码必须填写', validator: nameValid, trigger: 'blur' }
+        ],
+        roleId: [
+          { required: true, message: '操作员角色必须填写', trigger: 'blur' }
+        ]
+      },
       pubAttachList: [], // 企业附件
       // form: {
       //   isHtEnterprise: '1', // 是否海天集团
@@ -406,6 +422,12 @@ export default {
       if (this.sysUserIng()) { return }
       this.sysUserList.splice(rowIndex, 1)
     },
+    // 输完操作员账号
+    userBlur(data) {
+      if (this.form.isHtEnterprise === '1') {
+        console.log(data.row.htSysCode)
+      }
+    },
     //保存企业操作员
     sysUserSave(row, rowIndex) {
       row.save = true
@@ -498,7 +520,7 @@ export default {
                 if (!codeArr.includes('8') || !codeArr.includes('9') || !codeArr.includes('10') || !sysUserList.length) {
                   return this.$messageBox({
                     type: 'warning',
-                    content: `心企业是海天集团双岗，必须录入经办员、复核员和风险接收人！`
+                    content: `核心企业是海天集团双岗，必须录入经办员、复核员和风险接收人！`
                   })
                 }
               }
@@ -507,7 +529,7 @@ export default {
                 if (!codeArr.includes('8') || !codeArr.includes('10') || !sysUserList.length) {
                   return this.$messageBox({
                     type: 'warning',
-                    content: `心企业是海天集团单岗，必须录入经办员、风险接收人！`
+                    content: `核心企业是海天集团单岗，必须录入经办员、风险接收人！`
                   })
                 }
               }

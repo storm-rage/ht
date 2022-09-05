@@ -10,7 +10,7 @@ const entUserManageRouter = [
       root: '我的代办',
       keepAlive: true,
       refreshIndex: 0,
-      pageType: 'detail',
+      pageType: 'audit',
       notRequireAuth: true
     }
   },
@@ -25,7 +25,7 @@ const entUserManageRouter = [
       root: '我的代办',
       keepAlive: true,
       refreshIndex: 0,
-      pageType: 'detail',
+      pageType: 'agendaDetail',
       notRequireAuth: true
     }
   },
@@ -55,7 +55,7 @@ const entUserManageRouter = [
       root: '我的代办',
       keepAlive: true,
       refreshIndex: 0,
-      pageType: 'detail',
+      pageType: 'agendaDetail',
       notRequireAuth: true
     }
   }

@@ -18,7 +18,7 @@
     <audit-remark ref="auditRemark" v-if="pageType === 'audit'"></audit-remark>
 
     <zj-content-footer>
-      <template v-if="pageType !== 'detail'">
+      <template v-if="pageType !== 'agendaDetail'">
         <zj-button type="primary" @click="toPass">复核通过</zj-button>
         <zj-button @click="toReject" v-if="row.workflowState === 'U002'">驳回上一级</zj-button>
         <zj-button @click="toReject" v-else-if="row.workflowState === 'U006'">作废</zj-button>
@@ -65,11 +65,12 @@ export default {
     this.getRow()
     this.getDictionary()
     this.getDetail()
-    // 驳回待处理可修改
-    if (this.row.workflowState === 'E005') {
-      this.isEdit = true
+    // 审核驳回待处理可修改
+    if (this.row.workflowState === 'U006' && this.$route.meta.pageType === 'audit') {
+      this.$route.meta.pageType = 'edit'
+    } else {
+      this.$route.meta.pageType = 'detail'
     }
-    this.type = this.row.startObject
   },
   methods: {
     //获取字典
@@ -80,6 +81,7 @@ export default {
     },
     //详情
     getDetail() {
+      this.type = this.row.startObject
       let autoApi = this.zjControl.getUserInformationDetail // 平台方详情接口
       if (this.type === 'KH') {
         autoApi = this.zjControl.getUserInformationKhDetail // 客户方详情接口

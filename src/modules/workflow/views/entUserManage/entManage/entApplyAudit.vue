@@ -15,7 +15,7 @@
     <audit-remark ref="auditRemark" v-if="$route.name === 'entApplyAudit'"></audit-remark>
 
     <zj-content-footer>
-      <template v-if="pageType !== 'detail'">
+      <template v-if="pageType !== 'agendaDetail'">
         <zj-button type="primary" @click="toPass">复核通过</zj-button>
         <zj-button @click="toReject" v-if="row.workflowState === 'E002'">驳回上一级</zj-button>
         <zj-button @click="toReject" v-else-if="row.workflowState === 'E005'">作废</zj-button>
@@ -59,10 +59,12 @@ export default {
     this.getDictionary()
     this.getDetail()
     this.getTodoBusinessParamLog()
-    // 驳回待处理可修改
-    if (this.row.workflowState === 'E005') {
+    // 审核驳回待处理可修改
+    console.log(this.$route.meta.pageType, this.row.workflowState)
+    if (this.row.workflowState === 'E005' && this.$route.meta.pageType === 'audit') {
       this.$route.meta.pageType = 'edit'
     }
+    console.log(this.$route.meta.pageType)
   },
   methods: {
     getDictionary() {
@@ -105,8 +107,7 @@ export default {
             qyfrzjAttachId: res.data.qyfrzjAttachId,
             qyfrzjAttachName: res.data.qyfrzjAttachName
           }
-
-          console.log(this.detailData)
+          // console.log(this.detailData)
         }
       })
     },
