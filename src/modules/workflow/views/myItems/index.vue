@@ -120,7 +120,7 @@ export default {
       } else {
         // 已办和已办结
         if (myItemsPath[row.busType].doneDetailPath) {
-          this.goChild(myItemsPath[row.busType].doneDetailPath, row);
+          this.goChild(myItemsPath[row.busType].doneDetailPath, { ...row, tabAtive: this.tabAtive });
         } else {
           this.goChild(myItemsPath[row.busType][row.applyType].doneDetailPath, { ...row, tabAtive: this.tabAtive });
         }

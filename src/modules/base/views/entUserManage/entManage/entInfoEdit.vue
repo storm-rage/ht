@@ -164,13 +164,13 @@
               <el-input v-model="form.bankNo" :disabled="isDetail" />
             </el-form-item>
           </el-col>
-          <el-col :span="8">
+          <!-- <el-col :span="8">
             <el-form-item label="银行类型：" prop="bankType">
               <el-select v-model="form.bankType" :popper-append-to-body="false" :disabled="isDetail">
                 <el-option v-for="(item, index) in dictionary.bankTypeList" :key="index" :value="item.code" :label="item.desc" />
               </el-select>
             </el-form-item>
-          </el-col>
+          </el-col> -->
         </el-row>
         <el-row>
           <h4 class="bl zj-m-l-20 mb-10">控制人信息</h4>
@@ -179,7 +179,11 @@
               <el-input v-model="form.actualController" :disabled="isDetail" />
             </el-form-item>
           </el-col>
-
+          <!-- <el-col :span="8">
+            <el-form-item label="控制人证件类型：" prop="controllerCertNo">
+              <el-input v-model="form.controllerCertNo" :disabled="isDetail" />
+            </el-form-item>
+          </el-col> -->
           <el-col :span="8">
             <el-form-item label="控制人身份证号：" prop="controllerCertNo">
               <el-input v-model="form.controllerCertNo" :disabled="isDetail" />
@@ -198,18 +202,18 @@
         <zj-header title="企业操作员" />
         <zj-content>
           <zj-button class="append zj-m-b-10" type="primary" @click="sysUserAdd" v-if="!isDetail">新增</zj-button>
-          <zj-table ref="sysUser" :dataList="sysUserList" :pager="false" keep-source auto-resize :edit-config="{
+          <zj-table ref="sysUser" :dataList="sysUserList" :pager="false" keep-source auto-resize :edit-rules="validRules" :edit-config="{
               trigger: 'manual',
               mode: 'row',
               icon: '-',
               autoClear: false,
               showStatus: true,
             }" class="sysUserAdd">
+            <zj-table-column field="htSysCode" title="娅米账号/业务系统账号" :edit-render="{ name: '$input', events:{blur: userBlur} }" />
             <zj-table-column field="userName" title="姓名" :edit-render="{ name: '$input' }" />
             <zj-table-column field="certNo" title="身份证号码" :edit-render="{ name: '$input' }" />
             <zj-table-column field="mobileNo" title="手机号码" :edit-render="{ name: '$input' }" />
             <zj-table-column field="email" title="邮箱" :edit-render="{ name: '$input' }" />
-            <zj-table-column field="htSysCode" title="内部系统账号" :edit-render="{ name: '$input' }" />
             <zj-table-column field="roleId" title="操作员角色" :edit-render="{name: '$select',options: statementAccountTypeTable}" />
             <zj-table-column field="statementAccountType" title="开凭证对账单类型权限" :edit-render="{
                 name: '$select',
@@ -317,5 +321,9 @@ export default entManage;
     width: 20px;
     text-align: center;
   }
+}
+
+/deep/ .vxe-header--row .vxe-cell .vxe-cell--title {
+  width: auto;
 }
 </style>
