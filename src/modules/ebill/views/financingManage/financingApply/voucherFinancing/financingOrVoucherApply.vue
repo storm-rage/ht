@@ -3,11 +3,11 @@
       <!--  入库融资申请/凭证融资申请  -->
       <zj-content>
         <zj-content-block>
-          <div class="quota-manage">
-            剩余可用额度：<span>{{form.surplusQuota}}</span>
-            总额度：<span>{{form.totalQuota}}</span>
+          <div class="quota-manage" v-if="form.financingFlag === '1'">
+            剩余可用额度：<span>{{form.availableCreditAmount}}</span>
+            总额度：<span>{{form.totalCreditAmount}}</span>
           </div>
-          <zj-top-header :title="`${titleInfo}申请`"/>
+          <zj-top-header :title="`${titleInfo?titleInfo:''}申请`"/>
           <el-form :model="form" ref="form" :rules="rules" label-width="200px" class="zj-m-t-20">
             <el-row class="hd-row">
               <el-form-item label="融资企业：">{{form.sellerName}}</el-form-item>
@@ -57,9 +57,9 @@
             <el-row>
               <el-col :span="12">
                 <el-form-item label="预计融资期限：">
-                  {{form.applyDateTime}}
-                  {{form.expireDate?`至${form.expireDate}`:''}}
-                  {{form.estimateDays?`共${form.estimateDays}天`:''}}
+                  {{form.applyDatetime?date(form.applyDatetime):''}}
+                  {{form.expireDate?`至 ${date(form.expireDate)}`:''}}
+                  {{form.estimateDays?` 共${form.estimateDays}天`:''}}
                 </el-form-item>
               </el-col>
               <el-col :span="12">
@@ -87,9 +87,13 @@
             <zj-table-column field="ebillCode" title="海e单编号" />
             <zj-table-column field="rootCode" title="原始海e单编号" />
             <zj-table-column field="writerName" title="开单人" />
-            <zj-table-column field="transferName" title="转让企业" />
+            <zj-table-column field="transferName" title="转让企业" >
+              <template v-slot="{row}">
+                {{row.transferName?row.transferName:'-'}}
+              </template>
+            </zj-table-column>
             <zj-table-column field="ebillAmt" title="海e单金额" :formatter="money"/>
-            <zj-table-column field="voucherAcc" title="剩余可用金额" :formatter="money"/>
+            <zj-table-column field="availableAmt" title="剩余可用金额" :formatter="money"/>
             <zj-table-column field="holderDate" title="海e单持有日期" :formatter="date"/>
             <zj-table-column field="expireDate" title="海e单到期日" :formatter="date"/>
           </zj-table>

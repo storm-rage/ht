@@ -80,7 +80,7 @@ export default {
         this.goChild('orderFinancingDetail', {buyerId: this.nextStepParams.buyerId})
       }
       if(this.tabs === 'billTab') {
-        if(this.nextStepParams.nextFlag) {
+        if(this.nextStepParams.nextStepFlag) {
           this.$message.error('请选择到期日为同一天的凭证！')
           return
         }

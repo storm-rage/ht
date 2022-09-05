@@ -48,15 +48,21 @@
             </el-form>
           </template>
           <zj-table ref="searchTable"
+                    row-id="id"
                     :dataList="billList"
                     @checkbox-change="checkChange"
                     @checkbox-all="checkChange"
+                    :checkbox-config="{ highlight: true, reserve:true,}"
           >
-            <zj-table-column type="checkbox" width="40"/>
+            <zj-table-column type="checkbox" width="40" fixed="left"/>
             <zj-table-column field="ebillCode" title="债权凭证编号"/>
             <zj-table-column field="rootCode" title="原始债权凭证编号"/>
             <zj-table-column field="writerName" title="凭证签发人"/>
-            <zj-table-column field="transferName" title="转让企业"/>
+            <zj-table-column field="transferName" title="转让企业">
+              <template v-slot="{row}">
+                {{row.transferName?row.transferName:'-'}}
+              </template>
+            </zj-table-column>
             <zj-table-column field="ebillAmt" title="凭证金额" :formatter="money"/>
             <zj-table-column field="availableAmt" title="剩余可用金额" :formatter="money"/>
             <zj-table-column field="holderDate" title="凭证持有日期" :formatter="date"/>
@@ -114,6 +120,12 @@ export default {
       this.zjControl.queryFinancingApplyBillPage(params).then(res=>{
         this.billList = res.data.rows
         this.totalAmount = res.data.totalAmount
+        if(windowSSStorage.getItem('cacheBillCheck') && res.data.rows.length) {
+          let cacheCheck = windowSSStorage.getItem('cacheBillCheck')
+          console.log(JSON.parse(cacheCheck))
+          this.$refs.searchTable.setCheckboxRow(JSON.parse(cacheCheck), true)
+          this.$refs.searchTable.updateData()
+        }
       })
       windowSSStorage.setItem('cacheEntInfo',val)
       this.$emit('nextStepParams',this.nextParams)
@@ -126,8 +138,7 @@ export default {
     },
     checkChange() {
       let checkArr = this.$refs.searchTable.getCheckboxRecords()
-      windowSSStorage.setItem('cacheBillCheck',checkArr)
-
+      windowSSStorage.setItem('cacheBillCheck',JSON.stringify(checkArr))
       let newCheckArr = checkArr.map(item=>item.ebillAmt)
       //已勾选凭证金额合计
       if(checkArr.length > 1 ) {
@@ -141,10 +152,12 @@ export default {
       }
       console.log(`~`+JSON.stringify(checkArr))
       //勾选多个凭证时，遍历数组查看选中的凭证是否为同一个到期日
+      let nextFlag = false
       if(checkArr.length > 1) {
         let expDate = checkArr[0].expireDate
         for(let i of checkArr) {
           if(i.expireDate !== expDate.expireDate) {
+            nextFlag = true
             this.$message.error('请选择到期日为同一天的凭证！')
             break
           }
@@ -155,6 +168,7 @@ export default {
       this.nextParams = {
         ...this.nextParams,
         idList: selectBillId,
+        nextStepFlag: nextFlag,
       }
       this.$emit('nextStepParams',this.nextParams)
     },
