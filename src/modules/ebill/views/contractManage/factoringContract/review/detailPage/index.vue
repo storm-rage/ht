@@ -27,6 +27,8 @@
                       label="拒绝原因"
                       message="请输入拒绝原因"
                       :max="100"></zj-reject-dialog>
+    <!-- 云证书签章 -->
+    <zj-certuficate ref="certuficate" @confirm="handleCertuficateDone" />
   </div>
 </template>
 
@@ -75,26 +77,29 @@ export default {
           confirmButtonText: '确定',
           cancelButtonText: '取消'
         }).then(() => {
-          this.passLoading = true;
-          this.zjControl.submitEbContractApplyReview({
-            serialNo: this.row.serialNo,
-            operResult: OperResult.PASS
-          }).then(res => {
-            this.passLoading = false;
-            //成功，关闭
-            if (res.success) {
-              this.$message.success(res.msg);
-              this.goParent();
-            }
-          }).catch(() => {
-            this.passLoading = false;
-          })
+          this.signUserProtocol()
         })
       }else {
         this.$alert('请阅读并同意上述协议','提示', {
           type: 'warning'
         })
       }
+    },
+    save() {
+      this.passLoading = true;
+      this.zjControl.submitEbContractApplyReview({
+        serialNo: this.row.serialNo,
+        operResult: OperResult.PASS
+      }).then(res => {
+        this.passLoading = false;
+        //成功，关闭
+        if (res.success) {
+          this.$message.success(res.msg);
+          this.goParent();
+        }
+      }).catch(() => {
+        this.passLoading = false;
+      })
     },
     toReject() {
       this.$refs.rejectDialog.open();
@@ -116,7 +121,16 @@ export default {
       }).catch(() => {
         this.rejectLoading = false;
       })
-    }
+    },
+    // 去签协议
+    signUserProtocol () {
+      this.$refs.certuficate.open()
+    },
+    //云证书返回
+    handleCertuficateDone() {
+      console.log("云证书返回");
+      this.save()
+    },
   },
 };
 </script>
