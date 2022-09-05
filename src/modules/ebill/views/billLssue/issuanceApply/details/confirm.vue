@@ -69,6 +69,8 @@
       <div v-html="dialogHtml"></div>
     </el-dialog>
     <!-- 工作流 -->
+    <!-- 云证书签章 -->
+    <zj-certuficate ref="certuficate" @confirm="handleCertuficateDone" />
   </div>
 </template>
 
@@ -77,6 +79,7 @@ export default {
   data () {
     return {
       zjControl: {
+        signUserProtocol: this.$api.login.signUserProtocol, //人脸签署
         billCommit: this.$api.openBillApply.billCommit, //对账单-提交复核
         getKdAgreeemnt: this.$api.openBillApply.getKdAgreeemnt // 开单确认书-协议查看
       },
@@ -112,19 +115,23 @@ export default {
           this.$message.warning('请检查我已阅读并同意相关协议是否勾选')
           return
         } else {
-          this.zjControl
-            .billCommit({
-              accountBillList: this.row.list,
-              applyType: this.row.applyType
-            })
-            .then(res => {
-              if (res.code === 200) {
-                this.toParent()
-                this.$message.success('提交成功!')
-              }
-            }).catch(()=>{})
+          this.signUserProtocol()
         }
       })
+    },
+    save () {
+      this.zjControl
+        .billCommit({
+          accountBillList: this.row.list,
+          applyType: this.row.applyType
+        })
+        .then(res => {
+          if (res.code === 200) {
+            this.toParent()
+            this.$message.success('提交成功!')
+          }
+        })
+        .catch(() => {})
     },
     //取消
     toParent () {
@@ -150,7 +157,16 @@ export default {
           this.dialogShow = true
         })
         .catch(() => {})
-    }
+    },
+    // 去签协议
+    signUserProtocol () {
+      this.$refs.certuficate.open()
+    },
+    //云证书返回
+    handleCertuficateDone() {
+      console.log("云证书返回");
+      this.save()
+    },
   }
 }
 </script>
