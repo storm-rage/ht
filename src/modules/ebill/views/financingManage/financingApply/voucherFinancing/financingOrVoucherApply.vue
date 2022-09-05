@@ -3,7 +3,7 @@
       <!--  入库融资申请/凭证融资申请  -->
       <zj-content>
         <zj-content-block>
-          <div class="quota-manage" >
+          <div class="quota-manage" v-if="form.financingFlag === '1'">
             剩余可用额度：<span>{{form.availableCreditAmount}}</span>
             总额度：<span>{{form.totalCreditAmount}}</span>
           </div>
