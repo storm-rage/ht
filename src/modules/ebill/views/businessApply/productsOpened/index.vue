@@ -5,8 +5,8 @@
         <el-form ref="searchForm" :model="searchForm">
           <el-form-item label="申请日期：" class="col-right">
             <zj-date-range-picker
-              :startDate.sync="searchForm.applyDateStart"
-              :endDate.sync="searchForm.applyDateEnd"
+              :startDate.sync="searchForm.productApplyDateStart"
+              :endDate.sync="searchForm.productApplyDateEnd"
             />
           </el-form-item>
           <el-form-item label="申请状态：" class="col-center">

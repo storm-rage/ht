@@ -271,7 +271,7 @@ export default {
       this.$refs.invoiceItemListsTable.iRefresh()
     },
     submit(){
-      if(this.form.isGysHtEnterprise === '1' && this.form.tranAmt > this.ebillAmtTotal) {
+      if(this.form.isGysHtEnterprise === '1' && Number(this.form.tranAmt) > Number(this.ebillAmtTotal)) {
         return this.$message.error('本次融资发票金额不足！')
       }
       let params = {
