@@ -92,10 +92,13 @@ export default {
         if (res.data.zrtzqrAgreement) {
           this.agreementList.push(res.data.zrtzqrAgreement);
         }
+        if (res.data.zrtzjqrhAgreement) {
+          this.agreementList.push(res.data.zrtzjqrhAgreement);
+        }
       });
     },
     toDownload (row) {
-      this.zjControl.downApi(row);
+      this.zjControl.downApi({fileId: row.agreementFileId, fileUrl: row.agreementFileId,fileName: row.agreementFileName});
     }
   }
 };
