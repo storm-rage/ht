@@ -617,47 +617,45 @@ export default {
       return key
     },
     save (type, row) {
-       return new Promise((resove,reject)=>{
-         this.$refs[type + 'Table']
-           .validate(row)
-           .then(() => {
-             let saveType = {
-               contract: {
-                 url: this.zjControl.maintainContract,
-                 valueProp: 'contractInfo'
-               },
-               bill: {
-                 url: this.zjControl.maintainInvoice,
-                 valueProp: 'invoice'
-               },
-               other: {
-                 url: this.zjControl.maintainOther,
-                 valueProp: 'otherAttach'
-               }
-             }
-             let request = saveType[type].url
-             request({
-               acctId: this.row.id,
-               [saveType[type].valueProp]: {
-                 ...row,
-                 operateType: row.id ? 'MOD' : 'ADD',
-                 ebillCode: this.detailData.ebillCode
-               }
-             })
-               .then(res => {
-                 this.$refs[type + 'Table'].clearActived()
-                 !row.id ? (row.id = res.data.id) : ''
-                 this.$message.success('保存成功!')
-                 resove(res)
-               })
-               .catch(() => {
-                  reject(err)
-               })
-           })
-           .catch(err => {
-              reject(err)
-           })
-       })
+      this.$refs[type + 'Table']
+        .validate(row)
+        .then(() => {
+          let saveType = {
+            contract: {
+              url: this.zjControl.maintainContract,
+              valueProp: 'contractInfo'
+            },
+            bill: {
+              url: this.zjControl.maintainInvoice,
+              valueProp: 'invoice'
+            },
+            other: {
+              url: this.zjControl.maintainOther,
+              valueProp: 'otherAttach'
+            }
+          }
+          let request = saveType[type].url
+          request({
+            acctId: this.row.id,
+            [saveType[type].valueProp]: {
+              ...row,
+              operateType: row.id ? 'MOD' : 'ADD',
+              ebillCode: this.detailData.ebillCode
+            }
+          })
+            .then(res => {
+              this.$refs[type + 'Table'].clearActived()
+              !row.id ? (row.id = res.data.id) : ''
+              this.$message.success('保存成功!')
+              return Promise.resolve(res)
+            })
+            .catch(() => {
+              return Promise.reject(err)
+            })
+        })
+        .catch(err => {
+          return Promise.reject(err)
+        })
     },
     cancel (type, row) {
       row = JSON.parse(JSON.stringify(this[type + 'Row']))
@@ -728,7 +726,7 @@ export default {
     onConfirm() {
       let types = ['contract','bill','other']
       let prosimeAll =  types.map((type,index)=>{
-        return new Promise((resove,reject)=>{
+        return new Promise((resolve,reject)=>{
           let tableActiveRow = this.$refs[type+'Table'] && this.$refs[type+'Table'].getActiveRecord()
           if(tableActiveRow) {
             // 有未保存的数据，未保存的数据是否必填完
@@ -736,15 +734,15 @@ export default {
               .validate(tableActiveRow.row)
               .then(()=>{
                 // this.save(type, tableActiveRow.row).then(res=>{
-                //   resove(res)
+                //   resolve(res)
                 // })
-                resove({type, row: tableActiveRow.row})
+                resolve({type, row: tableActiveRow.row})
               })
               .catch(()=>{
                 reject()
               })
           } else {
-            resove()
+            resolve()
           }
         })
       })

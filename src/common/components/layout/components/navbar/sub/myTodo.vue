@@ -9,7 +9,8 @@
 export default {
   methods: {
     toRouter () {
-      this.$router.push({name: 'myTodo'})
+      // this.$router.push({name: 'myTodo'})
+      this.goChild('myTodo')
     }
   }
 };

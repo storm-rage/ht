@@ -39,14 +39,14 @@
           </el-form-item>
           <el-form-item label="是否开立凭证：" class="col-center">
             <el-select
-              v-model="searchForm.isIssueVoucher"
+              v-model="searchForm.isApplyVoucher"
               placeholder="请选择"
               clearable
               :popper-append-to-body="false"
             >
               <el-option value="" label="全部"></el-option>
               <el-option
-                v-for="item in dictionary.isIssueVoucher"
+                v-for="item in dictionary.isApplyVoucher"
                 :key="item.code"
                 :label="item.desc"
                 :value="item.code"
@@ -109,6 +109,7 @@
                 <zj-date-picker
                   class="table-date-picker"
                   :date.sync="row.estimatedPaymentDate"
+                  :overNow="true"
                 />
               </div>
               <div v-else>{{ date(row.estimatedPaymentDate) }}</div>
@@ -128,13 +129,14 @@
                   digits="2"
                   :controls="false"
                   style="width: 100%;"
+                  @change="openBillAmtChange(row)"
                 ></vxe-input>
               </div>
               <div v-else>{{ money(row.openBillAmt) }}</div>
             </template>
           </zj-table-column>
           <zj-table-column
-            field="isIssueVoucher"
+            field="isApplyVoucher"
             title="是否开立凭证"
             width="100"
             :formatter="obj => ifOrNot(obj.cellValue)"
@@ -203,10 +205,10 @@ export default {
         checkBillDateEnd: '',
         estimatedPaymentDateStart: '',
         estimatedPaymentDateEnd: '',
-        isIssueVoucher: ''
+        isApplyVoucher: '1'
       },
       dictionary: {
-        isIssueVoucher: [
+        isApplyVoucher: [
           { desc: '是', code: '1' },
           { desc: '否', code: '0' }
         ]
@@ -225,6 +227,10 @@ export default {
       let dt = typeof time === 'number' ? time : Number(time)
       return dt.length === 8 ? this.date(dt) : formatDate(dt, 'yyyy-MM-dd')
     },
+    afterResetSearch() {
+      this.searchForm.isApplyVoucher = '1'
+      window.console.log('this.searchForm', this.searchForm);
+    },
     //详情
     minute (row) {
       this.$router.push({
@@ -241,6 +247,11 @@ export default {
       // this.openBillApplyRow = Object.assign({}, row)
       this.openBillApplyRow = JSON.parse(JSON.stringify(row))
       this.$refs.searchTable.setActiveRow(row)
+    },
+    openBillAmtChange(row) {
+      if(+row.openBillAmt > +row.checkBillAmt) {
+        row.openBillAmt = row.checkBillAmt
+      }
     },
     isTableEdit () {
       let key = true

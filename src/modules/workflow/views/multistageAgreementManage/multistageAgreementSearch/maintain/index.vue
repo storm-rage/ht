@@ -92,7 +92,7 @@ export default {
       if(flag=='1' && !this.rejectReason) {
         this.$message.error('请填写审核意见')
       }
-      if(isHaveFinancingAgreement) {
+      if(isHaveFinancingAgreement || flag==='拒绝') {
         let params = {
           busTradeId: this.row.busTradeId,
           applyId: this.detailData.businessApplyInfo?.applyId,//申请记录id：保理公司直接维护时不需要传

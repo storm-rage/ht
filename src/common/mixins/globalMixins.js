@@ -107,6 +107,8 @@ export default {
 
           if(this.afterResetSearch && typeof(this.afterResetSearch) === 'function'){
             this.afterResetSearch()
+          } else if (this.$parent && this.$parent.afterResetSearch && typeof(this.$parent.afterResetSearch) === 'function') {
+            this.$parent.afterResetSearch()
           }
           this.search(boo)
         },

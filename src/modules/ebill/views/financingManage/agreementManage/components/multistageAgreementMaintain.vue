@@ -182,7 +182,7 @@ export default {
         return this.$message.error('提交审核中，不能新增合同附件！')
       }
       if(!this.tableEditReport(["attaTable"])){return}
-      let item = {attachId:'', fileId:'', fileName:'', fileRemark:'',}
+      let item = {attachId:'', fileId:'', fileName:'', fileRemark:'',recordId: this.businessApplyInfo.recordId || '',}
       this.contractInfoList.push(item)
       this.$refs.attaTable.setActiveRow(item)
     },
@@ -210,7 +210,7 @@ export default {
         recordId : row.recordId || '',
         tradeId : this.agreementParams.tradeId || '',
       }
-      this.zjControl.delContract(params).then(res => {
+      return this.zjControl.delContract(params).then(res => {
         //刷新当前贸易关系下的合同附件列表
         this.zjControl.queryPhasedAgreePage(this.agreementParams).then(res=>{
           this.agreementList = res.data.phasedAgreeInfoList
@@ -226,6 +226,7 @@ export default {
           this.$message.success('保存成功！')
           this.$refs.attaTable.clearActived()
         })
+        return Promise.resolve(res)
       })
     },
     cancel(row) {
