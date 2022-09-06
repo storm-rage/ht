@@ -12,6 +12,10 @@ const forgotPasswordApi = {
   validateCode:(params) => {
     return request.post('/forget-password/validate-param',params)
   },
+  //3.校验手机号和登录账号是否匹配
+  validateUser:(params) => {
+    return request.post('/forget-password/validate-user',params)
+  },
   //4.保存新密码
   saveNewPassword:(params) => {
     return request.post('/forget-password/save-new-password',params)

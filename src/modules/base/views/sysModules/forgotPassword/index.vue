@@ -68,6 +68,7 @@
             zjControl:{
               sendPhoneCode:this.$api.forgotPassword.sendPhoneCode,//1发送手机验证码
               validateCode:this.$api.forgotPassword.validateCode,//2校验手机验证码
+              validateUser:this.$api.forgotPassword.validateUser,//3校验手机号和登录账号是否匹配
               saveNewPassword:this.$api.forgotPassword.saveNewPassword//4保存新密码
             },
             form:{
@@ -194,7 +195,7 @@
               phone
             }
             this.zjControl.sendPhoneCode(params).then(res=>{
-              this.$Message.success('验证码已成功发送，请注意查收')
+              this.$message.success('验证码已成功发送，请注意查收')
               this.form.phoneFlag = true //禁用
               this.form.sendFlag = true //启用倒计时标识
               this.form.userId = res.data.userId
@@ -211,6 +212,9 @@
                   sum --
                 }
               },1000)
+            })
+            this.zjControl.validateUser(params).then(res=> {
+              this.form.userId = res.data.userId
             })
           },
           //2.校验手机验证码
