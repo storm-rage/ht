@@ -121,7 +121,7 @@
       </div>
     </zj-content>
     <zj-content-footer>
-      <template v-if="userBaseInfo.entInfo.isHtEnterprise === '0'">
+      <template v-if="userBaseInfo.entInfo.entType === 'S' || (userBaseInfo.entInfo.entType === 'B' && userBaseInfo.entInfo.isHtEnterprise === '0')">
         <zj-button type="primary" @click="goChild('entInfoMaintain',userBaseInfo.entInfo)" v-show="tabAtive === 'myBasicInformation'">维护企业信息</zj-button>
         <zj-button type="primary" @click="goChild('userInfoMaintain',userBaseInfo.userInfo)" v-show="tabAtive === 'myBasicInformation'">维护个人信息</zj-button>
       </template>
