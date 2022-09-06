@@ -42,18 +42,18 @@
                   <span>{{ detailData.mobileNo | value }}</span>
                 </el-form-item>
               </el-col>
-              <el-col :span="8">
+              <!-- <el-col :span="8">
                 <el-form-item label="邮箱：">
                   <span>{{ detailData.email | value }}</span>
                 </el-form-item>
-              </el-col>
+              </el-col> -->
               <el-col :span="8">
                 <el-form-item label="海天业务系统账号：">
                   <span>{{ detailData.htSysCode | value }}</span>
                 </el-form-item>
               </el-col>
               <el-col :span="8">
-                <zj-button type="text" @click="downloadFile(row)">身份证影像件</zj-button>
+                <zj-button type="text" style="font-size: 16px" @click="downloadFile(detailData.idCardAttach)" :disabled="!detailData.idCardAttach.length">身份证影像件</zj-button>
               </el-col>
             </el-row>
           </div>
@@ -71,6 +71,7 @@
             <zj-table-column field="createDatetime" title="新增日期" :formatter="date" />
             <zj-table-column field="entState" title="企业状态" :formatter="(obj) => typeMap(dictionary.enterpriseStateList, obj.cellValue)" />
             <zj-table-column field="roleId" title="角色" :formatter="(obj) => typeMap(dictionary.sysRoleList, obj.cellValue)" />
+            <zj-table-column field="email" title="邮箱" />
             <zj-table-column field="userState" title="状态" :formatter="(obj) => typeMap(dictionary.userState, obj.cellValue)" />
             <zj-table-column field="statementAccountType" title="支持开立债权凭证的对账单类型" v-if="pageType !== 'detail'">
               <template v-slot="{ row }">
@@ -219,8 +220,8 @@ export default {
         }
       }
     },
-    downloadFile(fileId, fileName) {
-      this.zjControl.downloadFile({ fileId, fileName })
+    downloadFile(data) {
+      this.zjControl.downloadFile(data[0])
     },
     toDetail(row) {
       if (this.detailData.userAndEntInfoList.length) {
@@ -244,3 +245,9 @@ export default {
   },
 };
 </script>
+<style lang="less" scoped>
+// .fileBtn {
+//   color: #ccc;
+//   font-size: 20px;
+// }
+</style>

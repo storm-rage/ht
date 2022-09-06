@@ -123,8 +123,10 @@ export default {
         if(windowSSStorage.getItem('cacheBillCheck') && res.data.rows.length) {
           let cacheCheck = windowSSStorage.getItem('cacheBillCheck')
           console.log(JSON.parse(cacheCheck))
-          this.$refs.searchTable.setCheckboxRow(JSON.parse(cacheCheck), true)
-          this.$refs.searchTable.updateData()
+          if(this.$refs.searchTable) {
+            this.$refs.searchTable.setCheckboxRow(JSON.parse(cacheCheck), true)
+            this.$refs.searchTable.updateData()
+          }
 
           let list = [...JSON.parse(cacheCheck)]
           this.checkChange([...list])
@@ -141,9 +143,8 @@ export default {
     },
     checkChange(billList) {
       console.log(billList)
-      let objArr = billList.row
-      console.log('objArr')
-      this.$refs.searchTable.updateData()
+      let objArr = billList instanceof Array ? billList : billList.records
+      console.log(objArr)
       let checkArr = this.$refs.searchTable.getCheckboxRecords().length?this.$refs.searchTable.getCheckboxRecords() : objArr
       console.log(`~`+JSON.stringify(checkArr))
       windowSSStorage.setItem('cacheBillCheck',JSON.stringify(checkArr))
@@ -163,7 +164,8 @@ export default {
       if(checkArr.length > 1) {
         let expDate = checkArr[0].expireDate
         for(let i of checkArr) {
-          if(i.expireDate !== expDate.expireDate) {
+          if(i.expireDate !== expDate) {
+            console.log(i.expireDate+'-----'+expDate)
             nextFlag = true
             this.$message.error('请选择到期日为同一天的凭证！')
             break

@@ -9,12 +9,6 @@
           <el-form-item label="新增日期：" class="col-right">
             <zj-date-range-picker :startDate.sync="searchForm.createDateStart" :endDate.sync="searchForm.createDateEnd" />
           </el-form-item>
-          <el-form-item label="用户状态：">
-            <el-select v-model="searchForm.state">
-              <el-option label="全部" value="" />
-              <el-option v-for="(item, index) in dictionary.userState" :key="index" :value="item.code" :label="item.desc"></el-option>
-            </el-select>
-          </el-form-item>
           <el-form-item label="企业名称：">
             <el-input v-model="searchForm.entNameLike" @keyup.enter.native="enterSearch" />
           </el-form-item>

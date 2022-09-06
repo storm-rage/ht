@@ -89,7 +89,9 @@
           </el-col>
           <el-col :span="8">
             <el-form-item label="企业规模：" prop="scale">
-              <el-input v-model="form.scale" :disabled="isDetail || isEdit" />
+              <el-select v-model="form.scale" :popper-append-to-body="false" :disabled="isDetail || isEdit">
+                <el-option v-for="(item, index) in dictionary.scaleList" :key="index" :value="item.code" :label="item.desc"></el-option>
+              </el-select>
             </el-form-item>
           </el-col>
           <el-col :span="8">
@@ -130,7 +132,13 @@
               <el-input v-model="form.legalPersonName" disabled />
             </el-form-item>
           </el-col>
-
+          <el-col :span="8">
+            <el-form-item label="法定代表人证件类型：" prop="controllerCertNo">
+              <el-select v-model="form.legalCertType" :popper-append-to-body="false" :disabled="isDetail">
+                <el-option v-for="(item, index) in dictionary.legalCertTypeList" :key="index" :value="item.code" :label="item.desc" />
+              </el-select>
+            </el-form-item>
+          </el-col>
           <el-col :span="8">
             <el-form-item label="法定代表人身份证号：" prop="legalCertNo">
               <el-input v-model="form.legalCertNo" :disabled="isDetail" />
@@ -179,11 +187,13 @@
               <el-input v-model="form.actualController" :disabled="isDetail" />
             </el-form-item>
           </el-col>
-          <!-- <el-col :span="8">
+          <el-col :span="8">
             <el-form-item label="控制人证件类型：" prop="controllerCertNo">
-              <el-input v-model="form.controllerCertNo" :disabled="isDetail" />
+              <el-select v-model="form.controllerCertType" :popper-append-to-body="false" :disabled="isDetail">
+                <el-option v-for="(item, index) in dictionary.legalCertTypeList" :key="index" :value="item.code" :label="item.desc" />
+              </el-select>
             </el-form-item>
-          </el-col> -->
+          </el-col>
           <el-col :span="8">
             <el-form-item label="控制人身份证号：" prop="controllerCertNo">
               <el-input v-model="form.controllerCertNo" :disabled="isDetail" />
@@ -209,9 +219,9 @@
               autoClear: false,
               showStatus: true,
             }" class="sysUserAdd">
-            <zj-table-column field="htSysCode" title="娅米账号/业务系统账号" :edit-render="{ name: '$input', events:{blur: userBlur} }" />
-            <zj-table-column field="userName" title="姓名" :edit-render="{ name: '$input' }" />
-            <zj-table-column field="certNo" title="身份证号码" :edit-render="{ name: '$input' }" />
+            <zj-table-column field="htSysCode" title="娅米账号/业务系统账号" :edit-render="{ name: '$input' }" />
+            <zj-table-column field="userName" title="姓名" :edit-render="{ name: '$input',events:{focus: getEmployeeInfo} }" />
+            <zj-table-column field="certNo" title="身份证号码" :edit-render="{name: 'input', attrs: {disabled: false}}" />
             <zj-table-column field="mobileNo" title="手机号码" :edit-render="{ name: '$input' }" />
             <zj-table-column field="email" title="邮箱" :edit-render="{ name: '$input' }" />
             <zj-table-column field="roleId" title="操作员角色" :edit-render="{name: '$select',options: statementAccountTypeTable}" />

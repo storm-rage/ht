@@ -60,12 +60,16 @@
           </el-col>
           <el-col :span="8">
             <el-form-item label="企业规模：" prop="scale">
-              <el-input v-model.trim="form.scale" :disabled="!isEdit" />
+              <el-select v-model="form.scale" :popper-append-to-body="false" :disabled="!isEdit">
+                <el-option v-for="(item, index) in dictionary.scale" :key="index" :value="item.code" :label="item.desc"></el-option>
+              </el-select>
             </el-form-item>
           </el-col>
           <el-col :span="8">
             <el-form-item label="企业经营类型：" prop="custType">
-              <el-input v-model.trim="form.custType" :disabled="!isEdit" />
+              <el-select v-model="form.custType" :popper-append-to-body="false" :disabled="!isEdit">
+                <el-option v-for="(item, index) in dictionary.custType" :key="index" :value="item.code" :label="item.desc"></el-option>
+              </el-select>
             </el-form-item>
           </el-col>
           <el-col :span="8">

@@ -14,20 +14,80 @@ export const myItemsPath = {
 
   // 企业管理
   QYGL: {
-    // 审核路由
-    auditPath: 'entApplyAudit',
-    // 详情路由
-    detailPath: 'entApplyAuditDetail',
+    '1': {
+      // 初审状态（apply）
+      'E001': {
+        auditPath: 'entApplyAudit',
+        detailPath: 'entApplyAuditDetail'
+      },
+      // 复审状态
+      'E002': {
+        auditPath: 'entApplyAudit',
+        detailPath: 'entApplyAuditDetail'
+      },
+      // 复核驳回状态
+      'E005': {
+        auditPath: 'entApplyReject',
+        detailPath: 'entApplyAuditDetail'
+      },
+    },
+    '2': {
+      // 初审状态（apply）
+      'E001': {
+        auditPath: 'entApplyAudit',
+        detailPath: 'entApplyAuditDetail'
+      },
+      // 复审状态
+      'E002': {
+        auditPath: 'entApplyAudit',
+        detailPath: 'entApplyAuditDetail'
+      },
+      // 复核驳回状态
+      'E005': {
+        auditPath: 'entApplyReject',
+        detailPath: 'entApplyAuditDetail'
+      },
+    },
     // 已办和办结状态
     doneDetailPath: 'entApplyAuditDetail',
   },
 
   // 用户管理
   YHGL: {
-    // 审核路由
-    auditPath: 'maintainUserAudit',
-    // 详情路由
-    detailPath: 'maintainUserDetail',
+    '1': {
+      // 初审状态（apply）
+      'U001': {
+        auditPath: 'maintainUserAudit',
+        detailPath: 'maintainUserDetail'
+      },
+      // 复审状态
+      'U002': {
+        auditPath: 'maintainUserAudit',
+        detailPath: 'maintainUserDetail'
+      },
+      // 复核驳回状态
+      'U006': {
+        auditPath: 'maintainUserAudit',
+        detailPath: 'maintainUserDetail'
+      },
+    },
+    '2': {
+      // 初审状态（apply）
+      'U001': {
+        auditPath: 'maintainUserAudit',
+        detailPath: 'maintainUserDetail'
+      },
+      // 复审状态
+      'U002': {
+        auditPath: 'maintainUserAudit',
+        detailPath: 'maintainUserDetail'
+      },
+      // 复核驳回状态
+      'U006': {
+        auditPath: 'maintainUserReject',
+        detailPath: 'maintainUserDetail'
+      },
+    },
     // 已办和办结状态
     doneDetailPath: 'maintainUserDetail',
   },

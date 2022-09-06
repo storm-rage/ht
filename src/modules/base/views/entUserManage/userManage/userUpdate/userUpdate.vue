@@ -121,7 +121,11 @@ export default {
     isEdit: {
       type: Boolean,
       default: true
-    }
+    },
+    dictionary: {
+      type: Object,
+      default: () => { }
+    },
   },
   watch: {
     form(data) {
@@ -130,14 +134,13 @@ export default {
           this.attachInfo[0] = Object.assign(this.attachInfo[0], data.idCardAttach[0])
         })
       }
-    }
+    },
   },
   data() {
     return {
       zjControl: this.$api.userInfoManage,
       attachInfo: [{ fileId: "", type: "身份证影印件", fileName: "" }],
       dialogVisible: false,
-      dictionary: {},
       statementAccountType: [],
       updateTypeIndex: 0,
       rules: {
@@ -168,7 +171,6 @@ export default {
   },
   created() {
     this.getRow();
-    this.getDictionary()
   },
   methods: {
     handleForm() {
