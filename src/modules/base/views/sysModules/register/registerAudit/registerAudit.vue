@@ -166,7 +166,7 @@
                   <el-radio v-for="item in [
                       { code: '1', desc: '是' },
                       { code: '0', desc: '否' },
-                    ]" :key="item.code" :label="item.code">{{ item.desc }}</el-radio>
+                    ]" :key="item.code" :label="item.code" disabled>{{ item.desc }}</el-radio>
                 </el-radio-group>
               </el-form-item>
 
@@ -355,9 +355,9 @@ export default {
       this.attachInfo.infoViewList = [
         { fileId: this.detailData.qyyzFileId, fileName: this.detailData.qyyzAttachName },
         { fileId: this.detailData.qyfrzjFileId, fileName: this.detailData.qyfrzjAttachName },
-        { fileId: jb.fileId, fileName: jb.attachName },
-        { fileId: fh.fileId, fileName: fh.attachName },
-        { fileId: fx.fileId, fileName: fx.attachName },
+        { fileId: jb.identitycardFileId, fileName: jb.identitycardFileName },
+        { fileId: fh.identitycardFileId, fileName: fh.identitycardFileName },
+        { fileId: fx.identitycardFileId, fileName: fx.identitycardFileName },
         { fileId: this.detailData.qywtsqsFileId, fileName: this.detailData.qywtsqsAttachName },
       ]
     },

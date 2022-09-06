@@ -47,27 +47,6 @@
                 {{ typeMap(directory.platFormAuditEntTypeList, row.entType) }}
                 ( 直接供应商 )
               </template>
-              <!-- 间接供应商 -->
-              <template v-else-if="row.supplierType === '02'">
-                <!-- 有贸易关系 -->
-                <template v-if="row.isTradeRelation === '1'">
-                  <label>
-                    {{
-                      typeMap(directory.platFormAuditEntTypeList, row.entType)
-                    }}
-                    ( 间接供应商<span class="success">√</span> )
-                  </label>
-                </template>
-                <!-- 无贸易关系 -->
-                <template v-else>
-                  <label>
-                    {{
-                      typeMap(directory.platFormAuditEntTypeList, row.entType)
-                    }}
-                    ( 间接供应商<span class="red">×</span> )
-                  </label>
-                </template>
-              </template>
             </template>
             <template v-else>—</template>
           </template>

@@ -219,11 +219,31 @@
               autoClear: false,
               showStatus: true,
             }" class="sysUserAdd">
-            <zj-table-column field="htSysCode" title="娅米账号/业务系统账号" :edit-render="{ name: '$input' }" />
-            <zj-table-column field="userName" title="姓名" :edit-render="{ name: '$input',events:{focus: getEmployeeInfo} }" />
-            <zj-table-column field="certNo" title="身份证号码" :edit-render="{name: 'input', attrs: {disabled: false}}" />
-            <zj-table-column field="mobileNo" title="手机号码" :edit-render="{ name: '$input' }" />
-            <zj-table-column field="email" title="邮箱" :edit-render="{ name: '$input' }" />
+            <zj-table-column field="htSysCode" title="娅米账号/业务系统账号" :edit-render="{}">
+              <template #edit="{ row }">
+                <vxe-input v-model="row.htSysCode" type="text" :disabled="row.isHtSysCodeDis"></vxe-input>
+              </template>
+            </zj-table-column>
+            <zj-table-column field="userName" title="姓名" :edit-render="{}">
+              <template #edit="{ row, rowIndex }">
+                <vxe-input v-model="row.userName" type="text" @focus="(val)=>getEmployeeInfo(row,rowIndex)" :disabled="row.isUserNameDis"></vxe-input>
+              </template>
+            </zj-table-column>
+            <zj-table-column field="certNo" title="身份证号码" :edit-render="{}">
+              <template #edit="{ row }">
+                <vxe-input v-model="row.certNo" type="text" :disabled="row.isCertNoDis"></vxe-input>
+              </template>
+            </zj-table-column>
+            <zj-table-column field="mobileNo" title="手机号码" :edit-render="{}">
+              <template #edit="{ row }">
+                <vxe-input v-model="row.mobileNo" type="text" :disabled="row.isMobileNoNameDis"></vxe-input>
+              </template>
+            </zj-table-column>
+            <zj-table-column field="email" title="邮箱" :edit-render="{}">
+              <template #edit="{ row }">
+                <vxe-input v-model="row.email" type="text" :disabled="row.isEmailDis"></vxe-input>
+              </template>
+            </zj-table-column>
             <zj-table-column field="roleId" title="操作员角色" :edit-render="{name: '$select',options: statementAccountTypeTable}" />
             <zj-table-column field="statementAccountType" title="开凭证对账单类型权限" :edit-render="{
                 name: '$select',
