@@ -59,12 +59,6 @@ export default {
     this.getDictionary()
     this.getDetail()
     this.getTodoBusinessParamLog()
-    // 审核驳回待处理可修改
-    console.log(this.$route.meta.pageType, this.row.workflowState)
-    if (this.row.workflowState === 'E005' && this.$route.meta.pageType === 'audit') {
-      this.$route.meta.pageType = 'edit'
-    }
-    console.log(this.$route.meta.pageType)
   },
   methods: {
     getDictionary() {
