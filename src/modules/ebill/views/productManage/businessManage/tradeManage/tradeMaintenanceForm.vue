@@ -54,7 +54,10 @@
                   </zj-number-input>
                 </el-form-item>
               </el-col>
-              <el-col :span="24">
+
+            </el-row>
+            <el-row>
+              <el-col :span="12">
                 <el-form-item label="结算周期："
                               prop="settlementCycle"
                               :rules="[
@@ -66,7 +69,22 @@
                                :label="item.desc"
                                :value="item.code"></el-option>
                   </el-select>
-                  &nbsp;<zj-text-tip text="注：结算周期从mdm取值仅供参考，最终以平台维护为准。"></zj-text-tip>
+                  &nbsp;<el-tooltip content="注：结算周期从mdm取值仅供参考，最终以平台维护为准。"  effect="dark" placement="top">
+                  <i class="el-icon-info" style="color:#909399"></i>
+                </el-tooltip>
+                </el-form-item>
+              </el-col>
+              <el-col :span="12" v-if="isSelectBillBl">
+                <el-form-item label="供应商总额度："
+                              prop="totalCreditAmount"
+                              :rules="[
+                          {required: true,message: '请输入供应商总额度',trigger: ['change','blur']}
+                        ]">
+                  <zj-number-input :disabled="!isEdit" v-model.trim="form.totalCreditAmount">
+                    <template slot="append">
+                      元
+                    </template>
+                  </zj-number-input>
                 </el-form-item>
               </el-col>
             </el-row>
@@ -94,6 +112,8 @@
                                  v-if="item.code===constProductType.DDBL"
                                  :title="`${item.label}业务设置-${form.buyerName}`"
                                  :isOnlyMonthRateEdit="isEdit"
+                                 :is-show-contract-info="true"
+                                 :isEdit="!form.busTradeId"
                                  :dic="dictionary"
                                  :params="form.orderFactoringModel"></order-product-biz-setting>
       <!--  电子凭证产品业务设置    -->
@@ -171,6 +191,12 @@ export default {
         })
       }
       return [];
+    },
+    /**
+     * 是否选择了订单保理
+     */
+    isSelectBillBl () {
+      return this.form.cactoringLogo&& this.form.cactoringLogo===CactoringLogo.BILLBL;
     },
     /**
      * 是否显示产品树
