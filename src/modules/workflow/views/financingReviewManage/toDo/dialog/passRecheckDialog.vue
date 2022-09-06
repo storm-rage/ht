@@ -80,8 +80,8 @@ export default {
       //
       // }
       let params = {
-                  attachList: this.dialogForm.otherAttachList,
-                  creditId: this.dialogForm.blContractInfo.creditId,
+                  attachList: this.dialogForm.otherAttachList?this.dialogForm.otherAttachList:[],
+                  creditId: this.dialogForm.blContractInfo?this.dialogForm.blContractInfo.creditId:'',
                   isRiskFlag: this.dialogForm.isRiskFlag,
                   operateFlag: flag,//融资审核操作标志：1-保理公司初审通过 2-保理公司初审驳回 3-保理公司复审通过 4-保理公司复审驳回上一级
                   remark: this.dialogForm.rejectReason,
@@ -97,8 +97,8 @@ export default {
     },
     reviewConfirm(flag) {
       let params = {
-        attachList: this.dialogForm.otherAttachList,
-        creditId: this.dialogForm.blContractInfo.creditId,
+        attachList: this.dialogForm.otherAttachList?this.dialogForm.otherAttachList:[],
+        creditId: this.dialogForm.blContractInfo?this.dialogForm.blContractInfo.creditId:'',
         isRiskFlag: this.dialogForm.isRiskFlag,
         operateFlag: flag,//融资审核操作标志：1-保理公司初审通过 2-保理公司初审驳回 3-保理公司复审通过 4-保理公司复审驳回上一级
         remark: this.dialogForm.rejectReason,

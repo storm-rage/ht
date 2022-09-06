@@ -142,26 +142,27 @@
           </zj-content-block>
         </zj-content-block>
 
-        <!-- 底部工作流状态 -->
-        <zj-workflow v-model="workflow" :list="workflowList" v-if="form.transInfo && form.transInfo.financingProductType !== '0'">
-          <!-- 审核时 -->
-          <el-row slot="right">
-            <el-row class="btn-w85 zj-center">
-              <zj-button type="primary" @click="recheck('复核通过')" v-if="form.transInfo.workflowState === 'F003'||'F004'">审核通过</zj-button>
-              <zj-button class="btn-warning" @click="recheck('复核拒绝')" v-if="form.transInfo.workflowState === 'F003'">审核拒绝</zj-button>
-              <zj-button class="btn-warning" @click="recheck('复核拒绝')" v-if="form.transInfo.workflowState === 'F004'">驳回上一级</zj-button>
-              <zj-button class="btn-warning" @click="recheck('复核拒绝')">审核拒绝</zj-button>
-              <zj-button class="back" @click="goParent">返回</zj-button>
+        <div v-if="titleHandle">
+          <!-- 底部工作流状态 -->
+          <zj-workflow v-model="workflow" :list="workflowList" v-if="form.transInfo && form.transInfo.financingProductType !== '0'">
+            <!-- 审核时 -->
+            <el-row slot="right">
+              <el-row class="btn-w85 zj-center">
+                <zj-button type="primary" @click="recheck('复核通过')" v-if="form.transInfo.workflowState === 'F003'||'F004'">审核通过</zj-button>
+                <zj-button class="btn-warning" @click="recheck('复核拒绝')" v-if="form.transInfo.workflowState === 'F003'">审核拒绝</zj-button>
+                <zj-button class="btn-warning" @click="recheck('复核拒绝')" v-if="form.transInfo.workflowState === 'F004'">驳回上一级</zj-button>
+                <zj-button class="back" @click="goParent">返回</zj-button>
+              </el-row>
             </el-row>
-          </el-row>
-        </zj-workflow>
-        <!--   融资产品类型：0-订单融资 1-入库融资 2-凭证融资   -->
-        <zj-content-footer v-if="form.transInfo && form.transInfo.financingProductType === '0'">
-          <zj-button type="primary" @click="recheck('复核通过')" v-if="form.transInfo.workflowState === 'F003'||'F004'">审核通过</zj-button>
-          <zj-button class="btn-warning" @click="recheck('复核拒绝')" v-if="form.transInfo.workflowState === 'F003'">审核拒绝</zj-button>
-          <zj-button class="btn-warning" @click="recheck('复核拒绝')" v-if="form.transInfo.workflowState === 'F004'">驳回上一级</zj-button>
-          <zj-button class="back" @click="goParent">返回</zj-button>
-        </zj-content-footer>
+          </zj-workflow>
+          <!--   融资产品类型：0-订单融资 1-入库融资 2-凭证融资   -->
+          <zj-content-footer v-if="form.transInfo && form.transInfo.financingProductType === '0'">
+            <zj-button type="primary" @click="recheck('复核通过')" v-if="form.transInfo.workflowState === 'F003'||'F004'">审核通过</zj-button>
+            <zj-button class="btn-warning" @click="recheck('复核拒绝')" v-if="form.transInfo.workflowState === 'F003'">审核拒绝</zj-button>
+            <zj-button class="btn-warning" @click="recheck('复核拒绝')" v-if="form.transInfo.workflowState === 'F004'">驳回上一级</zj-button>
+            <zj-button class="back" @click="goParent">返回</zj-button>
+          </zj-content-footer>
+        </div>
 
         <pass-recheck-dialog ref="passRecheckDialog" :zj-control="zjControl" :zj-btn="zjBtn"/>
       </zj-content>

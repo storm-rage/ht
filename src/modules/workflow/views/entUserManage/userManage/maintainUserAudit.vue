@@ -15,7 +15,7 @@
     <operate-log ref="operateLog" :logList="logList"></operate-log>
 
     <!--  审核意见  -->
-    <audit-remark ref="auditRemark" v-if="pageType === 'audit'"></audit-remark>
+    <audit-remark ref="auditRemark" v-if="$route.name === 'entApplyReject' || pageType === 'edit'"></audit-remark>
 
     <zj-content-footer>
       <template v-if="pageType !== 'agendaDetail'">
@@ -92,6 +92,9 @@ export default {
     },
     //
     formPass(params) {
+      if (this.row.workflowState !== 'U006') {
+        params = { serialNo: params.serialNo }
+      }
       if (this.state === 'pass') {
         this.$refs.auditRemark.getForm().clearValidate();
         const { notes } = this.$refs.auditRemark.getData()

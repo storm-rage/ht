@@ -1,4 +1,3 @@
-// import project from "../../project";
 import {
   validateEmail, newValidateFixedPhone, validateBankAcct, validateIdCard
 } from '@utils/rules'
@@ -7,7 +6,6 @@ import OtherFileSetting from './components/otherFileSetting';
 
 export default {
   name: "enterpriseManage",
-  // mixins: [project],
   components: { OperateLog, OtherFileSetting },
   props: {
     form: {
@@ -21,13 +19,22 @@ export default {
   watch: {
     form(data) {
       this.queryEntDictionary()
-      // this.form = Object.assign({}, data)
     }
   },
   data() {
-    const nameValid = ({ cellValue }) => {
+    const mobileNoValid = ({ cellValue }) => {
       if (cellValue && !/^(13[0-9]|14[579]|15[0-3,5-9]|16[6]|17[0135678]|18[0-9]|19[89])\d{8}$/.test(cellValue)) {
         return new Error('手机号格式不正确')
+      }
+    }
+    const emailValid = ({ cellValue }) => {
+      if (cellValue && !/^[a-zA-Z0-9_.-]+@[a-zA-Z0-9-]+(\\.[a-zA-Z0-9-]+)*\.[a-zA-Z0-9]{2,6}$/.test(cellValue)) {
+        return new Error('邮箱格式不正确')
+      }
+    }
+    const statementAccountTypeValid = ({ cellValue }) => {
+      if (cellValue.length === 0) {
+        return new Error('请选择对账单类型权限')
       }
     }
     return {
@@ -51,14 +58,20 @@ export default {
         htSysCode: [
           { required: true, message: '娅米账号/业务系统账号必须填写' }
         ],
+        userName: [
+          { required: true, message: '姓名必须填写' }
+        ],
         mobileNo: [
-          { required: true, message: '手机号码必须填写', validator: nameValid}
+          { required: false, validator: mobileNoValid, trigger: 'change' }
+        ],
+        email: [
+          { required: false, validator: emailValid }
         ],
         roleId: [
           { required: true, message: '操作员角色必须填写' }
         ],
         statementAccountType: [
-          { required: true, message: '开凭证对账单类型权限必须填写' }
+          { required: true, message: '开凭证对账单类型权限必须填写', validator: statementAccountTypeValid }
         ]
       },
       pubAttachList: [], // 企业附件
@@ -418,7 +431,6 @@ export default {
         statementAccountType: [], //对账单类型
         save: false,//是否保存过
       }
-      // let sysUserItem = Object.assign({}, this.sysUserItem)
       this.sysUserList.push(sysUserItem)
       this.$refs.sysUser.setActiveRow(sysUserItem)
     },
@@ -429,7 +441,6 @@ export default {
       }
       if (this.sysUserIng()) { return }
       this.oldRow = JSON.parse(JSON.stringify(row))
-      console.log(row)
       this.$refs.sysUser.setActiveRow(row)
     },
     //删除企业操作员
@@ -438,81 +449,65 @@ export default {
       this.sysUserList.splice(rowIndex, 1)
     },
     // 输完操作员账号获取海天员工信息
-    getEmployeeInfo(data) {
-      console.log(data)
-      if (this.form.isHtEnterprise === '1' && !!data.row.htSysCode) {
-        this.zjControl.getEmployeeInfo({ htSysCode: data.row.htSysCode }).then((res) => {
+    getEmployeeInfo(row, rowIndex) {
+      if (this.form.isHtEnterprise === '1' && !!row.htSysCode) {
+        this.zjControl.getEmployeeInfo({ htSysCode: row.htSysCode }).then((res) => {
           if (res.data.realName) {
             let sysUserItem = {
-              htSysCode: data.row.htSysCode,
+              htSysCode: row.htSysCode,
               userName: res.data.realName,//用户名
-              roleId: '',//操作员角色
               certNo: res.data.idcardNo,//证件号码
               mobileNo: res.data.tel,//手机号码
               email: res.data.email,//电子邮箱
+              roleId: '',//操作员角色
               statementAccountType: [], //对账单类型
               save: false,//是否保存过
+              isSave: true // 是否可以保存
             }
-            // this.sysUserList[data.rowIndex] = this.sysUserItem
+            // 返回的数据不能修改
+            if (!!sysUserItem.htSysCode) sysUserItem.isHtSysCodeDis = true //是否禁用
+            if (!!sysUserItem.userName) sysUserItem.isUserNameDis = true //是否禁用
+            if (!!sysUserItem.certNo) sysUserItem.isCertNoDis = true //是否禁用
+            if (!!sysUserItem.mobileNo) sysUserItem.isMobileNoNameDis = true //是否禁用
+            if (!!sysUserItem.email) sysUserItem.isEmailDis = true //是否禁用
+
             this.$refs.sysUser.setActiveRow(sysUserItem)
-            this.$set(this.sysUserList, data.rowIndex, sysUserItem)
-            console.log(this.sysUserList)
-            // this.$refs.sysUser.clearActived()
+            this.$set(this.sysUserList, rowIndex, sysUserItem)
             this.$message.success('查询成功！')
           } else {
             this.$refs.sysUser.setActiveRow(this.sysUserItem)
-            this.$refs.sysUser.setActiveRow(this.sysUserItem)
-            this.$set(this.sysUserList, data.rowIndex, this.sysUserItem)
+            this.$set(this.sysUserList, rowIndex, this.sysUserItem)
             this.$message.error('娅米账号/业务系统账号不存在！')
           }
         })
       }
     },
     //保存企业操作员
-    async sysUserSave(row, rowIndex) {
-      const errMap = await this.$refs.sysUser.validate().catch(errMap => errMap)
-      if (!errMap) {
+    async sysUserSave(row) {
+      let items = this.sysUserList.filter(item => item.htSysCode === row.htSysCode)
+      if (items.length > 1) {
+        this.$message.error('存在相同的账号！')
+        return
+      }
+      items = this.sysUserList.filter(item => item.certNo === row.certNo)
+      if (items.length > 1) {
+        this.$message.error('存在相同的身份证号码！')
+        return
+      }
+      length = this.sysUserList.filter(item => item.mobileNo === row.mobileNo)
+      if (items.length > 1) {
+        this.$message.error('存在相同的手机号码！')
+        return
+      }
+
+      const errMap = await this.$refs.sysUser.validate(row).catch(errMap => errMap)
+      if (!errMap && !row.isSave) {
+        this.$message.error('请先查询账号信息！')
+      }
+      if (!errMap && row.isSave) {
         row.save = true
         this.$refs.sysUser.clearActived()
       }
-
-
-      // let flag = false
-      // for (let key in row) {
-      //   if (key !== '_XID' && key !== 'statementAccountType' && typeof (row[key]) !== 'boolean' && row[key].trim()) {
-      //     flag = true
-      //   }
-      // }
-      // if (flag) {
-      // if (!row.userName) { return this.$message.warning('请填写用户名') }
-      // let userNameElReg1 = /^_+$/g
-      // let userNameElReg = /^[a-zA-Z0-9_]{4,20}$/i
-      // if (
-      //   row.userName && (
-      //     (row.userName.length < 6 || row.userName.length > 20) ||
-      //     !userNameElReg.test(row.userName) ||
-      //     userNameElReg1.test(row.userName)
-      //   )
-      // ) { return this.$message.warning('用户名为6-20位英文字母、数字组成，可包含下划线') }
-      // if (!loBoo) { return this.$message.error(`用户名为：${row.userName} ，在列表中已存在`) }
-      // if (!row.roleId) { return this.$message.warning('请选择操作员角色') }
-      // if (!row.userName) { return this.$message.warning('请填写姓名') }
-      // if (row.userName && row.userName.length > 50) { return this.$message.warning('姓名不可超过50字符') }
-      // if (!row.certNo) { return this.$message.warning('请填写证件号码') }
-      // let idReg = /^[1-9]\d{7}((0\d)|(1[0-2]))(([0|1|2]\d)|3[0-1])\d{3}$|^[1-9]\d{5}[1-9]\d{3}((0\d)|(1[0-2]))(([0|1|2]\d)|3[0-1])\d{3}([0-9]|X)$/
-      // if (row.certType === '01' && !idReg.test(row.certNo)) { return this.$message.warning('请填写正确身份证号码') }
-      // if (row.certType !== '01' && row.certNo.length > 50) { return this.$message.warning('证件号码不可超过50字符') }
-      // if (!row.mobileNo) { return this.$message.warning('请填写手机号码') }
-      // let phoneReg = /^((\(\d{3}\))|(\d{3}\u002d))?(1[3456789]\d{9})$/i
-      // if (row.mobileNo && !phoneReg.test(row.mobileNo)) { return this.$message.warning('手机号码格式不正确') }
-      // if (!row.email) { return this.$message.warning('请填写电子邮箱') }
-      // let emailReg = /^[0-9A-Za-z_-]+[@][0-9A-Za-z]+([.][0-9A-Za-z]+){1,2}$/
-      // if (row.email && !emailReg.test(row.email)) { return this.$message.warning('邮箱号码格式不正确') }
-      //   this.$refs.sysUser.clearActived()
-      //   return
-      // } else {
-      //   this.sysUserDel(rowIndex)
-      // }
     },
     //取消企业操作员
     sysUserCancel(row, rowIndex) {

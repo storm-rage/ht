@@ -32,11 +32,11 @@
               <el-form-item label="融资期限：">
                 {{date(detail.applyDatetime)}}
                 {{detail.expireDate ? `至`+date(detail.expireDate) : ''}}
-                {{detail.estimateDays ? `共${detail.estimateDays}` : ''}}
+                {{detail.estimateDays ? `共${detail.estimateDays}天` : ''}}
               </el-form-item>
             </el-col>
             <el-col :span="12">
-              <el-form-item label="融资月利率：">{{detail.interestRate}}</el-form-item>
+              <el-form-item label="融资月利率：">{{rate(detail.interestRate)}}</el-form-item>
             </el-col>
           </el-row>
           <el-row>
@@ -44,12 +44,12 @@
               <el-form-item label="收款银行账号：">{{detail.receiptAcctNo}}</el-form-item>
             </el-col>
             <el-col :span="12">
-              <el-form-item label="融资状态：">{{detail.workflowState}}</el-form-item>
+              <el-form-item label="融资状态：">{{detail.workflowState?typeMap(dictionary.workflowState,detail.workflowState):''}}</el-form-item>
             </el-col>
           </el-row>
           <el-row>
             <el-col :span="12">
-              <el-form-item label="还款状态：">{{detail.repaymentFlag}}</el-form-item>
+              <el-form-item label="还款状态：">{{detail.repaymentFlag?typeMap(dictionary.repaymentType,detail.repaymentFlag):''}}</el-form-item>
             </el-col>
           </el-row>
         </zj-content-block>
@@ -59,7 +59,7 @@
                     :pager="false"
           >
             <zj-table-column type="seq" title="序号" width="60"/>
-            <zj-table-column field="voucherNo" title="还款方式" />
+            <zj-table-column field="voucherNo" title="还款方式" :formatter="obj=>typeMap(dictionary.repaymentType,obj.cellValue)"/>
             <zj-table-column field="entName" title="凭证编号" />
             <zj-table-column field="repaymentDate" title="还款日期" :formatter="date"/>
             <zj-table-column field="repaymentAmt" title="还款金额" :formatter="money"/>
@@ -102,7 +102,9 @@ export default {
   name: "myFinancingDetail",
   computed: {
     titleInfo() {
-      return this.row.financingProductType === '0' ? '订单保理融资详情' : '入库融资/凭证融资详情'
+      return this.row.financingProductType === '0' ? '订单保理融资详情' :
+        this.row.financingProductType === '1' ? '入库融资详情' :
+        this.row.financingProductType === '2' ? '凭证融资详情' : '融资详情'
     }
   },
   data() {

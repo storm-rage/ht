@@ -42,7 +42,7 @@
           " />
         <zj-table-column title="操作" fixed="right">
           <template v-slot="{ row }">
-            <zj-button type="text" @click="goChild('entManageEdit', row)" :api="zjBtn.updateEnterprise" v-if="row.isHtEnterprise==='1'">维护</zj-button>
+            <zj-button type="text" @click="goChild('entManageEdit', row)" :api="zjBtn.updateEnterprise" v-if="row.isHtEnterprise==='1' && row.entType !== 'S'">维护</zj-button>
             <span v-else>—</span>
           </template>
         </zj-table-column>
