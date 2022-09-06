@@ -64,9 +64,9 @@
               </el-row>
             </el-row>
           <zj-content-block>
-            <zj-header :title="`产品设置-${typeMap(dictionary.productType,infoForm.productType)}`" v-if="!row.id && this.infoForm.productType"></zj-header>
+            <zj-header :title="`产品设置-${typeMap(dictionary.productType,infoForm.productType)}`" v-if="!row.id && infoForm.productType"></zj-header>
             <zj-header :title="`产品设置-${typeMap(dictionary.productType,infoForm.productType)}`" v-if="row.id"></zj-header>
-            <el-row v-if="this.row.productType === 'DDBL' || this.infoForm.productType === 'DDBL'">
+            <el-row v-if="row.productType === 'DDBL' || infoForm.productType === 'DDBL'">
               <el-row>
                 <el-col :span="8">
                   <el-form-item label="保理追索方式：" prop="factoringRecourse">
@@ -158,7 +158,7 @@
                 <el-col :span="8">注：业务联系人和保理专户用于后续签署保理合同。</el-col>
               </el-row>
             </el-row>
-            <el-row v-if="this.row.productType === 'RD' || this.infoForm.productType === 'RD'">
+            <el-row v-if="row.productType === 'RD' || infoForm.productType === 'RD'">
               <el-row class="el-claims-voucher">
                 <el-form-item label="对账单付款日前N天通知核心企业："  prop="rdEndNoticeCompanyDays" label-width="300px">
                   <zj-number-input :precision="0" v-model="infoForm.rdEndNoticeCompanyDays" >
@@ -171,7 +171,7 @@
                   <zj-number-input :precision="0" v-model="infoForm.rdBeforeStopDays" >
                     <template slot="append">天</template>
                   </zj-number-input>
-                  <span class="zj-m-l-10">注：对账单付款日前X天至凭证到期日，凭证即不能融资，也不能转让。</span>
+                  <zj-content-tip class="zj-m-l-10" text="注：对账单付款日前X天至凭证到期日，凭证即不能融资，也不能转让。"></zj-content-tip>
                 </el-form-item>
               </el-row>
               <el-row class="el-claims-voucher">
@@ -179,7 +179,7 @@
                   <zj-number-input :precision="0" v-model="infoForm.rdEndNoticeBlDays" >
                     <template slot="append">天</template>
                   </zj-number-input>
-                  <span class="zj-m-l-10">注：对账单付款日前Z天，若对账单未发起结算，则通知保理公司。</span>
+                  <zj-content-tip class="zj-m-l-10" text="注：对账单付款日前Z天，若对账单未发起结算，则通知保理公司。"></zj-content-tip>
                 </el-form-item>
               </el-row>
               <el-row class="el-claims-voucher">
@@ -197,7 +197,7 @@
                 </el-form-item>
               </el-row>
             </el-row>
-            <el-row v-if="this.row.productType === 'JXD' || this.infoForm.productType === 'JXD'">
+            <el-row v-if="row.productType === 'JXD' || infoForm.productType === 'JXD'">
               <el-row>
                 <el-col :span="8">
                   <el-form-item label="资金方名称："  prop="fundingName" >
@@ -380,7 +380,9 @@ export default {
         } else {
           let params = {
             ...this.infoForm,
-            lowRdFinancingMonthRate: Number(this.infoForm.lowRdFinancingMonthRate).toFixed(2)
+          }
+          if(this.row.productType === 'RD' || this.infoForm.productType === 'RD') {
+            params.lowRdFinancingMonthRate = Number(this.infoForm.lowRdFinancingMonthRate).toFixed(2)
           }
           if(this.row.id) {
               params.id = this.row.id
