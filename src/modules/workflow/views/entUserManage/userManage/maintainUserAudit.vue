@@ -57,7 +57,7 @@ export default {
       attachInfo: [{ fileId: "", type: "身份证影印件", fileName: "" }],
       logList: [],
       state: 'pass',
-      isEdit: false,
+      isEdit: this.$route.meta.pageType === 'edit',
       type: ""
     };
   },
@@ -65,12 +65,6 @@ export default {
     this.getRow()
     this.getDictionary()
     this.getDetail()
-    // 审核驳回待处理可修改
-    if (this.row.workflowState === 'U006' && this.$route.meta.pageType === 'audit') {
-      this.$route.meta.pageType = 'edit'
-    } else {
-      this.$route.meta.pageType = 'detail'
-    }
   },
   methods: {
     //获取字典

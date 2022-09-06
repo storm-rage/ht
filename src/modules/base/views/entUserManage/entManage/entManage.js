@@ -37,15 +37,28 @@ export default {
       old_projectInfoList: [],
       statementAccountTypeTable: [],
       sysUserList: [], // 企业操作员信息
+      sysUserItem: {
+        htSysCode: '', //账号
+        userName: '',//用户名
+        roleId: '',//操作员角色
+        certNo: '',//证件号码
+        mobileNo: '',//手机号码
+        email: '',//电子邮箱
+        statementAccountType: [], //对账单类型
+        save: false,//是否保存过
+      },
       validRules: { // 企业操作员校验
         htSysCode: [
-          { required: true, message: '娅米账号/业务系统账号必须填写', trigger: 'blur' }
+          { required: true, message: '娅米账号/业务系统账号必须填写' }
         ],
         mobileNo: [
-          { required: true, message: '手机号码必须填写', validator: nameValid, trigger: 'blur' }
+          { required: true, message: '手机号码必须填写', validator: nameValid}
         ],
         roleId: [
-          { required: true, message: '操作员角色必须填写', trigger: 'blur' }
+          { required: true, message: '操作员角色必须填写' }
+        ],
+        statementAccountType: [
+          { required: true, message: '开凭证对账单类型权限必须填写' }
         ]
       },
       pubAttachList: [], // 企业附件
@@ -395,7 +408,8 @@ export default {
         this.statementAccountTypeTable = this.dictionary.blSysRoleListTable
       }
       if (this.sysUserIng()) { return }
-      let item = {
+      let sysUserItem = {
+        htSysCode: '', //账号
         userName: '',//用户名
         roleId: '',//操作员角色
         certNo: '',//证件号码
@@ -404,8 +418,9 @@ export default {
         statementAccountType: [], //对账单类型
         save: false,//是否保存过
       }
-      this.sysUserList.push(item)
-      this.$refs.sysUser.setActiveRow(item)
+      // let sysUserItem = Object.assign({}, this.sysUserItem)
+      this.sysUserList.push(sysUserItem)
+      this.$refs.sysUser.setActiveRow(sysUserItem)
     },
     //修改企业操作员
     sysUserEdit(row) {
@@ -422,16 +437,45 @@ export default {
       if (this.sysUserIng()) { return }
       this.sysUserList.splice(rowIndex, 1)
     },
-    // 输完操作员账号
-    userBlur(data) {
-      if (this.form.isHtEnterprise === '1') {
-        console.log(data.row.htSysCode)
+    // 输完操作员账号获取海天员工信息
+    getEmployeeInfo(data) {
+      console.log(data)
+      if (this.form.isHtEnterprise === '1' && !!data.row.htSysCode) {
+        this.zjControl.getEmployeeInfo({ htSysCode: data.row.htSysCode }).then((res) => {
+          if (res.data.realName) {
+            let sysUserItem = {
+              htSysCode: data.row.htSysCode,
+              userName: res.data.realName,//用户名
+              roleId: '',//操作员角色
+              certNo: res.data.idcardNo,//证件号码
+              mobileNo: res.data.tel,//手机号码
+              email: res.data.email,//电子邮箱
+              statementAccountType: [], //对账单类型
+              save: false,//是否保存过
+            }
+            // this.sysUserList[data.rowIndex] = this.sysUserItem
+            this.$refs.sysUser.setActiveRow(sysUserItem)
+            this.$set(this.sysUserList, data.rowIndex, sysUserItem)
+            console.log(this.sysUserList)
+            // this.$refs.sysUser.clearActived()
+            this.$message.success('查询成功！')
+          } else {
+            this.$refs.sysUser.setActiveRow(this.sysUserItem)
+            this.$refs.sysUser.setActiveRow(this.sysUserItem)
+            this.$set(this.sysUserList, data.rowIndex, this.sysUserItem)
+            this.$message.error('娅米账号/业务系统账号不存在！')
+          }
+        })
       }
     },
     //保存企业操作员
-    sysUserSave(row, rowIndex) {
-      row.save = true
-      this.$refs.sysUser.clearActived()
+    async sysUserSave(row, rowIndex) {
+      const errMap = await this.$refs.sysUser.validate().catch(errMap => errMap)
+      if (!errMap) {
+        row.save = true
+        this.$refs.sysUser.clearActived()
+      }
+
 
       // let flag = false
       // for (let key in row) {
@@ -479,8 +523,6 @@ export default {
       }
       this.$refs.sysUser.clearActived()
     },
-
-
     //企业附件下载
     pubAttachDownload(row) {
       this.$api.baseCommon.downloadFile(row)

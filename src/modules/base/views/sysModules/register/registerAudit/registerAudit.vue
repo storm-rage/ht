@@ -84,11 +84,6 @@
                       }}</span>
                     </el-form-item>
                   </el-col>
-                        <el-col :span="8">
-                    <el-form-item label="企业网址：">
-                      <span>{{ detailData.registerWebsite | value }}</span>
-                    </el-form-item>
-                  </el-col>
                 </el-row>
               </el-form>
             </zj-collapse>
@@ -100,7 +95,7 @@
             <ent-linkman ref="entLinkman" :detailData="detailData" />
 
             <!-- 银行账户 -->
-            <bank-account ref="bankAccount" :dataList="detailData.entBanksList" :dictionary="dictionary"/>
+            <bank-account ref="bankAccount" :dataList="detailData.entBanksList" :dictionary="dictionary" />
 
             <!-- 天眼查信息 -->
             <zj-collapse title="天眼查信息">
@@ -163,7 +158,7 @@
             <zj-collapse title="审核信息">
               <el-form-item label="平台客户类型：" prop="entType">
                 <el-radio-group v-model="form.entType">
-                  <el-radio v-for="item in dictionary.platFormAuditEntTypeList" :key="item.code" :label="item.code" :disabled="item.code === 'B'">{{ item.desc }}</el-radio>
+                  <el-radio v-for="item in dictionary.platFormAuditEntTypeList" :key="item.code" :label="item.code" :disabled="form.isHtEnterprise === '1'">{{ item.desc }}</el-radio>
                 </el-radio-group>
               </el-form-item>
               <el-form-item label="是否海天集团：" prop="isHtEnterprise">
@@ -177,7 +172,7 @@
 
               <el-form-item label="供应商类型：" prop="supplierType" v-if="form.entType === 'S'">
                 <el-radio-group v-model="form.supplierType">
-                  <el-radio v-for="item in dictionary.supplierTypeList" :key="item.code" :label="item.code">{{ item.desc }}</el-radio>
+                  <el-radio v-for="item in dictionary.supplierTypeList" :key="item.code" :label="item.code" :disabled="form.isHtEnterprise === '1'">{{ item.desc }}</el-radio>
                 </el-radio-group>
               </el-form-item>
               <el-form-item label="注册企业名称：" prop="name">
