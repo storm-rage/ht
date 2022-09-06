@@ -34,6 +34,23 @@
         <zj-header :title="`${prodInfo.ddProductName}业务设置-${currentTrade.buyerName}`"></zj-header>
         <zj-content>
           <div style="width: 67%;margin: 0 auto">
+            <el-row v-if="isShowContractInfo&&currentTrade.orderFactoringModel.contractNo">
+              <el-col :span="8">
+                <el-form-item label="保理合同编号：" >
+                  {{currentTrade.orderFactoringModel.contractNo}}
+                </el-form-item>
+              </el-col>
+              <el-col :span="8">
+                <el-form-item label="保理合同有效期：" >
+                  {{currentTrade.orderFactoringModel.contractStartDate}}~{{currentTrade.orderFactoringModel.contractEndDate}}
+                </el-form-item>
+              </el-col>
+              <el-col :span="8">
+                <el-form-item label="保理合同状态：" >
+                  {{typeMap(dic.contractStatus, currentTrade.orderFactoringModel.contractStatus)}}
+                </el-form-item>
+              </el-col>
+            </el-row>
             <el-row>
               <el-col :span="12">
                 <el-form-item label="保理追索方式：" >
@@ -55,12 +72,7 @@
                   </el-select>
                 </el-form-item>
               </el-col>
-              <el-col :span="12">
-                <el-form-item label="订单保理额度开始日：">
-                  <el-date-picker v-model="currentTrade.orderFactoringModel.factoringCreditStartDate" value-format="yyyyMMdd" disabled></el-date-picker>
-                </el-form-item>
-              </el-col>
-              <el-col :span="12">
+              <el-col :span="24">
                 <el-form-item label="订单保理额度到期日：">
                   <el-date-picker v-model="currentTrade.orderFactoringModel.factoringCreditEndDate" value-format="yyyyMMdd" disabled></el-date-picker>
                 </el-form-item>
@@ -82,11 +94,11 @@
                   </el-input><br/><zj-text-tip text="注：订单融资日利率=订单融资月利率/30"></zj-text-tip>
                 </el-form-item>
               </el-col>
-              <el-col :span="12">
-            <el-form-item label="订单保理额度：">
-                <zj-number-input disabled :precision="2" v-model.trim="currentTrade.factoringCreditAmount"></zj-number-input>        
-            </el-form-item>
-          </el-col>
+              <el-col :span="12" v-if="isShowContractInfo&&!currentTrade.orderFactoringModel.contractNo">
+                <el-form-item label="订单保理额度：">
+                  <zj-number-input disabled :precision="2" v-model.trim="currentTrade.factoringCreditAmount"></zj-number-input>
+                </el-form-item>
+              </el-col>
             </el-row>
           </div>
         </zj-content>
@@ -142,6 +154,11 @@ export default {
       }
     },
     prodInfo: Object,
+    //是否显示合同信息
+    isShowContractInfo: {
+      type: Boolean,
+      default: false
+    },
     // 字典
     dic: Object,
   },

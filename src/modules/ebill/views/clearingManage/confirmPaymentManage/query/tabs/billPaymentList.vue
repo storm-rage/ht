@@ -48,7 +48,7 @@
         <zj-table-column field="remark" title="备注"/>
         <zj-table-column field="capitalSerialno" title="业务系统单号"/>
         <zj-table-column field="billConfirmAmt" title="确认凭证金额" :formatter="money"/>
-        <zj-table-column field="actualExpireDate" title="凭证实际到期日"/>
+        <zj-table-column field="actualExpireDate" title="凭证实际到期日" :formatter="date"/>
         <zj-table-column title="操作" fixed="right">
           <template v-slot="{row}">
             <zj-button type="text" @click="toSubmitPayment(row)" :api="zjBtn.billConfirmReceipt">确认收款</zj-button>
@@ -56,7 +56,7 @@
         </zj-table-column>
       </zj-table>
     </zj-list-layout>
-    <confirm-payment-maintenance ref="confirmPaymentMaintenance" :biz-id="bizId" @done="handleDone"></confirm-payment-maintenance>
+    <confirm-payment-maintenance :actualExpireDate="actualExpireDate" ref="confirmPaymentMaintenance" :biz-id="bizId" @done="handleDone"></confirm-payment-maintenance>
     <zj-content-footer v-if="zjBtn.billConfirmReceiptApply" style="position: fixed" :style="{'left': bottomBtnLeft+'px'}">
       <zj-button type="primary" :disabled="!showBottomBtn" @click="batchSubmitApply" :api="zjBtn.billConfirmReceiptApply">提交申请</zj-button>
     </zj-content-footer>
@@ -70,6 +70,12 @@ export default {
     bizId: {
       type: String,
       required: true
+    },
+    // 凭证实际到期日，确认收款维护需要
+    actualExpireDate: {
+      type:String,
+      required: true,
+      default: ''
     }
   },
   components: {

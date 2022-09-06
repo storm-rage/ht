@@ -45,10 +45,15 @@ export default {
     noBottomBorder: {
       type: Boolean,
       default: false
-    }
+    },
+    //搜索前方法
+    beforeSearchFuc: Function
   },
-  data() {
-    return {
+  methods: {
+    beforeSearch() {
+      if (this.beforeSearchFuc&&this.XEUtils.isFunction(this.beforeSearchFuc)) {
+        this.beforeSearchFuc();
+      }
     }
   }
 }

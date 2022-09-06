@@ -26,7 +26,7 @@
           <zj-table-column field="remark" title="备注"/>
           <zj-table-column field="capitalSerialno" title="业务系统单号"/>
           <zj-table-column field="billConfirmAmt" title="确认凭证金额" :formatter="money"/>
-          <zj-table-column field="actualExpireDate" title="凭证实际到期日"/>
+          <zj-table-column field="actualExpireDate" title="凭证实际到期日" :formatter="date"/>
         </zj-table>
       </zj-content>
     </zj-content-block>
