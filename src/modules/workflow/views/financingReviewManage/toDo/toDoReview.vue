@@ -193,7 +193,10 @@ export default {
       default: true,
     },
     bizId: String,
-    titleHandle: Boolean,
+    titleHandle: {
+      type: Boolean,
+      default: true,
+    },
   },
   data() {
     return {
