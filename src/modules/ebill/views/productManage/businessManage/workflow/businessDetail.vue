@@ -7,6 +7,7 @@
     <!--  贸易关系  -->
     <trade-detail :tradeList="tradeRelationModelList"
                   :dic="dictionary"
+                  :is-show-contract-info="isShowContractInfo"
                   :prodInfo="prodInfo"></trade-detail>
   </div>
 </template>
@@ -23,6 +24,11 @@ export default {
     detailApi: {
       type: Function,
       required: true
+    },
+    //是否显示合同信息
+    isShowContractInfo: {
+      type: Boolean,
+      default: false
     },
     rowData: Object
   },

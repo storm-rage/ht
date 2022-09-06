@@ -1,6 +1,6 @@
 <template>
   <zj-content-container>
-    <zj-top-header :title="`供应商额度${row.applyType=='EDXQ'?'续签':'变更'}`"></zj-top-header>
+    <zj-top-header :title="`供应商额度${row.applyType=='EDXQ'?'续签':'维护'}`"></zj-top-header>
     <el-form ref="form" label-width="160px">
       <!--  供应商基本信息  -->
       <supplier-base-info title="供应商基本信息"
@@ -143,7 +143,7 @@ export default {
         getDataDirectory: this.$api.businessManage.getDataDirectory,
         getTradeRelationDetail: this.$api.businessManage.getTradeRelationDetail,
         applyLimit: this.$api.businessManage.applyLimit, // 额度续签
-        checkContractRenewal: this.$api.businessManage.checkContractRenewal, 
+        checkContractRenewal: this.$api.businessManage.checkContractRenewal,
         applyLimitChange: this.$api.businessManage.applyLimitChange, // 额度变更
       },
       // 字典
@@ -223,7 +223,7 @@ export default {
         tradeRelationParamModel
       }
       let request = this.row.applyType == 'EDXQ' ?
-                          this.zjControl.applyLimit : 
+                          this.zjControl.applyLimit :
                           this.zjControl.applyLimitChange
       request(params).then(res => {
         this.loading = false;

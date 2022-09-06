@@ -1,6 +1,6 @@
 <template>
   <div>
-    <zj-list-layout>
+    <zj-list-layout :beforeSearchFuc="beforeSearch">
       <template slot="searchForm">
         <el-form ref="searchForm" :model="searchForm">
           <el-form-item label="资金流水号：">
@@ -37,7 +37,7 @@
         <zj-table-column field="capitalSerialno" title="资金流水号" />
         <zj-table-column field="payerEntName" title="付款方名称" />
         <zj-table-column field="repayAmt" title="收款金额" :formatter="money"/>
-        <zj-table-column field="repayDate" title="收款时间"/>
+        <zj-table-column field="repayDate" title="收款时间" :formatter="formateRepayDate"/>
         <zj-table-column field="repayEntName" title="收款方名称"/>
         <zj-table-column field="repayAcctNo" title="收款账号"/>
         <zj-table-column field="outOrederNo" title="业务系统单号"/>
@@ -61,6 +61,7 @@
                        :name="item.name" >
             <component :is="activeComp"
                        v-if="item.name === activeComp"
+                       :actualExpireDate="currentSelectRow.repayDate"
                        :bizId="currentSelectRow.id"></component>
           </el-tab-pane>
         </zj-tabs>
@@ -113,6 +114,9 @@ export default {
     this.getApi()
   },
   methods: {
+    beforeSearch() {
+      this.currentSelectRow = {};
+    },
     /**
      * 列表查询响应回调
      * @param rows
@@ -133,6 +137,12 @@ export default {
     },
     toViewDetail() {
       this.$router.push({name: 'factoringContractDetail'});
+    },
+    formateRepayDate({cellValue}) {
+      if (cellValue) {
+        return this.$moment(cellValue,'YYYYMMDD').format('YYYY-MM-DD')
+      }
+     return '';
     }
   }
 }

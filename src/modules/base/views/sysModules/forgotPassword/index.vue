@@ -5,7 +5,7 @@
     <div class="body">
       <el-card>
         <el-row class="body-card-header">忘记密码</el-row>
-        <el-form ref="form" :model="form" class="form" :rules="rules" label-width="92px">
+        <el-form ref="form" :model="form" class="form" :rules="rules" label-width="100px">
           <el-form-item prop="phone" label="手机号">
             <el-input v-model="form.phone" placeholder="请输入手机号" maxLength="11" @input="changePhoneFlag">
               <vxe-button slot="append" :disabled="form.phoneFlag"
@@ -15,25 +15,9 @@
                 {{form.phoneText}}
               </vxe-button>
             </el-input>
-            <p class="pmes">
-            <span @click="$refs.editPhone.open('phone')">
-              <i class="el-icon-info"/>手机号已变更？请点这里
-            </span>
-            </p>
           </el-form-item>
           <el-form-item prop="msgCode" label="验证码">
             <el-input v-model="form.msgCode" placeholder="请输入6位数验证码" maxLength="6" @blur="validateCode"/>
-          </el-form-item>
-          <el-form-item prop="loginName" label="登录账号">
-            <el-input v-model="form.loginName" placeholder="输入登录账号"
-                      :disabled="form.msgFlag" :title="form.msgFlag ? '请输入手机号与验证码进行检测' : ''"
-                      @blur="validateUser"
-            />
-            <p class="pmes">
-            <span @click="getLoginName">
-              <i class="el-icon-info" />忘记登录名？点击这里重新获取，请使用注册邮箱进行查收
-            </span>
-            </p>
           </el-form-item>
           <el-form-item prop="newPassword" label="设置新密码" class="pass">
             <el-input v-model="form.newPassword" placeholder="请设置新密码"
@@ -66,33 +50,26 @@
   </div>
 
   <RegisterFooter/>
-
-  <editPhone ref="editPhone" :detailData="detailData"/>
 </div>
 </template>
 
 <script>
     import RegisterHeader from "../register/register/components/RegisterHeader.vue";
     import RegisterFooter from "../register/register/components/RegisterFooter.vue";
-    import editPhone from "./components/editPhone";
     const phoneReg = /^((\(\d{3}\))|(\d{3}\u002d))?(1[3456789]\d{9})$/i;
     export default {
         name: "index",
         components:{
-          RegisterHeader,RegisterFooter,editPhone
+          RegisterHeader,
+          RegisterFooter
         },
         data(){
           return {
             zjControl:{
               sendPhoneCode:this.$api.forgotPassword.sendPhoneCode,//1发送手机验证码
               validateCode:this.$api.forgotPassword.validateCode,//2校验手机验证码
-              validateUser:this.$api.forgotPassword.validateUser,//3校验手机号和登录账号是否匹配
-              saveNewPassword:this.$api.forgotPassword.saveNewPassword,//4保存新密码
-              getForgetPasswordDetail:this.$api.forgotPassword.getForgetPasswordDetail,//5.获取平台信息
-              getUserName:this.$api.forgotPassword.getUserName,//6.获取用户邮箱
-
+              saveNewPassword:this.$api.forgotPassword.saveNewPassword//4保存新密码
             },
-            detailData:{},
             form:{
               phone:'',//手机号码
               oldPhone:'',//当发送一次手机验证码后进行校验
@@ -103,7 +80,6 @@
               msgCode:'',//验证码
               msgFlag:true,//是否禁止输入登录名
 
-              loginName:'',//登录名
               userId:'',//用户id
               passFlag:true,//是否禁止输入密码
 
@@ -137,17 +113,6 @@
                     }
                   },trigger: 'blur'
                 }
-              ],
-              loginName:[
-                {required: true,validator:(rule,value,callback) => {
-                    if(!value && rule.required){
-                      callback(new Error('请输入登录账号'))
-                    }else{
-                      if(value){
-                        callback()
-                      }
-                    }
-                },trigger: 'change'}
               ],
               newPassword:[
                 {required: true,validator:(rule,value,callback) => {
@@ -197,14 +162,12 @@
         methods:{
           //验证码-失败清空
           msgCodeErrorClear(){
-            this.form.loginName = ''
             this.form.newPassword = ''
             this.form.againNewPassword = ''
             this.form.msgFlag = true //禁止输入登录名
             this.form.passFlag = true
             this.form.saveFlag = true
             this.isEmail = false
-            this.$refs.form.clearValidate('loginName')
             this.$refs.form.clearValidate('newPassword')
             this.$refs.form.clearValidate('againNewPassword')
           },
@@ -216,12 +179,6 @@
             this.form.saveFlag = true
             this.$refs.form.clearValidate('newPassword')
             this.$refs.form.clearValidate('againNewPassword')
-          },
-          //获取平台信息
-          getForgetPasswordDetail(){
-            this.zjControl.getForgetPasswordDetail({}).then(res => {
-              this.detailData = res.data
-            })
           },
           changePhoneFlag () {
             if (this.form.phone && phoneReg.test(this.form.phone) && !this.form.sendFlag) {
@@ -272,33 +229,12 @@
               msgCode
             }
             this.zjControl.validateCode(params).then(res => {
-                this.form.msgFlag = false //允许输入登录名
+                this.form.passFlag = false //允许输入新密码
                 this.form.userId = res.data.userId
 
                 this.isEmail = true
             }).catch(() => {
               this.msgCodeErrorClear()
-            })
-          },
-          //3.校验手机号和登录账号是否匹配
-          validateUser(){
-            if(!this.form.loginName){
-              /*this.$messageBox({
-                type:'info',
-                content:'请输入登录账号'
-              })*/
-              this.loginNameErrorClear()
-              return
-            }
-            let {loginName,phone} = this.form
-            let params = {
-              loginName,phone
-            }
-            this.zjControl.validateUser(params).then(res=>{
-              this.form.passFlag = false //允许输入新密码
-              this.form.userId = res.data.userId
-            }).catch(()=>{
-              this.loginNameErrorClear()
             })
           },
           //4.保存新密码
@@ -311,7 +247,13 @@
             this.$refs.form.validate(boo => {
               if(!boo){return}
               this.zjControl.saveNewPassword(params).then(() => {
-                this.$refs.editPhone.open('success')
+                this.$messageBox({
+                  type: 'success',
+                  content: '密码修改成功！',
+                  title: '提示',
+                  showConfirmButton: true,
+                  center: true
+                })
                 //重置
                 for(let key in this.form){
                   if(typeof(this.form[key]) === 'boolean'){
@@ -335,26 +277,6 @@
               })
             })
           },
-          //6.获取邮箱
-          getLoginName(){
-            if(!this.isEmail){
-              /*return this.$messageBox({
-                type:'info',
-                content:'请先输入正确的手机号与验证码才可进行此操作'
-              })*/
-              return;
-            }
-            let params = {
-              phone:this.form.phone
-            }
-            this.zjControl.getUserName(params).then(res => {
-              this.$refs.editPhone.open('login',res.data.userEmail)
-            })
-
-          },
-        },
-        created() {
-          this.getForgetPasswordDetail()
         }
     }
 </script>

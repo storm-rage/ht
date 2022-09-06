@@ -61,7 +61,9 @@
                    </zj-number-input>
                   </el-form-item>
                 </el-col>
-                <el-col :span="24">
+              </el-row>
+              <el-row>
+                <el-col :span="12">
                   <el-form-item label="结算周期："
                                 prop="settlementCycle"
                                 :rules="[
@@ -73,7 +75,22 @@
                                  :label="item.desc"
                                  :value="item.code"></el-option>
                     </el-select>
-                    &nbsp;<zj-text-tip text="注：结算周期从mdm取值仅供参考，最终以平台维护为准。"></zj-text-tip>
+                    &nbsp;<el-tooltip content="注：结算周期从mdm取值仅供参考，最终以平台维护为准。"  effect="dark" placement="top">
+                    <i class="el-icon-info" style="color:#909399"></i>
+                  </el-tooltip>
+                  </el-form-item>
+                </el-col>
+                <el-col :span="12" v-if="isSelectBillBl">
+                  <el-form-item label="供应商总额度："
+                                prop="totalCreditAmount"
+                                :rules="[
+                          {required: true,message: '请输入供应商总额度',trigger: ['change','blur']}
+                        ]">
+                    <zj-number-input v-model.trim="form.totalCreditAmount">
+                      <template slot="append">
+                        元
+                      </template>
+                    </zj-number-input>
                   </el-form-item>
                 </el-col>
               </el-row>
@@ -101,6 +118,7 @@
                                    :title="`${item.label}业务设置-${form.buyerName}`"
                                    :isOnlyMonthRateEdit="true"
                                    :dic="dictionary"
+                                   :is-show-contract-info="true"
                                    :isEdit="!form.busTradeId"
                                    :params="form.orderFactoringModel"></order-product-biz-setting>
         <!--  电子凭证产品业务设置    -->
@@ -158,6 +176,12 @@ export default {
      */
     isShowProdTree () {
       return this.oldCactoringLogo !== CactoringLogo.NOTBL && this.form.cactoringLogo !== CactoringLogo.NOTBL;
+    },
+    /**
+     * 是否选择了订单保理
+     */
+    isSelectBillBl () {
+      return this.form.cactoringLogo&& this.form.cactoringLogo===CactoringLogo.BILLBL;
     }
   },
   data () {
