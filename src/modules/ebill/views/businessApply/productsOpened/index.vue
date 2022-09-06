@@ -43,7 +43,7 @@
             </div>
           </template>
         </zj-table-column>
-        <zj-table-column field="applyStatus" title="申请状态" :formatter="(obj) => typeMap(dictionary.applyStatus, obj.cellValue)"/>
+        <zj-table-column field="applyStatus" title="申请状态"/>
       </zj-table>
     </zj-list-layout>
   </div>
