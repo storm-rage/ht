@@ -27,6 +27,11 @@ export default {
         return new Error('手机号格式不正确')
       }
     }
+    const emailValid = ({ cellValue }) => {
+      if (cellValue && !/^[a-zA-Z0-9_.-]+@[a-zA-Z0-9-]+(\\.[a-zA-Z0-9-]+)*\.[a-zA-Z0-9]{2,6}$/.test(cellValue)) {
+        return new Error('邮箱格式不正确')
+      }
+    }
     const statementAccountTypeValid = ({ cellValue }) => {
       if (cellValue.length === 0) {
         return new Error('请选择对账单类型权限')
@@ -57,10 +62,10 @@ export default {
           { required: true, message: '姓名必须填写' }
         ],
         mobileNo: [
-          { required: false, message: '手机号码格式不正确', pattern: /^(13[0-9]|14[579]|15[0-3,5-9]|16[6]|17[0135678]|18[0-9]|19[89])\d{8}$/ }
+          { required: false, validator: mobileNoValid, trigger: 'change' }
         ],
         email: [
-          { required: false, message: '邮箱格式不正确', pattern: /^[a-zA-Z0-9_.-]+@[a-zA-Z0-9-]+(\\.[a-zA-Z0-9-]+)*\.[a-zA-Z0-9]{2,6}$/ }
+          { required: false, validator: emailValid }
         ],
         roleId: [
           { required: true, message: '操作员角色必须填写' }
@@ -470,7 +475,6 @@ export default {
             this.$set(this.sysUserList, rowIndex, sysUserItem)
             this.$message.success('查询成功！')
           } else {
-            this.$refs.sysUser.setActiveRow(this.sysUserItem)
             this.$refs.sysUser.setActiveRow(this.sysUserItem)
             this.$set(this.sysUserList, rowIndex, this.sysUserItem)
             this.$message.error('娅米账号/业务系统账号不存在！')
