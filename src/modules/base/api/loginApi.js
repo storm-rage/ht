@@ -46,5 +46,15 @@ const login = {
   signUserProtocol:(params) => {
     return request.post('/login/sign-user-protocol',params)
   },
+
+  // 供应商首次登录协议-查询
+  queryLoginProtocolForSupplier:(params) => {
+    return request.post('/login/query-login-protocol-for-supplier',params)
+  },
+  // 供应商首次登录协议-签署
+  signProtocol:(params) => {
+    return request.post('/login/sign-protocol',params)
+  },
+
 }
 export default login;
