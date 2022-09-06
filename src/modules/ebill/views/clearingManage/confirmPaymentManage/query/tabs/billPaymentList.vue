@@ -83,7 +83,7 @@ export default {
         billConfirmReceiptApply: this.$api.confirmPaymentManage.billConfirmReceiptApply
       },
       searchForm: {
-        bizId: '',
+        id: this.bizId,
         ebillCode: '',
         payableIssuanceDateStart: '',
         payableIssuanceDateEnd: '',
