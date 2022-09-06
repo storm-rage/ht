@@ -439,14 +439,16 @@ export default {
       //校验操作用户数据是否完整
       if(!this.entInfoObj.form.registerUserList) {
         for(let i of this.registerUserList){
-          if(!i.userId) {
+          if(!i.userId || !i.userName || !i.certNo || !i.certStartDate || !i.mobileNo) {
+            console.log(i.mobileNo)
             this.$message.error(`请补全操作用户的信息！`)
             return
           }
         }
       }else{
         for(let i of this.entInfoObj.form.registerUserList){
-          if(!i.userId) {
+          if(!i.userId || !i.userName || !i.certNo || !i.certStartDate || !i.mobileNo) {
+            console.log(i.mobileNo)
             this.$message.error(`请补全操作用户的信息！`)
             return
           }
@@ -654,14 +656,16 @@ export default {
       //下载前需要校验操作用户信息是否完整
       if(!this.entInfoObj.form.registerUserList) {
         for(let i of this.registerUserList){
-          if(!i.userId) {
+          if(!i.userId || !i.userName || !i.certNo || !i.certStartDate || !i.mobileNo) {
+            console.log(i.mobileNo)
             this.$message.error(`请补全操作用户的信息！`)
             return
           }
         }
       }else{
         for(let i of this.entInfoObj.form.registerUserList){
-          if(!i.userId) {
+          if(!i.userId || !i.userName || !i.certNo || !i.certStartDate || !i.mobileNo) {
+            console.log(i.mobileNo)
             this.$message.error(`请补全操作用户的信息！`)
             return
           }
