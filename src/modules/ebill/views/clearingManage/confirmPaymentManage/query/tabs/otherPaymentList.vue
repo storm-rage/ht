@@ -57,9 +57,7 @@ export default {
         noBillConfirmReceiptApply: this.$api.confirmPaymentManage.noBillConfirmReceiptApply,
       },
       searchForm: {
-        bizId: '',
-        sellerEntName: '',
-        buyerEntName: ''
+        id: this.bizId
       },
       // 字典
       dictionary: {}
