@@ -419,6 +419,8 @@ export default {
   },
   mounted(){
     this.setFormValue()
+  },
+  updated() {
     this.handleDataChange()
   },
   methods: {
@@ -611,19 +613,16 @@ export default {
       if (rows && rows.length && this.entInfoObj.form.entBankInfo) {
           console.log(this.$refs)
           console.log(this.$refs.entBankInfoTable)
-        setTimeout(()=>{
-          this.$nextTick(()=>{
-            if(this.$refs.entBankInfoTable) {
-              this.$refs.entBankInfoTable.setRadioRow(rows[rowIndex])
-            }
-          })
-        },100)
+          if(this.$refs.entBankInfoTable) {
+            this.$refs.entBankInfoTable.setRadioRow(rows[rowIndex])
+          }
         this.handleRadioChange({row: rows[rowIndex]})
       }
     },
     handleRadioChange({ row }) {
       this.form.entBankInfo = row
       this.form.isSelectEntBankInfo = true
+      console.log(this.form.isSelectEntBankInfo)
     },
     bankChange(val) {
 
@@ -772,7 +771,7 @@ export default {
             return this.$message.error('请确认开户行一致！')
           }
           if(this.form.isHtEnterprise === '1') {
-            let str = this.form.entBankInfo.bankName.slice(0,4)
+            let str = this.form.entBankInfo ? this.form.entBankInfo.bankName.slice(0,4):''
             let res = ''
             for(let item of this.bankInfoList) {
               if(item.label === this.form.confirmBankName) {
@@ -795,8 +794,8 @@ export default {
           this.form.legalCertType = this.entInfoObj.form.legalCertType
           this.zjControl.saveEntInfo(this.form).then(res => {
             this.$message.success('提交企业资料成功！')
-            this.entInfoObj.form.id = res.data.id
             this.entInfoObj.form = this.form
+            this.entInfoObj.form.id = res.data.id
             // this.entInfoObj.form.entBankInfo = this.form.entBankInfo
             // this.entInfoObj.form.isSelectEntBankInfo = this.form.isSelectEntBankInfo
             // this.entInfoObj.form.defaultSelectRowId = this.form.defaultSelectRowId
