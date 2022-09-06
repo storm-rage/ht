@@ -5,8 +5,8 @@
           <div class="zj-search-condition zj-m-b-20" style="border-bottom: none;">
             <zj-list-layout>
               <template slot="rightBtns">
-                <vxe-button class="reset" icon="el-icon-refresh" @click="resetSearch">重置</vxe-button>
-                <vxe-button class="search" icon="el-icon-search" @click="search">查询</vxe-button>
+                <vxe-button class="reset" icon="el-icon-refresh" @click="resetSearch()">重置</vxe-button>
+                <vxe-button class="search" icon="el-icon-search" @click="search(true,'searchTable')">查询</vxe-button>
               </template>
               <template slot="leftBtns">
                 <vxe-button class="export" icon="el-icon-download" @click="toExport" :api="zjBtn.exportMyFinancingList">导出</vxe-button>
@@ -35,7 +35,7 @@
                     <el-select v-model="searchForm.repaymentFlag">
                       <el-option label="全部" value=""/>
                       <el-option
-                        v-for="item in dictionary.workflowState"
+                        v-for="item in dictionary.repaymentType"
                         :label="item.desc"
                         :value="item.code"
                         :key="item.code"
@@ -63,7 +63,7 @@
                 <zj-table-column field="repaymentPrincipalAmt" title="已还款本金" :formatter="money"/>
                 <zj-table-column field="repaymentInterestAmt" title="已还款利息" :formatter="money"/>
                 <zj-table-column field="lastRepayDate" title="上次还款日期" :formatter="date"/>
-                <zj-table-column field="repaymentflag" title="还款状态" :formatter="obj=>typeMap(dictionary.workflowState,obj.cellValue)"/>
+                <zj-table-column field="repaymentFlag" title="还款状态" :formatter="obj=>typeMap(dictionary.repaymentType,obj.cellValue)"/>
               </zj-table>
             </zj-list-layout>
           </div>
@@ -102,7 +102,7 @@ export default {
       })
     },
     toDetail (row) {
-      this.goChild('productInfoManageDetail', row)
+      this.goChild('myFinancingDetail', row)
     },
     toExport() {
       this.zjControl.exportMyFinancingList(this.searchForm)
