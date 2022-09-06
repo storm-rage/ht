@@ -68,9 +68,7 @@
             zjControl:{
               sendPhoneCode:this.$api.forgotPassword.sendPhoneCode,//1发送手机验证码
               validateCode:this.$api.forgotPassword.validateCode,//2校验手机验证码
-              saveNewPassword:this.$api.forgotPassword.saveNewPassword,//4保存新密码
-              getUserName:this.$api.forgotPassword.getUserName,//6.获取用户邮箱
-
+              saveNewPassword:this.$api.forgotPassword.saveNewPassword//4保存新密码
             },
             form:{
               phone:'',//手机号码
