@@ -12,7 +12,7 @@
     <ent-info-kh ref="entInfoKH" :detailData="detailData" :dictionary="dictionary" :isEdit="false" v-if="type === 'KH'" />
 
     <!--  审批意见  -->
-    <audit-remark ref="auditRemark" v-if="$route.name === 'entApplyAudit'"></audit-remark>
+    <audit-remark ref="auditRemark" v-if="$route.name === 'entApplyAudit' || pageType === 'edit'"></audit-remark>
 
     <zj-content-footer>
       <template v-if="pageType !== 'agendaDetail'">
