@@ -35,7 +35,9 @@ export default {
       },
       // 字典
       dictionary: {},
-      detailInfo: {}
+      detailInfo: {
+        operateLogList: []
+      }
     };
   },
   created() {
