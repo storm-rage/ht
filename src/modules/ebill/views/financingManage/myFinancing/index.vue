@@ -50,7 +50,7 @@
               >
                 <zj-table-column title="融资流水号">
                   <template v-slot="{row}">
-                    <zj-button type="text" @click="toDetail(row)">{{row.tranSerialNo}}</zj-button>
+                    <zj-button type="text" @click="toDetail(row)">{{row.serialNo}}</zj-button>
                   </template>
                 </zj-table-column>
                 <zj-table-column field="fromEntName" title="融资企业"/>
