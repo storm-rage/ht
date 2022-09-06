@@ -3,7 +3,7 @@
   <!-- 凭证确认收款信息   -->
   <bill-confirm-payment-info :detail-info="bizDetailInfo"></bill-confirm-payment-info>
   <!-- 附件信息   -->
-  <payment-file ref="paymentFile" :is-edit="true" :attach-list="bizDetailInfo.attachModelList"></payment-file>
+  <payment-file ref="paymentFile" :is-edit="true" :bus-desc="bizDetailInfo.busDesc" :attach-list="bizDetailInfo.attachModelList"></payment-file>
 </div>
 </template>
 
