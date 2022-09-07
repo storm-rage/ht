@@ -2,7 +2,7 @@
   <div class="navbar">
     <!--    &lt;!&ndash; logo &ndash;&gt;-->
     <div class="navbar-logo" :class="{'min-navbar-logo': collapseFlag}">
-      <img src="@assets/img/layout/Logo.png"/><span class="text">供应链金融平台</span>
+      <img src="@assets/img/layout/Logo2.png"/><span class="text">海云信平台</span>
     </div>
     <!-- 左边内容 -->
     <div class="navbar-left">
@@ -90,10 +90,11 @@ export default {
       margin-left: 5px;
     }
     img {
-      width: 48px;
+      width: 30px;
       margin: auto;
-      height: 35px;
+      height: 30px;
       vertical-align: middle;
+      margin-right:5px;
     }
   }
 
