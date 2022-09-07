@@ -15,7 +15,7 @@
     <audit-remark ref="auditRemark" v-if="pageType === 'audit' || pageType === 'edit'"></audit-remark>
 
     <zj-content-footer>
-      <template v-if="pageType !== 'agendaDetail'">
+      <template v-if="pageType === 'audit' || pageType === 'edit'">
         <zj-button type="primary" @click="toPass">复核通过</zj-button>
         <zj-button @click="toReject" v-if="row.workflowState === 'E002'">驳回上一级</zj-button>
         <zj-button @click="toReject" v-else-if="row.workflowState === 'E005'">作废</zj-button>
@@ -129,8 +129,8 @@ export default {
       if (this.row.workflowState !== 'E005') {
         params = { serialNo: params.serialNo }
       }
+      this.$refs.auditRemark.getForm().clearValidate();
       if (this.state === 'pass') {
-        this.$refs.auditRemark.getForm().clearValidate();
         const { notes } = this.$refs.auditRemark.getData()
         this.passLoading = true;
         this.zjControl.todoEnterpriseSubmit({
@@ -146,6 +146,7 @@ export default {
           }
         }).catch(() => {
           this.passLoading = false;
+          this.$refs.auditRemark.getForm().clearValidate();
         })
       }
       else {
@@ -169,6 +170,7 @@ export default {
             })
           } else {
             this.$message.warning('请选输入审核意见!')
+            this.$refs.auditRemark.getForm().clearValidate();
           }
         })
       }
