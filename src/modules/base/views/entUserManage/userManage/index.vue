@@ -17,7 +17,7 @@
       <template slot="btnGroups">
         <zj-button type="primary" icon="el-icon-circle-plus-outline" class="zj-m-t-10" @click="goChild('userAdd')">新增</zj-button>
       </template>
-      <zj-table ref="searchTable" :params="searchForm" :api="zjControl.queryUserPage">
+      <zj-table ref="searchTable" :syncUpdateFlag="dicLoadingFlag" :params="searchForm" :api="zjControl.queryUserPage">
         <zj-table-column field="userCode" title="用户编码">
           <template v-slot="{ row }">
             <zj-button type="text" @click="goChild('userDetail', row)">{{

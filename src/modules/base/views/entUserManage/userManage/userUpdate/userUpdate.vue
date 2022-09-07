@@ -68,7 +68,7 @@
     <zj-content-block>
       <zj-header title="用户归属企业信息"></zj-header>
       <zj-content>
-        <zj-table ref="xTable" :dataList="form.userAndEntInfoList" :edit-config="{
+        <zj-table ref="xTable" keep-source :dataList="form.userAndEntInfoList" :edit-config="{
               trigger: 'manual',
               mode: 'row',
               icon: '-',
@@ -83,17 +83,17 @@
           <zj-table-column field="createDatetime" title="新增日期" :formatter="date" />
           <zj-table-column field="entState" title="企业状态" :formatter="(obj) => typeMap(dictionary.enterpriseStateList, obj.cellValue)" />
           <zj-table-column field="roleId" title="角色" :formatter="(obj) => typeMap(dictionary.sysRoleList, obj.cellValue)" />
-          <zj-table-column field="email" title="邮箱" :edit-render="{}">
+          <zj-table-column field="email" title="邮箱" :edit-render="{name: 'input'}">
             <template #edit="{ row }">
               <vxe-input v-model="row.email" type="text"></vxe-input>
             </template>
           </zj-table-column>
           <zj-table-column field="userState" title="状态" :formatter="(obj) => typeMap(dictionary.userState, obj.cellValue)" />
           <zj-table-column field="statementAccountType" title="支持开立债权凭证的对账单类型" :edit-render="{}">
-            <template #default="{ row }">
-              <!-- {{row.statementAccountType}} -->
+            <!-- <template #default="{ row }">
               {{handleStatementAccountType(row.statementAccountType)}}
-            </template>
+            </template> -->
+            <!-- <template #default="{ row }">{{row.statementAccountType}}</template> -->
             <template #edit="{ row }">
               <vxe-select v-model="row.statementAccountType" multiple transfer>
                 <vxe-option v-for="item in dictionary.statementAccountTypeList" :key="item.code" :label="item.desc" :value="item.code">
@@ -156,6 +156,18 @@ export default {
           this.attachInfo[0] = Object.assign(this.attachInfo[0], data.idCardAttach[0])
         })
       }
+      // if (!!data.userAndEntInfoList && Array.isArray(data.userAndEntInfoList)) {
+      //   data.userAndEntInfoList.forEach(item => {
+      //     if (!!item.statementAccountType) {
+      //       let arr = []
+      //       item.statementAccountType = item.statementAccountType.split(',')
+      //       item.statementAccountType.forEach((k, i) => {
+      //         item.statementAccountType[i] = this.typeMap(this.dictionary.statementAccountTypeList, k)
+      //       })
+      //       console.log(item.statementAccountType)
+      //     }
+      //   })
+      // }
     },
   },
   data() {
@@ -235,8 +247,13 @@ export default {
     },
     //对账单类型转码
     handleStatementAccountType(data) {
+      let arr = []
       if (!!data) {
-        let arr = data.split(',')
+        if (Array.isArray(data)) {
+          arr = data
+        } else {
+          arr = data.split(',')
+        }
         if (Array.isArray(arr) && data.length) {
           arr.forEach((item, i) => {
             console.log(this.typeMap(this.dictionary.statementAccountTypeList, item))
@@ -246,15 +263,27 @@ export default {
         }
       }
     },
+    // 编辑
     editRowEvent(row) {
+      if (!!row.statementAccountType && typeof row.statementAccountType === 'string') {
+        row.statementAccountType = row.statementAccountType.split(',')
+      }
       const $table = this.$refs.xTable
       $table.setActiveRow(row)
     },
-    saveRowEvent() {
+    // 保存
+    saveRowEvent(row) {
+      if (!!row.statementAccountType && Array.isArray(row.statementAccountType)) {
+        row.statementAccountType = row.statementAccountType.join(',')
+      }
       const $table = this.$refs.xTable
       $table.clearActived()
     },
+    // 取消
     cancelRowEvent(row) {
+      if (!!row.statementAccountType && Array.isArray(row.statementAccountType)) {
+        row.statementAccountType = row.statementAccountType.join(',')
+      }
       const $table = this.$refs.xTable
       $table.clearActived().then(() => {
         // 还原行数据
