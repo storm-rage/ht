@@ -14,7 +14,7 @@
           </el-form-item>
           <el-form-item label="平台客户类型：">
             <el-select v-model="searchForm.entType" :popper-append-to-body="false">
-               <el-option label="全部" value=""/>
+              <el-option label="全部" value="" />
               <el-option v-for="(item, index) in dictionary.entTypeList" :key="index" :value="item.code" :label="item.desc"></el-option>
             </el-select>
           </el-form-item>
@@ -26,7 +26,7 @@
           <zj-button type="primary" icon="el-icon-download" @click="exportList" :api="zjBtn.exportEnterpriseList">导出数据</zj-button>
         </zj-content>
       </template>
-      <zj-table ref="searchTable" v-if="Object.keys(dictionary).length" :params="searchForm" :api="zjControl.tableApi">
+      <zj-table ref="searchTable" :syncUpdateFlag="dicLoadingFlag" v-if="Object.keys(dictionary).length" :params="searchForm" :api="zjControl.tableApi">
         <zj-table-column title="企业编码">
           <template v-slot="{ row }">
             <span class="table-elbill-code" @click="goChild('entDetail', row)">{{ row.code }}</span>
@@ -77,7 +77,6 @@ export default {
     queryEntDictionary() {
       this.zjControl.queryEntDictionary().then((res) => {
         this.dictionary = res.data;
-        this.search()
       });
     },
     // 导出列表

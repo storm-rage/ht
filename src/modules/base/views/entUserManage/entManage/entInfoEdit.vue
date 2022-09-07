@@ -27,7 +27,7 @@
 
           <el-col :span="8">
             <el-form-item label="客户业务系统编码：" prop="customCode">
-              <el-input v-model="form.customCode" :disabled="isDetail" />
+              <el-input v-model="form.customCode" disabled />
             </el-form-item>
           </el-col>
           <el-col :span="24">
