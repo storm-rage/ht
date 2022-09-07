@@ -221,7 +221,7 @@ export const myItemsPath = {
 
   // 阶段性协议维护
   JDXXY: {
-    auditPath: 'multistageAgreementMaintain',
+    auditPath: 'multistageAgreementMaintainAudit',
     detailPath: 'multistageAgreementDetailToDo'
   },
 

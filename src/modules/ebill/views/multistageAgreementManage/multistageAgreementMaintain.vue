@@ -1,33 +1,23 @@
 <template>
   <zj-content-container>
     <zj-top-header title="阶段性协议维护"></zj-top-header>
-    <!--  业务申请信息  -->
-    <biz-apply-info v-if="!row.maintainType||row.maintainType!='1'" :formData="detailData.businessApplyInfo" :dictionary="dictionary"/>
     <!--  具体业务信息  -->
     <business-audit :rowData="row" :formData="detailData"/>
     <!--  阶段性协议信息  -->
     <multistage-agreement :rowData="row" :tableData="detailData" :dictionary="dictionary" :zjControl="zjControl" @handleAgreementList="agreementChange"/>
-     <!--  审批意见  -->
-    <audit-remark @reject="reject"/>
     <zj-content-footer>
       <zj-button type="primary" @click="submit('提交')">确认提交</zj-button>
-      <zj-button type="primary" v-if="!row.maintainType||row.maintainType!='1'" @click="submit('拒绝')">拒绝</zj-button>
       <zj-button @click="goParent">返回</zj-button>
     </zj-content-footer>
   </zj-content-container>
 </template>
 <script>
-import BizApplyInfo from './components/bizApplyInfo';
-import multistageAgreement from './components/multistageAgreement';
-import AuditRemark from './components/auditRemark';
-import BusinessAudit from './workflow/businessAudit.vue';
-import multistageAgreementWorkflow from "../../../../api/multistageAgreementManageWorkflowApi";
+import multistageAgreement from '@modules/workflow/views/multistageAgreementManage/multistageAgreementSearch/maintain/components/multistageAgreement';
+import BusinessAudit from '@modules/workflow/views/multistageAgreementManage/multistageAgreementSearch/maintain/workflow/businessAudit.vue';
 
 export default {
   components: {
-    BizApplyInfo,
     multistageAgreement,
-    AuditRemark,
     BusinessAudit
   },
   data () {
@@ -64,14 +54,14 @@ export default {
         busTradeId: this.row.busTradeId,
         buyerId: this.row.buyerId,
         buyerName: this.row.buyerName,
+        maintainType: '1',//0-待办维护 1-保理公司直接维护,现仅阶段性维护跳转给row加maintainType
         // maintainType: this.row.maintainType?this.row.maintainType:'0',//0-待办维护 1-保理公司直接维护,现仅阶段性维护跳转给row加maintainType
-        maintainType: '0',//0-待办维护 1-保理公司直接维护,现仅阶段性维护跳转给row加maintainType
         sellerId: this.row.sellerId,
         sellerName: this.row.sellerName,
         serialNo: this.row.serialNo,
       }
       // let requestUrl = this.row.maintainType=='1'?this.zjControl.getBackPhasedAgreeInfo:this.zjControl.getWaitPhasedAgreeInfo
-      this.zjControl.getWaitPhasedAgreeInfo(params).then(res=>{
+      this.zjControl.getBackPhasedAgreeInfo(params).then(res=>{
         this.detailData = res.data
       })
     },
@@ -109,7 +99,7 @@ export default {
           content:`是否确认${flag}？`,
           showCancelButton: true,
           messageResolve:()=>{
-            this.zjControl.submitWaitBackPhasedAgree(params).then(res=>{
+            this.zjControl.submitBackPhasedAgree(params).then(res=>{
               this.getDetail()
               this.$message.success(res.msg)
               this.goParent()
