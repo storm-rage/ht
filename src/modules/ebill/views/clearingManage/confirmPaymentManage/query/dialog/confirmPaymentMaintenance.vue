@@ -9,7 +9,7 @@
         <zj-content>
           <el-row :gutter="10">
             <el-col>
-              <el-form-item label="凭证编号：" prop="ebillCode">
+              <el-form-item :label="`${productName}编号：`" prop="ebillCode">
                 {{form.ebillCode}}
               </el-form-item>
             </el-col>
@@ -29,12 +29,12 @@
               </el-form-item>
             </el-col>
             <el-col>
-              <el-form-item label="凭证金额："  prop="payableAmt">
+              <el-form-item :label="`${productName}金额：`"  prop="payableAmt">
                 {{money(form.payableAmt)}}
               </el-form-item>
             </el-col>
             <el-col>
-              <el-form-item label="凭证到期日："  prop="payableExpireDate">
+              <el-form-item :label="`${productName}到期日：`"  prop="payableExpireDate">
                 {{date(form.payableExpireDate)}}
               </el-form-item>
             </el-col>
@@ -53,7 +53,7 @@
               </el-form-item>
             </el-col>
             <el-col>
-              <el-form-item label="确认凭证金额：" prop="billConfirmAmt" :rules="[
+              <el-form-item :label="`确认${productName}金额：`" prop="billConfirmAmt" :rules="[
                 {required: true,message: '请输入确认凭证金额',trigger: ['blur','change']}
               ]">
                 <zj-number-input v-model="form.billConfirmAmt" :max="Number(form.payableAmt)">
@@ -85,6 +85,11 @@ export default {
       type:String,
       required: true,
       default: ''
+    }
+  },
+  computed: {
+    productName () {
+      return this.$store.getters['user/productName']
     }
   },
   data () {
