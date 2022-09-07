@@ -64,6 +64,8 @@
       autoResize: { type: Boolean, default: true },
       // 自动跟随某个属性的变化去重新计算表格，和手动调用 recalculate 方法是一样的效果（对于通过某个属性来控制显示/隐藏切换的场景可能会用到）
       syncResize: [Boolean, String, Number],
+      // 监听同步属性变化，更新表格数据
+      syncUpdateFlag: {type: Boolean, default: true},
       // 所有的列是否允许拖动列宽调整大小
       resizable: {
         type: Boolean,
@@ -1384,7 +1386,13 @@
       },
       api () {
         this.getList()
-      }
+      },
+      syncUpdateFlag() {
+        if (this.syncUpdateFlag&&this.tableData&&this.tableData.length&&this.$refs.zjTable) {
+          console.log('syncUpdateData')
+          this.syncData()
+        }
+      },
     },
   }
 </script>

@@ -31,7 +31,12 @@
           <zj-button type="primary" :api="zjBtn.openApply" @click="toApply">产品开通申请</zj-button>
         </div>
       </template>
-      <zj-table ref="searchTable" :params="searchForm" :api="zjControl.tableApi" :pagerPageSize="6" :pagerPageSizes="[6,10,15,20,50,100]">
+      <zj-table ref="searchTable"
+                :syncUpdateFlag="dicLoadingFlag"
+                :params="searchForm"
+                :api="zjControl.tableApi"
+                :pagerPageSize="6"
+                :pagerPageSizes="[6,10,15,20,50,100]">
         <zj-table-column field="serialNo" title="申请流水号"/>
         <zj-table-column field="productApplyDatetime" title="申请时间" formatter="formatDateTime"/>
         <zj-table-column field="productType" title="申请产品">
@@ -71,11 +76,6 @@ export default {
     this.getApi()
     this.zjControl.getDataDirectory().then(res => {
       this.dictionary = res.data
-      this.$nextTick(() => {
-        if (this.$refs.searchTable) {
-          this.$refs.searchTable.refreshColumn();
-        }
-      })
     })
   },
   methods: {

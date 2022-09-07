@@ -9,7 +9,11 @@
             title="供应商名称"/>
           <zj-table-column
             field="isHtEnterprise"
-            title="是否海天一级供应商" :formatter="(obj) => typeMap(dic.isHtEnterprise, obj.cellValue)"/>
+            title="是否海天一级供应商">
+            <template v-slot="{row}">
+              {{typeMap(dic.isHtEnterprise,row.isHtEnterprise)}}
+            </template>
+          </zj-table-column>
           <zj-table-column
             field="sellerCode"
             title="供应商业务系统编码"/>
