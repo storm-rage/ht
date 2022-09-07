@@ -21,6 +21,8 @@
           <agreement v-if="showAgreement"
                      :entId="userInfos.loginRes.entInfoList[0].entId"
                      :userServiceAgreementFlag="userInfos.loginRes.userServiceAgreementFlag"
+                     :personalInfoAuthFlag="userInfos.loginRes.personalInfoAuthFlag"
+                     :userRegisterAgreementFlag="userInfos.loginRes.userRegisterAgreementFlag"
                      :is-only-agreement="showAgreement&&!showFace"
                      @setIsSuccess="setIsSuccess"
                      @done="handleDone"></agreement>

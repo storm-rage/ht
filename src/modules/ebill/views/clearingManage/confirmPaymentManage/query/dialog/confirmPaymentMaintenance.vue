@@ -15,7 +15,7 @@
             </el-col>
             <el-col>
               <el-form-item label="签发日期："  prop="payableIssuanceDate">
-                {{form.payableIssuanceDate}}
+                {{date(form.payableIssuanceDate)}}
               </el-form-item>
             </el-col>
             <el-col>
@@ -49,14 +49,14 @@
               <el-form-item label="凭证实际到期日：" prop="actualExpireDate" :rules="[
                 {required: true,message: '请选择凭证实际到期日',trigger: ['blur','change']}
               ]">
-               <el-date-picker disabled v-model="form.actualExpireDate"></el-date-picker>
+               <el-date-picker value-format="yyyyMMdd" format="yyyy-MM-dd" disabled v-model="form.actualExpireDate"></el-date-picker>
               </el-form-item>
             </el-col>
             <el-col>
               <el-form-item label="确认凭证金额：" prop="billConfirmAmt" :rules="[
                 {required: true,message: '请输入确认凭证金额',trigger: ['blur','change']}
               ]">
-                <zj-number-input v-model="form.billConfirmAmt" :max="form.payableAmt">
+                <zj-number-input v-model="form.billConfirmAmt" :max="Number(form.payableAmt)">
                 </zj-number-input>
                 <p class="zj-right" style="width: 220px">{{digitUp(form.billConfirmAmt)}}</p>
               </el-form-item>
@@ -79,6 +79,12 @@ export default {
     bizId: {
       type: String,
       required: true
+    },
+    // 凭证实际到期日，确认收款维护需要
+    actualExpireDate: {
+      type:String,
+      required: true,
+      default: ''
     }
   },
   data () {
@@ -94,6 +100,14 @@ export default {
   methods: {
     show (obj) {
       this.form = Object.assign({},obj);
+      //默认为收款日期
+      if (!this.form.actualExpireDate) {
+        this.form.actualExpireDate = this.actualExpireDate;
+      }
+      //默认为凭证金额
+      if (!this.form.billConfirmAmt) {
+        this.form.billConfirmAmt = obj.payableAmt;
+      }
       this.dialogVisible = true;
     },
     close () {
@@ -108,7 +122,7 @@ export default {
             // 凭证ID
             accountId: this.form.id,
             // 凭证实际到期日
-            actualExpireDate: this.form.billConfirmAmt,
+            actualExpireDate: this.form.actualExpireDate,
             // 确认凭证金额
             billConfirmAmt: this.form.billConfirmAmt,
             // 资金流水ID

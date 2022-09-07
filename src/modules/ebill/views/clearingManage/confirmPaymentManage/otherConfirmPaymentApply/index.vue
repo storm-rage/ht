@@ -2,11 +2,11 @@
   <zj-content-container>
     <zj-top-header title="非凭证确认收款申请"></zj-top-header>
     <!-- 非凭证确认收款信息   -->
-    <other-confirm-payment-info ref="paymentInfo" is-edit :detailInfo="detailInfo"></other-confirm-payment-info>
+    <other-confirm-payment-info ref="paymentInfo" is-edit :dictionary="dictionary" :detailInfo="detailInfo"></other-confirm-payment-info>
     <!-- 附件信息   -->
     <payment-file ref="paymentFile" is-edit></payment-file>
     <zj-content-footer>
-      <zj-button type="primary" :disabled="loading" @click="toApply">提交申请</zj-button>
+      <zj-button type="primary" :disabled="loading" :loading="loading" @click="toApply">提交申请</zj-button>
       <zj-button @click="goParent">返回</zj-button>
     </zj-content-footer>
   </zj-content-container>
@@ -14,6 +14,7 @@
 <script>
 import OtherConfirmPaymentInfo from '../components/otherConfirmPaymentInfo';
 import PaymentFile from '../../components/clearingFileInfo';
+import BigNumber from "bignumber.js";
 export default {
   components: {
     OtherConfirmPaymentInfo,
@@ -29,7 +30,9 @@ export default {
       // 字典
       dictionary: {},
       // 详情
-      detailInfo: {},
+      detailInfo: {
+        bankCapitalFlow: {}
+      },
       loading: false
     };
   },
@@ -48,6 +51,14 @@ export default {
     getDetail() {
       this.zjControl.getNoBillReceiptApplyDetail({busTradeId: this.row.busTradeId, id: this.row.bizId}).then(res => {
         this.detailInfo = res.data;
+        // 默认收款日期=勾选资金流水的收款日期
+        if (!this.detailInfo.confirmRepaymentDate) {
+          this.detailInfo.confirmRepaymentDate = this.detailInfo.bankCapitalFlow.repayDate
+        }
+        // 收款金额默认=勾选资金流水的剩余可用收款金额（收款金额-已关联金额）
+        if(!this.detailInfo.confirmRepaymentTotalAmt) {
+          this.detailInfo.confirmRepaymentTotalAmt = new BigNumber(this.detailInfo.bankCapitalFlow.repayAmt).minus(this.detailInfo.bankCapitalFlow.relationAmt||0).toFixed(2)
+        }
       });
     },
     toApply () {

@@ -12,7 +12,7 @@
     <ent-info-kh ref="entInfoKH" :detailData="detailData" :dictionary="dictionary" :isEdit="false" v-if="type === 'KH'" />
 
     <!--  审批意见  -->
-    <audit-remark ref="auditRemark" v-if="$route.name === 'entApplyAudit'"></audit-remark>
+    <audit-remark ref="auditRemark" v-if="$route.name === 'entApplyAudit' || pageType === 'edit'"></audit-remark>
 
     <zj-content-footer>
       <template v-if="pageType !== 'agendaDetail'">
@@ -59,12 +59,6 @@ export default {
     this.getDictionary()
     this.getDetail()
     this.getTodoBusinessParamLog()
-    // 审核驳回待处理可修改
-    console.log(this.$route.meta.pageType, this.row.workflowState)
-    if (this.row.workflowState === 'E005' && this.$route.meta.pageType === 'audit') {
-      this.$route.meta.pageType = 'edit'
-    }
-    console.log(this.$route.meta.pageType)
   },
   methods: {
     getDictionary() {

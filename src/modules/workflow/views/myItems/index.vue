@@ -133,7 +133,7 @@ export default {
         if (myItemsPath[row.busType].auditPath) {
           this.goChild(myItemsPath[row.busType].auditPath, row, 'todo');
         } else if (myItemsPath[row.busType][row.applyType][row.workflowState].auditPath) {
-          this.goChild(myItemsPath[row.busType][row.applyType][row.workflowState].auditPath, row , 'todo');
+          this.goChild(myItemsPath[row.busType][row.applyType][row.workflowState].auditPath, row, 'todo');
         }
       }
     },

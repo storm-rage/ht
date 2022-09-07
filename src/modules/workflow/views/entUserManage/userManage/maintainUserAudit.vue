@@ -15,7 +15,7 @@
     <operate-log ref="operateLog" :logList="logList"></operate-log>
 
     <!--  审核意见  -->
-    <audit-remark ref="auditRemark" v-if="pageType === 'audit'"></audit-remark>
+    <audit-remark ref="auditRemark" v-if="$route.name === 'entApplyReject' || pageType === 'edit'"></audit-remark>
 
     <zj-content-footer>
       <template v-if="pageType !== 'agendaDetail'">
@@ -57,7 +57,7 @@ export default {
       attachInfo: [{ fileId: "", type: "身份证影印件", fileName: "" }],
       logList: [],
       state: 'pass',
-      isEdit: false,
+      isEdit: this.$route.meta.pageType === 'edit',
       type: ""
     };
   },
@@ -65,12 +65,6 @@ export default {
     this.getRow()
     this.getDictionary()
     this.getDetail()
-    // 审核驳回待处理可修改
-    if (this.row.workflowState === 'U006' && this.$route.meta.pageType === 'audit') {
-      this.$route.meta.pageType = 'edit'
-    } else {
-      this.$route.meta.pageType = 'detail'
-    }
   },
   methods: {
     //获取字典
@@ -98,6 +92,9 @@ export default {
     },
     //
     formPass(params) {
+      if (this.row.workflowState !== 'U006') {
+        params = { serialNo: params.serialNo }
+      }
       if (this.state === 'pass') {
         this.$refs.auditRemark.getForm().clearValidate();
         const { notes } = this.$refs.auditRemark.getData()

@@ -25,6 +25,7 @@ export default {
   created() {
     this.getRow();
     this.getUserInformation();
+    this.getDictionary()
   },
   methods: {
     //获取字典

@@ -53,13 +53,13 @@
         <zj-table-column field="fileName" title="合同附件" />
         <zj-table-column field="fileRemark" title="附件说明" :edit-render="{name: '$input'}"/>
         <zj-table-column title="操作">
-          <template v-slot="{row}">
+          <template v-slot="{row,rowIndex}">
             <template v-if="$refs.attaTable.isActiveByRow(row)">
               <zj-upload class="zj-inline" :httpRequest="handleFileUpload" :data="{ row }">
                 <zj-button slot="trigger" type="text" :api="zjBtn.uploadFile">上传</zj-button>
               </zj-upload>
               <zj-button type="text" @click="saveRow(row)" :api="zjBtn.delContract">保存</zj-button>
-              <zj-button type="text" @click="cancel(row)">取消</zj-button>
+              <zj-button type="text" @click="cancel(row,rowIndex)">取消</zj-button>
             </template>
             <template v-if="!$refs.attaTable.isActiveByRow(row)">
               <zj-button type="text" @click="attaDownload(row)" :api="zjBtn.downloadFile">下载</zj-button>
@@ -182,7 +182,7 @@ export default {
         return this.$message.error('提交审核中，不能新增合同附件！')
       }
       if(!this.tableEditReport(["attaTable"])){return}
-      let item = {attachId:'', fileId:'', fileName:'', fileRemark:'',recordId: this.businessApplyInfo.recordId || '',}
+      let item = {attachId:'', fileId:'', fileName:'', fileRemark:'',recordId: this.businessApplyInfo?this.businessApplyInfo.recordId : '',}
       this.contractInfoList.push(item)
       this.$refs.attaTable.setActiveRow(item)
     },
@@ -229,8 +229,8 @@ export default {
         return Promise.resolve(res)
       })
     },
-    cancel(row) {
-      this.contractInfoList.splice(row.index,1)
+    cancel(row,rowIndex) {
+      this.contractInfoList.splice(rowIndex,1)
       this.$refs.attaTable.clearActived()
     },
     //检测是否正在编辑     tableRefList需要检测的table数组

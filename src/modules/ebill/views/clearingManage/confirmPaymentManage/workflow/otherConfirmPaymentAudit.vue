@@ -5,7 +5,7 @@
                                 :isEdit="false"
                                 :dictionary="dictionary"></other-confirm-payment-info>
     <!-- 附件信息   -->
-    <payment-file :is-edit="false" :attach-list="bizDetailInfo.attachModelList"></payment-file>
+    <payment-file :is-edit="false" :bus-desc="bizDetailInfo.busDesc" :attach-list="bizDetailInfo.attachModelList"></payment-file>
   </div>
 </template>
 

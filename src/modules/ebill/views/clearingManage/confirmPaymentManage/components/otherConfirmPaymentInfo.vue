@@ -30,7 +30,7 @@
           </el-col>
           <el-col :span="8">
             <el-form-item label="核心企业是否海天集团：">
-              {{typeMap(dictionary.buyerIsHtEnterprise, form.buyerIsHtEnterprise)}}
+              {{typeMap(dictionary.isHtEnterprise, form.buyerIsHtEnterprise)}}
             </el-form-item>
           </el-col>
           <el-col :span="8">
@@ -59,7 +59,7 @@
               <el-form-item label="确认收款日期：" prop="confirmRepaymentDate" :rules="[
                 {required: true,message: '请选择确认收款日期',trigger: ['blur','change']}
               ]">
-                <el-date-picker disabled v-model="form.confirmRepaymentDate"></el-date-picker>
+                <el-date-picker disabled value-format="yyyyMMdd" format="yyyy-MM-dd" v-model="form.confirmRepaymentDate"></el-date-picker>
               </el-form-item>
             </el-col>
           </el-row>

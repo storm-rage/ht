@@ -115,8 +115,8 @@
               <!--贸易关系状态为“正常”时，才展示维护和额度管理-->
               <template v-if="row.state === '1'">
                 <zj-button type="text" :api="zjBtn.maintainTradeRelation" @click="toMaintenance(row)">维护</zj-button>
+                <zj-button type="text" v-if="isDDBL" :api="zjBtn.applyLimit" @click="toMaintenanceQuota(row, 'EDBG')">额度维护</zj-button>
                 <zj-button type="text" v-if="isDDBL" :api="zjBtn.applyLimit" @click="toMaintenanceQuota(row, 'EDXQ')">额度续签</zj-button>
-                <zj-button type="text" v-if="isDDBL" :api="zjBtn.applyLimit" @click="toMaintenanceQuota(row, 'EDBG')">额度变更</zj-button>
               </template>
               <template v-else>
                 ——
