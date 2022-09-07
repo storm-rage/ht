@@ -1,43 +1,26 @@
 const multistageAgreementManageRouter = [
   {
-    path: '/frontBackAgreeManage',
-    name: 'frontBackAgreeManage',
-    component: () => import('../views/multistageAgreementManage/index.vue'),
-    meta: {
-      isMock: true,
-      title: '阶段性协议查询',
-      root: '阶段性协议管理',
-      keepAlive: true,
-      refreshIndex: 0,
-      notRequireAuth: true
-    }
-  },
-  {
-    path: '/multistageAgreementMaintain',
-    name: 'multistageAgreementMaintain',
+    path: '/multistageAgreementMaintainAudit',
+    name: 'multistageAgreementMaintainAudit',
     component: () => import('../views/multistageAgreementManage/multistageAgreementSearch/maintain/index.vue'),
     meta: {
-      isMock: true,
       title: '阶段性协议维护',
       root: '阶段性协议管理',
       keepAlive: true,
-      parent:'frontBackAgreeManage',
-      refreshIndex: 0,
-      notRequireAuth: true
+      parent:'myTodo',
+      refreshIndex: 0
     }
   },
   {
-    path: '/multistageAgreementDetail',
-    name: 'multistageAgreementDetail',
+    path: '/multistageAgreementAuditDetail',
+    name: 'multistageAgreementAuditDetail',
     component: () => import('../views/multistageAgreementManage/multistageAgreementSearch/maintain/detail.vue'),
     meta: {
-      isMock: true,
       title: '阶段性协议详情',
       root: '阶段性协议管理',
       keepAlive: true,
-      parent:'frontBackAgreeManage',
-      refreshIndex: 0,
-      notRequireAuth: true
+      parent:'myTodo',
+      refreshIndex: 0
     }
   },
   {
@@ -45,13 +28,11 @@ const multistageAgreementManageRouter = [
     name: 'multistageAgreementDetailToDo',
     component: () => import('../views/multistageAgreementManage/multistageAgreementSearch/maintain/todoDetail'),
     meta: {
-      isMock: true,
       title: '阶段性协议维护交易详情',
       root: '阶段性协议管理',
       keepAlive: true,
-      parent:'frontBackAgreeManage',
-      refreshIndex: 0,
-      notRequireAuth: true
+      parent:'myTodo',
+      refreshIndex: 0
     }
   },
 ]
