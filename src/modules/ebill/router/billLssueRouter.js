@@ -7,12 +7,10 @@ const billLssueRouter = [
     name: 'openBillApply',
     component: () => import('../views/billLssue/issuanceApply/index.vue'),
     meta: {
-      isMock: true,
-      title: `凭证签发申请`,
+      title: `{0}签发申请`,
       root: '电子债权凭证',
       keepAlive: true,
-      refreshIndex: 0,
-      notRequireAuth: true
+      refreshIndex: 0
     }
   },
   {
@@ -20,11 +18,9 @@ const billLssueRouter = [
     name: 'openBillApplyDetails',
     component: () => import('../views/billLssue/issuanceApply/details/index.vue'),
     meta: {
-      isMock: false,
-      title: `凭证签发申请详情`,
+      title: `{0}签发申请详情`,
       keepAlive: true,
-      refreshIndex: 0,
-      notRequireAuth: true
+      refreshIndex: 0
     }
   },
   {
