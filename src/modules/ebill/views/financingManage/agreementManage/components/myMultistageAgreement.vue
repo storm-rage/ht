@@ -54,7 +54,7 @@
               />
             </el-form-item>
             <el-form-item label="贸易合同编号：">
-              <el-input v-model="searchForm.entName" @keyup.enter.native="enterSearch"/>
+              <el-input v-model="searchForm.agreementNo" @keyup.enter.native="enterSearch"/>
             </el-form-item>
             <el-form-item label="协议类型：">
               <el-select v-model="searchForm.agreementType">
@@ -103,7 +103,7 @@ export default {
         agreementState: '',
         agreementStartDateBegin:'',
         agreementStartDateEnd:'',
-        entName: '',
+        agreementNo: '',
         agreementType: '',
       },
       tradeRelationList: [],
