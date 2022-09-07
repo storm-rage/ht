@@ -8,6 +8,12 @@ export default {
           row: {},
         }
       },
+      computed: {
+        // 字典加载成功标识，用于需要字典格式化表格数据场景
+        dicLoadingFlag() {
+          return this.dictionary&&!this.XEUtils.isEmpty(this.dictionary)
+        }
+      },
       methods:{
         notEmptyCheck(form,rules,whiteList = []){
           let formSplit = form.split('.')

@@ -13,6 +13,7 @@
 <!--      </template>-->
       <zj-table ref="searchTable"
                 :params="searchForm"
+                :syncUpdateFlag="dicLoadingFlag"
                 :pager="false"
                 :api="zjControl.tableApi">
         <zj-table-column field="sellerEntCode" title="供应商编码"/>
@@ -73,11 +74,6 @@ export default {
     getDic() {
       this.zjControl.getDirectory().then((res) => {
         this.dictionary = res.data
-        this.$nextTick(() => {
-          if (this.$refs.searchTable) {
-            this.$refs.searchTable.refreshColumn();
-          }
-        })
       });
     },
     toSubmitPayment (row) {

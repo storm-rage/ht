@@ -35,6 +35,7 @@
       <zj-table
         ref="searchTable"
         :params="searchForm"
+        :syncUpdateFlag="dicLoadingFlag"
         :api="zjControl.tableApi"
       >
         <zj-table-column title="申请流水号">
@@ -71,7 +72,7 @@ export default {
         ...this.$api.maintainTransaction,
       },
       searchForm: {},
-      dictionary: {},
+      dictionary: {}
     };
   },
   created() {

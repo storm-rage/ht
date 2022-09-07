@@ -57,6 +57,7 @@
           <zj-table ref="searchContractTable"
                     :api="zjControl.contractTableApi"
                     row-id="id"
+                    :syncUpdateFlag="dicLoadingFlag"
                     :params="searchForm"
                     @after-load="handleDataChange"
                     @radio-change="handleRadioChange"
@@ -97,7 +98,7 @@
     <zj-content-block v-if="currentContractRow.id">
       <zj-header title="贸易关系"></zj-header>
       <zj-content>
-        <zj-table ref="searchTradeTable" :pager="false" :dataList="tradeList">
+        <zj-table ref="searchTradeTable" :pager="false" :syncUpdateFlag="dicLoadingFlag" :dataList="tradeList">
           <zj-table-column field="buyerName" title="核心企业名称"/>
           <zj-table-column field="isHtEnterprise" title="核心企业是否海天集团" :formatter="(obj) => typeMap(dictionary.isHtEnterprise, obj.cellValue)"/>
           <zj-table-column
@@ -173,12 +174,6 @@ export default {
     this.getApi();
     this.zjControl.getDataDirectory().then(res => {
       this.dictionary = res.data
-      this.$nextTick(() => {
-        if (this.$refs.searchContractTable) {
-          console.log('hhhh')
-          this.$refs.searchContractTable.refreshColumn();
-        }
-      })
     })
   },
   methods: {
