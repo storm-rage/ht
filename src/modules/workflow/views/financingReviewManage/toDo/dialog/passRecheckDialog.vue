@@ -84,7 +84,7 @@ export default {
                   creditId: this.dialogForm.blContractInfo?this.dialogForm.blContractInfo.creditId:'',
                   isRiskFlag: this.dialogForm.isRiskFlag,
                   operateFlag: flag,//融资审核操作标志：1-保理公司初审通过 2-保理公司初审驳回 3-保理公司复审通过 4-保理公司复审驳回上一级
-                  remark: this.dialogForm.rejectReason,
+                  remark: this.dialogForm.remark,
                   voucherId: this.dialogForm.voucherCreditInfo?this.dialogForm.voucherCreditInfo.voucherId:'',
                   bizId: this.bizId,
                 }
@@ -101,7 +101,7 @@ export default {
         creditId: this.dialogForm.blContractInfo?this.dialogForm.blContractInfo.creditId:'',
         isRiskFlag: this.dialogForm.isRiskFlag,
         operateFlag: flag,//融资审核操作标志：1-保理公司初审通过 2-保理公司初审驳回 3-保理公司复审通过 4-保理公司复审驳回上一级
-        remark: this.dialogForm.rejectReason,
+        remark: this.dialogForm.remark,
         voucherId: this.dialogForm.voucherCreditInfo?this.dialogForm.voucherCreditInfo.voucherId:'',
         bizId: this.bizId,
       }

@@ -8,7 +8,7 @@
         <el-row>
           <el-col :span="8">
             <el-form-item label="企业名称：" prop="name">
-              <el-input v-model.trim="form.name" :disabled="!isEdit" />
+              <el-input v-model.trim="form.name" :disabled="!isEdit || supplierType === '01'" />
             </el-form-item>
           </el-col>
           <el-col :span="16">
@@ -20,7 +20,7 @@
         <el-row>
           <el-col :span="8">
             <el-form-item label="企业简称：" prop="shortName">
-              <el-input v-model.trim="form.shortName" :disabled="!isEdit" />
+              <el-input v-model.trim="form.shortName" :disabled="!isEdit || supplierType === '01'" />
             </el-form-item>
           </el-col>
           <el-col :span="8">
@@ -50,12 +50,12 @@
           </el-col>
           <el-col :span="8">
             <el-form-item label="注册资本：" prop="registerCapital">
-              <el-input v-model.trim="form.registerCapital" :disabled="!isEdit" />
+              <el-input v-model.trim="form.registerCapital" :disabled="!isEdit || supplierType === '01'" />
             </el-form-item>
           </el-col>
           <el-col :span="8">
             <el-form-item label="企业工商有效期：" prop="registerEndDate">
-              <zj-date-picker :date.sync="form.registerEndDate" :disabled="!isEdit" />
+              <zj-date-picker :date.sync="form.registerEndDate" :disabled="!isEdit || supplierType === '01'" />
             </el-form-item>
           </el-col>
           <el-col :span="8">
@@ -82,12 +82,12 @@
           <h4 class="bl zj-m-l-20 mb-10">企业联系人</h4>
           <el-col :span="8">
             <el-form-item label="企业联系人姓名：" prop="fastMailName">
-              <el-input v-model.trim="form.fastMailName" :disabled="!isEdit" />
+              <el-input v-model.trim="form.fastMailName" :disabled="!isEdit || supplierType === '01'" />
             </el-form-item>
           </el-col>
           <el-col :span="8">
             <el-form-item label="企业联系人手机号：" prop="fastMailPhone">
-              <el-input v-model.trim="form.fastMailPhone" :disabled="!isEdit" />
+              <el-input v-model.trim="form.fastMailPhone" :disabled="!isEdit || supplierType === '01'" />
             </el-form-item>
           </el-col>
         </el-row>
@@ -214,6 +214,10 @@ export default {
   },
   watch: {
     detailData(data) {
+      console.log(data)
+      if (this.isEdit) {
+        this.supplierType = data.basicEntInfo.entInfo.supplierType
+      }
       this.form = data.form
       this.attachInfo[0].qyyzAttachId = data.attachInfo.qyyzAttachId; // 营业执照
       this.attachInfo[0].fileId = data.attachInfo.qyyzFileId;
@@ -237,6 +241,7 @@ export default {
         { fileId: "", type: "营业执照", fileName: "" },
         { fileId: "", type: "法定代表人身份证", fileName: "" },
       ],
+      supplierType: '',
       rules: {
         name: [
           {

@@ -4,7 +4,7 @@
       <ZjTopHeader>请确认电子债权凭证签发申请</ZjTopHeader>
     </div>
     <zj-table ref="searchTable" :dataList="row.list">
-      <zj-table-column field="ebillCode" title="海e单编号" />
+      <zj-table-column field="ebillCode" :title="`${productName}编号`" />
       <zj-table-column field="acctBillCode" title="对账单编号" />
       <zj-table-column field="companyName" title="买方名称" />
       <zj-table-column field="supplierName" title="供应商名称" />
@@ -30,7 +30,7 @@
       />
       <zj-table-column
         field="dueBillDate"
-        title="海e单到期日"
+        :title="`${productName}到期日`"
         :formatter="date"
       />
       <zj-table-column field="voucherRemark" title="备注" />
@@ -95,6 +95,9 @@ export default {
       return this.row.list
         ? this.row.list.reduce((all, item) => (all += +item.totalOpenAmt), 0)
         : 0
+    },
+    productName() {
+      return this.$store.getters['user/productName']
     }
   },
   activated () {

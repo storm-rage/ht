@@ -484,21 +484,21 @@ export default {
     },
     //保存企业操作员
     async sysUserSave(row) {
-      let items = this.sysUserList.filter(item => item.htSysCode === row.htSysCode)
-      if (items.length > 1) {
-        this.$message.error('存在相同的账号！')
-        return
-      }
-      items = this.sysUserList.filter(item => item.certNo === row.certNo)
-      if (items.length > 1) {
-        this.$message.error('存在相同的身份证号码！')
-        return
-      }
-      length = this.sysUserList.filter(item => item.mobileNo === row.mobileNo)
-      if (items.length > 1) {
-        this.$message.error('存在相同的手机号码！')
-        return
-      }
+      // let items = this.sysUserList.filter(item => item.htSysCode === row.htSysCode)
+      // if (items.length > 1) {
+      //   this.$message.error('存在相同的账号！')
+      //   return
+      // }
+      // items = this.sysUserList.filter(item => item.certNo === row.certNo)
+      // if (items.length > 1) {
+      //   this.$message.error('存在相同的身份证号码！')
+      //   return
+      // }
+      // length = this.sysUserList.filter(item => item.mobileNo === row.mobileNo)
+      // if (items.length > 1) {
+      //   this.$message.error('存在相同的手机号码！')
+      //   return
+      // }
 
       const errMap = await this.$refs.sysUser.validate(row).catch(errMap => errMap)
       if (!errMap && !row.isSave) {

@@ -206,7 +206,6 @@
                        filterable
                        placeholder="请选择" class="sw-year-select register102-legalCertType"
                        :popper-append-to-body="false"
-                       @change="bankChange"
             >
               <el-option
                 v-for="item in bankInfoList"
@@ -419,9 +418,10 @@ export default {
   },
   mounted(){
     this.setFormValue()
+    this.handleDataChange()
   },
   updated() {
-    this.handleDataChange()
+    // this.handleDataChange()
   },
   methods: {
     isChecked() {
@@ -611,18 +611,20 @@ export default {
       }
       console.log('银行账户index=='+rowIndex)
       if (rows && rows.length && this.entInfoObj.form.entBankInfo) {
+        this.$nextTick(()=>{
           console.log(this.$refs)
           console.log(this.$refs.entBankInfoTable)
-          if(this.$refs.entBankInfoTable) {
+          if(this.$refs.entBankInfoTable && this.$refs.entBankInfoTable.dataList && this.$refs.entBankInfoTable.dataList.length) {
             this.$refs.entBankInfoTable.setRadioRow(rows[rowIndex])
+            console.log('in')
+            this.handleRadioChange({row: rows[rowIndex]})
           }
-        this.handleRadioChange({row: rows[rowIndex]})
+        })
       }
     },
     handleRadioChange({ row }) {
       this.form.entBankInfo = row
-      this.form.isSelectEntBankInfo = true
-      console.log(this.form.isSelectEntBankInfo)
+      console.log(this.form.entBankInfo)
     },
     bankChange(val) {
 
@@ -751,7 +753,7 @@ export default {
             this.$message.error('银行账户不能为空！')
             return
           }
-          if(this.form.isHtEnterprise === '1' && !this.form.isSelectEntBankInfo) {
+          if(this.form.isHtEnterprise === '1' && !this.form.entBankInfo) {
             this.$message.error('请选择主结算银行账户！')
             return
           }
@@ -771,7 +773,7 @@ export default {
             return this.$message.error('请确认开户行一致！')
           }
           if(this.form.isHtEnterprise === '1') {
-            let str = this.form.entBankInfo ? this.form.entBankInfo.bankName.slice(0,4):''
+            let str = this.form.entBankInfo && this.form.entBankInfo.bankName ? this.form.entBankInfo.bankName.slice(0,4):''
             let res = ''
             for(let item of this.bankInfoList) {
               if(item.label === this.form.confirmBankName) {
@@ -797,7 +799,6 @@ export default {
             this.entInfoObj.form = this.form
             this.entInfoObj.form.id = res.data.id
             // this.entInfoObj.form.entBankInfo = this.form.entBankInfo
-            // this.entInfoObj.form.isSelectEntBankInfo = this.form.isSelectEntBankInfo
             // this.entInfoObj.form.defaultSelectRowId = this.form.defaultSelectRowId
             // this.entInfoObj.form.confirmBankId = this.form.confirmBankId
             // this.entInfoObj.form.confirmBankName = this.form.confirmBankName

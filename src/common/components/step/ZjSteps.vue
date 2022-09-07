@@ -3,8 +3,8 @@
   <div id="zj-steps" :style="{width: parentWidth+'px'}">
     <el-row v-for="(item,index) in list" :key="index" class="zj-steps-item" :style="{width:width + 'px'}">
       <i :class="item.state"/>
-      <span>{{ isDayTime ? dayTime(item.date) : item.date}}</span>
-      <label :class="item.state" :title="item.label">{{item.label}}</label>
+      <span>{{ isDayTime ? dayTime(item.date) : item.createDatetime}}</span>
+      <label :class="item.state" :title="item.label">{{item.notes}}</label>
       <b v-if="index+1 !== list.length"/>
     </el-row>
   </div>

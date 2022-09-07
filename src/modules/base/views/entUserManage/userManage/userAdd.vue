@@ -159,6 +159,13 @@ export default {
             trigger: ["blur"],
           },
         ],
+        isHtSysCode: [
+          {
+            required: true,
+            message: "海天业务系统账号",
+            trigger: ["blur"],
+          },
+        ],
         certNo: [
           {
             required: true,
@@ -183,6 +190,7 @@ export default {
           },
         ],
       },
+      rolesActive: []
     };
   },
   created() {
@@ -200,12 +208,16 @@ export default {
       }
     },
     roleChange(val) {
-      this.dictionary.autoRoleList.forEach(item => {
-        if (item.code === val) {
-          item.disabled = true
-        }
-      });
-      console.log(this.dictionary.autoRoleList)
+      // this.form.roles.forEach(item => {
+      //   this.rolesActive.push(item.roleId)
+      // })
+      // console.log(this.rolesActive)
+      // this.dictionary.autoRoleList.forEach(item => {
+      //   if (item.code === val) {
+      //     item.disabled = true
+      //   }
+      // });
+      // console.log(this.dictionary.autoRoleList)
     },
     //获取字典
     getDictionary() {
