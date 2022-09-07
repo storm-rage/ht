@@ -24,7 +24,6 @@ export default {
   },
   created() {
     this.getRow();
-    this.getUserInformation();
     this.getDictionary()
   },
   methods: {
@@ -32,6 +31,7 @@ export default {
     getDictionary() {
       this.zjControl.getUserDictionary().then((res) => {
         this.dictionary = res.data;
+        this.getUserInformation();
       });
     },
     // 获取详情

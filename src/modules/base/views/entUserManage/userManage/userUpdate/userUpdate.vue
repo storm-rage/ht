@@ -38,11 +38,6 @@
               </el-form-item>
             </el-col>
             <el-col :span="8">
-              <el-form-item label="邮箱：" prop="email">
-                <el-input v-model="form.email" :disabled="!isEdit" />
-              </el-form-item>
-            </el-col>
-            <el-col :span="8">
               <el-form-item label="海天业务系统账号：">
                 <el-input v-model="form.htSysCode" :disabled="!isEdit" />
               </el-form-item>
@@ -73,30 +68,57 @@
     <zj-content-block>
       <zj-header title="用户归属企业信息"></zj-header>
       <zj-content>
-        <zj-table :dataList="form.userAndEntInfoList">
+        <zj-table ref="xTable" :dataList="form.userAndEntInfoList" :edit-config="{
+              trigger: 'manual',
+              mode: 'row',
+              icon: '-',
+              autoClear: false,
+              showStatus: true,
+            }">
           <zj-table-column field="code" title="企业代码" />
           <zj-table-column field="customCode" title="客户业务系统编码" />
-          <zj-table-column field="entName" title="企业名称" />
+          <zj-table-column field="name" title="企业名称" />
           <zj-table-column field="isHtEnterprise" title="是否海天集团" :formatter="(obj) => typeMap(dictionary.isHtEnterprise, obj.cellValue)" />
           <zj-table-column field="entType" title="平台客户类型" :formatter="(obj) => typeMap(dictionary.entType, obj.cellValue)" />
           <zj-table-column field="createDatetime" title="新增日期" :formatter="date" />
           <zj-table-column field="entState" title="企业状态" :formatter="(obj) => typeMap(dictionary.enterpriseStateList, obj.cellValue)" />
           <zj-table-column field="roleId" title="角色" :formatter="(obj) => typeMap(dictionary.sysRoleList, obj.cellValue)" />
-          <zj-table-column field="userState" title="状态" :formatter="(obj) => typeMap(dictionary.userState, obj.cellValue)" />
-          <zj-table-column field="statementAccountType" title="支持开立债权凭证的对账单类型">
-            <template v-slot="{ row }">
-              {{handleStatementAccountType(row.statementAccountType)}}
+          <zj-table-column field="email" title="邮箱" :edit-render="{}">
+            <template #edit="{ row }">
+              <vxe-input v-model="row.email" type="text"></vxe-input>
             </template>
           </zj-table-column>
-          <zj-table-column title="操作" fixed="right" width="200px" v-if="isEdit">
-            <template v-slot="{ row,rowIndex }">
+          <zj-table-column field="userState" title="状态" :formatter="(obj) => typeMap(dictionary.userState, obj.cellValue)" />
+          <zj-table-column field="statementAccountType" title="支持开立债权凭证的对账单类型" :edit-render="{}">
+            <template #default="{ row }">
+              <!-- {{row.statementAccountType}} -->
+              {{handleStatementAccountType(row.statementAccountType)}}
+            </template>
+            <template #edit="{ row }">
+              <vxe-select v-model="row.statementAccountType" multiple transfer>
+                <vxe-option v-for="item in dictionary.statementAccountTypeList" :key="item.code" :label="item.desc" :value="item.code">
+                </vxe-option>
+              </vxe-select>
+            </template>
+          </zj-table-column>
+          <zj-table-column title="操作" fixed="right" width="160px" v-if="isEdit">
+            <!-- <template v-slot="{ row,rowIndex }">
               <zj-button type="text" @click="updateTypeDialog(row,rowIndex)">维护对账单类型</zj-button>
+            </template> -->
+            <template #default="{ row }">
+              <template v-if="$refs.xTable.isActiveByRow(row)">
+                <zj-button type="text" @click="saveRowEvent(row)">保存</zj-button>
+                <zj-button type="text" @click="cancelRowEvent(row)">取消</zj-button>
+              </template>
+              <template v-else>
+                <zj-button type="text" @click="editRowEvent(row)">编辑</zj-button>
+              </template>
             </template>
           </zj-table-column>
         </zj-table>
       </zj-content>
     </zj-content-block>
-    <el-dialog title="维护对账单类型" :visible.sync="dialogVisible" width="30%" v-if="dialogVisible">
+    <!-- <el-dialog title="维护对账单类型" :visible.sync="dialogVisible" width="30%" v-if="dialogVisible">
       <span>请选择开凭证对账单类型权限:&nbsp;</span>
       <el-select v-model="statementAccountType" filterable placeholder="请选择" multiple>
         <el-option v-for="item in dictionary.statementAccountTypeList" :key="item.code" :label="item.desc" :value="item.code">
@@ -106,7 +128,7 @@
         <el-button @click="dialogVisible = false">取 消</el-button>
         <el-button type="primary" @click="updateStatementAccountType">确 定</el-button>
       </span>
-    </el-dialog>
+    </el-dialog> -->
   </zj-content-block>
 </template>
 <script>
@@ -223,6 +245,21 @@ export default {
           return arr.join(',')
         }
       }
+    },
+    editRowEvent(row) {
+      const $table = this.$refs.xTable
+      $table.setActiveRow(row)
+    },
+    saveRowEvent() {
+      const $table = this.$refs.xTable
+      $table.clearActived()
+    },
+    cancelRowEvent(row) {
+      const $table = this.$refs.xTable
+      $table.clearActived().then(() => {
+        // 还原行数据
+        $table.revertData(row)
+      })
     }
   },
 };

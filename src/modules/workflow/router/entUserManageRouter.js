@@ -9,7 +9,7 @@ const entUserManageRouter = [
       root: '我的代办',
       keepAlive: true,
       refreshIndex: 0,
-      pageType: 'detail',
+      pageType: 'audit',
     }
   },
   {

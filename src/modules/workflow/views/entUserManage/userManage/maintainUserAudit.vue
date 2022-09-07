@@ -15,7 +15,7 @@
     <operate-log ref="operateLog" :logList="logList"></operate-log>
 
     <!--  审核意见  -->
-    <audit-remark ref="auditRemark" v-if="$route.name === 'entApplyReject' || pageType === 'edit'"></audit-remark>
+    <audit-remark ref="auditRemark" v-if=" pageType === 'audit' || pageType === 'edit'"></audit-remark>
 
     <zj-content-footer>
       <template v-if="pageType !== 'agendaDetail'">
@@ -96,7 +96,6 @@ export default {
         params = { serialNo: params.serialNo }
       }
       if (this.state === 'pass') {
-        this.$refs.auditRemark.getForm().clearValidate();
         const { notes } = this.$refs.auditRemark.getData()
         this.passLoading = true;
         this.zjControl.todoUserSubmit({
@@ -112,6 +111,7 @@ export default {
           }
         }).catch(() => {
           this.passLoading = false;
+          this.$refs.auditRemark.getForm().clearValidate();
         })
       }
       if (this.state = 'reject') {
