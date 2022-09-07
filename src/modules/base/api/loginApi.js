@@ -1,4 +1,5 @@
 import request from '@common/axios/request'
+import download from "@utils/download";
 const login = {
   //获取手机验证码
   sendMobileCaptcha:(params) => {
@@ -54,6 +55,10 @@ const login = {
   // 供应商首次登录协议-签署
   signProtocol:(params) => {
     return request.post('/login/sign-protocol',params)
+  },
+  // 供应商首次登录协议-下载
+  downloadProtocol:(params) => {
+    return download('/login/download-protocol',params,1,'post')
   },
 
 }

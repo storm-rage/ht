@@ -44,7 +44,7 @@
                     <zj-button type="text" @click="toDetail(row)">{{row.serialNo}}</zj-button>
                   </template>
                 </zj-table-column>
-                <zj-table-column field="financingProductType" title="融资产品名称"/>
+                <zj-table-column field="financingProductType" title="融资产品名称" :formatter="obj=>typeMap(dictionary.productTypeList,obj.cellValue)"/>
                 <zj-table-column field="fromEntName" title="融资企业名称"/>
                 <zj-table-column field="applyDatetime" title="融资申请日期" :formatter="date"/>
                 <zj-table-column field="tranAmt" title="融资申请金额" :formatter="money"/>
@@ -90,6 +90,6 @@ export default {
   created() {
     this.getApi()
     this.getDic()
-  }
+  },
 };
 </script>
