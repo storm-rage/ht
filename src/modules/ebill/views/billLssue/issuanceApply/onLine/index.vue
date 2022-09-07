@@ -11,7 +11,7 @@
               @keyup.enter.native="search"
             />
           </el-form-item>
-          <el-form-item label="供应商业务系统编码" class="col-center">
+          <el-form-item label="供应商业务系统编码：" class="col-center">
             <el-input
               v-model.trim="searchForm.supplierCode"
               clearable
@@ -303,7 +303,8 @@ export default {
         if (res.code === 200) {
           this.goChild('openBillApplyConfirm', {
             list: res.data.accountBillList || [],
-            applyType: '0' // 线上
+            applyType: '0', // 线上
+            isHtEnterprise: res.data.isHtEnterprise
           })
         }
       })

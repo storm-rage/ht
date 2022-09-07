@@ -160,7 +160,8 @@ export default {
         if (res.code === 200) {
           this.goChild('openBillApplyConfirm', {
             list: res.data.accountBillList || [],
-            applyType: '1' // 线下
+            applyType: '1', // 线下
+            isHtEnterprise: res.data.isHtEnterprise
           })
         }
       })
