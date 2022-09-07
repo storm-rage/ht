@@ -13,23 +13,26 @@
 
       <!-- 签署协议 -->
       <div v-if="!isMultipleEnt" class="ratify-accord">
-        <div class="ent-list">
-          <div class="company" v-for="(item,index) in protocolList"
-               :key="index"
-               @click="handleEntSelect(item)"
-               :class="currentAgree.coreEntName === item.coreEntName || currentAgree.entName === item.entName ? 'ent-check' : ''"
-          >
-            {{item.coreEntName || item.entName}}
-          </div>
-        </div>
-        <p class="hint">
-          {{ agreeType === 'YH_TWO' ? '您仅剩一步即可完成账户激活，请阅读并签署如下用户服务协议：'
-          : agreeType === 'YH_THREE' ? '请阅读并签署如下用户服务协议：'
-            : '请阅读并签署如下用户服务协议'
-          }}
-        </p>
+        <zj-content-block class="agree-tip-text">
+          <h3>
+            在为您提供服务前，您需要签署
+            <span class="agree-item" v-for="(item,index) in protocolList"
+                  :key="index"
+            >
+              《{{item.agreementName}}》
+            </span>
+            ，烦请您仔细阅读，并充分理解个协议内容。
+          </h3>
+        </zj-content-block>
+
+<!--        <p class="hint">-->
+<!--          {{ agreeType === 'YH_TWO' ? '您仅剩一步即可完成账户激活，请阅读并签署如下用户服务协议：'-->
+<!--          : agreeType === 'YH_THREE' ? '请阅读并签署如下用户服务协议：'-->
+<!--            : '请阅读并签署如下用户服务协议'-->
+<!--          }}-->
+<!--        </p>-->
         <div v-if="currentAgree" class="protocol-content">
-          <div style="overflow-y: scroll;border: 1px solid #999999;height: 400px" class="zj-m-b-15 ">
+          <div style="overflow-y: scroll;border: 1px solid #999999;height: 400px" class="zj-m-b-15 " v-if="false">
             <div v-show="currentAgree.type === 'html'">
               <div style="margin: 20px 30px" v-html="currentAgree.agreementContent"/>
             </div>
@@ -39,12 +42,35 @@
               </div>
             </div>
           </div>
-          <div class="btn-sign">
-            <zj-button type="primary" @click="signUserProtocol">同意并签署</zj-button>
+          <div class="ent-list zj-m-t-20">
+            <el-checkbox v-model="isChecked" @change="isChecked">我已阅读并同意</el-checkbox>
+            <span class="company ent-check" v-for="(item,index) in protocolList"
+                 :key="index"
+                 @click="handleEntSelect(item)"
+            >
+              《{{item.agreementName || item.entName}}》
+            </span>
+          </div>
+          <div class="btn-sign zj-m-t-20">
+            <zj-button type="primary" @click="signUserProtocol">确认签署</zj-button>
           </div>
         </div>
       </div>
     </div>
+    <!-- 协议查看弹窗 -->
+    <el-dialog
+      :visible.sync="dialogAgreeVisible"
+      width="800px"
+      center
+      :show-close="true"
+      :close-on-click-modal="false"
+      :close-on-press-escape="false"
+    >
+      <div v-html="currentAgree.agreementContent" style="height: 600px;overflow-y:scroll;"></div>
+      <div slot="footer" class="dialog-footer">
+        <zj-button type="primary" @click="downloadAgree">下载</zj-button>
+      </div>
+    </el-dialog>
     <!-- 云证书签章 -->
     <zj-certuficate ref="certuficate" @confirm="handleCertuficateDone"/>
   </div>
@@ -60,6 +86,8 @@ export default {
     // 企业ID,请求协议
     entId:String,
     userServiceAgreementFlag:String,
+    personalInfoAuthFlag:String,
+    userRegisterAgreementFlag:String,
     // 是否使用云证书
     isUseYunCert: {
       type: Boolean,
@@ -75,22 +103,30 @@ export default {
       zjControl:{
         downloadPdf: this.$api.baseCommon.downloadPdf,//下载协议
         queryUserProtocol:this.$api.login.queryUserProtocol,//协议查询
-        signUserProtocol:this.$api.login.signUserProtocol//人脸签署
+        signUserProtocol:this.$api.login.signUserProtocol,//人脸签署
+        queryLoginProtocolForSupplier:this.$api.login.queryLoginProtocolForSupplier,//供应商首次登录协议-查询
+        signProtocol:this.$api.login.signProtocol,//供应商首次登录协议-签署
+        downloadProtocol:this.$api.login.downloadProtocol,//供应商首次登录协议-下载
       },
       agreeType: '',
       // 协议列表
       protocolList: [],
       // 当前选中的协议
       currentAgree: {},
+      //是否同意签署
+      isChecked: false,
+      //协议弹窗
+      dialogAgreeVisible: false,
       // 是否多企业
       isMultipleEnt: false
     }
   },
   methods: {
     getAgreement() {
-      this.zjControl.queryUserProtocol({
-        entId: this.entId,
+      this.zjControl.queryLoginProtocolForSupplier({
         userServiceAgreementFlag: this.userServiceAgreementFlag,
+        personalInfoAuthFlag: this.personalInfoAuthFlag,
+        userRegisterAgreementFlag: this.userRegisterAgreementFlag,
       }).then(res=>{
         this.$emit('setIsSuccess',true);
         this.isMultipleEnt = false //显示下拉列表
@@ -134,7 +170,18 @@ export default {
       // }else{
       //   this.agreeEntActive = item.entName
       // }
-      this.handleAgreeRender()
+      // this.handleAgreeRender()
+      this.handleAgreeDialog()
+    },
+    handleAgreeDialog() {
+      this.dialogAgreeVisible = true
+    },
+    downloadAgree() {
+      let params = {
+        agreementName: this.currentAgree.agreementName + '.pdf',
+        agreementContent: this.currentAgree.agreementContent,
+      }
+      this.zjControl.downloadProtocol(params)
     },
     // 处理渲染
     handleAgreeRender() {
@@ -202,6 +249,7 @@ export default {
     },
     // 去签协议
     signUserProtocol() {
+      if(!this.isChecked) {return this.$message.error('请勾选我已阅读并同意')}
       if (this.isUseYunCert) {
         // 调用云证书
         this.$refs.certuficate.open()
@@ -211,7 +259,10 @@ export default {
     },
     //云证书返回
     handleCertuficateDone(){
-      this.zjControl.signUserProtocol(this.currentAgree).then(() => {
+      let params = {
+        agreementInfos: this.protocolList,
+      }
+      this.zjControl.signProtocol(params).then(() => {
         this.$messageBox({
           type:'success',
           title:`${this.protocolList.length-1 > 0 ? '签署成功' : '签署成功'}`,
@@ -275,20 +326,23 @@ export default {
     //签署协议
     .ratify-accord{
       .ent-list{
-        text-align: left;
+        text-align: center;
+        font-size: 14px;
         .company{
-          display: inline-block;
           cursor: pointer;
-          height: 29px;
           font-weight: bold;
-          font-size: 14px;
           line-height: 32px;
-          text-indent: 29px;
-          margin-right: 55px;
-          background: url("~@assets/img/faceRecognition/ent.png") left center no-repeat;
-          &.entCheck{
+          text-indent: 10px;
+          &.ent-check{
             color: #5494f2;
-            background: url("~@assets/img/faceRecognition/entO.png") left center no-repeat;
+          }
+          &:after{
+            width: 6px;
+            height: 6px;
+            content: '、';
+          }
+          &:last-child:after{
+            display: none;
           }
         }
       }
@@ -318,6 +372,14 @@ export default {
         }
       }
     }
+  }
+}
+.agree-tip-text {
+  margin: 10px auto 0;
+  height: 200px;
+  line-height: 28px;
+  .agree-item {
+
   }
 }
 </style>
