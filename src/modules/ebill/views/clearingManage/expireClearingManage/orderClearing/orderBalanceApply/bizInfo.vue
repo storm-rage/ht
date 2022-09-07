@@ -69,7 +69,7 @@
           >
           </zj-table-column>
           <zj-table-column field="repaymentOrderNo" title="收款单号"/>
-          <zj-table-column field="ebillCode" title="凭证编号"/>
+          <zj-table-column field="ebillCode" :title="`${$store.getters['user/productName']}编号`"/>
           <zj-table-column field="financingSerialno" title="融资流水号" />
           <zj-table-column field="repayDate" title="还款日期" :formatter="date"/>
           <zj-table-column field="oddAmt" title="尾款金额" :formatter="money"/>

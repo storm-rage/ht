@@ -3,7 +3,7 @@
     <zj-list-layout noBottomBorder>
       <template slot="searchForm">
         <el-form ref="searchForm" :model="searchForm">
-          <el-form-item label="凭证编号：">
+          <el-form-item :label="`${productName}编号：`">
             <el-input v-model.trim="searchForm.ebillCode" @keyup.enter.native="enterSearch"/>
           </el-form-item>
           <el-form-item label="签发日期：" class="col-right">
@@ -12,7 +12,7 @@
               :endDate.sync="searchForm.payableIssuanceDateEnd"
             />
           </el-form-item>
-          <el-form-item label="凭证到期日：" class="col-right">
+          <el-form-item :label="`${productName}到期日：`" class="col-right">
             <zj-date-range-picker
               :startDate.sync="searchForm.payableExpireDateStart"
               :endDate.sync="searchForm.payableExpireDateEnd"
@@ -35,7 +35,7 @@
                 @checkbox-change="tableCheckChange"
                 @checkbox-all="tableCheckChange">
         <zj-table-column type="checkbox" width="40px" fixed="left"></zj-table-column>
-        <zj-table-column field="ebillCode" title="凭证编号">
+        <zj-table-column field="ebillCode" :title="`${productName}编号`">
           <template v-slot="{ row }">
             <el-link @click="toViewDetail(row)" type="primary" :underline="false">{{row.ebillCode}}</el-link>
           </template>
@@ -43,11 +43,11 @@
         <zj-table-column field="payEntName" title="签发人" />
         <zj-table-column field="receiptEntName" title="原始持有人"/>
         <zj-table-column field="payableIssuanceDate" title="签发日期" :formatter="date"/>
-        <zj-table-column field="payableAmt" title="凭证金额" :formatter="money"/>
-        <zj-table-column field="payableExpireDate" title="凭证到期日" :formatter="date"/>
+        <zj-table-column field="payableAmt" :title="`${productName}金额`" :formatter="money"/>
+        <zj-table-column field="payableExpireDate" :title="`${productName}到期日`" :formatter="date"/>
         <zj-table-column field="remark" title="备注"/>
         <zj-table-column field="capitalSerialno" title="业务系统单号"/>
-        <zj-table-column field="billConfirmAmt" title="确认凭证金额" :formatter="money"/>
+        <zj-table-column field="billConfirmAmt" :title="`确认${productName}金额`" :formatter="money"/>
         <zj-table-column field="actualExpireDate" title="凭证实际到期日" :formatter="date"/>
         <zj-table-column title="操作" fixed="right">
           <template v-slot="{row}">
@@ -103,6 +103,11 @@ export default {
       showBottomBtn: false,
       // 底部按钮的偏移量
       bottomBtnLeft: 100
+    }
+  },
+  computed: {
+    productName () {
+      return this.$store.getters['user/productName']
     }
   },
   watch: {

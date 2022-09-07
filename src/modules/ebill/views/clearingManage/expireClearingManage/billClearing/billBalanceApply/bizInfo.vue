@@ -57,7 +57,7 @@
                   :radio-config="{highlight: true}"
                   :dataList="billList">
           <zj-table-column type="radio" width="40px" fixed="left"></zj-table-column>
-          <zj-table-column field="rootCode" title="原始凭证编号"/>
+          <zj-table-column field="rootCode" :title="`原始${productName}编号`"/>
           <zj-table-column field="repaymentOrderNo" title="收款单号"/>
           <zj-table-column
             field="capitalSerialno"
@@ -65,7 +65,7 @@
           />
           <zj-table-column
             field="ebillCode"
-            title="凭证编号"
+            :title="`${productName}编号`"
           >
             <template v-slot="{row}">
               <el-link @click="toViewDetail(row)" type="primary" :underline="false">{{row.ebillCode}}</el-link>
@@ -73,9 +73,9 @@
           </zj-table-column>
           <zj-table-column field="payEntName" title="签发人"/>
           <zj-table-column field="openDate" title="签发日期" />
-          <zj-table-column field="ebillAmt" title="凭证金额" :formatter="money"/>
+          <zj-table-column field="ebillAmt" :title="`${productName}金额`" :formatter="money"/>
           <zj-table-column field="oddAmt" title="尾款金额" :formatter="money"/>
-          <zj-table-column field="expireDate" title="凭证到期日" :formatter="date"/>
+          <zj-table-column field="expireDate" :title="`${productName}到期日`" :formatter="date"/>
           <zj-table-column field="actualExpireDate" title="凭证实际到期日" :formatter="date"/>
           <zj-table-column field="repaymentEntName" title="收款人"/>
         </zj-table>
@@ -167,6 +167,11 @@ export default {
       default:() => {
         return [];
       }
+    }
+  },
+  computed: {
+    productName () {
+      return this.$store.getters['user/productName']
     }
   },
   watch: {
