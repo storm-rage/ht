@@ -18,9 +18,9 @@
 <!--                  </div>-->
 <!--                </el-step>-->
 <!--              </el-steps>-->
-              <zj-step :list="form.progressInfo.nodeList"
-                       v-show="form.progressInfo.nodeList && form.progressInfo.nodeList.length"
-                       :boxWidth="boxWidth"/>
+<!--              <zj-step :list="form.progressInfo.nodeList"-->
+<!--                       v-show="form.progressInfo.nodeList && form.progressInfo.nodeList.length"-->
+<!--                       :boxWidth="boxWidth"/>-->
               <zj-steps :list="form.progressInfo.tranTxList"
                         :isDayTime="false"
                         :width="stepsWidth"
