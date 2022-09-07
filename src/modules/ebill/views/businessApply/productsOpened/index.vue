@@ -32,7 +32,6 @@
         </div>
       </template>
       <zj-table ref="searchTable"
-                :syncUpdateFlag="dicLoadingFlag"
                 :params="searchForm"
                 :api="zjControl.tableApi"
                 :pagerPageSize="6"
