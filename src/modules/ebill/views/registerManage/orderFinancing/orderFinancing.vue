@@ -72,12 +72,12 @@
       </zj-table>
     </zj-list-layout>
     <zj-workflow v-model="workflow">
-      <el-row slot="right">
+      <el-row slot="right" class="buttoni">
         <!-- <zj-button @click="toIssuance" >中登登记</zj-button>  
           <zj-button @click="toIssuance" >手工登记</zj-button> 
           this.$refs.frozenDialog.open(loginRes.frozenPhone)-->
-        <zj-button @click="zdlogin">中登登记</zj-button>
-        <zj-button @click="openDialog1">手工登记</zj-button>
+        <zj-button type="primary" @click="zdlogin">中登登记</zj-button>
+        <zj-button type="primary" @click="openDialog1">手工登记</zj-button>
         <!-- <zj-button @click="dialog">打开登录弹框</zj-button> -->
 
       </el-row>
@@ -254,3 +254,22 @@ export default {
   }
 };
 </script>
+<style lang="less" scoped>
+.buttoni{
+  margin: auto;
+}
+/deep/#ZjWorkflow {
+  .workflow-top {
+    .el-row {
+      padding: 5px 0 0;
+      text-align: center;
+    }
+  }
+  .workflow-bottom {
+    .right {
+      width: 100%;
+      text-align: center;
+    }
+  }
+}
+</style>
