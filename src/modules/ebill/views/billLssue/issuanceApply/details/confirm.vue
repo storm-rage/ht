@@ -115,7 +115,11 @@ export default {
           this.$message.warning('请检查我已阅读并同意相关协议是否勾选')
           return
         } else {
-          this.signUserProtocol()
+          if(this.row.isHtEnterprise=='1') {
+            this.save()
+          } else {
+            this.signUserProtocol()
+          }
         }
       })
     },

@@ -73,24 +73,32 @@
     </zj-content-block>
 
     <p>
-      <el-link :underline="false" type="primary">《xxx协议》</el-link>
+      <!-- <el-link :underline="false" type="primary" @click="previewAgreement()">《相关协议》</el-link> -->
     </p>
 
     <zj-content-footer>
       <zj-button type="primary" @click="toApply">提交申请</zj-button>
       <zj-button @click="goParent">返回</zj-button>
     </zj-content-footer>
-    <trade-bj-dialog ref="tradeBjDialog" v-if="tradeBjShow" :visible.sync="tradeBjShow" :rowData="rowData"/>
+    <trade-bj-dialog ref="tradeBjDialog" v-if="tradeBjShow" :visible.sync="tradeBjShow" :rowData="rowData" />
+    <!-- 查看器 -->
+    <zj-preview :visible.sync="viewShow" :showFooter="false" :title="agreementObj.agreementName" :htmlStr="agreementObj.agreementContent" fileType="html" @close="viewShow=false" />
   </zj-content-container>
 </template>
 
 <script>
 import { validateBankAcct } from "@utils/rules";
 import tradeBjDialog from './dialog/tradeBjDialog'
+import { mapState } from 'vuex'
 
 export default {
   components: {
     tradeBjDialog
+  },
+  computed: {
+    ...mapState({
+      entInfo: state => state.enterprise.entInfo,
+    })
   },
   data() {
     return {
@@ -134,7 +142,12 @@ export default {
           { required: true, message: "请输入收款账户开户行", trigger: "blur" },
         ],
       },
-      rowData: {}
+      rowData: {},
+      viewShow: false,
+      agreementObj: {
+        agreementName: "",
+        agreementContent: "",
+      },
     };
   },
   created() {
@@ -189,6 +202,22 @@ export default {
       // this.$refs.tradeBjDialog.open(this.row)
       this.rowData = row
       this.tradeBjShow = true
+    },
+    // 相关协议
+    previewAgreement() {
+      let params = {
+        ebillCode: this.detailData.ebillCode,
+        fromEntId: this.entInfo.entId,
+        fromEntName: this.entInfo.entName,
+        holderName: this.form.sellerEntName,
+        payableExpireDate: this.detailData.payableExpireDate,
+        payEntName: this.detailData.payEntName,
+        tranAmt: this.ebillAmt,
+      }
+      this.zjControl.getEbBillAgreementDetail(params).then(res => {
+        this.agreementObj = res.data || {}
+        this.viewShow = true
+      })
     }
   },
 };
