@@ -8,7 +8,7 @@ import homeApi from '@modules/base/api/homeApi';
 const state = {
   // 用户信息
   userInfo: {},
-  productName: '海e单',
+  productName: '海诺单',
   messageTipNum: ''
 }
 
