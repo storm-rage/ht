@@ -95,6 +95,7 @@ export default {
       if (this.row.workflowState !== 'U006') {
         params = { serialNo: params.serialNo }
       }
+      this.$refs.auditRemark.getForm().clearValidate();
       if (this.state === 'pass') {
         const { notes } = this.$refs.auditRemark.getData()
         this.passLoading = true;
@@ -113,8 +114,7 @@ export default {
           this.passLoading = false;
           this.$refs.auditRemark.getForm().clearValidate();
         })
-      }
-      if (this.state = 'reject') {
+      } else {
         this.$refs.auditRemark.getForm().validate((valid) => {
           if (valid) {
             const { notes } = this.$refs.auditRemark.getData()

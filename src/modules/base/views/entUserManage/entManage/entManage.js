@@ -240,7 +240,7 @@ export default {
     this.getApi()
     console.log(this.form)
     //详情页判断
-    this.isDetail = this.$route.meta.pageType === 'detail'
+    this.isDetail = this.$route.meta.pageType === 'detail' || this.$route.meta.pageType === 'audit'
     //新增页判断
     this.isAdd = this.$route.meta.pageType === 'add'
     //修改页判断
