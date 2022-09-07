@@ -36,7 +36,8 @@ export default {
       // 字典
       dictionary: {},
       detailInfo: {
-        operateLogList: []
+        operateLogList: [],
+        bankCapitalFlow: {}
       }
     };
   },

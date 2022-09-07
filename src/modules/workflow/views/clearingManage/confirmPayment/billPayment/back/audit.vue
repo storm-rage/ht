@@ -47,7 +47,8 @@ export default {
       rejectLoading: false,
       passLoading: false,
       detailInfo: {
-        operateLogList: []
+        operateLogList: [],
+        bankCapitalFlow: {}
       }
     }
   },

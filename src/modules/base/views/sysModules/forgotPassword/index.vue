@@ -257,26 +257,8 @@
                   title: '提示',
                   showConfirmButton: true,
                   center: true
-                })
-                //重置
-                for(let key in this.form){
-                  if(typeof(this.form[key]) === 'boolean'){
-                    if(key === 'sendFlag'){
-                      this.form[key] = false
-                    }else{
-                      this.form[key] = true
-                    }
-                  }else{
-                    if(key === 'phoneText'){
-                      this.form[key] = '发送验证码'
-                    }else{
-                      this.form[key] = ''
-                    }
-                  }
-                }
-                this.$refs.form.clearValidate()
-                this.$nextTick(() => {
-                  this.$refs.form.clearValidate()
+                }).then(() => {
+                  this.$router.push({name: 'login'})
                 })
               })
             })
