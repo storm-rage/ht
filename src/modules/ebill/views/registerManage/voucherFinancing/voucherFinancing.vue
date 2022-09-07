@@ -52,11 +52,11 @@
 
 
     </zj-content-container>
-    <zj-workflow v-model="workflow">
-      <el-row slot="right">
-        <zj-button @click="zdlogin">中登登记</zj-button>
-        <zj-button @click="openDialog1">手工登记</zj-button>
-        <zj-button @click="daqian">确认放款</zj-button>
+    <zj-workflow v-model="workflow" >
+      <el-row slot="right" class="buttoni">
+        <zj-button type="primary" @click="zdlogin">中登登记</zj-button>
+        <zj-button type="primary" @click="openDialog1">手工登记</zj-button>
+        <zj-button type="primary" @click="daqian">确认放款</zj-button>
       </el-row>
     </zj-workflow>
     <loginDialog ref="loginDialog"></loginDialog>
@@ -220,3 +220,19 @@ export default {
   }
 };
 </script>
+<style lang="less" scoped>
+/deep/#ZjWorkflow {
+  .workflow-top {
+    .el-row {
+      padding: 5px 0 0;
+      text-align: center;
+    }
+  }
+  .workflow-bottom {
+    .right {
+      width: 100%;
+      text-align: center;
+    }
+  }
+}
+</style>

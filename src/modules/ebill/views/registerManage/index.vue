@@ -1,7 +1,7 @@
 <template>
   <zj-content-container>
     <!--  中登登记管理  -->
-    <zj-tabs v-model="tabs" class="zj-tabs-card zj-p-l-16 zj-p-r-16">
+    <zj-tabs v-model="tabs">
       <el-tab-pane label="订单保理" name="orderFinancing" >
         <orderFinancing :zjControl="zjControl" :uDictionary="uDictionary" :uBtn="zjBtn"/>
       </el-tab-pane>
