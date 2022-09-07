@@ -90,7 +90,7 @@
         <ent-linkman ref="entLinkman" :detailData="detailData" />
 
         <!-- 银行账户 -->
-        <bank-account ref="bankAccount" :dataList="detailData.entBanksList" />
+        <bank-account ref="bankAccount" :dataList="detailData.entBanksList" :dictionary="dictionary" />
 
         <!-- 控制人信息 -->
         <controller ref="controller" :detailData="detailData" />

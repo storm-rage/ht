@@ -42,18 +42,13 @@
                   <span>{{ detailData.mobileNo | value }}</span>
                 </el-form-item>
               </el-col>
-              <!-- <el-col :span="8">
-                <el-form-item label="邮箱：">
-                  <span>{{ detailData.email | value }}</span>
-                </el-form-item>
-              </el-col> -->
               <el-col :span="8">
                 <el-form-item label="海天业务系统账号：">
                   <span>{{ detailData.htSysCode | value }}</span>
                 </el-form-item>
               </el-col>
               <el-col :span="8">
-                <zj-button type="text" style="font-size: 16px" @click="downloadFile(detailData.idCardAttach)" :disabled="!detailData.idCardAttach.length">身份证影像件</zj-button>
+                <zj-button type="text" style="font-size: 16px" @click="downloadFile(detailData.idCardAttach)" :disabled="Array.isArray(detailData.idCardAttach)&&!detailData.idCardAttach.length">身份证影像件</zj-button>
               </el-col>
             </el-row>
           </div>
@@ -65,7 +60,7 @@
           <zj-table ref="searchTable" :dataList="detailData.userAndEntInfoList">
             <zj-table-column field="code" title="企业代码" />
             <zj-table-column field="customCode" title="客户业务系统编码" />
-            <zj-table-column field="entName" title="企业名称" />
+            <zj-table-column field="name" title="企业名称" />
             <zj-table-column field="isHtEnterprise" title="是否海天集团" :formatter="(obj) => typeMap(dictionary.isHtEnterprise, obj.cellValue)" />
             <zj-table-column field="entType" title="平台客户类型" :formatter="(obj) => typeMap(dictionary.entType, obj.cellValue)" />
             <zj-table-column field="createDatetime" title="新增日期" :formatter="date" />
@@ -81,7 +76,8 @@
             </zj-table-column>
             <zj-table-column title="操作" fixed="right" width="240px" v-if="pageType !== 'detail'">
               <template v-slot="{ row }">
-                <zj-button type="text" @click="makeCertKey(row)">制key</zj-button>
+                <!-- 是海天集团并且是核心企业、平台、保理公司不显示制key -->
+                <zj-button type="text" @click="makeCertKey(row)" v-if="row.isHtEnterprise !== '1' && !['B','0','BL'].includes(row.entType)">制key</zj-button>
                 <zj-button type="text" @click="freezeUser(row)" v-if="row.userState === '1'">冻结</zj-button>
                 <zj-button type="text" @click="unfreezeUser(row)" v-if="row.userState === '5'">解冻</zj-button>
                 <zj-button type="text" @click="cancelUser(row)" v-if="row.userState === '1' || row.userState === '5'">注销</zj-button>
@@ -114,13 +110,13 @@ export default {
   created() {
     this.getRow();
     this.getDictionary();
-    this.getUserInformation();
   },
   methods: {
     //获取字典
     getDictionary() {
       this.zjControl.getUserDictionary().then((res) => {
         this.dictionary = res.data;
+        this.getUserInformation();
       });
     },
     // 获取详情
