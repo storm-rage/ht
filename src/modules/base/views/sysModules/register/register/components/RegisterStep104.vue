@@ -120,7 +120,10 @@
         <div class="border-underline"></div>
         <el-form :model="tradeInfoForm" :rules="tradeInfoRules" label-width="160px" class="invoiceForm">
           <el-form-item label="请选择：" prop="supplier">
-            <el-radio v-model="tradeInfoForm.supplier" label="1">我是供应商</el-radio>
+            <el-radio-group v-model="tradeInfoForm.supplier">
+              <el-radio label="S" >我是供应商</el-radio>
+              <!--            <el-radio label="B">我是核心企业</el-radio>-->
+            </el-radio-group>
           </el-form-item>
           <el-form-item label="我的买方企业：" prop="myBuyers">
             <el-input type="text" placeholder="支持录入多个，请用'，'分隔开" v-model="tradeInfoForm.myBuyers"></el-input>
@@ -279,7 +282,7 @@ export default {
       registerAttachList:[],
       //贸易信息
       tradeInfoForm: {
-        supplier:'1',
+        supplier:'S',
         myBuyers:'',
       },
       //贸易信息规则
@@ -488,6 +491,7 @@ export default {
           this.entInfoObj.form.invoicePhone = this.form.invoicePhone
           this.entInfoObj.form.invoiceTaxpayerId = this.form.invoiceTaxpayerId
           this.entInfoObj.form.myBuyers = this.tradeInfoForm.myBuyers
+          this.entInfoObj.form.entType = this.tradeInfoForm.supplier
           let params = {
             ...this.entInfoObj.form,
             id: this.entInfoObj.form.id,
@@ -582,6 +586,7 @@ export default {
       this.entInfoObj.form.invoicePhone = this.form.invoicePhone
       this.entInfoObj.form.invoiceTaxpayerId = this.form.invoiceTaxpayerId
       this.entInfoObj.form.myBuyers = this.tradeInfoForm.myBuyers
+      this.entInfoObj.form.entType = this.tradeInfoForm.supplier
       this.zjControl.completeRegister(this.entInfoObj.form).then(res => {
         this.$message.success('提交企业资料成功！')
         let params = Object.assign({},this.entInfoObj)

@@ -1,10 +1,10 @@
 <template>
   <el-row style="position: relative;overflow: hidden" id="zj-step">
     <div class="zj-progress" style="left: 40%;transform: translateX(-50%)" :style="{width:list.length * width + 'px'}">
-      <div class="zj-progress-item" v-for="(item,index) in list" :class="[item.flag]" :key="index">
+      <div class="zj-progress-item" v-for="(item,index) in list" :class="[item.state]" :key="index">
         <div class="zj-progress-item_box" :style="{width:width+'px'}" :class="[item.after,index === list.length -1 ?  'noAfter' : '']">
           <span class="zj-progress-item_box-index">{{ index+1 }}</span>
-          <label class="zj-progress-item_box-label">{{item.desc}}</label>
+          <label class="zj-progress-item_box-label">{{item.label}}</label>
         </div>
       </div>
     </div>
