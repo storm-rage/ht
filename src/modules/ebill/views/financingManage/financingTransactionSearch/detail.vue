@@ -206,8 +206,8 @@
                   :dataList="form.financingAgreement"
                   :pager="false"
         >
-          <zj-table-column field="seq" title="序号" />
-          <zj-table-column field="agreementName" title="协议附件" />
+          <zj-table-column type="seq" title="序号" />
+          <zj-table-column field="agreementTypeName" title="协议附件" />
           <zj-table-column title="操作">
             <template v-slot="{row}">
               <zj-button type="text" @click="attaDownLoad(row)">下载</zj-button>
@@ -341,7 +341,10 @@ export default {
       this.stepsWidth = width > 500 ? 500 : width
     },
     attaDownLoad(row){
-      this.zjControl.downloadFile(row.fileId)
+      this.$api.baseCommon.downloadFile({
+        fileId: row.fileId,
+        fileName: row.fileName,
+      })
     },
   },
   created() {
