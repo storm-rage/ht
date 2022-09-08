@@ -67,7 +67,7 @@
         <zj-table-column :title="`原始${productName}编号`">
           <template v-slot="{ row }">
             <el-link
-              @click="toViewDetail(row)"
+              @click="toViewDetail(row.rootCode)"
               type="primary"
               :underline="false"
               >{{ row.rootCode }}</el-link
@@ -79,7 +79,7 @@
         <zj-table-column field="ebillCode" :title="`${productName}编号`">
           <template v-slot="{ row }">
             <el-link
-              @click="toViewDetail(row)"
+              @click="toViewDetail(row.ebillCode)"
               type="primary"
               :underline="false"
               >{{ row.ebillCode }}</el-link
@@ -199,10 +199,15 @@ export default {
       this.showBottomBtn = records.length > 0;
     },
     /**
-     * todo:跳转凭证详情
+     *
      * @param row
      */
-    toViewDetail(row) {},
+    toViewDetail(ebillCode) {
+      this.goChild('billLssueMyBillDetail',{
+        ebillCode: ebillCode,
+        parentRouteName: 'expireClear'
+      })
+    },
     /**
      * 批量清算申请
      */
