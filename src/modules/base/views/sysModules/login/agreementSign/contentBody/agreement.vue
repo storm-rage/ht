@@ -43,7 +43,7 @@
             </div>
           </div>
           <div class="ent-list zj-m-t-20">
-            <el-checkbox v-model="isChecked" @change="isChecked">我已阅读并同意</el-checkbox>
+            <el-checkbox v-model="isChecked" >我已阅读并同意</el-checkbox>
             <span class="company ent-check" v-for="(item,index) in protocolList"
                  :key="index"
                  @click="handleEntSelect(item)"
@@ -158,7 +158,7 @@ export default {
             }
           })
         }
-        this.handleEntSelect(this.protocolList[0])
+        // this.handleEntSelect(this.protocolList[0])
       }).catch(() => {
         this.$emit('setIsSuccess',false);
       })
@@ -270,11 +270,7 @@ export default {
           confirmText:`${this.protocolList.length-1 > 0 ? '完成' : '完成'}`,
           showCancelButton:false,
           messageResolve:()=>{
-            if(this.protocolList.length-1 > 0){
-              this.getAgreement()
-            }else{
-              this.$emit('done');
-            }
+            this.$emit('done');
           },
           messageReject:() => {
             if(this.protocolList.length-1 > 0){
