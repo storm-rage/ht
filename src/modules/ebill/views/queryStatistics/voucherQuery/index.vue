@@ -15,7 +15,7 @@
                   <el-form-item label="原始持有人：">
                     <el-input v-model="searchForm.receiptEntNameLike" @keyup.enter.native="search"></el-input>
                   </el-form-item>
-                  <el-form-item label="债权凭证状态：">
+                  <el-form-item :label="`${productName}状态：`">
                     <el-select v-model="searchForm.state">
                       <el-option label="全部" value=""/>
                       <el-option v-for="item in dictionary.stateList"
@@ -28,25 +28,25 @@
                   <el-form-item label="当前持有人：">
                     <el-input v-model="searchForm.holderNameLike" @keyup.enter.native="search"></el-input>
                   </el-form-item>
-                  <el-form-item label="债权凭证编号：">
+                  <el-form-item :label="`${productName}编号：`">
                     <el-input v-model="searchForm.ebillCode" @keyup.enter.native="search"></el-input>
                   </el-form-item>
-                  <el-form-item label="原始债权凭证编号：">
+                  <el-form-item :label="`原始${productName}编号：`">
                     <el-input v-model="searchForm.rootCode" @keyup.enter.native="search"></el-input>
                   </el-form-item>
-                  <el-form-item label="债权凭证签发日期：">
+                  <el-form-item :label="`${productName}签发日期：`">
                     <zj-date-range-picker
                       :startDate.sync="searchForm.payableIssuanceDateStart"
                       :endDate.sync="searchForm.payableIssuanceDateEnd"
                     />
                   </el-form-item>
-                  <el-form-item label="债权凭证到期日：">
+                  <el-form-item :label="`${productName}到期日：`">
                     <zj-date-range-picker
                       :startDate.sync="searchForm.payableExpireDateStart"
                       :endDate.sync="searchForm.payableExpireDateEnd"
                     />
                   </el-form-item>
-                  <el-form-item label="债权凭证金额：">
+                  <el-form-item :label="`${productName}金额：`">
                     <zj-amount-range :startAmt.sync="searchForm.payableAmtStart" :endAmt.sync="searchForm.payableAmtEnd"></zj-amount-range>
                   </el-form-item>
                 </el-form>
@@ -55,12 +55,12 @@
                         :api="zjControl.queryElectronicClaimsBillPage"
                         :params="searchForm"
               >
-                <zj-table-column title="债权凭证编号">
+                <zj-table-column :title="`${productName}编号`">
                   <template v-slot="{row}">
                     <zj-button type="text" @click="toDetail(row)">{{row.ebillCode}}</zj-button>
                   </template>
                 </zj-table-column>
-                <zj-table-column title="原始债权凭证编号">
+                <zj-table-column :title="`原始${productName}编号`">
                   <template v-slot="{row}">
                     <zj-button type="text" @click="toDetail(row)">{{row.rootCode}}</zj-button>
                   </template>
@@ -68,11 +68,10 @@
                 <zj-table-column field="payEntName" title="签发人"/>
                 <zj-table-column field="receiptEntName" title="原始持有人" />
                 <zj-table-column field="holderName" title="当前持有人" />
-                <zj-table-column field="payableAmt" title="债权凭证金额" :formatter="money"/>
-                <zj-table-column field="payableIssuanceDate" title="债权凭证签发日期" :formatter="date"/>
-                <zj-table-column field="payableExpireDate" title="债权凭证到期日" :formatter="date"/>
-                <zj-table-column field="state" title="债权凭证状态" />
-<!--                <zj-table-column field="state" title="债权凭证状态" :formatter="obj=>typeMap(dictionary.stateList,obj.cellValue)"/>-->
+                <zj-table-column field="ebillAmt" :title="`${productName}金额`" :formatter="money"/>
+                <zj-table-column field="payableIssuanceDate" :title="`${productName}签发日期`" :formatter="date"/>
+                <zj-table-column field="payableExpireDate" :title="`${productName}到期日`" :formatter="date"/>
+                <zj-table-column field="state" :title="`${productName}状态`" :formatter="obj=>typeMap(dictionary.stateList,obj.cellValue)"/>
               </zj-table>
             </zj-list-layout>
           </div>
@@ -82,6 +81,11 @@
 <script>
 export default {
   name: 'voucherQuery',
+  computed: {
+    productName () {
+      return this.$store.getters['user/productName']
+    }
+  },
   data() {
     return {
       zjControl: {
