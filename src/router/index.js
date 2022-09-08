@@ -55,7 +55,8 @@ router.beforeEach((to, from, next) => {
             name: 'signAgreement',
             params:{
               rowData:res.model
-            }
+            },
+            replace: true
           })
         }else {
           next('/home')
