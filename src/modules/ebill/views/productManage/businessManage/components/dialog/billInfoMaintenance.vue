@@ -13,7 +13,7 @@
                         :rules="[
                           {required: true,message: '请输入开单宽限天数',trigger: ['change','blur']}
                         ]">
-            <zj-number-input v-model.trim="form.openGraceDays" :max="180" :precision="0">
+            <zj-number-input v-model.trim="form.openGraceDays" :precision="0">
               <template slot="append">天</template>
             </zj-number-input>
           </el-form-item>
@@ -55,7 +55,7 @@
                         :rules="[
                                 {required: true,message: '请输入凭证可用折扣',trigger: ['change','blur']}
                               ]">
-            <zj-number-input v-model.trim="item.availableDiscountsRate" :max="100" :precision="4">
+            <zj-number-input v-model.trim="item.availableDiscountsRate" :max="100" :precision="2">
               <template slot="append">%</template>
             </zj-number-input>
           </el-form-item>

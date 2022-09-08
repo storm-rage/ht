@@ -191,7 +191,7 @@ export default {
       if (fileName) {
         const names = fileName.split('.');
         const fileType = names[1].toLowerCase();
-        const supportFileTypes = ['pdf','bmp','gif','jpeg','png','zip','rar','doc','docx','xlsx','xls'];
+        const supportFileTypes = ['pdf','bmp','gif','jpg','jpeg','png','zip','rar','doc','docx','xlsx','xls'];
         if (!supportFileTypes.includes(fileType)) {
           this.$messageBox({
             type: 'warning',
