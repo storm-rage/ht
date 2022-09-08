@@ -6,12 +6,12 @@
       <el-form ref="form" label-width="160px">
         <el-row>
           <el-col :span="8">
-            <el-form-item label="原始海e单编号：">
+            <el-form-item :label="`原始${productName}编号：`">
               <span>{{ detailData.rootCode | value }}</span>
             </el-form-item>
           </el-col>
           <el-col :span="8">
-            <el-form-item label="海e单编号：">
+            <el-form-item :label="`${productName}编号：`">
               <span>{{ detailData.ebillCode | value }}</span>
             </el-form-item>
           </el-col>
@@ -26,12 +26,12 @@
             </el-form-item>
           </el-col>
           <el-col :span="8">
-            <el-form-item label="海e单签发日期：">
+            <el-form-item :label="`${productName}签发日期：`">
               <span>{{ detailData.payableIssuanceDate | value }}</span>
             </el-form-item>
           </el-col>
           <el-col :span="8">
-            <el-form-item label="海e单到期日：">
+            <el-form-item :label="`${productName}到期日：`">
               <span>{{ detailData.payableExpireDate | value }}</span>
             </el-form-item>
           </el-col>
@@ -41,7 +41,7 @@
             </el-form-item>
           </el-col>
           <el-col :span="8">
-            <el-form-item label="海e单金额：">
+            <el-form-item :label="`${productName}金额：`">
               <span>{{ detailData.ebillAmt | value }}</span>
             </el-form-item>
           </el-col>
@@ -124,7 +124,10 @@ export default {
   computed: {
     ...mapState({
       entInfo: state => state.enterprise.entInfo,
-    })
+    }),
+    productName() {
+      return this.$store.getters['user/productName']
+    },
   },
   mixins:[view],
   data() {
