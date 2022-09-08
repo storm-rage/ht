@@ -118,7 +118,7 @@
                   </el-form-item>
                 </el-col>
                 <el-col :span="12">
-                  <el-form-item label="融资折扣率：">{{form.discountrate}}</el-form-item>
+                  <el-form-item label="融资折扣率：">{{form.discountRate?`${(form.discountRate).toFixed(4)}%`:''}}</el-form-item>
                 </el-col>
               </el-row>
               <el-row>
@@ -131,7 +131,7 @@
                   </el-form-item>
                 </el-col>
                 <el-col :span="12">
-                  <el-form-item label="融资月利率：">{{form.interestRate}}</el-form-item>
+                  <el-form-item label="融资月利率：">{{form.interestRate?`${(form.interestRate).toFixed(4)}%`:''}}</el-form-item>
                 </el-col>
               </el-row>
               <el-row>
