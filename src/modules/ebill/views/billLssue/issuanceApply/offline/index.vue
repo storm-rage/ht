@@ -53,6 +53,7 @@
           :api="zjControl.offlineList"
           :params="searchForm"
           ref="searchTable"
+          @after-load="afterLoad"
           @checkbox-change="checkChange"
           @checkbox-all="checkChange"
         >
@@ -152,6 +153,28 @@ export default {
     },
     //签发凭证
     toIssuance () {
+      let overtimeAcctBillCodelist = []
+      this.selection.forEach(item=>{
+        if(this.$moment(item.estimatedPaymentDate).diff(this.$moment(),'days') >= 180) {
+          overtimeAcctBillCodelist.push(item.acctBillCode)
+        }
+      })
+      if(overtimeAcctBillCodelist.length) {
+        this.$messageBox({
+          type:'confirm',
+          title:'提交确认',
+          content: `海诺单天数大于180天，请确认是否签发?对账单号：${overtimeAcctBillCodelist.join(',')}`,
+          showCancelButton:true,
+          messageResolve:()=>{
+            this.toIssuanceSave()
+          },
+          messageReject: ()=>{}
+        })
+      } else {
+        this.toIssuanceSave()
+      }
+    },
+    toIssuanceSave () {
       let params = {
         applyType: '1',
         accountBillList: this.selection
@@ -175,6 +198,10 @@ export default {
         }
       })
     },
+    afterLoad(data) {
+      this.selection = data.filter(item=>item.checkBillStatus=='0')
+      this.$refs.searchTable.setCheckboxRow(this.selection, true)
+    },
     //勾选
     checkChange (row) {
       let checkArr = this.$refs.searchTable.getCheckboxRecords()
@@ -184,18 +211,29 @@ export default {
     },
     //勾选删除
     remove () {
-      let params = {
-        accountBillList: this.selection
-      }
-      this.zjControl
-        .accountOffline(params)
-        .then(ret => {
-          if (ret.code == 200) {
-            this.$message.success('删除成功!')
-            this.$refs.searchTable.removeCheckboxRow()
+      this.$messageBox({
+        type:'confirm',
+        title:'删除确认',
+        content: `是否确认删除选中对账单?`,
+        showCancelButton:true,
+        messageResolve:()=>{
+          let params = {
+            accountBillList: this.selection
           }
-        })
-        .catch(() => {})
+          this.zjControl
+            .accountOffline(params)
+            .then(ret => {
+              if (ret.code == 200) {
+                this.$message.success('删除成功!')
+                this.$refs.searchTable.removeCheckboxRow()
+              }
+            })
+            .catch(() => {})
+        },
+        messageReject: ()=>{
+
+        }
+      })
     }
   }
 }
