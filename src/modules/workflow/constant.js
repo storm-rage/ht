@@ -17,39 +17,41 @@ export const myItemsPath = {
     '1': {
       // 初审状态（apply）
       'E001': {
-        auditPath: 'entApplyAudit',
-        detailPath: 'entApplyAuditDetail'
+        auditPath: 'entApplyAuditAdd',
+        detailPath: 'entApplyAuditAddDetail'
       },
       // 复审状态
       'E002': {
-        auditPath: 'entApplyAudit',
-        detailPath: 'entApplyAuditDetail'
+        auditPath: 'entApplyAuditAdd',
+        detailPath: 'entApplyAuditAddDetail'
       },
       // 复核驳回状态
       'E005': {
-        auditPath: 'entApplyReject',
-        detailPath: 'entApplyAuditDetail'
+        auditPath: 'entApplyRejectAdd',
+        detailPath: 'entApplyAuditAddDetail'
       },
+      // 已办和办结状态
+      doneDetailPath: 'entApplyAuditAddDetail',
     },
     '2': {
       // 初审状态（apply）
       'E001': {
-        auditPath: 'entApplyAudit',
-        detailPath: 'entApplyAuditDetail'
+        auditPath: 'entApplyAuditEdit',
+        detailPath: 'entApplyAuditEditDetail'
       },
       // 复审状态
       'E002': {
-        auditPath: 'entApplyAudit',
-        detailPath: 'entApplyAuditDetail'
+        auditPath: 'entApplyAuditEdit',
+        detailPath: 'entApplyAuditEditDetail'
       },
       // 复核驳回状态
       'E005': {
-        auditPath: 'entApplyReject',
-        detailPath: 'entApplyAuditDetail'
+        auditPath: 'entApplyRejectEdit',
+        detailPath: 'entApplyAuditEditDetail'
       },
+      // 已办和办结状态
+      doneDetailPath: 'entApplyAuditEditDetail',
     },
-    // 已办和办结状态
-    doneDetailPath: 'entApplyAuditDetail',
   },
 
   // 用户管理

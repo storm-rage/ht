@@ -1,7 +1,7 @@
 const entUserManageRouter = [
   {
-    path: '/entApplyAudit',
-    name: 'entApplyAudit',
+    path: '/entApplyAuditAdd',
+    name: 'entApplyAuditAdd',
     component: () => import('../views/entUserManage/entManage/entApplyAudit'),
     meta: {
       title: '复核企业信息申请',
@@ -10,11 +10,39 @@ const entUserManageRouter = [
       keepAlive: true,
       refreshIndex: 0,
       pageType: 'audit',
+      workflowState: 'addDetail'
     }
   },
   {
-    path: '/entApplyReject',
-    name: 'entApplyReject',
+    path: '/entApplyAuditEdit',
+    name: 'entApplyAuditEdit',
+    component: () => import('../views/entUserManage/entManage/entApplyAudit'),
+    meta: {
+      title: '复核企业信息申请',
+      parent: 'myTodo',
+      root: '我的代办',
+      keepAlive: true,
+      refreshIndex: 0,
+      pageType: 'audit',
+      workflowState: 'editDetail'
+    }
+  },
+  {
+    path: '/entApplyRejectAdd',
+    name: 'entApplyRejectAdd',
+    component: () => import('../views/entUserManage/entManage/entApplyAudit'),
+    meta: {
+      title: '复核企业信息申请',
+      parent: 'myTodo',
+      root: '我的代办',
+      keepAlive: true,
+      refreshIndex: 0,
+      pageType: 'add',
+    }
+  },
+  {
+    path: '/entApplyRejectEdit',
+    name: 'entApplyRejectEdit',
     component: () => import('../views/entUserManage/entManage/entApplyAudit'),
     meta: {
       title: '复核企业信息申请',
@@ -26,8 +54,8 @@ const entUserManageRouter = [
     }
   },
   {
-    path: '/entApplyAuditDetail',
-    name: 'entApplyAuditDetail',
+    path: '/entApplyAuditAddDetail',
+    name: 'entApplyAuditAddDetail',
     component: () => import('../views/entUserManage/entManage/entApplyAudit'),
     meta: {
       title: '企业信息申请交易详情',
@@ -36,6 +64,21 @@ const entUserManageRouter = [
       keepAlive: true,
       refreshIndex: 0,
       pageType: 'detail',
+      workflowState: 'addDetail'
+    }
+  },
+  {
+    path: '/entApplyAuditEditDetail',
+    name: 'entApplyAuditEditDetail',
+    component: () => import('../views/entUserManage/entManage/entApplyAudit'),
+    meta: {
+      title: '企业信息申请交易详情',
+      parent: 'myTodo',
+      root: '我的代办',
+      keepAlive: true,
+      refreshIndex: 0,
+      pageType: 'detail',
+      workflowState: 'editDetail'
     }
   },
   {
