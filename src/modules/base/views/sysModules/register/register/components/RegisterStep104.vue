@@ -480,7 +480,7 @@ export default {
           return
         }else{
           //校验贸易信息
-          if(this.entInfoObj.form.isHtEnterprise === '0' && this.tradeInfoForm.supplier !== '1'){
+          if(this.entInfoObj.form.isHtEnterprise === '0' && this.tradeInfoForm.supplier !== 'S'){
             this.$message.error(`请勾选"我是供应商"！`)
             return
           }

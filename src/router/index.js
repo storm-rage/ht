@@ -52,10 +52,11 @@ router.beforeEach((to, from, next) => {
       if (res.isSuccess) {
         if (res.needSignAgreement) {
           next({
-            path: '/signAgreement',
+            name: 'signAgreement',
             params:{
               rowData:res.model
-            }
+            },
+            replace: true
           })
         }else {
           next('/home')

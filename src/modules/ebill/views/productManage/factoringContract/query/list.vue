@@ -24,7 +24,7 @@
             <el-select v-model="searchForm.isHtEnterprise">
               <el-option value="" label="全部"></el-option>
               <el-option
-                v-for="item in dictionary.isHtEnterprise"
+                v-for="item in dictionary.htEnterprise"
                 :key="`${item.code}isHtEnterprise`"
                 :label="item.desc"
                 :value="item.code"
@@ -47,7 +47,7 @@
       </template>
       <zj-table ref="searchTable" :params="searchForm" :api="zjControl.tableApi">
         <zj-table-column field="supplierName" title="供应商名称" />
-        <zj-table-column field="supplierTypeDesc" title="是否海天一级供应商" />
+        <zj-table-column field="isHtEnterpriseDesc" title="是否海天一级供应商" />
         <zj-table-column field="bizLicence" title="供应商统一社会信用代码" />
         <zj-table-column field="contractNo" title="合同编号"/>
         <zj-table-column field="contractName" title="合同名称"/>

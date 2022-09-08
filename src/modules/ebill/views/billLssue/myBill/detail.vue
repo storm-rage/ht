@@ -20,7 +20,7 @@
         <!-- 审核时 -->
         <el-row slot="right">
           <el-row class="btn-w85 zj-center">
-            <zj-button class="back" @click="goParent">返回</zj-button>
+            <zj-button @click="back">返回</zj-button>
           </el-row>
         </el-row>
       </zj-workflow>
@@ -33,6 +33,9 @@ import billDetail from './components/billDetail'
 import locus from './components/locus'
 import tradeBackground from './components/tradeBackground'
 
+/**
+ * 公共凭证详情
+ */
 export default {
   name: "billLssueMyBillDetail",
   components: {
@@ -68,6 +71,13 @@ export default {
     }
   },
   methods: {
+    back() {
+      if (this.row.parentRouteName) {
+        this.goParent(this.row.parentRouteName)
+      }else {
+        this.goParent();
+      }
+    },
     //获取凭证详情
     getHoldBillDetail() {
       let params = {

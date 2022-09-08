@@ -168,12 +168,11 @@ export default {
         }
     },
     created() {
+        this.getDictionary()
         this.getApi()
         this.getRow()
         console.log(this.row, "传来的row");
-
         this.idList = this.row.idList,
-            this.getDictionary()
         this.getDetail()
     },
     methods: {

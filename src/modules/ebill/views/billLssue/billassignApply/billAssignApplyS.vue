@@ -5,21 +5,22 @@
       <zj-header>电子债权凭证信息</zj-header>
       <zj-content>
         <zj-table :pager="false" :dataList="dataList">
-          <zj-table-column field="ebillCode" title="海e单编号">
+          <zj-table-column field="ebillCode" :title="`${productName}编号`">
           </zj-table-column>
-          <zj-table-column field="rootCode" title="原始海e单编号" />
+          <zj-table-column field="rootCode" :title="`原始${productName}编号`" />
           <zj-table-column field="payEntName" title="签发人" :formatter="money" />
           <zj-table-column field="receiptEntName" title="原始持有人" :formatter="money" />
           <zj-table-column field="payableIssuanceDate" title="凭证签发日" :formatter="money" />
-          <zj-table-column field="payableExpireDate" title="海e单到期日" :formatter="date" />
+          <zj-table-column field="payableExpireDate" :title="`${productName}到期日`" :formatter="date" />
           <zj-table-column field="transferName" title="转让企业" :formatter="date" />
-          <zj-table-column field="ebillAmt" title="海e单金额" :formatter="money" />
+          <zj-table-column field="ebillAmt" :title="`${productName}金额`" :formatter="money" />
           <zj-table-column field="availableAmt" title="剩余可用金额" :formatter="money" />
           <zj-table-column field="holderDate" title="凭证签收日" :formatter="date" />
-          <zj-table-column field="stateDesc" title="海e单状态" />
+          <zj-table-column field="stateDesc" :title="`${productName}状态`" />
           <zj-table-column title="操作" fixed="right">
             <template v-slot="{ row }">
               <zj-button type="text" v-if="!row.htSign" @click="openDialog(row)" :api="zjBtn.getEnterprise">贸易背景</zj-button>
+              <zj-button type="text" v-if="form.sellerEntName" @click="previewAgreement(row)">相关协议</zj-button>
             </template>
           </zj-table-column>
         </zj-table>
@@ -98,7 +99,10 @@ export default {
   computed: {
     ...mapState({
       entInfo: state => state.enterprise.entInfo,
-    })
+    }),
+    productName() {
+      return this.$store.getters['user/productName']
+    },
   },
   data() {
     return {
@@ -204,14 +208,14 @@ export default {
       this.tradeBjShow = true
     },
     // 相关协议
-    previewAgreement() {
+    previewAgreement(row) {
       let params = {
-        ebillCode: this.detailData.ebillCode,
+        ebillCode: row.ebillCode,
         fromEntId: this.entInfo.entId,
         fromEntName: this.entInfo.entName,
         holderName: this.form.sellerEntName,
-        payableExpireDate: this.detailData.payableExpireDate,
-        payEntName: this.detailData.payEntName,
+        payableExpireDate: row.payableExpireDate,
+        payEntName: row.payEntName,
         tranAmt: this.ebillAmt,
       }
       this.zjControl.getEbBillAgreementDetail(params).then(res => {
