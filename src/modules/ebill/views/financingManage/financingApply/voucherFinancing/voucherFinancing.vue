@@ -2,9 +2,9 @@
   <zj-content-container>
     <!--  凭证融资  -->
       <div class="zj-search-condition zj-m-b-20" style="border-bottom: none;">
-        <zj-header title="请选择海e单开单人/转让企业"/>
+        <zj-header :title="`请选择${productName}开单人/转让企业`"/>
         <el-form ref="searchFormEnt" :model="searchForm">
-          <el-form-item label="海e单开单人/转让企业：">
+          <el-form-item :label="`${productName}开单人/转让企业：`">
             <el-select v-model="searchForm.entId" @change="entChange">
               <el-option
                 v-for="item in dictionary.entInfoList"
@@ -16,33 +16,33 @@
           </el-form-item>
         </el-form>
         <zj-list-layout>
-          <zj-header title="凭证信息"/>
+          <zj-header :title="`${productName}信息`"/>
           <template slot="rightBtns">
             <vxe-button class="reset" icon="el-icon-refresh" @click="reset(nextParams.entId)">重置</vxe-button>
             <vxe-button class="search" icon="el-icon-search" @click="entChange(nextParams.entId)">查询</vxe-button>
           </template>
           <template slot="searchForm">
             <el-form ref="searchForm" :model="searchForm">
-              <el-form-item label="凭证持有日期：">
+              <el-form-item :label="`${productName}持有日期：`">
                 <zj-date-range-picker
                   :startDate.sync="searchForm.holderDateStart"
                   :endDate.sync="searchForm.holderDateEnd"
                 />
               </el-form-item>
-              <el-form-item label="凭证到期日：">
+              <el-form-item :label="`${productName}到期日：`">
                 <zj-date-range-picker
                   :startDate.sync="searchForm.expireDateStart"
                   :endDate.sync="searchForm.expireDateEnd"
                 />
               </el-form-item>
-              <el-form-item label="凭证金额：">
+              <el-form-item :label="`${productName}金额：`">
                 <zj-amount-range
                   :startAmt.sync="searchForm.ebillAmtStart"
                   :endAmt.sync="searchForm.ebillAmtEnd"
                   @keyupEnterNative="entChange(nextParams.entId)"
                 />
               </el-form-item>
-              <el-form-item label="凭证编号：">
+              <el-form-item :label="`${productName}编号：`">
                 <el-input v-model="searchForm.ebillCodeLike" @keyup.enter.native="entChange(nextParams.entId)"/>
               </el-form-item>
             </el-form>
@@ -55,21 +55,21 @@
                     :checkbox-config="{ highlight: true, reserve:true,}"
           >
             <zj-table-column type="checkbox" width="40" fixed="left"/>
-            <zj-table-column field="ebillCode" title="债权凭证编号"/>
-            <zj-table-column field="rootCode" title="原始债权凭证编号"/>
-            <zj-table-column field="writerName" title="凭证签发人"/>
+            <zj-table-column field="ebillCode" :title="`${productName}编号`"/>
+            <zj-table-column field="rootCode" :title="`原始${productName}编号`"/>
+            <zj-table-column field="writerName" :title="`${productName}签发人`"/>
             <zj-table-column field="transferName" title="转让企业">
               <template v-slot="{row}">
                 {{row.transferName?row.transferName:'-'}}
               </template>
             </zj-table-column>
-            <zj-table-column field="ebillAmt" title="凭证金额" :formatter="money"/>
+            <zj-table-column field="ebillAmt" :title="`${productName}金额`" :formatter="money"/>
             <zj-table-column field="availableAmt" title="剩余可用金额" :formatter="money"/>
-            <zj-table-column field="holderDate" title="凭证持有日期" :formatter="date"/>
-            <zj-table-column field="expireDate" title="凭证到期日" :formatter="date"/>
+            <zj-table-column field="holderDate" :title="`${productName}持有日期`" :formatter="date"/>
+            <zj-table-column field="expireDate" :title="`${productName}到期日`" :formatter="date"/>
             <el-row slot="pager-left" class="slotRows" >
-              海e单金额合计：{{moneyNoSynbol(totalAmount)}}
-              <span class="zj-m-l-10">已勾选凭证金额合计：{{moneyNoSynbol(checkedTotalAmount)}}</span>
+              {{productName}}金额合计：{{moneyNoSynbol(totalAmount)}}
+              <span class="zj-m-l-10">已勾选{{productName}}金额合计：{{moneyNoSynbol(checkedTotalAmount)}}</span>
             </el-row>
           </zj-table>
         </zj-list-layout>
@@ -85,7 +85,9 @@ export default {
     dictionary: Object,
   },
   computed: {
-
+    productName () {
+      return this.$store.getters['user/productName']
+    },
   },
   data() {
     return {
