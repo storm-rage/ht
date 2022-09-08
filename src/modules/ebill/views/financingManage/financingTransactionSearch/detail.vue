@@ -18,14 +18,14 @@
 <!--                  </div>-->
 <!--                </el-step>-->
 <!--              </el-steps>-->
-<!--              <zj-step :list="form.progressInfo.nodeList"-->
-<!--                       v-show="form.progressInfo.nodeList && form.progressInfo.nodeList.length"-->
-<!--                       :boxWidth="boxWidth"/>-->
-              <zj-steps :list="form.progressInfo.tranTxList"
+              <zj-step :list="stepList"
+                       v-show="stepList && stepList.length"
+                       :boxWidth="boxWidth"/>
+              <zj-steps :list="stepsList"
                         :isDayTime="false"
                         :width="stepsWidth"
-                        :parent-item-size="form.progressInfo.nodeList.length"
-                        class="zj-p-t-20"/>
+                        :parent-item-size="stepsList.length"
+                        class="zj-p-y-20"/>
             </zj-content>
           </zj-content-block>
           <zj-content-block>
@@ -258,12 +258,8 @@ export default {
       detail:{},
       dictionary:{},
       stepsWidth: 400,
-      stepList:[
-        {title: '融资申请',desc:'',time:'提交时间：2022.02.02 11:11:12',reason:''},
-        {title: '融资复核',desc:'复核通过',time:'提交时间：2022.02.02 11:11:12',reason:'拒绝原因：12333444'},
-        {title: '保理公处理核',desc:'审核通过',time:'提交时间：2022.02.02 11:11:12',reason:''},
-        {title: '融资放款',desc:'完成放款',time:'放款时间：2022.02.02 11:11:12',reason:''},
-      ],
+      stepList:[],
+      stepsList:[],
     }
   },
   methods: {
@@ -279,14 +275,69 @@ export default {
       if(this.row.financingProductType === '0') {
         this.zjControl.getOrderFinancingTranDetail(params).then(res=>{
           this.form = res.data
+          //步骤
+          let newStepList = []
+          if(res.data.progressInfo.nodeList && res.data.progressInfo.nodeList.length) {
+            res.data.progressInfo.nodeList.forEach((item,index)=>{
+              newStepList.push({
+                label:item.desc,
+                state:item.flag ? item.flag === '1' ? 'success' : 'error' : 'info',
+                after:index + 1 !== res.data.progressInfo.nodeList.length
+                  ? res.data.progressInfo.nodeList[index + 1].flag
+                    ? res.data.progressInfo.nodeList[index + 1].flag === '1' ? 'success' : 'error' : 'info'
+                  : 'info'
+              })
+            })
+          }
+          this.stepList = newStepList
+          //步骤说明
+          let newAlist = []
+          if(res.data.progressInfo.tranTxList && res.data.progressInfo.tranTxList.length) {
+            res.data.progressInfo.tranTxList.forEach((item,index)=>{
+              newAlist.push({
+                state:index+1 === res.data.progressInfo.tranTxList && item.flag ? item.flag === '1' ? 'success' : 'error' : '',
+                date:item.createDatetime,
+                label:item.notes,
+              })
+            })
+          }
+          this.stepsList = newAlist
         })
       } else {
         this.zjControl.getBillFinancingTranDetail(params).then(res=>{
           this.form = res.data
+          //步骤
+          let newStepList = []
+          if(res.data.progressInfo.nodeList && res.data.progressInfo.nodeList.length) {
+            res.data.progressInfo.nodeList.forEach((item,index)=>{
+              newStepList.push({
+                label:item.desc,
+                state:item.flag ? item.flag === '1' ? 'success' : 'error' : 'info',
+                after:index + 1 !== res.data.progressInfo.nodeList.length
+                  ? res.data.progressInfo.nodeList[index + 1].flag
+                    ? res.data.progressInfo.nodeList[index + 1].flag === '1' ? 'success' : 'error' : 'info'
+                  : 'info'
+              })
+            })
+          }
+          this.stepList = newStepList
+          //步骤说明
+          let newAlist = []
+          if(res.data.progressInfo.tranTxList && res.data.progressInfo.tranTxList.length) {
+            res.data.progressInfo.tranTxList.forEach((item,index)=>{
+              newAlist.push({
+                state:index+1 === res.data.progressInfo.tranTxList && item.flag ? item.flag === '1' ? 'success' : 'error' : '',
+                date:item.createDatetime,
+                label:item.notes,
+              })
+            })
+          }
+          this.stepsList = newAlist
         })
       }
     },
     boxWidth(width) {
+      // this.stepsWidth = width
       this.stepsWidth = width > 500 ? 500 : width
     },
     attaDownLoad(row){
