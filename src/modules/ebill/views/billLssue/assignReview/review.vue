@@ -26,16 +26,16 @@
       <zj-header>电子债权凭证信息</zj-header>
       <zj-content>
         <zj-table :dataList="detailData.getEbBillBasicInfoList">
-          <zj-table-column field="rootCode" title="原始海e单编号">
+          <zj-table-column field="rootCode" :title="`原始${productName}编号`">
           </zj-table-column>
-          <zj-table-column field="ebillCode" title="海e单编号" />
+          <zj-table-column field="ebillCode" :title="`${productName}编号`" />
           <zj-table-column field="payEntName" title="签发人" />
           <zj-table-column field="receiptEntName" title="原始持有人"/>
-          <zj-table-column field="payableIssuanceDate" title="海e单签发日" :formatter="date" />
-          <zj-table-column field="payableExpireDate" title="海e单到期日" :formatter="date" />
+          <zj-table-column field="payableIssuanceDate" :title="`${productName}签发日`" :formatter="date" />
+          <zj-table-column field="payableExpireDate" :title="`${productName}到期日`" :formatter="date" />
           <zj-table-column field="holderName" title="转让企业" />
-          <zj-table-column field="ebillAmt" title="海e单金额" :formatter="money" />
-          <zj-table-column field="holderDate" title="海e单签收日" :formatter="date" />
+          <zj-table-column field="ebillAmt" :title="`${productName}金额`" :formatter="money" />
+          <zj-table-column field="holderDate" :title="`${productName}签收日`" :formatter="date" />
           <zj-table-column field="stateDesc" title="凭证状态" />
           <zj-table-column title="操作" fixed="right">
             <template v-slot="{ row }">
@@ -50,7 +50,7 @@
       <zj-header>转让信息</zj-header>
       <zj-content>
         <zj-table :dataList="detailData.getEbBillBankInfoList">
-          <zj-table-column field="ebillCode" title="海e单编号" />
+          <zj-table-column field="ebillCode" :title="`${productName}编号`" />
           <zj-table-column field="receiptEntName" title="被转让人名称">
           </zj-table-column>
           <zj-table-column field="tranAmt" title="转让金额" :formatter="money" />
@@ -97,7 +97,10 @@ export default {
   computed: {
     ...mapState({
       entInfo: state => state.enterprise.entInfo,
-    })
+    }),
+    productName() {
+      return this.$store.getters['user/productName']
+    }
   },
   mixins:[view],
   data() {

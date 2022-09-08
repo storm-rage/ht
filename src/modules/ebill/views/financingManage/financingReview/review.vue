@@ -145,7 +145,7 @@
             <zj-table-column field="expireDate" title="凭证到期日" :formatter="date"/>
           </zj-table>
           <el-row class="zj-m-t-10 zj-m-l-20" >
-            海e单金额合计：{{moneyNoSynbol(form.billInfo?form.billInfo.totalEbillAmt:'')}}
+            {{$store.getters['user/productName']}}金额合计：{{moneyNoSynbol(form.billInfo?form.billInfo.totalEbillAmt:'')}}
           </el-row>
         </zj-content-block>
         <zj-content-block>

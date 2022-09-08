@@ -84,18 +84,18 @@
                     :dataList="form.ebBillModelList"
                     :pager="false"
           >
-            <zj-table-column field="ebillCode" title="海e单编号" />
-            <zj-table-column field="rootCode" title="原始海e单编号" />
+            <zj-table-column field="ebillCode" :title="`${productName}编号`" />
+            <zj-table-column field="rootCode" :title="`原始${productName}编号`" />
             <zj-table-column field="writerName" title="开单人" />
             <zj-table-column field="transferName" title="转让企业" >
               <template v-slot="{row}">
                 {{row.transferName?row.transferName:'-'}}
               </template>
             </zj-table-column>
-            <zj-table-column field="ebillAmt" title="海e单金额" :formatter="money"/>
+            <zj-table-column field="ebillAmt" :title="`${productName}金额`" :formatter="money"/>
             <zj-table-column field="availableAmt" title="剩余可用金额" :formatter="money"/>
-            <zj-table-column field="holderDate" title="海e单持有日期" :formatter="date"/>
-            <zj-table-column field="expireDate" title="海e单到期日" :formatter="date"/>
+            <zj-table-column field="holderDate" :title="`${productName}持有日期`" :formatter="date"/>
+            <zj-table-column field="expireDate" :title="`${productName}到期日`" :formatter="date"/>
           </zj-table>
           <el-row class="slotRows zj-m-l-10 zj-m-t-10" >
             凭证金额合计：{{form.totalAmt?moneyNoSynbol(form.totalAmt):''}}
@@ -186,6 +186,9 @@ export default {
       }
       return res
     },
+    productName() {
+      return this.$store.getters['user/productName']
+    }
   },
   data() {
     return {
