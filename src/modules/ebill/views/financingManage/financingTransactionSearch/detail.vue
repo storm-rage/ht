@@ -3,7 +3,7 @@
     <zj-content-container>
       <!--  入库融资详情  -->
       <zj-content>
-      <zj-top-header :title="`${productName}融资详情`"/>
+      <zj-top-header :title="`${proName}融资详情`"/>
       <zj-content-block>
         <el-form :model="form" ref="form" label-width="200px">
           <zj-content-block>
@@ -118,7 +118,7 @@
                   </el-form-item>
                 </el-col>
                 <el-col :span="12">
-                  <el-form-item label="融资折扣率：">{{form.discountrate}}</el-form-item>
+                  <el-form-item label="融资折扣率：">{{form.discountRate?`${form.discountRate}%`:''}}</el-form-item>
                 </el-col>
               </el-row>
               <el-row>
@@ -131,7 +131,7 @@
                   </el-form-item>
                 </el-col>
                 <el-col :span="12">
-                  <el-form-item label="融资月利率：">{{form.interestRate}}</el-form-item>
+                  <el-form-item label="融资月利率：">{{form.interestRate?`${form.interestRate}%`:''}}</el-form-item>
                 </el-col>
               </el-row>
               <el-row>
@@ -162,7 +162,7 @@
           <zj-content-block>
             <!--     产品为订单融资时     -->
             <zj-table ref="searchTable" class="zj-search-table"
-                      :dataList="form.ebBillModelList"
+                      :dataList="form.phasedAgreements"
                       :pager="false"
                       v-if="row.financingProductType === '0'"
             >
@@ -170,7 +170,7 @@
               <zj-table-column field="agreementName" title="阶段性协议名称" />
               <zj-table-column field="agreementStartDate" title="协议签订日期" :formatter="date"/>
               <zj-table-column field="agreementEstimateEndDate" title="协议到期日" :formatter="date"/>
-              <zj-table-column field="agreementStatus" title="状态" :formatter="obj=>typeMap(dictionary.financingStateList,obj.cellValue)"/>
+              <zj-table-column field="agreementStatus" title="状态" :formatter="obj=>typeMap(dictionary.agreementStatus,obj.cellValue)"/>
               <zj-table-column field="fileName" title="附件"/>
               <zj-table-column title="操作">
                 <template v-slot="{row}">
@@ -184,16 +184,16 @@
                         :dataList="form.ebBillModelList"
                         :pager="false"
               >
-                <zj-table-column field="ebillCode" title="凭证编号" />
-                <zj-table-column field="rootCode" title="原始凭证编码" />
-                <zj-table-column field="writerName" title="凭证签发人" />
+                <zj-table-column field="ebillCode" :title="`${productName}编号`" />
+                <zj-table-column field="rootCode" :title="`原始${productName}编码`" />
+                <zj-table-column field="writerName" :title="`${productName}签发人`" />
                 <zj-table-column field="transferName" title="转让企业" />
-                <zj-table-column field="ebillAmt" title="凭证金额" :formatter="money"/>
-                <zj-table-column field="holderDate" title="凭证持有日期" :formatter="date"/>
-                <zj-table-column field="expireDate" title="凭证到期日" :formatter="date"/>
+                <zj-table-column field="ebillAmt" :title="`${productName}金额`" :formatter="money"/>
+                <zj-table-column field="holderDate" :title="`${productName}持有日期`" :formatter="date"/>
+                <zj-table-column field="expireDate" :title="`${productName}到期日`" :formatter="date"/>
               </zj-table>
               <el-row class="zj-m-t-10 zj-m-l-10" >
-                凭证金额合计：{{moneyNoSynbol(form.totalAmt)}}
+                {{ productName }}金额合计：{{moneyNoSynbol(form.totalAmt)}}
               </el-row>
             </zj-content-block>
           </zj-content-block>
@@ -234,10 +234,13 @@ export default {
     zjStep,zjSteps
   },
   computed: {
-    productName() {
+    proName() {
       return this.row.financingProductType === '0' ? '订单保理' :
         this.row.financingProductType === '1' ? '入库' : '凭证'
     },
+    productName () {
+      return this.$store.getters['user/productName']
+    }
   },
   data() {
     return {

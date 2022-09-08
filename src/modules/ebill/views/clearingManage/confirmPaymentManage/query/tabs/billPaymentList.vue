@@ -136,7 +136,12 @@ export default {
     setBottomBtnLeft () {
       this.bottomBtnLeft = this.$refs.billPaymentRef.getBoundingClientRect().left - 10;
     },
-    toViewDetail (row) {},
+    toViewDetail (row) {
+      this.goChild('billLssueMyBillDetail',{
+        ebillCode: row.ebillCode,
+        parentRouteName: 'confirmReceipt'
+      })
+    },
     /**
      * 弹框修改确认收款
      * @param row

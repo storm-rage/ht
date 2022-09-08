@@ -162,7 +162,8 @@
     <zj-content-footer>
       <el-checkbox v-model="checked">我已阅读并同意
         <el-link type="primary" @click="getAgreement('DDBLRZXY')" v-if="row.financingProductType === '0'">《订单保理融资协议》</el-link>
-        <el-link type="primary" @click="getAgreement('RKRZXY')" v-if="row.financingProductType !== '0'">《入库融资协议》</el-link>
+        <el-link type="primary" @click="getAgreement('RKRZXY')" v-if="row.financingProductType === '1'">《入库融资协议》</el-link>
+        <el-link type="primary" @click="getAgreement('PZRZXY')" v-if="row.financingProductType === '2'">《凭证融资协议》</el-link>
       </el-checkbox>
       <zj-button type="primary" @click="reviewResolve">复核通过</zj-button>
       <zj-button class="reject" @click="reject">拒绝</zj-button>
