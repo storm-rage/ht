@@ -112,18 +112,18 @@
           @radio-change="handleRadioChange" :radio-config="{ highlight: true }" :pager="false">
           <!-- :api="zjControl.getFinancingBillInfos" -->
           <zj-table-column type="radio" width="40" />
-          <zj-table-column field="ebillCode" title="海诺单编号" />
-          <zj-table-column field="rootCode" title="原始海诺单编号" />
+          <zj-table-column field="ebillCode" :title="`${productName}编号`" />
+          <zj-table-column field="rootCode" :title="`原始${productName}编号`" />
           <zj-table-column field="payEntName" title="凭证签发人" />
           <zj-table-column field="transferName" title="转让企业" />
           <zj-table-column field="payableIssuanceDate" title="签发日期" :formatter="date" />
-          <zj-table-column field="payableAmt" title="海诺单金额" :formatter="money" />
-          <zj-table-column field="payableExpireDate" title="海诺单到期日" :formatter="date" />
+          <zj-table-column field="payableAmt" :title="`${productName}金额`" :formatter="money" />
+          <zj-table-column field="payableExpireDate" :title="`${productName}到期日`" :formatter="date" />
         </zj-table>
       </zj-content-block>
       <div class="zz"></div>
       <zj-content-block>
-        <zj-header :title="`对账单信息:（海诺单编号：${this.bjcode})`" />
+        <zj-header :title="`对账单信息:（${productName}编号：${this.bjcode})`" />
         <zj-table ref="searchTable" :dataList="billList" :pager="false">
           <zj-table-column field="acctBillCode" title="对账单编号" />
           <zj-table-column field="companyName" title="买方名称" />
@@ -222,6 +222,11 @@ export default {
     workflow() {
       // this.setFirstRow(this.voucherInfoList[0]);
       this.getOtherDetail()
+    }
+  },
+  computed: {
+    productName () {
+      return this.$store.getters['user/productName']
     }
   },
   data() {
