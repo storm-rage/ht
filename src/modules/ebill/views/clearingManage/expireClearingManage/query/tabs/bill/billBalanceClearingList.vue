@@ -125,10 +125,15 @@ export default {
       }
     },
     /**
-     * todo:跳转凭证详情
+     *
      * @param row
      */
-    toViewDetail(row) {},
+    toViewDetail(row) {
+      this.goChild('billLssueMyBillDetail',{
+        ebillCode: row.ebillCode,
+        parentRouteName: 'expireClear'
+      })
+    },
     /**
      * 批量尾款清算申请
      */
