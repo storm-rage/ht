@@ -294,7 +294,33 @@ export default {
       // console.log(this.list, '勾选的值22222')
     },
     //签发凭证
-    toIssuance (row) {
+    toIssuance () {
+      let overtimeAcctBillCodelist = []
+      let isError = this.list.some(item=>{
+        if(item.isApplyVoucher != '1') {
+          return true
+        }
+        if(this.$moment(item.estimatedPaymentDate).diff(this.$moment(),'days') >= 180) {
+          overtimeAcctBillCodelist.push(item.acctBillCode)
+        }
+      })
+      isError && (this.$message.warning('只允许“是否申请开立债权凭证=是”的对账单开立债权凭证。'))
+      if(overtimeAcctBillCodelist.length) {
+        this.$messageBox({
+          type:'confirm',
+          title:'提交确认',
+          content: `海诺单天数大于180天，请确认是否签发?对账单号：${overtimeAcctBillCodelist.join(',')}`,
+          showCancelButton:true,
+          messageResolve:()=>{
+            this.toIssuanceSave()
+          },
+          messageReject: ()=>{}
+        })
+      } else {
+        this.toIssuanceSave()
+      }
+    },
+    toIssuanceSave() {
       let params = {
         applyType: '0',
         accountBillList: this.list
