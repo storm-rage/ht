@@ -78,13 +78,13 @@ export default {
   methods: {
     userHandle(){
       // 是否同时需要  人脸识别 与  签署协议
-      if(this.userInfos.loginRes.userServiceAgreementFlag === '1' && this.userInfos.loginRes.faceCheck){
+      if((this.userInfos.loginRes.userServiceAgreementFlag === '1'  || this.userInfos.loginRes.personalInfoAuthFlag === '1' || this.userInfos.loginRes.userRegisterAgreementFlag === '1' ) && this.userInfos.loginRes.faceCheck){
         this.showFace = true //显示二维码
         this.showAgreement = true // 显示协议
       }else if (this.userInfos.loginRes.faceCheck){
         // 只需要需要人脸识别
         this.showFace = true //显示二维码
-      }else if (this.userInfos.loginRes.userServiceAgreementFlag === '1'){
+      }else if (this.userInfos.loginRes.userServiceAgreementFlag === '1' || this.userInfos.loginRes.personalInfoAuthFlag === '1' || this.userInfos.loginRes.userRegisterAgreementFlag === '1' ){
         // 只需要签协议
         this.showAgreement = true // 显示协议
         this.isMultipleEnt = false
@@ -110,11 +110,12 @@ export default {
     handleDone () {
       this.removeRow()
       this.saveInfo(this.userInfos.loginRes) // 保存所需信息
-      this.$router.push('/home') //进入系统
     },
     //保存相关信息
     saveInfo(loginRes){
-      this.$store.dispatch('user/saveUserInfo', loginRes);
+      this.$store.dispatch('user/saveUserInfo', loginRes).then(()=>{
+        this.$router.push('/home') //进入系统
+      });
       //设置默认到账户中心
       // this.$store.dispatch('menu/setNavMenuActive', '0')
     }
