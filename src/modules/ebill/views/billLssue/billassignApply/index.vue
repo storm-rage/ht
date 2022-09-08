@@ -1,6 +1,6 @@
 <template>
   <zj-content-container>
-    <zj-money-block img-name="hold-img" text="可转让电子债券凭证金额：" :amount="transferAmount" tipsText="说明：可转让债权凭证金额：当前状态为“正常持有”的，折扣范围内的可用金额。" />
+    <zj-money-block img-name="hold-img" :text="`可转让电子债券${productName}金额：`" :amount="transferAmount" :tipsText="`说明：1.可转让${productName}金额：当前状态为“正常持有”的，折扣范围内的可用金额。2.基于订单保理产品下签发的电子债权凭证，不支持转让！`" />
     <zj-list-layout>
       <template slot="searchForm">
         <el-form ref="searchForm" :model="searchForm">
@@ -8,11 +8,11 @@
             <el-input v-model="searchForm.payEntName" @keyup.enter.native="enterSearch" />
           </el-form-item>
 
-          <el-form-item label="凭证到期日：" class="col-right">
+          <el-form-item :label="`${productName}到期日：`" class="col-right">
             <zj-date-range-picker :startDate.sync="searchForm.payableExpireDateStart" :endDate.sync="searchForm.payableExpireDateEnd" />
           </el-form-item>
 
-          <el-form-item label="凭证金额：" class="col-center">
+          <el-form-item :label="`${productName}金额：`" class="col-center">
             <zj-amount-range :startAmt.sync="searchForm.ebillAmtStart" :endAmt.sync="searchForm.ebillAmtEnd" @keyupEnterNative="enterSearch" />
           </el-form-item>
 
@@ -20,7 +20,7 @@
             <el-input v-model="searchForm.transferName" @keyup.enter.native="enterSearch" />
           </el-form-item>
 
-          <el-form-item label="债权凭证编号：">
+          <el-form-item :label="`${productName}编号：`">
             <el-input v-model="searchForm.ebillCode" @keyup.enter.native="enterSearch" />
           </el-form-item>
 
@@ -31,22 +31,23 @@
       </template>
       <zj-table ref="searchTable" :params="searchForm" :api="zjControl.tableApi" @checkbox-change="tableCheckChange" @checkbox-all="tableCheckChange">
         <zj-table-column type="checkbox" width="40px" fixed="left"></zj-table-column>
-        <zj-table-column field="ebillCode" title="债权凭证编号">
+        <zj-table-column field="ebillCode" :title="`${productName}编号`">
           <template v-slot="{ row }">
             <span class="table-elbill-code" @click="goChild('', row)">{{
               row.ebillCode
             }}</span>
           </template>
         </zj-table-column>
-        <zj-table-column field="rootCode" title="原始债权凭证编号" />
+        <zj-table-column field="rootCode" :title="`原始${productName}编号`" />
         <zj-table-column field="payEntName" title="签发人" />
         <zj-table-column field="receiptEntName" title="原始持有人" />
-        <zj-table-column field="payableIssuanceDate" title="凭证签发日" :formatter="date" />
-        <zj-table-column field="payableExpireDate" title="凭证到期日" :formatter="date" />
+        <zj-table-column field="payableIssuanceDate" :title="`${productName}签发日`" :formatter="date" />
+        <zj-table-column field="payableExpireDate" :title="`${productName}到期日`" :formatter="date" />
         <zj-table-column field="transferName" title="转让企业"  />
-        <zj-table-column field="ebillAmt" title="凭证金额" :formatter="money" />
+        <zj-table-column field="ebillAmt" :title="`${productName}金额`" :formatter="money" />
+        <zj-table-column field="availableAmt" title="剩余可用金额" :formatter="money" />
         <zj-table-column field="holderDate" title="凭证签收日" :formatter="date" />
-        <zj-table-column field="stateDesc" title="凭证状态" />
+        <zj-table-column field="stateDesc" :title="`${productName}状态`" />
         <zj-table-column title="操作" fixed="right">
           <template v-slot="{ row }">
             <zj-button type="text" @click="goChild('billAssignApply', row)" :api="zjBtn.getEnterprise">转让申请</zj-button>
@@ -72,6 +73,11 @@ export default {
       transferAmount: 0,
       paramsDataList: []
     };
+  },
+  computed: {
+    productName() {
+      return this.$store.getters['user/productName']
+    },
   },
   created() {
     this.getApi();
