@@ -31,8 +31,8 @@
       <zj-header title="阶段性协议信息"></zj-header>
       <zj-list-layout>
         <template slot="rightBtns">
-          <vxe-button class="reset" icon="el-icon-refresh" @click="resetSearch()">重置</vxe-button>
-          <vxe-button class="search" icon="el-icon-search" @click="search(true,'searchTable')">查询</vxe-button>
+          <vxe-button class="reset" icon="el-icon-refresh" @click="reset({'coreCompanyName': buyerName})">重置</vxe-button>
+          <vxe-button class="search" icon="el-icon-search" @click="queryMyPhasedAgreePage({'coreCompanyName': buyerName})">查询</vxe-button>
         </template>
         <template slot="searchForm">
           <el-form ref="searchForm" :model="searchForm">
@@ -109,11 +109,13 @@ export default {
       tradeRelationList: [],
       dictionary: {},
       myPhasedAgreePageList: [],
+      buyerName: '',
     };
   },
   methods: {
     handleRadioChange({row}) {
       let coreComName = row.buyerName
+      this.buyerName = row.buyerName
       this.queryMyPhasedAgreePage({'coreCompanyName': coreComName})
     },
     attaDownload(row) {
@@ -133,6 +135,17 @@ export default {
     queryMyPhasedAgreePage(coreName) {
       this.searchForm = {...this.searchForm, ...coreName}
       console.log(this.searchForm)
+      this.$nextTick(() => {
+        this.$refs.searchTable.getList(this.searchForm)
+      })
+    },
+    reset(coreName) {
+      this.searchForm.agreementState = ''
+      this.searchForm.agreementStartDateBegin = ''
+      this.searchForm.agreementStartDateEnd = ''
+      this.searchForm.agreementNo = ''
+      this.searchForm.agreementType = ''
+      this.searchForm = {...this.searchForm, ...coreName}
       this.$nextTick(() => {
         this.$refs.searchTable.getList(this.searchForm)
       })
