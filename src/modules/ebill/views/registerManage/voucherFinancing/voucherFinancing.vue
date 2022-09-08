@@ -99,8 +99,8 @@ export default {
     };
   },
   created() {
-    this.getApi();
     this.getDetail();
+    this.getApi();
   },
   methods: {
     daqian() {
