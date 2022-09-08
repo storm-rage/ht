@@ -53,7 +53,7 @@
                 :endDate.sync="searchForm.agreementStartDateEnd"
               />
             </el-form-item>
-            <el-form-item label="贸易合同编号：">
+            <el-form-item label="阶段性协议编号：">
               <el-input v-model="searchForm.agreementNo" @keyup.enter.native="enterSearch"/>
             </el-form-item>
             <el-form-item label="协议类型：">
