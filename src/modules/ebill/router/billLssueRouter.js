@@ -133,6 +133,18 @@ const billLssueRouter = [
     },
   },
   {
+    path: '/ebBillApplyDetail',
+    name: 'ebBillApplyDetail',
+    component: () => import('../views/billLssue/billassignApply/detail'),
+    meta: {
+      title: `转让申请详情`,
+      parent: 'ebBillApply',
+      root: '电子债权凭证',
+      keepAlive: true,
+      refreshIndex: 0,
+    },
+  },
+  {
     path: '/billAssignApply',
     name: 'billAssignApply',
     component: () => import('../views/billLssue/billassignApply/billAssignApply.vue'),

@@ -208,7 +208,7 @@
         </el-row>
       </zj-content-block>
       <!-- 企业操作员 -->
-      <zj-content-block v-if="isAdd">
+      <zj-content-block v-if="isAdd || workflowState === 'addDetail'">
         <zj-header title="企业操作员" />
         <zj-content>
           <zj-button class="append zj-m-b-10" type="primary" @click="sysUserAdd" v-if="!isDetail">新增</zj-button>
@@ -244,7 +244,7 @@
                 <vxe-input v-model="row.email" type="text" :disabled="row.isEmailDis"></vxe-input>
               </template>
             </zj-table-column>
-            <zj-table-column field="roleId" title="操作员角色" :edit-render="{name: '$select',options: statementAccountTypeTable}" />
+            <zj-table-column field="roleIds" title="操作员角色" :edit-render="{name: '$select', props: { multiple: true },options: statementAccountTypeTable}" />
             <zj-table-column field="statementAccountType" title="开凭证对账单类型权限" :edit-render="{
                 name: '$select',
                 props: { multiple: true },

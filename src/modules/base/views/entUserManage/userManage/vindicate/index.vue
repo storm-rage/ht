@@ -68,11 +68,7 @@
             <zj-table-column field="roleId" title="角色" :formatter="(obj) => typeMap(dictionary.sysRoleList, obj.cellValue)" />
             <zj-table-column field="email" title="邮箱" />
             <zj-table-column field="userState" title="状态" :formatter="(obj) => typeMap(dictionary.userState, obj.cellValue)" />
-            <zj-table-column field="statementAccountType" title="支持开立债权凭证的对账单类型" v-if="pageType !== 'detail'">
-              <template v-slot="{ row }">
-                {{handleStatementAccountType
-                (row.statementAccountType)}}
-              </template>
+            <zj-table-column field="statementAccountType" title="支持开立债权凭证的对账单类型" :formatter="(obj) => typeMap(dictionary.statementAccountTypeList, obj.cellValue)" v-if="pageType !== 'detail'">
             </zj-table-column>
             <zj-table-column title="操作" fixed="right" width="240px" v-if="pageType !== 'detail'">
               <template v-slot="{ row }">
@@ -202,19 +198,6 @@ export default {
           });
         },
       });
-    },
-    //对账单类型转码
-    handleStatementAccountType(data) {
-      if (!!data) {
-        let arr = data.split(',')
-        if (Array.isArray(arr) && data.length) {
-          arr.forEach((item, i) => {
-            console.log(this.typeMap(this.dictionary.statementAccountTypeList, item))
-            arr[i] = this.typeMap(this.dictionary.statementAccountTypeList, item)
-          })
-          return arr.join(',')
-        }
-      }
     },
     downloadFile(data) {
       this.zjControl.downloadFile(data[0])

@@ -32,6 +32,11 @@ export default {
         return new Error('邮箱格式不正确')
       }
     }
+    const roleIdValid = ({ cellValue }) => {
+      if (cellValue.length === 0) {
+        return new Error('请选择操作员角色')
+      }
+    }
     const statementAccountTypeValid = ({ cellValue }) => {
       if (cellValue.length === 0) {
         return new Error('请选择对账单类型权限')
@@ -47,7 +52,7 @@ export default {
       sysUserItem: {
         htSysCode: '', //账号
         userName: '',//用户名
-        roleId: '',//操作员角色
+        roleIds: [],//操作员角色
         certNo: '',//证件号码
         mobileNo: '',//手机号码
         email: '',//电子邮箱
@@ -67,8 +72,8 @@ export default {
         email: [
           { required: false, validator: emailValid }
         ],
-        roleId: [
-          { required: true, message: '操作员角色必须填写' }
+        roleIds: [
+          { required: true, message: '操作员角色必须填写', validator: roleIdValid }
         ],
         statementAccountType: [
           { required: true, message: '开凭证对账单类型权限必须填写', validator: statementAccountTypeValid }
@@ -231,6 +236,8 @@ export default {
       isEdit: false,
       //是否是新增页
       isAdd: false,
+      // 工作流状态
+      workflowState: this.$route.meta.workflowState,
       //操作记录
       logList: []
     }
@@ -424,7 +431,7 @@ export default {
       let sysUserItem = {
         htSysCode: '', //账号
         userName: '',//用户名
-        roleId: '',//操作员角色
+        roleIds: [],//操作员角色
         certNo: '',//证件号码
         mobileNo: '',//手机号码
         email: '',//电子邮箱
@@ -459,7 +466,7 @@ export default {
               certNo: res.data.idcardNo,//证件号码
               mobileNo: res.data.tel,//手机号码
               email: res.data.email,//电子邮箱
-              roleId: '',//操作员角色
+              roleIds: [],//操作员角色
               statementAccountType: [], //对账单类型
               save: false,//是否保存过
               isSave: true // 是否可以保存
@@ -484,21 +491,21 @@ export default {
     },
     //保存企业操作员
     async sysUserSave(row) {
-      // let items = this.sysUserList.filter(item => item.htSysCode === row.htSysCode)
-      // if (items.length > 1) {
-      //   this.$message.error('存在相同的账号！')
-      //   return
-      // }
-      // items = this.sysUserList.filter(item => item.certNo === row.certNo)
-      // if (items.length > 1) {
-      //   this.$message.error('存在相同的身份证号码！')
-      //   return
-      // }
-      // length = this.sysUserList.filter(item => item.mobileNo === row.mobileNo)
-      // if (items.length > 1) {
-      //   this.$message.error('存在相同的手机号码！')
-      //   return
-      // }
+      let items = this.sysUserList.filter(item => item.htSysCode === row.htSysCode)
+      if (items.length > 1) {
+        this.$message.error('存在相同的账号！')
+        return
+      }
+      items = this.sysUserList.filter(item => item.certNo === row.certNo)
+      if (items.length > 1) {
+        this.$message.error('存在相同的身份证号码！')
+        return
+      }
+      length = this.sysUserList.filter(item => item.mobileNo === row.mobileNo)
+      if (items.length > 1) {
+        this.$message.error('存在相同的手机号码！')
+        return
+      }
 
       const errMap = await this.$refs.sysUser.validate(row).catch(errMap => errMap)
       if (!errMap && !row.isSave) {
@@ -549,7 +556,9 @@ export default {
             let codeArr = []
             let sysUserList = this.sysUserList
             sysUserList.forEach(item => {
-              codeArr.push(item.roleId)
+              if (Array.isArray(item.roleIds)) {
+                codeArr.push(...item.roleIds)
+              }
             })
             if (this.form.entType === 'B') {
               if (this.form.isDoublePost === '1') {
@@ -595,12 +604,6 @@ export default {
           }
           // 企业附件
           params.pubAttachList = this.pubAttachList
-          // if (params.pubAttachList) {
-          //   params.pubAttachList = params.pubAttachList.filter(item => {
-          //     return !!item.fileName
-          //   })
-          // }
-          // return
           this.$emit('formPass', params)
         } else {
           return this.$messageBox({
@@ -613,6 +616,20 @@ export default {
     // 暂存
     saveEnterprise() {
       if (!!this.form.bizLicence) {
+        let params = JSON.parse(JSON.stringify(this.form))
+        // 其他附件
+        params.pubOtherAttachList = this.$refs.ofileSetting.getData()
+        // 企业操作员
+        params.sysUserList = this.sysUserList
+        if (params.sysUserList) {
+          params.sysUserList.forEach(item => {
+            if (item.statementAccountType.join) {
+              item.statementAccountType = item.statementAccountType.join(',')
+            }
+          })
+        }
+        // 企业附件
+        params.pubAttachList = this.pubAttachList
         this.zjControl.saveEnterprise(this.form).then(() => {
           this.$message.success('暂存成功！')
           this.goParent()
