@@ -40,18 +40,18 @@
           <el-row>
             <el-col :span="24">
               <el-form-item label="海天业务系统账号：" prop="htSysCode">
-                <el-input v-model="form.htSysCode" />
-                <zj-button class="zj-m-l-20" type="primary" @click="getEmployeeInfo">确认</zj-button>
+                <el-input v-model="form.htSysCode" :disabled="state < 1" />
+                <zj-button class="zj-m-l-20" type="primary" @click="getEmployeeInfo" :disabled="state < 1">确认</zj-button>
               </el-form-item>
             </el-col>
             <el-col :span="8">
               <el-form-item label="用户姓名：" prop="userName">
-                <el-input v-model="form.userName" />
+                <el-input v-model="form.userName" :disabled="state < 2" />
               </el-form-item>
             </el-col>
             <el-col :span="8">
               <el-form-item label="证件类型：" prop="certType">
-                <el-select v-model="form.certType" filterable placeholder="请选择" :popper-append-to-body="false">
+                <el-select v-model="form.certType" filterable placeholder="请选择" :popper-append-to-body="false" :disabled="state < 2">
                   <el-option v-for="item in dictionary.certType" :key="item.code" :label="item.desc" :value="item.code">
                   </el-option>
                 </el-select>
@@ -59,29 +59,29 @@
             </el-col>
             <el-col :span="8">
               <el-form-item label="证件号码：" prop="certNo">
-                <el-input v-model="form.certNo" />
+                <el-input v-model="form.certNo" :disabled="state < 2" />
               </el-form-item>
             </el-col>
             <el-col :span="8">
               <el-form-item label="证件有效期：">
-                <zj-date-range-picker class="el-form-item__regExpire" :startDate.sync="form.certStartDate" :endDate.sync="form.certEndDate" />
+                <zj-date-range-picker class="el-form-item__regExpire" :startDate.sync="form.certStartDate" :endDate.sync="form.certEndDate" :disabled="state < 2" />
               </el-form-item>
             </el-col>
             <el-col :span="8">
               <el-form-item label="手机号码/用户名：" prop="mobileNo">
-                <el-input v-model="form.mobileNo" />
+                <el-input v-model="form.mobileNo" :disabled="state < 2" />
               </el-form-item>
             </el-col>
             <el-col :span="8">
               <el-form-item label="邮箱：">
-                <el-input v-model="form.email" />
+                <el-input v-model="form.email" :disabled="state < 2" />
               </el-form-item>
             </el-col>
           </el-row>
           <el-row>
             <el-col :span="24">
               <el-form-item label="用户角色：">
-                <el-select class="rolesSelect" v-model="form.roleIds" filterable placeholder="请选择" :popper-append-to-body="false" multiple @change="roleChange">
+                <el-select class="rolesSelect" v-model="form.roleIds" filterable placeholder="请选择" :popper-append-to-body="false" multiple :disabled="state < 2">
                   <el-option v-for="item in dictionary.autoRoleList" :key="item.code" :label="item.desc" :value="item.code" :disabled="item.disabled">
                   </el-option>
                 </el-select>
@@ -89,7 +89,7 @@
             </el-col>
             <el-col :span="24">
               <el-form-item label="请选择开凭证对账单类型权限：" label-width="280px" v-if="isShowType">
-                <el-select v-model="statementAccountTypeArr" filterable placeholder="请选择" :popper-append-to-body="false" multiple>
+                <el-select v-model="statementAccountTypeArr" filterable placeholder="请选择" :popper-append-to-body="false" multiple :disabled="state < 2">
                   <el-option v-for="item in dictionary.statementAccountTypeList" :key="item.code" :label="item.desc" :value="item.code">
                   </el-option>
                 </el-select>
@@ -189,30 +189,14 @@ export default {
       },
       rolesActive: [],
       isShowType: true,
+      state: 0,
     };
   },
   created() {
     this.getRow();
     this.getDictionary();
   },
-  watch: {
-    // 选择经办，复核显示对账单类型
-    // 'form.roleIds'(roles) {
-    //   console.log(roles)
-    //   let codeArr = ['5', '6', '8', '9', '11', '12', '14', '15']
-    //   this.isShowType = false
-    //   roles.forEach(item => {
-    //     if (codeArr.includes(item)) {
-    //       console.log(this.isShowType)
-    //       return this.isShowType = true
-    //     }
-    //   })
-    // }
-  },
   methods: {
-    roleChange(roles) {
-
-    },
     //获取字典
     getDictionary() {
       this.zjControl.getUserDictionary().then((res) => {
@@ -223,6 +207,7 @@ export default {
     getEnterpriseConfirm() {
       this.zjControl
         .getEnterpriseConfirm({ name: this.detailData.name }).then((res) => {
+          this.state = 1
           this.detailData = res.data;
           // 核心企业可选角色
           if (this.detailData.entType === "B") {
@@ -247,6 +232,7 @@ export default {
     getEmployeeInfo() {
       this.zjControl.getEmployeeInfo({ htSysCode: this.form.htSysCode, customCode: this.detailData.customCode }).then((res) => {
         if (res.data.realName) {
+          this.state = 2
           let sysUserItem = {
             userName: res.data.realName,//用户名
             certNo: res.data.idcardNo,//证件号码
@@ -269,7 +255,7 @@ export default {
           if (!!sysUserItem.certNo) sysUserItem.isCertNoDis = true //是否禁用
           if (!!sysUserItem.mobileNo) sysUserItem.isMobileNoNameDis = true //是否禁用
           if (!!sysUserItem.email) sysUserItem.isEmailDis = true //是否禁用
-          this.form = Object.assign(this.form, sysUserItem)
+          this.form = Object.assign(sysUserItem, this.form)
           console.log(this.form)
 
           this.$message.success('查询成功！')
@@ -290,19 +276,24 @@ export default {
     },
     // 新增用户
     submit() {
-      let params = Object.assign(this.form, this.detailData);
-      // if (roleArr.includes('5') && roleArr.includes('6') || roleArr.includes('8') && roleArr.includes('9') || roleArr.includes('11') && roleArr.includes('12')||roleArr.includes('14') && roleArr.includes('15')) {
-      //   this.$message.error('同一账号不能同时选经办员和复核员！')
-      //   return
-      // }
-      if (this.statementAccountTypeArr) {
-        params.statementAccountType = this.statementAccountTypeArr.join(',')
-      }
-      params.idCardAttach = this.attachInfo // 身份证附件
-      this.zjControl.addUser(params).then((res) => {
-        this.$message.success("新增用户成功！");
-        this.goParent();
-      });
+      this.$refs.form.validate((valid) => {
+        if (valid) {
+          let roleArr = this.form.roleIds
+          if (roleArr.includes('5') && roleArr.includes('6') || roleArr.includes('8') && roleArr.includes('9') || roleArr.includes('11') && roleArr.includes('12') || roleArr.includes('14') && roleArr.includes('15')) {
+            this.$message.error('不能同时选经办员和复核员！')
+            return
+          }
+          let params = Object.assign(this.form, this.detailData);
+          if (this.statementAccountTypeArr) {
+            params.statementAccountType = this.statementAccountTypeArr.join(',')
+          }
+          params.idCardAttach = this.attachInfo // 身份证附件
+          this.zjControl.addUser(params).then((res) => {
+            this.$message.success("新增用户成功！");
+            this.goParent();
+          });
+        }
+      })
     },
   },
 };

@@ -300,7 +300,8 @@ export default {
         if (!!this.form.pubAttachList) { // 企业附件回显
           this.pubAttachList = this.form.pubAttachList
         }
-        this.sysUserList = this.form.sysUserList || []
+        // 操作员
+        this.sysUserList = this.form.sysUserList || this.form.entUserList || []
         // 其他附件
         this.$refs.ofileSetting.$data.fileList = this.form.pubOtherAttachList || []
         // 企业操作员
@@ -650,7 +651,7 @@ export default {
     getEnterpriseConfirm() {
       this.zjControl.getEnterpriseConfirm({ name: this.form.name }).then((res) => {
         this.$emit('update:form', res.data)
-        this.sysUserList = res.data.entUserList || []
+        // this.sysUserList = res.data.entUserList || []
         this.detailsHandle()
       })
     },
