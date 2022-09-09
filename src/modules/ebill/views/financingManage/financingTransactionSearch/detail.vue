@@ -23,7 +23,7 @@
               <zj-steps :list="stepsList"
                         :isDayTime="false"
                         :width="stepsWidth"
-                        :parent-item-size="stepsList.length"
+                        :parent-item-size="stepList.length"
                         class="zj-p-y-20"/>
             </zj-content>
           </zj-content-block>
@@ -306,6 +306,7 @@ export default {
             })
           }
           this.stepsList = newAlist
+          console.log(this.stepsList)
         })
       } else {
         this.zjControl.getBillFinancingTranDetail(params).then(res=>{
@@ -337,6 +338,7 @@ export default {
             })
           }
           this.stepsList = newAlist
+          console.log(this.stepsList)
         })
       }
     },
