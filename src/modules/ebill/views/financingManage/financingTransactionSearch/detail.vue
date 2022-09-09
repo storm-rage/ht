@@ -306,7 +306,6 @@ export default {
             })
           }
           this.stepsList = newAlist
-          console.log(this.stepsList)
         })
       } else {
         this.zjControl.getBillFinancingTranDetail(params).then(res=>{
@@ -338,7 +337,6 @@ export default {
             })
           }
           this.stepsList = newAlist
-          console.log(this.stepsList)
         })
       }
     },
