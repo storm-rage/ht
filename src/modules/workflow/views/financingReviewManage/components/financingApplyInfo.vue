@@ -123,16 +123,16 @@
         <zj-table ref="searchTable" class="zj-search-table"
                   :dataList="voucherList"
         >
-          <zj-table-column field="ebillCode" title="海e单编号" />
-          <zj-table-column field="rootCode" title="原始海e单编号" />
+          <zj-table-column field="ebillCode" :title="`${productName}编号`" />
+          <zj-table-column field="rootCode" :title="`原始${productName}编号`" />
           <zj-table-column field="writerName" title="凭证签发人" />
           <zj-table-column field="transferName" title="转让企业" />
-          <zj-table-column field="ebillAmt" title="海e单金额" :formatter="money"/>
+          <zj-table-column field="ebillAmt" :title="`${productName}金额`" :formatter="money"/>
           <zj-table-column field="holderDate" title="凭证持有日期" :formatter="date"/>
-          <zj-table-column field="expireDate" title="海e单到期日" :formatter="date"/>
+          <zj-table-column field="expireDate" :title="`${productName}到期日`" :formatter="date"/>
         </zj-table>
         <el-row class="zj-m-l-10 zj-m-t-10" >
-          海e单金额合计：{{moneyNoSynbol(ddTotalAmt)}}
+          {{productName}}金额合计：{{moneyNoSynbol(ddTotalAmt)}}
         </el-row>
       </zj-content-block>
 
@@ -162,6 +162,9 @@ export default {
       return arr.reduce((pre,cur)=>
         pre + cur , 0
       )
+    },
+    productName() {
+      return this.$store.getters['user/productName']
     }
   },
   data() {

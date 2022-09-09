@@ -1,7 +1,7 @@
 <template>
   <zj-content-container>
     <!--  融资申请  -->
-    <el-tabs v-model="tabs" class="zj-tabs-card zj-p-l-16 zj-p-r-16" @tab-click="tabHandle">
+    <el-tabs v-model="tabs" class="zj-tabs-card" @tab-click="tabHandle">
       <el-tab-pane label="订单融资" name="orderTab" v-if="tabInfo.orderTab">
         <orderFinancing :zjControl="zjControl" :dictionary="dictionary" :uBtn="zjBtn" @nextStepParams="handelNextStepParams"/>
       </el-tab-pane>
@@ -89,7 +89,7 @@ export default {
         } else if(this.nextStepParams.entId && !this.nextStepParams.idList) {
           this.$message.error('请选择凭证信息!')
         } else if(!this.nextStepParams.entId) {
-          this.$message.error('请选择海e单开单人/转让企业，并选择凭证信息!')
+          this.$message.error(`请选择${this.$store.getters['user/productName']}开单人/转让企业，并选择凭证信息!`)
         }
       }
     },
@@ -116,7 +116,9 @@ export default {
 };
 </script>
 <!-- 公共样式 -->
-<style lang="less">
-
+<style lang="less" scoped>
+/deep/.el-tabs__header {
+  padding: 0 12px;
+}
 
 </style>

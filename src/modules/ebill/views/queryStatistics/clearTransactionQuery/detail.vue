@@ -7,6 +7,7 @@
         <el-form :model="form" ref="form" label-width="200px" class="financingForm">
           <zj-content-block>
             <zj-header title="交易信息"></zj-header>
+            <zj-content>
             <el-row>
               <el-col :span="8">
                 <el-form-item label="申请流水号：" >{{form.tranInfo.serialNo}}</el-form-item>
@@ -18,9 +19,11 @@
                 <el-form-item label="申请状态：" >{{form.tranInfo.applyStatus}}</el-form-item>
               </el-col>
             </el-row>
+            </zj-content>
           </zj-content-block>
           <zj-content-block>
             <zj-header title="基础信息"></zj-header>
+            <zj-content>
             <el-row>
               <el-col :span="8">
                 <el-form-item label="收款人名称：" >{{form.basicInfo.bankAccname}}</el-form-item>
@@ -37,49 +40,76 @@
                 <el-form-item label="业务描述：" >{{form.basicInfo.bizDesc}}</el-form-item>
               </el-col>
             </el-row>
+              <zj-collapse title="供应商收款银行账号" class="zj-m-t-10">
+                <el-row>
+                  <el-col :span="8">
+                    <el-form-item label="收款账户名称：" >{{form.basicInfo.bankAccname}}</el-form-item>
+                  </el-col>
+                  <el-col :span="8">
+                    <el-form-item label="收款账号：" >{{form.basicInfo.bankAccno}}</el-form-item>
+                  </el-col>
+                  <el-col :span="8">
+                    <el-form-item label="收款账户开户行：" >{{form.basicInfo.bankName}}</el-form-item>
+                  </el-col>
+                </el-row>
+                <el-row>
+                  <el-col :span="8">
+                    <el-form-item label="银行联行号：" >{{form.basicInfo.bankNo}}</el-form-item>
+                  </el-col>
+                </el-row>
+              </zj-collapse>
+
+            </zj-content>
           </zj-content-block>
-          <zj-collapse title="供应商收款银行账号" class="zj-m-t-10">
-            <el-row>
-              <el-col :span="8">
-                <el-form-item label="收款账户名称：" >{{form.basicInfo.bankAccname}}</el-form-item>
-              </el-col>
-              <el-col :span="8">
-                <el-form-item label="收款账号：" >{{form.basicInfo.bankAccno}}</el-form-item>
-              </el-col>
-              <el-col :span="8">
-                <el-form-item label="收款账户开户行：" >{{form.basicInfo.bankName}}</el-form-item>
-              </el-col>
-            </el-row>
-            <el-row>
-              <el-col :span="8">
-                <el-form-item label="银行联行号：" >{{form.basicInfo.bankNo}}</el-form-item>
-              </el-col>
-            </el-row>
-          </zj-collapse>
           <zj-content-block>
             <zj-header :title="`待清算${clearType}`"></zj-header>
+            <zj-content>
             <zj-table ref="searchTable" class="zj-search-table" :pager="false"
                       :dataList="form.waitClearInfoList"
-                      @radio-change="handleRadioChange"
-                      :radio-config="{highLight:true}"
+                      v-if="row.clearType === '00' || '01'"
             >
-              <zj-table-column type="radio"  width="60"/>
-              <zj-table-column field="index" title="原始凭证编号" />
-              <zj-table-column field="fileName" title="收款单号" />
-              <zj-table-column field="fileName" title="资金流水号" />
-              <zj-table-column field="fileName" title="凭证编号" />
-              <zj-table-column field="fileName" title="签发人" />
-              <zj-table-column field="fileName" title="签发日期" :formatter="date"/>
-              <zj-table-column field="fileName" title="凭证金额" :formatter="money"/>
-              <zj-table-column field="fileName" title="尾款金额" :formatter="money"/>
-              <zj-table-column field="fileName" title="凭证到期日期" :formatter="date"/>
-              <zj-table-column field="actualExpireDate" title="凭证实际到期" :formatter="date"/>
-              <zj-table-column field="fileName" title="收款人" />
+              <zj-table-column field="rootCode" :title="`原始${productName}编号`" />
+              <zj-table-column field="repaymentOrderNo" title="收款单号" />
+              <zj-table-column field="capitalSerialno" title="资金流水号" />
+              <zj-table-column field="ebillCode" :title="`${productName}编号`" />
+              <zj-table-column field="holderName" title="开单人" />
+              <zj-table-column field="openDate" title="签发日期" :formatter="date"/>
+              <zj-table-column field="holderName" title="原始持有人" v-if="row.clearType=== '00'"/>
+              <zj-table-column field="holderName" title="当前持有人" v-if="row.clearType=== '00'"/>
+              <zj-table-column field="ebillAmt" :title="`${productName}金额`" :formatter="money"/>
+              <zj-table-column field="oddAmt" title="尾款金额" :formatter="money" v-if="row.clearType=== '01'"/>
+              <zj-table-column field="expireDate" :title="`${productName}到期日`" :formatter="date"/>
+              <zj-table-column field="actualExpireDate" :title="`${productName}实际到期日`" :formatter="date"/>
+              <zj-table-column field="repaymentEntName" title="收款人" v-if="row.clearType=== '01'"/>
+              <zj-table-column field="payAmt" title="最终付款金额" v-if="row.clearType=== '00'"/>
             </zj-table>
+              <zj-table ref="searchTable" class="zj-search-table" :pager="false"
+                        :dataList="form.waitClearInfoList"
+                        v-if="row.clearType === '02' || '03' || '04'"
+              >
+                <!--      少字段      -->
+                <zj-table-column field="rootCode" title="核心企业代码" />
+                <zj-table-column field="repaymentOrderNo" title="核心企业名称" />
+                <zj-table-column field="capitalSerialno" title="供应商编码" />
+                <zj-table-column field="ebillCode" title="供应商名称" />
+                <zj-table-column field="holderName" title="资金流水号" />
+                <zj-table-column field="holderName" title="收款单号" />
+                <zj-table-column field="openDate" title="确认收款日期" :formatter="date" v-if="row.clearType === '02'"/>
+                <zj-table-column field="openDate" title="还款日期" :formatter="date" v-if="row.clearType === '03'"/>
+                <zj-table-column field="openDate" title="提前还款日期" :formatter="date" v-if="row.clearType === '04'"/>
+                <zj-table-column field="openDate" title="确认收款金额" :formatter="money" v-if="row.clearType === '02'"/>
+                <zj-table-column field="openDate" title="实际付款金额" :formatter="money" v-if="row.clearType === '02'"/>
+                <zj-table-column field="openDate" title="提前还款金额" :formatter="money" v-if="row.clearType === '04'"/>
+                <zj-table-column field="openDate" title="尾款金额" :formatter="money" v-if="row.clearType === '03'"/>
+                <zj-table-column field="openDate" title="还款本金" :formatter="money" v-if="row.clearType === '04'"/>
+                <zj-table-column field="openDate" title="还款利息" :formatter="money" v-if="row.clearType === '04'"/>
+              </zj-table>
+            </zj-content>
           </zj-content-block>
           <!--     清算类型：00凭证清算，01凭证尾款清算，02订单清算，03订单尾款清算，04提前还款清算     -->
           <zj-content-block v-if="row.clearType !== '00' && '02'">
             <zj-header :title="`融资详情-${billNo}`"></zj-header>
+            <zj-content>
             <el-row>
               <el-col :span="8">
                 <el-form-item label="融资流水号：" >{{form.financeInfo.financingSerialno}}</el-form-item>
@@ -124,9 +154,11 @@
                 <el-form-item label="还款状态：" >{{form.financeInfo.payStatus}}</el-form-item>
               </el-col>
             </el-row>
+            </zj-content>
           </zj-content-block>
           <zj-content-block>
             <zj-header title="附件信息"></zj-header>
+            <zj-content>
             <zj-table
               :pager="false"
               ref="searchTable"
@@ -141,6 +173,7 @@
                 </template>
               </zj-table-column>
             </zj-table>
+            </zj-content>
           </zj-content-block>
           <!--操作记录 -->
           <operate-log :logList="form.oprateRecordList"></operate-log>
@@ -166,6 +199,9 @@ export default {
       let typeInfo = this.typeMap(this.dictionary.applyType,this.row.clearType)
       let res = typeInfo.slice(0,typeInfo.length-2)
       return res
+    },
+    productName() {
+      return this.$store.getters['user/productName']
     },
   },
   data() {

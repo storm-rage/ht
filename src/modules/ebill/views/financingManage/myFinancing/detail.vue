@@ -4,6 +4,7 @@
     <zj-top-header :title="titleInfo"/>
     <zj-content-block>
       <zj-header title="融资信息"/>
+      <zj-content>
       <el-form ref="form" label-width="200px" class="zj-m-t-20">
         <zj-content-block>
           <el-row class="hd-row">
@@ -73,9 +74,11 @@
           </el-row>
         </zj-collapse>
       </el-form>
+      </zj-content>
     </zj-content-block>
     <zj-content-block>
       <zj-header title="融资协议"/>
+      <zj-content>
       <zj-table ref="searchTable" class="zj-search-table"
                 :dataList="detail.voucherList"
                 :pager="false"
@@ -88,6 +91,7 @@
           </template>
         </zj-table-column>
       </zj-table>
+      </zj-content>
     </zj-content-block>
     <zj-content-footer>
       <zj-button class="submit-button" @click="goParent">返回</zj-button>

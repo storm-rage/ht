@@ -2,11 +2,11 @@
   <zj-content-container>
     <!--  产品详情  -->
     <zj-content-block>
-      <zj-content>
         <zj-top-header :title="row.id?'修改产品信息':'新增产品'" direction="center"/>
         <el-form :model="infoForm" ref="infoForm" :rules="rules" label-width="220px">
             <el-row>
               <zj-header title="产品基础信息"></zj-header>
+              <zj-content>
               <el-row>
                 <el-col :span="8">
                   <el-form-item label="产品名称：" prop="productName">
@@ -62,10 +62,12 @@
                   </el-select>
                 </el-form-item>
               </el-row>
+              </zj-content>
             </el-row>
           <zj-content-block>
             <zj-header :title="`产品设置-${typeMap(dictionary.productType,infoForm.productType)}`" v-if="!row.id && infoForm.productType"></zj-header>
             <zj-header :title="`产品设置-${typeMap(dictionary.productType,infoForm.productType)}`" v-if="row.id"></zj-header>
+            <zj-content>
             <el-row v-if="row.productType === 'DDBL' || infoForm.productType === 'DDBL'">
               <el-row>
                 <el-col :span="8">
@@ -154,8 +156,8 @@
                   </el-col>
                 </el-row>
               </zj-collapse>
-              <el-row>
-                <el-col :span="8">注：业务联系人和保理专户用于后续签署保理合同。</el-col>
+              <el-row class="zj-m-t-10">
+                  <zj-content-tip text="注：业务联系人和保理专户用于后续签署保理合同。"/>
               </el-row>
             </el-row>
             <el-row v-if="row.productType === 'RD' || infoForm.productType === 'RD'">
@@ -225,9 +227,9 @@
                 </el-col>
               </el-row>
             </el-row>
+            </zj-content>
           </zj-content-block>
           </el-form>
-      </zj-content>
     </zj-content-block>
     <zj-content-footer>
       <zj-button type="primary" @click="submit">提交</zj-button>

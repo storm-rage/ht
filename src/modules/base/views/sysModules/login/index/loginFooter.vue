@@ -9,7 +9,7 @@
       <div>|</div>
       <span>联系我们</span>
     </div>
-    <div class="bottom">@2021 海天</div>
+    <div class="bottom">©2021 广东海天集团股份有限公司</div>
   </div>
 </template>
 <script>

@@ -23,6 +23,7 @@
             </zj-content-block>
             <zj-content-block>
               <zj-header title="融资申请信息"/>
+              <zj-content>
               <el-row>
                 <el-col :span="8">
                   <el-form-item label="融资企业：">{{form.fromEntName}}</el-form-item>
@@ -142,9 +143,11 @@
                   凭证金额合计：{{moneyNoSynbol(form.totalAmt)}}
                 </el-row>
               </zj-table>
+              </zj-content>
             </zj-content-block>
             <zj-content-block>
               <zj-header title="协议信息"/>
+              <zj-content>
               <zj-table ref="searchTable" class="zj-search-table"
                         :dataList="form.financingAgreement"
                         :pager="false"
@@ -158,9 +161,11 @@
                   </template>
                 </zj-table-column>
               </zj-table>
+              </zj-content>
             </zj-content-block>
             <zj-content-block>
               <zj-header title="保理合同信息"/>
+              <zj-content>
               <el-row>
                 <el-col :span="8">
                   <el-form-item label="保理合同编号：">{{form.contractNo}}</el-form-item>
@@ -191,9 +196,11 @@
                   <el-form-item label="保理合同到期日：">{{form.availableCreditAmount}}</el-form-item>
                 </el-col>
               </el-row>
+              </zj-content>
             </zj-content-block>
             <zj-content-block v-if="row.financingProductType !== '0'">
               <zj-header title="总控额度信息"/>
+              <zj-content>
               <el-row>
                 <el-col :span="8">
                   <el-form-item label="供应商总控额度：">{{form.contractNo}}</el-form-item>
@@ -202,9 +209,11 @@
                   <el-form-item label="剩余可用额度：">{{form.contractNo}}</el-form-item>
                 </el-col>
               </el-row>
+              </zj-content>
             </zj-content-block>
             <zj-content-block>
               <zj-header title="其他附件"/>
+              <zj-content>
               <zj-table ref="searchTable" class="zj-search-table"
                         :dataList="form.otherAttachs"
                         :pager="false"
@@ -218,6 +227,7 @@
                   </template>
                 </zj-table-column>
               </zj-table>
+              </zj-content>
             </zj-content-block>
             <!--  操作记录  -->
             <operate-log :logList="form.operEbTranTxListLogs"/>
@@ -227,6 +237,7 @@
       <zj-content-block v-if="workflow === 'pzxx' && row.financingProductType !== '0'">
           <zj-content-block>
             <zj-header title="凭证信息"/>
+            <zj-content>
             <zj-table ref="billInfoTable" class="zj-search-table"
                       :api="zjControl.getFinancingBillInfos"
                       :params="{id : row.id, serialNo: row.serialNo,}"
@@ -244,9 +255,11 @@
               <zj-table-column field="ebillAmt" title="凭证金额" :formatter="money"/>
               <zj-table-column field="expireDate" title="凭证到期日" :formatter="date"/>
             </zj-table>
+            </zj-content>
           </zj-content-block>
           <zj-content-block>
             <zj-header :title="`对账单信息${ebillCode?`-${ebillCode}`:''}`"/>
+            <zj-content>
             <zj-table ref="searchTable"
                       :dataList="ebillInfo.accountBillInners"
                       :pager="false"
@@ -263,12 +276,14 @@
               <zj-table-column field="checkBillPerson" title="对账人" />
               <zj-table-column field="billSource" title="对账单来源" />
             </zj-table>
+            </zj-content>
           </zj-content-block>
           <zj-content-block>
             <zj-header :title="`贸易背景资料（资产编号：${activeEbillCodeNo}）`"/>
+            <zj-content>
             <el-tabs v-model="tabs" class="zj-tabs-card">
               <el-tab-pane label="贸易合同信息" name="tradeContract" >
-                <trade-contract :zjControl="zjControl" :form="ebillInfo.contractInfo"/>
+                <trade-contract :zjControl="zjControl" :form="ebillInfo.contractInfos"/>
               </el-tab-pane>
               <el-tab-pane label="发票信息" name="invoice" >
                 <invoice :invoiceList="ebillInfo.invoices"/>
@@ -277,6 +292,7 @@
                 <attaList :attaList="ebillInfo.otherAttachs"/>
               </el-tab-pane>
             </el-tabs>
+            </zj-content>
           </zj-content-block>
 
       </zj-content-block>
@@ -387,7 +403,7 @@ export default {
         //对账单编号
         this.activeEbillCodeNo = this.ebillInfo.accountBillInners[0].acctBillCode
         //背景资料信息列表
-        this.ebillInfo.contractInfo = res.data.contractInfos[0]
+        this.ebillInfo.contractInfos = res.data.contractInfos
         this.ebillInfo.invoices = res.data.invoices
         this.ebillInfo.otherAttachs = res.data.otherAttachs
       })

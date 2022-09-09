@@ -16,7 +16,7 @@
       </div>
       <div class="right">
         <div class="customer">
-          <img src="~@assets/img/layout/WeChatService.png"/>
+          <img src="~@assets/img/layout/WeChatService2.png"/>
           <label>微信客服</label>
         </div>
       </div>
@@ -29,9 +29,9 @@ export default {
   name: "LoginFooter",
   data() {
     return {
-      serviceTelephone: '400-995-2122', // 客服电话
-      workingTime: '9:00-18:00', // 工作时间
-      zejinEmail: 'kefu@izejin.com', // 客服邮箱
+      serviceTelephone: '13422011992', // 客服电话
+      workingTime: '8:00-18:00', // 工作时间
+      zejinEmail: 'heyz5@haday.cn', // 客服邮箱
     }
   }
 }

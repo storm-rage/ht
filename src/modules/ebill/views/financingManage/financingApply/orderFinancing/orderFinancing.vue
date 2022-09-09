@@ -1,8 +1,8 @@
 <template>
-  <zj-content-container>
+  <zj-content-block>
     <!--  订单融资  -->
     <zj-content-block>
-        <div class="zj-search-response">
+        <zj-content class="zj-search-response">
           <zj-table ref="tradeRelationTable"
                     :api="zjControl.getOrderFinancingCredit"
                     @after-load="handleDataChange"
@@ -24,8 +24,9 @@
               <li class="explain-item">剩余可用额度=额度总额-实际已用额度-在途使用额度。</li>
             </ol>
           </div>
-        </div>
+        </zj-content>
         <zj-header title="阶段性协议信息"/>
+      <zj-content>
         <zj-table ref="searchTable"
                   :dataList="agreementList"
                   @radio-change="handleRadioChange"
@@ -45,8 +46,9 @@
             </template>
           </vxe-table-column>
         </zj-table>
+      </zj-content>
       </zj-content-block>
-  </zj-content-container>
+  </zj-content-block>
 </template>
 <script>
 export default {

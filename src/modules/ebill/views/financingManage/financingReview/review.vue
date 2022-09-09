@@ -6,7 +6,7 @@
         剩余可用额度：{{form.availableCreditAmount}}
         总额度：{{form.totalCreditAmount}}
       </div>
-      <zj-content-block>
+      <zj-content>
         <zj-top-header :title="`${titleInfo}复核`"/>
         <el-form :model="form" ref="form" label-width="200px" class="zj-m-t-20">
           <el-row class="hd-row">
@@ -145,7 +145,7 @@
             <zj-table-column field="expireDate" title="凭证到期日" :formatter="date"/>
           </zj-table>
           <el-row class="zj-m-t-10 zj-m-l-20" >
-            海e单金额合计：{{moneyNoSynbol(form.billInfo?form.billInfo.totalEbillAmt:'')}}
+            {{$store.getters['user/productName']}}金额合计：{{moneyNoSynbol(form.billInfo?form.billInfo.totalEbillAmt:'')}}
           </el-row>
         </zj-content-block>
         <zj-content-block>
@@ -157,7 +157,7 @@
             </ol>
           </div>
         </zj-content-block>
-      </zj-content-block>
+      </zj-content>
     </zj-content-container>
     <zj-content-footer>
       <el-checkbox v-model="checked">我已阅读并同意
