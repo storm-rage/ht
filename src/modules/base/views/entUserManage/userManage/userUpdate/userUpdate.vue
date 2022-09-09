@@ -86,46 +86,30 @@
           <zj-table-column field="email" title="邮箱" :edit-render="{name: 'input'}">
           </zj-table-column>
           <zj-table-column field="userState" title="状态" :formatter="(obj) => typeMap(dictionary.userState, obj.cellValue)" />
-          <zj-table-column field="statementAccountType" title="支持开立债权凭证的对账单类型" :formatter="(obj) => typeMap(dictionary.statementAccountTypeList, obj.cellValue)" :edit-render="{}">
-            <!-- <template v-slot="{ row }">
+          <zj-table-column field="statementAccountType" title="支持开立债权凭证的对账单类型" :edit-render="{
+                name: '$select',
+                props: { multiple: true },
+                options: dictionary.statementAccountTypeList,
+                optionProps: {value: 'code', label: 'desc'},
+              }">
+            <template #default="{ row }">
               {{handleStatementAccountType(row.statementAccountType)}}
-            </template> -->
-            <!-- <template #default="{ row }">{{row.statementAccountType}}</template> -->
-            <template #edit="{ row }">
-              <vxe-select v-model="row.statementAccountType" multiple transfer>
-                <vxe-option v-for="item in dictionary.statementAccountTypeList" :key="item.code" :label="item.desc" :value="item.code">
-                </vxe-option>
-              </vxe-select>
             </template>
           </zj-table-column>
           <zj-table-column title="操作" fixed="right" width="160px" v-if="isEdit">
-            <!-- <template v-slot="{ row,rowIndex }">
-              <zj-button type="text" @click="updateTypeDialog(row,rowIndex)">维护对账单类型</zj-button>
-            </template> -->
             <template #default="{ row }">
               <template v-if="$refs.xTable.isActiveByRow(row)">
                 <zj-button type="text" @click="saveRowEvent(row)">保存</zj-button>
                 <zj-button type="text" @click="cancelRowEvent(row)">取消</zj-button>
               </template>
               <template v-else>
-                <zj-button type="text" @click="editRowEvent(row)">编辑</zj-button>
+                <zj-button type="text" @click="editRowEvent(row)">维护</zj-button>
               </template>
             </template>
           </zj-table-column>
         </zj-table>
       </zj-content>
     </zj-content-block>
-    <!-- <el-dialog title="维护对账单类型" :visible.sync="dialogVisible" width="30%" v-if="dialogVisible">
-      <span>请选择开凭证对账单类型权限:&nbsp;</span>
-      <el-select v-model="statementAccountType" filterable placeholder="请选择" multiple>
-        <el-option v-for="item in dictionary.statementAccountTypeList" :key="item.code" :label="item.desc" :value="item.code">
-        </el-option>
-      </el-select>
-      <span slot="footer" class="dialog-footer">
-        <el-button @click="dialogVisible = false">取 消</el-button>
-        <el-button type="primary" @click="updateStatementAccountType">确 定</el-button>
-      </span>
-    </el-dialog> -->
   </zj-content-block>
 </template>
 <script>
@@ -153,18 +137,6 @@ export default {
           this.attachInfo[0] = Object.assign(this.attachInfo[0], data.idCardAttach[0])
         })
       }
-      // if (!!data.userAndEntInfoList && Array.isArray(data.userAndEntInfoList)) {
-      //   data.userAndEntInfoList.forEach(item => {
-      //     if (!!item.statementAccountType) {
-      //       let arr = []
-      //       item.statementAccountType = item.statementAccountType.split(',')
-      //       item.statementAccountType.forEach((k, i) => {
-      //         item.statementAccountType[i] = this.typeMap(this.dictionary.statementAccountTypeList, k)
-      //       })
-      //       console.log(item.statementAccountType)
-      //     }
-      //   })
-      // }
     },
   },
   data() {
@@ -247,13 +219,12 @@ export default {
       let arr = []
       if (!!data) {
         if (Array.isArray(data)) {
-          arr = data
+          arr = JSON.parse(JSON.stringify(data))
         } else {
           arr = data.split(',')
         }
         if (Array.isArray(arr) && data.length) {
           arr.forEach((item, i) => {
-            console.log(this.typeMap(this.dictionary.statementAccountTypeList, item))
             arr[i] = this.typeMap(this.dictionary.statementAccountTypeList, item)
           })
           return arr.join(',')
@@ -273,7 +244,6 @@ export default {
       if (!!row.statementAccountType && Array.isArray(row.statementAccountType)) {
         row.statementAccountType = row.statementAccountType.join(',')
       }
-      console.log(row.statementAccountType)
       const $table = this.$refs.xTable
       $table.clearActived()
     },

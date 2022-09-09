@@ -300,6 +300,7 @@ export default {
         if (!!this.form.pubAttachList) { // 企业附件回显
           this.pubAttachList = this.form.pubAttachList
         }
+        this.sysUserList = this.form.sysUserList
         // 其他附件
         this.$refs.ofileSetting.$data.fileList = this.form.pubOtherAttachList || []
         // 企业操作员
@@ -458,7 +459,7 @@ export default {
     // 输完操作员账号获取海天员工信息
     getEmployeeInfo(row, rowIndex) {
       if (this.form.isHtEnterprise === '1' && !!row.htSysCode) {
-        this.zjControl.getEmployeeInfo({ htSysCode: row.htSysCode }).then((res) => {
+        this.zjControl.getEmployeeInfo({ htSysCode: row.htSysCode, customCode: this.form.customCode }).then((res) => {
           if (res.data.realName) {
             let sysUserItem = {
               htSysCode: row.htSysCode,
@@ -491,27 +492,34 @@ export default {
     },
     //保存企业操作员
     async sysUserSave(row) {
-      let items = this.sysUserList.filter(item => item.htSysCode === row.htSysCode)
-      if (items.length > 1) {
-        this.$message.error('存在相同的账号！')
-        return
-      }
-      items = this.sysUserList.filter(item => item.certNo === row.certNo)
-      if (items.length > 1) {
-        this.$message.error('存在相同的身份证号码！')
-        return
-      }
-      length = this.sysUserList.filter(item => item.mobileNo === row.mobileNo)
-      if (items.length > 1) {
-        this.$message.error('存在相同的手机号码！')
-        return
-      }
-
+      let roleArr = []
+      row.roleIds.forEach(item => {
+        roleArr.push(item)
+        if (roleArr.includes('8') && roleArr.includes('9') || roleArr.includes('11') && roleArr.includes('12')) {
+          this.$message.error('同一账号不能同时选经办员和复核员！')
+          return
+        }
+      })
       const errMap = await this.$refs.sysUser.validate(row).catch(errMap => errMap)
       if (!errMap && !row.isSave) {
         this.$message.error('请先查询账号信息！')
       }
       if (!errMap && row.isSave) {
+        let items = this.sysUserList.filter(item => item.htSysCode === row.htSysCode)
+        if (items.length > 1) {
+          this.$message.error('存在相同的账号！')
+          return
+        }
+        items = this.sysUserList.filter(item => item.certNo === row.certNo)
+        if (items.length > 1) {
+          this.$message.error('存在相同的身份证号码！')
+          return
+        }
+        items = this.sysUserList.filter(item => item.mobileNo === row.mobileNo)
+        if (items.length > 1) {
+          this.$message.error('存在相同的手机号码！')
+          return
+        }
         row.save = true
         this.$refs.sysUser.clearActived()
       }
