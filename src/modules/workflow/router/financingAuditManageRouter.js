@@ -40,34 +40,6 @@ const financingAuditManageRouter = [
       notRequireAuth: true
     }
   },
-  {
-    path: '/financingReviewDoneDetail',
-    name: 'financingReviewDoneDetail',
-    component: () => import('../views/financingReviewManage/done/doneDetail.vue'),
-    meta: {
-      isMock: true,
-      title: '融资交易详情',
-      root: '融资管理',
-      keepAlive: true,
-      parent:'myTodo',
-      refreshIndex: 0,
-      notRequireAuth: true
-    }
-  },
-  {
-    path: '/financingReviewSettleDetail',
-    name: 'financingReviewSettleDetail',
-    component: () => import('../views/financingReviewManage/settle/settleDetail'),
-    meta: {
-      isMock: true,
-      title: '融资交易详情',
-      root: '融资管理',
-      keepAlive: true,
-      parent:'myTodo',
-      refreshIndex: 0,
-      notRequireAuth: true
-    }
-  },
 
 ]
 export default financingAuditManageRouter

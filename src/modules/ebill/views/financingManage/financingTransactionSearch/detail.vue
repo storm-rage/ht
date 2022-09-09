@@ -23,7 +23,7 @@
               <zj-steps :list="stepsList"
                         :isDayTime="false"
                         :width="stepsWidth"
-                        :parent-item-size="stepsList.length"
+                        :parent-item-size="stepList.length"
                         class="zj-p-y-20"/>
             </zj-content>
           </zj-content-block>
