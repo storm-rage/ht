@@ -2,7 +2,7 @@
   <zj-content-container>
     <!--  阶段性协议管理  -->
     <zj-content-block>
-      <el-tabs v-model="tabs" class="zj-tabs-card zj-p-l-16 zj-p-r-16">
+      <el-tabs v-model="tabs" class="zj-tabs-card">
         <el-tab-pane label="阶段性协议维护" name="multistageAgreementMaintain" >
           <multistage-agreement-maintain :zjControl="zjControl" :dictionary="dictionary" @update="handleContractInfo" :mBtn="zjBtn" ref="mulAgreeMaintain"/>
         </el-tab-pane>
@@ -111,5 +111,10 @@ export default {
     font-size: 14px;
     margin-left: 20px;
   }
+}
+</style>
+<style lang="less" scoped>
+/deep/.el-tabs__header {
+  padding: 0 12px;
 }
 </style>

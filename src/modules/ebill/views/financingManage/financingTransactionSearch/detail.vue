@@ -2,7 +2,6 @@
   <div>
     <zj-content-container>
       <!--  入库融资详情  -->
-      <zj-content>
       <zj-top-header :title="`${proName}融资详情`"/>
       <zj-content-block>
         <el-form :model="form" ref="form" label-width="200px">
@@ -30,6 +29,7 @@
           </zj-content-block>
           <zj-content-block>
             <zj-header title="融资信息"/>
+            <zj-content>
             <zj-content-block v-if="row.financingProductType === '0'">
               <!--     产品为订单融资时     -->
               <el-row class="hd-row">
@@ -157,9 +157,11 @@
                 </el-col>
               </el-row>
             </zj-content-block>
+            </zj-content>
           </zj-content-block>
 
           <zj-content-block>
+            <zj-content>
             <!--     产品为订单融资时     -->
             <zj-table ref="searchTable" class="zj-search-table"
                       :dataList="form.phasedAgreements"
@@ -196,11 +198,13 @@
                 {{ productName }}金额合计：{{moneyNoSynbol(form.totalAmt)}}
               </el-row>
             </zj-content-block>
+            </zj-content>
           </zj-content-block>
         </el-form>
       </zj-content-block>
 
       <zj-content-block>
+        <zj-content>
         <zj-header title="融资协议"/>
         <zj-table ref="searchTable" class="zj-search-table"
                   :dataList="form.financingAgreement"
@@ -214,8 +218,8 @@
             </template>
           </zj-table-column>
         </zj-table>
+        </zj-content>
       </zj-content-block>
-      </zj-content>
     </zj-content-container>
 
     <zj-content-footer>

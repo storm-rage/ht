@@ -1,13 +1,13 @@
 <template>
     <zj-content-container>
       <!--  入库融资申请/凭证融资申请  -->
-      <zj-content>
         <zj-content-block>
           <div class="quota-manage" v-if="form.financingFlag === '1'">
             剩余可用额度：<span>{{form.availableCreditAmount}}</span>
             总额度：<span>{{form.totalCreditAmount}}</span>
           </div>
           <zj-top-header :title="`${titleInfo?titleInfo:''}申请`"/>
+          <zj-content>
           <el-form :model="form" ref="form" :rules="rules" label-width="200px" class="zj-m-t-20">
             <el-row class="hd-row">
               <el-form-item label="融资企业：">{{form.sellerName}}</el-form-item>
@@ -78,8 +78,10 @@
               </el-col>
             </el-row>
           </el-form>
+          </zj-content>
         </zj-content-block>
         <zj-content-block>
+          <zj-content>
           <zj-table ref="searchTable" class="zj-search-table"
                     :dataList="form.ebBillModelList"
                     :pager="false"
@@ -100,9 +102,11 @@
           <el-row class="slotRows zj-m-l-10 zj-m-t-10" >
             凭证金额合计：{{form.totalAmt?moneyNoSynbol(form.totalAmt):''}}
           </el-row>
+          </zj-content>
         </zj-content-block>
         <zj-content-block>
           <zj-header title="融资协议"/>
+          <zj-content>
           <el-row class="button-row">
             <zj-button type="text" @click="downloadAgreement('RKRZXY')" v-if="form.financingFlag === '1'">《入库融资协议》</zj-button>
             <zj-button type="text" @click="downloadAgreement('PZRZXY')" v-if="form.financingFlag === '2'">《凭证融资协议》</zj-button>
@@ -114,6 +118,7 @@
               <li class="explain-item">剩余可用额度=额度总额-实际已用额度-在途使用额度。</li>
             </ol>
           </div>
+          </zj-content>
         </zj-content-block>
         <zj-content-block v-if="form.isGysHtEnterprise === '1'">
           <zj-header title="贸易背景">
@@ -122,12 +127,12 @@
             </template>
           </zj-header>
           <!--    贸易背景      -->
+          <zj-content>
           <el-row>
             <div class="zj-f-r zj-m-r-10">
               <zj-button class="append" icon="el-icon-circle-plus-outline" @click="choiceInvoiceItem">选择发票</zj-button>
             </div>
           </el-row>
-          <zj-content-block>
             <zj-table ref="invoiceItemListsTable" class="zj-search-table"
                       :dataList="form.invoiceItemLists"
                       v-if="invoiceShow"
@@ -147,10 +152,9 @@
               </span>
             </zj-table>
 
-          </zj-content-block>
+          </zj-content>
 
         </zj-content-block>
-      </zj-content>
 
       <zj-content-footer>
         <zj-button class="back" @click="goParent">上一步</zj-button>
