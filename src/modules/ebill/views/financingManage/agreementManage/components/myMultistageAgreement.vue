@@ -3,6 +3,7 @@
     <!--  我的阶段性协议  -->
     <zj-content-block>
       <zj-header title="贸易关系"></zj-header>
+      <zj-content>
       <zj-table ref="tradeRelationTable" :pager="false"
                 :dataList="tradeRelationList"
                 @radio-change="handleRadioChange"
@@ -26,6 +27,7 @@
           <li class="explain-item">以上额度信息仅供参考，实际以融资时额度为准。</li>
         </ol>
       </div>
+      </zj-content>
     </zj-content-block>
     <zj-content-block>
       <zj-header title="阶段性协议信息"></zj-header>
@@ -69,6 +71,7 @@
             </el-form-item>
           </el-form>
         </template>
+        <zj-content>
         <zj-table ref="searchTable" :dataList="myPhasedAgreePageList" :params="searchForm" :api="zjControl.queryMyPhasedAgreePage">
           <zj-table-column field="coreCompanyName" title="买方企业名称"/>
           <zj-table-column field="agreementNo" title="阶段性协议编号"/>
@@ -84,6 +87,7 @@
             </template>
           </zj-table-column>
         </zj-table>
+        </zj-content>
       </zj-list-layout>
     </zj-content-block>
 

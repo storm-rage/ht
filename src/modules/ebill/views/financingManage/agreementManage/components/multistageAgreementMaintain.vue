@@ -3,6 +3,7 @@
     <!--  阶段性协议维护  -->
     <zj-content-block>
       <zj-header title="贸易关系"/>
+      <zj-content>
       <zj-table ref="tradeRelationTable" :pager="false"
                 :api="zjControl.getTradeRelationList"
                 @after-load="handleDataChange"
@@ -22,9 +23,11 @@
           <li class="explain-item">是否已有订单保理额度，不影响维护阶段性协议。</li>
         </ol>
       </div>
+      </zj-content>
     </zj-content-block>
     <zj-content-block>
       <zj-header title="阶段性协议信息"/>
+      <zj-content>
       <zj-table ref="searchTable" :dataList="agreementList" >
         <zj-table-column field="coreCompanyName" title="买方企业名称"/>
         <zj-table-column field="agreementNo" title="阶段性协议编号"/>
@@ -34,9 +37,11 @@
         <zj-table-column field="agreementEstimateEndDate" title="协议预计到期日" :formatter="date"/>
         <zj-table-column field="agreementStatus" title="状态"/>
       </zj-table>
+      </zj-content>
     </zj-content-block>
     <zj-content-block>
       <zj-header title="请上传贸易合同附件"/>
+      <zj-content>
       <div class="explain-text">
         <div>注：</div>
         <ol class="explain-content">
@@ -71,6 +76,7 @@
       <el-row class="button-row zj-center zj-m-t-10">
         <zj-button type="primary" icon="el-icon-circle-plus-outline" @click="addAtta">新增</zj-button>
       </el-row>
+      </zj-content>
     </zj-content-block>
   </zj-content-container>
 </template>

@@ -46,7 +46,7 @@ export default {
         }).then(ret => {
           this.currentEnt = item;
           const data = ret.data;
-          const loginRes = Object.assign({}, this.userInfo, data,{currentEnt: item});
+          const loginRes = Object.assign({}, this.userInfo, data, {entInfoList: data.entList || []}, {currentEnt: item});
           console.log(loginRes);
           if (data.faceCheck || data.userServiceAgreementFlag === '1' || data.userRegisterAgreementFlag === '1' || data.personalInfoAuthFlag === '1') {
             const loginSuccess = {loginRes};

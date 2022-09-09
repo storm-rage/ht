@@ -1,7 +1,7 @@
 <template>
   <zj-content-container>
     <!--  融资申请  -->
-    <el-tabs v-model="tabs" class="zj-tabs-card zj-p-l-16 zj-p-r-16" @tab-click="tabHandle">
+    <el-tabs v-model="tabs" class="zj-tabs-card" @tab-click="tabHandle">
       <el-tab-pane label="订单融资" name="orderTab" v-if="tabInfo.orderTab">
         <orderFinancing :zjControl="zjControl" :dictionary="dictionary" :uBtn="zjBtn" @nextStepParams="handelNextStepParams"/>
       </el-tab-pane>
@@ -116,7 +116,9 @@ export default {
 };
 </script>
 <!-- 公共样式 -->
-<style lang="less">
-
+<style lang="less" scoped>
+/deep/.el-tabs__header {
+  padding: 0 12px;
+}
 
 </style>

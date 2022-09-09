@@ -3,6 +3,7 @@
     <!--  凭证融资  -->
       <div class="zj-search-condition zj-m-b-20" style="border-bottom: none;">
         <zj-header :title="`请选择${productName}开单人/转让企业`"/>
+        <zj-content>
         <el-form ref="searchFormEnt" :model="searchForm">
           <el-form-item :label="`${productName}开单人/转让企业：`">
             <el-select v-model="searchForm.entId" @change="entChange">
@@ -15,8 +16,10 @@
             </el-select>
           </el-form-item>
         </el-form>
+        </zj-content>
+        <zj-header :title="`${productName}信息`"/>
+
         <zj-list-layout>
-          <zj-header :title="`${productName}信息`"/>
           <template slot="rightBtns">
             <vxe-button class="reset" icon="el-icon-refresh" @click="reset(nextParams.entId)">重置</vxe-button>
             <vxe-button class="search" icon="el-icon-search" @click="entChange(nextParams.entId)">查询</vxe-button>
@@ -47,6 +50,7 @@
               </el-form-item>
             </el-form>
           </template>
+          <zj-content>
           <zj-table ref="searchTable"
                     row-id="id"
                     :dataList="billList"
@@ -72,6 +76,7 @@
               <span class="zj-m-l-10">已勾选{{productName}}金额合计：{{moneyNoSynbol(checkedTotalAmount)}}</span>
             </el-row>
           </zj-table>
+          </zj-content>
         </zj-list-layout>
       </div>
   </zj-content-container>

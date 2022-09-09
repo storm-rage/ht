@@ -23,6 +23,7 @@
       </zj-content-block>
       <zj-content-block>
         <zj-header title="阶段性协议信息"></zj-header>
+        <zj-content>
         <zj-table ref="logTable"
                   :dataList="form.phasedAgreementList"
         >
@@ -33,9 +34,11 @@
           <zj-table-column field="agreementStartDate" title="协议签订日期" :formatter="date"/>
           <zj-table-column field="agreementEstimateEndDate" title="协议预计到期日" :formatter="date"/>
         </zj-table>
+        </zj-content>
       </zj-content-block>
       <zj-content-block>
         <zj-header title="贸易合同附件"></zj-header>
+        <zj-content>
         <zj-table ref="logTable"
                   :dataList="form.contractInfoList"
         >
@@ -44,10 +47,11 @@
           <zj-table-column field="fileRemark" title="附件说明"/>
           <zj-table-column title="操作">
             <template v-slot="{row}">
-              <zj-button type="text" @click="attaDownload(row.fileId)">下载</zj-button>
+              <zj-button type="text" @click="attaDownload(row)">下载</zj-button>
             </template>
           </zj-table-column>
         </zj-table>
+        </zj-content>
       </zj-content-block>
     </el-form>
     <zj-content-footer>
