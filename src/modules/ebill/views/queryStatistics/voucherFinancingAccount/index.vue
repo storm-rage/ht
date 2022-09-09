@@ -33,7 +33,7 @@
               </el-form-item>
             </el-form>
           </template>
-          <zj-table ref="searchTable" :params="searchForm" :api="zjControl.rdqueryPage">
+          <zj-table ref="searchTable" :params="searchForm" :api="zjControl.rdqueryPage" >
 
             <zj-table-column title="序号" type="seq"/>
             <zj-table-column field="fromEntName" title="供应商名称" />
@@ -45,19 +45,19 @@
                 <zj-button type="text" @click="goDetail(row)">{{ row.serialNo }}</zj-button>
               </template>
             </zj-table-column>
-            <zj-table-column field="tranferAmt" title="转让凭证金额" :formatter="money" />
+            <zj-table-column field="tranferAmt" :title="`转让${productName}金额`" :formatter="money" />
             <zj-table-column field="discountRate" title="融资比例" :formatter="rate" />
-            <zj-table-column field="tranAmt" title="融资本金" :formatter="money" />
-            <zj-table-column field="estimateTimeStart" title="起息日" :formatter="date" />
-            <zj-table-column field="estimateTimeEnd" title="融资到期日" :formatter="date" />
-            <zj-table-column field="estimateDays" title="预计计息天数" />
-            <zj-table-column field="interestRate" title="融资利率/月" :formatter="rate" />
-            <zj-table-column field="interestAmt" title="预计利息" :formatter="money" />
-            <zj-table-column field="actualExpireDate" title="实际到期日" :formatter="date" />
-            <zj-table-column field="estimateDays" title="实际计息天数" />
-            <zj-table-column field="interestAmt" title="实际利息" :formatter="money" />
-            <zj-table-column field="inputNumber" title="实际尾款金额" :formatter="money" />
-            <zj-table-column field="returnDate" title="年化本金" :formatter="money" />
+            <zj-table-column field="tranAmt" title="融资本金" :formatter="money" sortable/>
+            <zj-table-column field="estimateTimeStart" title="起息日" :formatter="date" sortable/>
+            <zj-table-column field="estimateTimeEnd" title="融资到期日" :formatter="date" sortable/>
+            <zj-table-column field="estimateDays" title="预计计息天数" sortable/>
+            <zj-table-column field="interestRate" title="融资利率/月" :formatter="rate" sortable/>
+            <zj-table-column field="interestAmt" title="预计利息" :formatter="money" sortable/>
+            <zj-table-column field="actualExpireDate" title="实际到期日" :formatter="date" sortable/>
+            <zj-table-column field="estimateDays" title="实际计息天数" sortable/>
+            <zj-table-column field="interestAmt" title="实际利息" :formatter="money" sortable/>
+            <zj-table-column field="inputNumber" title="实际尾款金额" :formatter="money" sortable/>
+            <zj-table-column field="returnDate" title="年化本金" :formatter="money" sortable/>
           </zj-table>
         </zj-list-layout>
       </div>
@@ -119,6 +119,11 @@ export default {
   created() {
     this.getApi()
     this.getDictionary()
-  }
+  },
+  computed: {
+    productName () {
+      return this.$store.getters['user/productName']
+    }
+  },
 };
 </script>
