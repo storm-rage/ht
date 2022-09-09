@@ -300,7 +300,7 @@ export default {
         if (!!this.form.pubAttachList) { // 企业附件回显
           this.pubAttachList = this.form.pubAttachList
         }
-        this.sysUserList = this.form.sysUserList
+        this.sysUserList = this.form.sysUserList || []
         // 其他附件
         this.$refs.ofileSetting.$data.fileList = this.form.pubOtherAttachList || []
         // 企业操作员
