@@ -43,7 +43,7 @@
             </div>
           </div>
           <div class="ent-list zj-m-t-20">
-            <el-checkbox v-model="isChecked" >我已阅读并同意</el-checkbox>
+            <el-checkbox v-model="isChecked">我已阅读并同意</el-checkbox>
             <span class="company ent-check" v-for="(item,index) in protocolList"
                  :key="index"
                  @click="handleEntSelect(item)"

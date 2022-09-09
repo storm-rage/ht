@@ -15,11 +15,11 @@
           <!-- 向右箭头 -->
           <div class="arrowsBox" v-if="showFace&&showAgreement">
             <img src="~@assets/img/faceRecognition/arrows.png"/>
-<!--            <img src="~@assets/img/faceRecognition/arrows.png" :class=" getNewFace ? 'resetArrows' : ''"/>-->
+            <!-- <img src="~@assets/img/faceRecognition/arrows.png" :class=" getNewFace ? 'resetArrows' : ''"/>-->
           </div>
           <!-- 协议 -->
           <agreement v-if="showAgreement"
-                     :entId="userInfos.loginRes.entInfoList[0].entId"
+                     :entId="userInfos.loginRes && userInfos.loginRes.entInfoList && userInfos.loginRes.entInfoList[0].entId"
                      :userServiceAgreementFlag="userInfos.loginRes.userServiceAgreementFlag"
                      :personalInfoAuthFlag="userInfos.loginRes.personalInfoAuthFlag"
                      :userRegisterAgreementFlag="userInfos.loginRes.userRegisterAgreementFlag"
