@@ -20,7 +20,7 @@
                             :pager="false">
                             <zj-table-column field="debtorName" title="名称" />
                             <zj-table-column field="debtorType" title="类型" :formatter="
-                                (obj) => typeMap(dictionary.debtorType, obj.cellValue)
+                                (obj) => typeMap(row.dictionary.debtorType, obj.cellValue)
                             " />
                             <zj-table-column field="organizationCode" title="组织机构代码/统一社会信用代码/金融机构填码" />
                             <zj-table-column field="debtorAddress" title="住所" />
@@ -36,7 +36,7 @@
                             :pager="false">
                             <zj-table-column field="pawneeName" title="名称" />
                             <zj-table-column field="pawneeType" title="类型" :formatter="
-                                (obj) => typeMap(dictionary.debtorType, obj.cellValue)
+                                (obj) => typeMap(row.dictionary.debtorType, obj.cellValue)
                             " />
                             <zj-table-column field="organizationCode" title="组织机构代码/统一社会信用代码/金融机构填码" />
                             <zj-table-column field="pawneeAddress" title="住所" />
