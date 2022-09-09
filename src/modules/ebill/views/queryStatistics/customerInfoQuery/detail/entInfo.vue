@@ -138,7 +138,7 @@
             </el-col>
             <el-col :span="8">
               <el-form-item label="开通产品：">
-                {{ valueFormatter(form.productType) }}
+                {{ typeMap(dictionary.productType,form.productType) }}
               </el-form-item>
             </el-col>
           </el-row>

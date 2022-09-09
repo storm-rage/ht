@@ -16,12 +16,12 @@ const customerInfoQueryRouter = [
   {
     path: '/entInfoQueryDetail',
     name: 'entInfoQueryDetail',
-    component: () => import('../views/queryStatistics/customerInfoQuery/detail'),
+    component: () => import('../views/queryStatistics/customerInfoQuery/detail/index.vue'),
     meta:{
       isMock:false,
       title:`企业信息明细`,
       keepAlive:true,
-      parent:'customerInfoQuery',
+      parent:'entInfoQuery',
       refreshIndex:0,
       notRequireAuth: true
     }

@@ -131,7 +131,7 @@ export default {
               return;
             }
             // 需要签 协议
-            else if (loginRes.faceCheck || loginRes.userServiceAgreementFlag === '1') {
+            else if (loginRes.faceCheck || loginRes.userServiceAgreementFlag === '1' || loginRes.personalInfoAuthFlag === '1' || loginRes.userRegisterAgreementFlag === '1') {
               const loginResMix = Object.assign({}, loginRes, this.userData);
               this.loginSuccess = JSON.parse(JSON.stringify({
                 loginRes: loginResMix

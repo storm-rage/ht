@@ -33,7 +33,7 @@
         <zj-table-column type="checkbox" width="40px" fixed="left"></zj-table-column>
         <zj-table-column field="ebillCode" :title="`${productName}编号`">
           <template v-slot="{ row }">
-            <span class="table-elbill-code" @click="goChild('', row)">{{
+            <span class="table-elbill-code" @click="goChild('ebBillApplyDetail', row)">{{
               row.ebillCode
             }}</span>
           </template>

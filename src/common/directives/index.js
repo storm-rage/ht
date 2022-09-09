@@ -101,6 +101,7 @@ export default {
           document.onmouseup = function(e) {
             document.onmousemove = null
             document.onmouseup = null
+            el.querySelector('.dragBox').onmousemove = null // 解决不按下也拖动的bug
           }
         }
 

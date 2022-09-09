@@ -6,7 +6,7 @@
           <template slot="searchForm">
             <el-form ref="searchForm" :model="searchForm">
               <el-form-item label="凭据类型：" class="col-center">
-                <el-select v-model="searchForm.voucherType"placeholder="请选择" clearable :popper-append-to-body="false">
+                <el-select v-model="searchForm.voucherType" placeholder="请选择" clearable :popper-append-to-body="false">
                   <el-option label="全部" value=""/>
                   <el-option v-for="item in dictionary.voucherType" :label="item.desc" :value="item.code" :key="item.code" />
                 </el-select>
@@ -47,7 +47,7 @@
               <zj-table-column fixed="left" type="checkbox" width="30"/>
               <zj-table-column field="voucherNo" title="凭证编号"/>
               <zj-table-column field="voucherType" title="凭证类型" :formatter="(obj) => typeMap(dictionary.voucherType, obj.cellValue)"/>
-              <zj-table-column field="ebillCode" title="海e单编号"/>
+              <zj-table-column field="ebillCode" :title="`${$store.getters['user/productName']}编号`"/>
               <zj-table-column field="payEntName" title="开单人"/>
               <zj-table-column field="receiptEntName" title="收单人"/>
               <zj-table-column field="createDatetime" title="凭证生成时间" :formatter="date"/>

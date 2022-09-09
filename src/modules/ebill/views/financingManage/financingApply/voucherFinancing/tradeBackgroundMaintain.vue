@@ -12,17 +12,17 @@
                   :pager="false"
         >
           <zj-table-column type="radio" width="40"/>
-          <zj-table-column field="rootCode" title="原始海e单编号"/>
-          <zj-table-column field="ebillCode" title="海e单编号"/>
+          <zj-table-column field="rootCode" :title="`原始${productName}编号`"/>
+          <zj-table-column field="ebillCode" :title="`${productName}编号`"/>
           <zj-table-column field="writerName" title="凭证签发人"/>
           <zj-table-column field="transferName" title="转让企业">
             <template v-slot="{row}">
               {{row.transferName?row.transferName:'-'}}
             </template>
           </zj-table-column>
-          <zj-table-column field="ebillAmt" title="海e单金额" :formatter="money"/>
+          <zj-table-column field="ebillAmt" :title="`${productName}金额`" :formatter="money"/>
           <zj-table-column field="holderDate" title="凭证持有日期" :formatter="date"/>
-          <zj-table-column field="expireDate" title="海e单到期日" :formatter="date"/>
+          <zj-table-column field="expireDate" :title="`${productName}到期日`" :formatter="date"/>
         </zj-table>
       </zj-content-block>
       <!--    贸易合同    -->
@@ -169,6 +169,9 @@ export default {
         })
       }
       return res
+    },
+    productName() {
+      return this.$store.getters['user/productName']
     }
   },
   data() {

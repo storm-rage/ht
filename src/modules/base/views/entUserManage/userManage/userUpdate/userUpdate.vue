@@ -84,13 +84,10 @@
           <zj-table-column field="entState" title="企业状态" :formatter="(obj) => typeMap(dictionary.enterpriseStateList, obj.cellValue)" />
           <zj-table-column field="roleId" title="角色" :formatter="(obj) => typeMap(dictionary.sysRoleList, obj.cellValue)" />
           <zj-table-column field="email" title="邮箱" :edit-render="{name: 'input'}">
-            <template #edit="{ row }">
-              <vxe-input v-model="row.email" type="text"></vxe-input>
-            </template>
           </zj-table-column>
           <zj-table-column field="userState" title="状态" :formatter="(obj) => typeMap(dictionary.userState, obj.cellValue)" />
-          <zj-table-column field="statementAccountType" title="支持开立债权凭证的对账单类型" :edit-render="{}">
-            <!-- <template #default="{ row }">
+          <zj-table-column field="statementAccountType" title="支持开立债权凭证的对账单类型" :formatter="(obj) => typeMap(dictionary.statementAccountTypeList, obj.cellValue)" :edit-render="{}">
+            <!-- <template v-slot="{ row }">
               {{handleStatementAccountType(row.statementAccountType)}}
             </template> -->
             <!-- <template #default="{ row }">{{row.statementAccountType}}</template> -->
@@ -276,6 +273,7 @@ export default {
       if (!!row.statementAccountType && Array.isArray(row.statementAccountType)) {
         row.statementAccountType = row.statementAccountType.join(',')
       }
+      console.log(row.statementAccountType)
       const $table = this.$refs.xTable
       $table.clearActived()
     },

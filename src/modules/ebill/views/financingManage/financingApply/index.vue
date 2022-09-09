@@ -89,7 +89,7 @@ export default {
         } else if(this.nextStepParams.entId && !this.nextStepParams.idList) {
           this.$message.error('请选择凭证信息!')
         } else if(!this.nextStepParams.entId) {
-          this.$message.error('请选择海e单开单人/转让企业，并选择凭证信息!')
+          this.$message.error(`请选择${this.$store.getters['user/productName']}开单人/转让企业，并选择凭证信息!`)
         }
       }
     },

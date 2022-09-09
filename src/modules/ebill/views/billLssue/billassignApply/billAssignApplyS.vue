@@ -20,6 +20,7 @@
           <zj-table-column title="操作" fixed="right">
             <template v-slot="{ row }">
               <zj-button type="text" v-if="!row.htSign" @click="openDialog(row)" :api="zjBtn.getEnterprise">贸易背景</zj-button>
+              <zj-button type="text" v-if="form.sellerEntName" @click="previewAgreement(row)">相关协议</zj-button>
             </template>
           </zj-table-column>
         </zj-table>
@@ -207,14 +208,14 @@ export default {
       this.tradeBjShow = true
     },
     // 相关协议
-    previewAgreement() {
+    previewAgreement(row) {
       let params = {
-        ebillCode: this.detailData.ebillCode,
+        ebillCode: row.ebillCode,
         fromEntId: this.entInfo.entId,
         fromEntName: this.entInfo.entName,
         holderName: this.form.sellerEntName,
-        payableExpireDate: this.detailData.payableExpireDate,
-        payEntName: this.detailData.payEntName,
+        payableExpireDate: row.payableExpireDate,
+        payEntName: row.payEntName,
         tranAmt: this.ebillAmt,
       }
       this.zjControl.getEbBillAgreementDetail(params).then(res => {

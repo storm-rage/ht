@@ -205,7 +205,7 @@
             <el-select v-model="form.confirmBankName"
                        filterable
                        placeholder="请选择" class="sw-year-select register102-legalCertType"
-                       :popper-append-to-body="false"
+                       :popper-append-to-body="true"
             >
               <el-option
                 v-for="item in bankInfoList"

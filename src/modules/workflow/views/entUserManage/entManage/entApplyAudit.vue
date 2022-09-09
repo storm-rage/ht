@@ -1,6 +1,6 @@
 <template>
   <zj-content-container>
-    <zj-top-header :title="$route.name === 'entApplyAudit' ? '复核企业信息申请' : '企业信息申请交易详情'"></zj-top-header>
+    <zj-top-header :title="pageType === 'audit' || pageType === 'edit' || pageType === 'add' ? '复核企业信息申请' : '企业信息申请交易详情'"></zj-top-header>
 
     <!--  交易信息  -->
     <trade-info :detailData="detailData" :dictionary="dictionary" />
@@ -12,10 +12,10 @@
     <ent-info-kh ref="entInfoKH" :detailData="detailData" :dictionary="dictionary" :isEdit="false" v-if="type === 'KH'" />
 
     <!--  审批意见  -->
-    <audit-remark ref="auditRemark" v-if="pageType === 'audit' || pageType === 'edit'"></audit-remark>
+    <audit-remark ref="auditRemark" v-if="pageType === 'audit' || pageType === 'edit' || pageType === 'add'"></audit-remark>
 
     <zj-content-footer>
-      <template v-if="pageType === 'audit' || pageType === 'edit'">
+      <template v-if="pageType === 'audit' || pageType === 'edit' || pageType === 'add'">
         <zj-button type="primary" @click="toPass">复核通过</zj-button>
         <zj-button @click="toReject" v-if="row.workflowState === 'E002'">驳回上一级</zj-button>
         <zj-button @click="toReject" v-else-if="row.workflowState === 'E005'">作废</zj-button>

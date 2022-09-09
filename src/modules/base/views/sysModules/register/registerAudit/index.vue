@@ -11,8 +11,8 @@
           </el-form-item>
           <el-form-item label="平台客户类型：" class="col-right">
             <el-select v-model="searchForm.entType" filterable placeholder="请选择" :popper-append-to-body="false">
-              <el-option label="全部" value=""/>
-              <el-option v-for="item in platFormAuditEntTypeList" :key="item.code" :label="item.desc" :value="item.code"/>
+              <el-option label="全部" value="" />
+              <el-option v-for="item in platFormAuditEntTypeList" :key="item.code" :label="item.desc" :value="item.code" />
             </el-select>
           </el-form-item>
           <el-form-item label="申请流水号：">
@@ -20,7 +20,7 @@
           </el-form-item>
           <el-form-item label="企业注册状态：" class="col-right">
             <el-select v-model="searchForm.registerState" filterable placeholder="请选择" :popper-append-to-body="false">
-              <el-option label="全部" value=""/>
+              <el-option label="全部" value="" />
               <el-option v-for="item in directory.platFormEntStateList" :key="item.code" :label="item.desc" :value="item.code">
               </el-option>
             </el-select>
@@ -46,6 +46,27 @@
               <template v-if="row.supplierType === '01'">
                 {{ typeMap(directory.platFormAuditEntTypeList, row.entType) }}
                 ( 直接供应商 )
+              </template>
+              <!-- 间接供应商 -->
+              <template v-else-if="row.supplierType === '02'">
+                <!-- 有贸易关系 -->
+                <template v-if="row.isTradeRelation === '1'">
+                  <label>
+                    {{
+                      typeMap(directory.platFormAuditEntTypeList, row.entType)
+                    }}
+                    ( 间接供应商)
+                  </label>
+                </template>
+                <!-- 无贸易关系 -->
+                <template v-else>
+                  <label>
+                    {{
+                      typeMap(directory.platFormAuditEntTypeList, row.entType)
+                    }}
+                    ( 间接供应商)
+                  </label>
+                </template>
               </template>
             </template>
             <template v-else>—</template>

@@ -145,34 +145,45 @@ export default {
       if(this.businessApplyInfo && this.businessApplyInfo.applyStatus === 'D002') {
         return this.$message.error('提交审核中，不能删除合同附件！')
       }
-      let params = {
-        attachId : row.attachId,
-        fileId : row.fileId,
-        fileName : row.fileName,
-        fileRemark : row.fileRemark,
-        phasedOperateFlag : OperateFlag.DEL,
-        recordId : row.recordId || '',
-        tradeId : this.agreementParams.tradeId || '',
-      }
-      this.zjControl.delContract(params).then(res => {
-        //刷新当前贸易关系下的合同附件列表
-        this.zjControl.queryPhasedAgreePage(this.agreementParams).then(res=>{
-          this.agreementList = res.data.phasedAgreeInfoList
-          this.attaTableShow = false
-          this.contractInfoList = res.data.contractInfoList || []
-          this.$nextTick(()=>{
-            this.attaTableShow = true
-          })
+      this.$messageBox({
+        type:'confirm',
+        title:'删除确认',
+        content: `是否确认删除?`,
+        showCancelButton:true,
+        messageResolve:()=>{
           let params = {
-            recordId : res.data.businessApplyInfo ? res.data.businessApplyInfo.recordId || '' : '',
-            contractInfoList : this.contractInfoList,
-            ...this.agreementParams,
+            attachId : row.attachId,
+            fileId : row.fileId,
+            fileName : row.fileName,
+            fileRemark : row.fileRemark,
+            phasedOperateFlag : OperateFlag.DEL,
+            recordId : row.recordId || '',
+            tradeId : this.agreementParams.tradeId || '',
           }
-          console.log(params)
-          this.$emit('update',params)
-          this.$message.success('删除附件成功！')
-          this.$refs.attaTable.clearActived()
-        })
+          this.zjControl.delContract(params).then(res => {
+            //刷新当前贸易关系下的合同附件列表
+            this.zjControl.queryPhasedAgreePage(this.agreementParams).then(res=>{
+              this.agreementList = res.data.phasedAgreeInfoList
+              this.attaTableShow = false
+              this.contractInfoList = res.data.contractInfoList || []
+              this.$nextTick(()=>{
+                this.attaTableShow = true
+              })
+              let params = {
+                recordId : res.data.businessApplyInfo ? res.data.businessApplyInfo.recordId || '' : '',
+                contractInfoList : this.contractInfoList,
+                ...this.agreementParams,
+              }
+              console.log(params)
+              this.$emit('update',params)
+              this.$message.success('删除附件成功！')
+              this.$refs.attaTable.clearActived()
+            })
+          })
+        },
+        messageReject: ()=>{
+
+        }
       })
     },
     //新增合同附件
