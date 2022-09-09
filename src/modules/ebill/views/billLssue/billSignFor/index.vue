@@ -32,7 +32,6 @@
                 </el-form>
               </template>
               <zj-table ref="searchTable" :api="zjControl.queryBillSignPage" :params="searchForm">
-<!--              <zj-table ref="searchTable"  :dataList="list">-->
                 <zj-table-column field="ebillCode" title="凭证编号"/>
                 <zj-table-column field="fromEntName" title="签发人/转让方"/>
                 <zj-table-column field="operType" title="签收类型" :formatter="obj=>typeMap(dictionary.openType,obj.cellValue)"/>
@@ -77,19 +76,6 @@ export default {
         ebillAmt: '',
         operType: '',
       },
-      list: [
-        {
-          field1: 'scm00001',
-          field2: '某某产品一号',
-          field3: '上游',
-          field4: '订单保理',
-          field5: '2022.09.08 11:18:19',
-          field6: '生效',
-          field7: '是',
-          id: '1',
-          state: 'B002',
-        }
-      ],
       dictionary: {},
       rowId: '',
       rowState: '',

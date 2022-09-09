@@ -5,6 +5,7 @@
       <zj-top-header title="转让交易详情"/>
       <zj-content-block>
         <zj-header title="交易信息"/>
+        <zj-content>
         <el-form ref="form" label-width="200px" class="zj-m-t-20">
           <el-row>
             <el-col :span="8">
@@ -26,9 +27,11 @@
             </el-col>
           </el-row>
         </el-form>
+        </zj-content>
       </zj-content-block>
       <el-row>
         <zj-header title="电子债权凭证信息"/>
+        <zj-content>
         <zj-table ref="searchTable" class="zj-search-table"
                   :api="zjControl.queryBillRecordPage"
                   :params="{id: row.id}"
@@ -43,9 +46,11 @@
           <zj-table-column field="ebillAmt" title="凭证金额" :formatter="money"/>
           <zj-table-column field="holderDate" title="凭证签收日" :formatter="date"/>
         </zj-table>
+        </zj-content>
       </el-row>
       <el-row>
         <zj-header title="转让信息"/>
+        <zj-content>
         <zj-table ref="searchTable" class="zj-search-table" :dataList="detail.transferInfos" :pager="false"
         >
           <zj-table-column field="ebillCode" title="凭证编号" />
@@ -59,6 +64,7 @@
           <zj-table-column field="checkResult" title="处理结果" />
           <zj-table-column field="rejectReson" title="失败原因" />
         </zj-table>
+        </zj-content>
       </el-row>
     </zj-content-container>
     <el-row style="position: relative;margin-top: 40px;">
