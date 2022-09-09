@@ -1,12 +1,12 @@
 <template>
     <zj-content-container>
       <!--  订单保理融资详情  -->
-      <zj-content>
         <zj-top-header title="订单保理融资详情"/>
         <zj-content-block v-if="workflow === 'sqxx'">
           <el-form :model="form" ref="form" label-width="200px" class="zj-m-t-20">
             <zj-content-block>
               <zj-header title="融资信息"/>
+              <zj-content>
               <el-row>
                 <el-col :span="12">
                   <el-form-item label="融资企业：">
@@ -83,9 +83,11 @@
                   <span class="zj-m-r-20">已还款利息合计：{{moneyNoSynbol(xqx.totalRepaymentInterestAmt)}}</span><!-- 缺字段 -->
                 </el-row>
               </zj-collapse>
+              </zj-content>
             </zj-content-block>
             <zj-content-block>
               <zj-header title="融资协议"/>
+              <zj-content>
               <zj-table ref="searchTable" class="zj-search-table" :dataList="xqx.agreementFileList" :pager="false"
               >
                 <zj-table-column type="seq" title="序号" width="60"/>
@@ -96,9 +98,11 @@
                   </template>
                 </zj-table-column>
               </zj-table>
+              </zj-content>
             </zj-content-block>
             <zj-content-block>
               <zj-header title="其他附件"/>
+              <zj-content>
               <zj-table ref="searchTable" class="zj-search-table"
                         :dataList="xqx.otherAttachList" :pager="false"
               >
@@ -111,6 +115,7 @@
                   </template>
                 </zj-table-column>
               </zj-table>
+              </zj-content>
             </zj-content-block>
 
           </el-form>
@@ -119,6 +124,7 @@
         <zj-content-block v-if="workflow === 'pzxx'">
           <zj-content-block>
             <zj-header title="阶段性协议信息"/>
+            <zj-content>
             <zj-table ref="searchTable" class="zj-search-table"
                       :dataList="xqa"
                       :pager="false"
@@ -137,6 +143,7 @@
                 </template>
               </zj-table-column>
             </zj-table>
+            </zj-content>
           </zj-content-block>
         </zj-content-block>
 
@@ -149,7 +156,6 @@
             </el-row>
           </el-row>
         </zj-workflow>
-      </zj-content>
     </zj-content-container>
 </template>
 
