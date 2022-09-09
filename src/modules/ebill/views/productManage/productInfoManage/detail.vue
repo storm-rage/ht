@@ -2,10 +2,9 @@
   <zj-content-container>
     <!--  产品详情  -->
     <zj-content-block>
-      <zj-content>
         <zj-top-header title="产品详情" direction="center"/>
         <zj-header title="产品基础信息"></zj-header>
-        <div class="zj-search-response">
+        <zj-content>
           <zj-table ref="searchTable" :dataList="rows" :pager="false">
             <zj-table-column field="productCode" title="产品编号"/>
             <zj-table-column field="productName" title="产品名称"/>
@@ -16,10 +15,11 @@
             <zj-table-column field="modifyDatetime" title="配置时间" :formatter="date"/>
             <zj-table-column field="status" title="产品状态" :formatter="obj=>typeMap(dictionary.status, obj.cellValue)"/>
           </zj-table>
-        </div>
+        </zj-content>
         <el-form :model="infoForm" ref="infoForm" label-width="220px">
           <zj-content-block>
             <zj-header :title="`产品设置-${typeMap(dictionary.productType,infoForm.productType)}`"></zj-header>
+            <zj-content>
             <el-row v-if="this.row.productType === 'DDBL'">
               <el-row>
                 <el-col :span="8">
@@ -108,7 +108,9 @@
                   </el-col>
                 </el-row>
                 <el-row>
-                  <el-col :span="8">注：业务联系人和保理专户用于后续签署保理合同。</el-col>
+                  <el-col :span="8">
+                    <zj-content-tip text="注：业务联系人和保理专户用于后续签署保理合同。"/>
+                    </el-col>
                 </el-row>
               </zj-collapse>
             </el-row>
@@ -125,7 +127,7 @@
                   <zj-number-input v-model="infoForm.rdBeforeStopDays" disabled>
                     <template slot="append">天</template>
                   </zj-number-input>
-                  <span class="tips">注：对账单付款日前X天至凭证到期日，凭证即不能融资，也不能转让。</span>
+                  <zj-content-tip class="zj-m-l-10" text="注：对账单付款日前X天至凭证到期日，凭证即不能融资，也不能转让。"/>
                 </el-form-item>
               </el-row>
               <el-row class="el-claims-voucher">
@@ -133,7 +135,7 @@
                   <zj-number-input v-model="infoForm.rdEndNoticeBlDays" disabled>
                     <template slot="append">天</template>
                   </zj-number-input>
-                  <span class="tips">注：对账单付款日前Z天，若对账单未发起结算，则通知保理公司。</span>
+                  <zj-content-tip class="zj-m-l-10" text="注：对账单付款日前Z天，若对账单未发起结算，则通知保理公司。"/>
                 </el-form-item>
               </el-row>
               <el-row class="el-claims-voucher">
@@ -179,9 +181,9 @@
                 </el-col>
               </el-row>
             </el-row>
+            </zj-content>
           </zj-content-block>
         </el-form>
-      </zj-content>
     </zj-content-block>
     <zj-content-footer>
       <zj-button class="back" @click="goParent">返回</zj-button>
@@ -189,7 +191,9 @@
   </zj-content-container>
 </template>
 <script>
+import ZjContentTip from "@pubComponent/content/ZjContentTip";
 export default {
+  components: {ZjContentTip},
   data() {
     return {
       zjControl: {
@@ -231,9 +235,5 @@ export default {
 .el-claims-voucher {
   width: 1000px;
   margin: 0 auto;
-}
-.tips {
-  color: #7f7f7f;
-  margin-left: 20px;
 }
 </style>

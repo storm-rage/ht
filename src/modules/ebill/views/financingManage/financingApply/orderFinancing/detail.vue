@@ -7,6 +7,7 @@
         总额度：<span>{{form.totalCreditAmount}}</span>
       </div>
       <zj-top-header title="订单融资申请"/>
+      <zj-content>
       <el-form :model="form" ref="form" :rules="rules" label-width="200px" class="zj-m-t-20">
         <el-row class="hd-row">
           <el-col :span="12">
@@ -95,6 +96,7 @@
           </el-col>
         </el-row>
         <zj-content-block>
+          <zj-content>
           <zj-table ref="searchTable" class="zj-search-table"
                     :dataList="form.phasedAgreementList"
                     :pager="false"
@@ -112,10 +114,13 @@
               </template>
             </zj-table-column>
           </zj-table>
+          </zj-content>
         </zj-content-block>
       </el-form>
+      </zj-content>
       <zj-content-block>
         <zj-header title="融资协议"/>
+        <zj-content>
         <el-row class="button-row">
           <zj-button type="text" @click="downloadAgreement">《订单保理融资协议》</zj-button>
         </el-row>
@@ -127,6 +132,7 @@
             <li class="explain-item">融资开始日以复核为准。</li>
           </ol>
         </div>
+        </zj-content>
       </zj-content-block>
 
     </zj-content-container>
