@@ -61,7 +61,7 @@
             <zj-table-column type="checkbox" width="40" fixed="left"/>
             <zj-table-column field="ebillCode" :title="`${productName}编号`"/>
             <zj-table-column field="rootCode" :title="`原始${productName}编号`"/>
-            <zj-table-column field="writerName" :title="`${productName}签发人`"/>
+            <zj-table-column field="writerName" title="开单人"/>
             <zj-table-column field="transferName" title="转让企业">
               <template v-slot="{row}">
                 {{row.transferName?row.transferName:'-'}}

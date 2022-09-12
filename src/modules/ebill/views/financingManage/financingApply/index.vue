@@ -5,7 +5,7 @@
       <el-tab-pane label="订单融资" name="orderTab" v-if="tabInfo.orderTab">
         <orderFinancing :zjControl="zjControl" :dictionary="dictionary" :uBtn="zjBtn" @nextStepParams="handelNextStepParams"/>
       </el-tab-pane>
-      <el-tab-pane label="入库融资/凭证融资" name="billTab" v-if="tabInfo.billTab || tabInfo.warehouseTab">
+      <el-tab-pane :label="`${productName}融资`" name="billTab" v-if="tabInfo.billTab || tabInfo.warehouseTab">
         <keep-alive>
           <voucherFinancing :zjControl="zjControl" :dictionary="dictionary" :mBtn="zjBtn" @nextStepParams="handelNextStepParams"/>
         </keep-alive>
