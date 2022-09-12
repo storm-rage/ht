@@ -44,9 +44,12 @@ export default {
     tradeBackground,
   },
   computed: {
+    productName() {
+      return this.$store.getters['user/productName']
+    },
     titleInfo() {
-      return this.workflow === 'lzgj'?'电子凭证流转轨迹':this.workflow === 'pzxx'||'mybj'?'电子债权凭证详情':''
-    }
+      return this.workflow === 'lzgj'?`${this.productName}流转轨迹`:this.workflow === 'pzxx'||'mybj'?`${this.productName}详情`:''
+    },
   },
   watch: {
     workflow() {
