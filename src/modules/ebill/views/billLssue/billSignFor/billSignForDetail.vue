@@ -1,10 +1,10 @@
 <template>
   <zj-content-block>
-    <zj-top-header title="电子债权凭证签收"/>
+    <zj-top-header :title="`${productName}签收`"/>
     <zj-content>
       <!--凭证详情-->
       <div>
-        <span>融单编号：{{ detailData.ebillCode }}</span>
+        <span>{{productName}}编号：{{ detailData.ebillCode }}</span>
 <!--        <span>业务方：{{ detailData.payEntName }}</span>-->
       </div>
       <table
@@ -39,7 +39,7 @@
           <td colspan="3">{{ detailData.receiptBankNo }}</td>
         </tr>
         <tr>
-          <td rowspan="2">融单</td>
+          <td rowspan="2">{{productName}}</td>
           <td colspan="2">金额（大写）</td>
           <td colspan="9">
           <span style="float: left">{{ detailData.ebillAmtUpper }}</span>
@@ -113,6 +113,11 @@ import view from "@pubComponent/preview/view";
 export default {
   name:'billSignForDetail',
   mixins:[view],
+  computed: {
+    productName() {
+      return this.$store.getters['user/productName']
+    }
+  },
   data() {
     return {
       zjControl: {
