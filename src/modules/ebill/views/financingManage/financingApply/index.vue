@@ -27,6 +27,11 @@ export default {
   components: {
     orderFinancing,voucherFinancing
   },
+  computed: {
+    productName() {
+      return this.$store.getters['user/productName']
+    }
+  },
   data() {
     return {
       zjControl: {
@@ -81,15 +86,15 @@ export default {
       }
       if(this.tabs === 'billTab') {
         if(this.nextStepParams.nextStepFlag) {
-          this.$message.error('请选择到期日为同一天的凭证！')
+          this.$message.error(`请选择到期日为同一天的${this.productName}！`)
           return
         }
         if(this.nextStepParams.entId && this.nextStepParams.idList && this.nextStepParams.idList.length) {
           this.goChild('voucherFinancingDetail', {...this.nextStepParams})
         } else if(this.nextStepParams.entId && !this.nextStepParams.idList) {
-          this.$message.error('请选择凭证信息!')
+          this.$message.error(`请选择${this.productName}信息!`)
         } else if(!this.nextStepParams.entId) {
-          this.$message.error(`请选择${this.$store.getters['user/productName']}开单人/转让企业，并选择凭证信息!`)
+          this.$message.error(`请选择${this.productName}开单人/转让企业，并选择凭证信息!`)
         }
       }
     },
