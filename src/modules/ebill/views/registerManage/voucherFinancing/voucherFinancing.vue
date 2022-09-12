@@ -52,7 +52,7 @@
 
 
     </zj-content-container>
-    <zj-workflow v-model="workflow" >
+    <zj-workflow v-model="workflow">
       <el-row slot="right" class="buttoni">
         <zj-button type="primary" @click="zdlogin">中登登记</zj-button>
         <zj-button type="primary" @click="openDialog1">手工登记</zj-button>
@@ -114,10 +114,22 @@ export default {
           idList: this.idlist
         }
         this.zjControl.confirmLoan(params).then(res => {
-          this.$messageBox({
-            type: 'success',
-            content: '放款成功'
-          })
+          console.log(res.data);
+          // this.$messageBox({
+          //   type: 'success',
+          //   content: '放款成功'
+          // })
+          if (res.data.errorMsg) {
+            this.$messageBox({
+              type: 'warning',
+              content: `${res.data.errorMsg}`
+            })
+          } else {
+            this.$messageBox({
+              type: 'success',
+              content: '放款成功'
+            })
+          }
         })
       }
     },
@@ -228,6 +240,7 @@ export default {
       text-align: center;
     }
   }
+
   .workflow-bottom {
     .right {
       width: 100%;
