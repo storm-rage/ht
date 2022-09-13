@@ -71,6 +71,11 @@ export default {
     loginDialog,
     artRegister
   },
+  created() {
+    this.dictionary=this.mDictionary
+    this.getDetail();
+    this.getApi();
+  },
   data() {
     return {
       workflow: '',
@@ -98,10 +103,7 @@ export default {
       idlist: [],
     };
   },
-  created() {
-    this.getDetail();
-    this.getApi();
-  },
+  
   methods: {
     daqian() {
       if (this.idlist.length == 0) {

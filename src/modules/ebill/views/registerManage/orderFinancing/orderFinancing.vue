@@ -95,7 +95,11 @@ export default {
     loginDialog,
     artRegister
   },
-
+created() {
+    this.dictionary=this.mDictionary
+    this.getDetail();
+    this.getApi();
+  },
   data() {
     return {
       workflow: '',
@@ -145,10 +149,7 @@ export default {
       registStatus:{},
     };
   },
-  created() {
-    this.getDetail();
-    this.getApi();
-  },
+ 
   methods: {
     getmsg() {
       console.log(this.userData);
