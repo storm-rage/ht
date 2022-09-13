@@ -5,11 +5,11 @@
 
       <zj-list-layout>
         <!--   代办和已办结没有按钮和查询条件   -->
-        <template slot="rightBtns">
+        <template v-if="rowData.maintainType&&rowData.maintainType=='1'" slot="rightBtns">
           <vxe-button class="reset" icon="el-icon-refresh" @click="resetSearch()">重置</vxe-button>
           <vxe-button class="search" icon="el-icon-search" @click="search(true,'searchTable')">查询</vxe-button>
         </template>
-        <template slot="searchForm">
+        <template v-if="rowData.maintainType&&rowData.maintainType=='1'" slot="searchForm">
           <el-form ref="searchForm" :model="searchForm">
             <el-form-item label="状态：">
               <el-select v-model="searchForm.agreementState">
@@ -34,7 +34,7 @@
             </el-form-item>
           </el-form>
         </template>
-        <zj-table ref="searchTable" :params="searchForm" :api="zjControl.queryBasePhasedAgreePage">
+        <zj-table ref="searchTable" :params="searchForm" :api="rowData.maintainType&&rowData.maintainType=='1'?zjControl.queryBasePhasedAgreePage:''"  :dataList="tableData">
         <!-- <zj-table ref="searchTable" :dataList="tableData" > -->
           <zj-table-column field="agreementNo" title="SRM阶段性协议编号"/>
           <zj-table-column field="agreementNo" title="阶段性协议编号"/>
@@ -70,7 +70,12 @@ export default {
   props: {
     tableData: Array,
     zjControl: Object,
-    rowData: Object,
+    rowData: {
+      type: Object,
+      default: ()=>{
+        return {}
+      }
+    },
   },
   components: {ZjButton,addOrEdit},
   data () {

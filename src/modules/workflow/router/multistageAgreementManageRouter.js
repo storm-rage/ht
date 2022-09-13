@@ -26,7 +26,7 @@ const multistageAgreementManageRouter = [
   {
     path: '/multistageAgreementDetailToDo',
     name: 'multistageAgreementDetailToDo',
-    component: () => import('../views/multistageAgreementManage/multistageAgreementSearch/maintain/todoDetail'),
+    component: () => import('../views/multistageAgreementManage/multistageAgreementSearch/maintain/todoDetail.vue'),
     meta: {
       title: '阶段性协议维护交易详情',
       root: '阶段性协议管理',
