@@ -177,7 +177,8 @@ export default {
       this.goChild('zhongdengManagexq1', row)
     },
     toEdit(row) {
-      this.goChild('zhongdengManageDetailpz', row)
+      // this.goChild('zhongdengManageDetailpz', row)
+      this.goChild('zhongdengManageDetailpz',row={id:row.id,serialNo:row.serialNo,currentActiveTab:"voucherFinancing"})
     },
     checkChange() {
       this.idlist = []

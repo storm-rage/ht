@@ -28,10 +28,10 @@
                   <el-form-item label="融资企业：">{{form.fromEntName}}</el-form-item>
                 </el-col>
                 <el-col :span="8" v-if="row.financingProductType !== '0'">
-                  <el-form-item label="融资金额：">{{form.buyerEntName}}</el-form-item>
+                  <el-form-item label="买方企业名称：">{{form.buyerEntName}}</el-form-item>
                 </el-col>
                 <el-col :span="8" v-if="row.financingProductType !== '0'">
-                  <el-form-item label="融资折扣率：">{{form.interestRate}}</el-form-item>
+                  <el-form-item label="融资月利率"><span>{{form.interestRate}}%</span></el-form-item>
                 </el-col>
                 <el-col :span="8" v-if="row.financingProductType === '0'">
                   <el-form-item label="买方企业名称：">{{form.buyerEntName}}</el-form-item>
@@ -298,7 +298,7 @@
 </template>
 
 <script>
-import operateLog from "@modules/workflow/views/components/operateLog";
+import operateLog from "../components/operateLog";
 import tradeContract from '../components/tradeContract'
 import invoice from '../components/invoice'
 import attaList from '../components/attaList'
@@ -398,6 +398,11 @@ export default {
     },
   },
   created() {
+    const currentActiveTab = this.getCurrentActiveTab();
+    if (currentActiveTab) {
+      this.activeComp = currentActiveTab;
+      this.removeCurrentTab();
+    }
     this.getApi()
     this.getRow()
     this.getDictionary()
