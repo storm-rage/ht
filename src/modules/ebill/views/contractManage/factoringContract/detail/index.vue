@@ -33,7 +33,7 @@
             </el-col>
             <el-col :span="8">
               <el-form-item label="合同生成时间：">
-                <span>{{contractInfo.contractStartDate}}</span>
+                <span>{{contractInfo.contractGenerateDate}}</span>
               </el-form-item>
             </el-col>
           </el-row>
