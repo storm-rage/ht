@@ -28,10 +28,10 @@
                   <el-form-item label="融资企业：">{{form.fromEntName}}</el-form-item>
                 </el-col>
                 <el-col :span="8" v-if="row.financingProductType !== '0'">
-                  <el-form-item label="融资金额：">{{form.buyerEntName}}</el-form-item>
+                  <el-form-item label="买方企业名称：">{{form.buyerEntName}}</el-form-item>
                 </el-col>
                 <el-col :span="8" v-if="row.financingProductType !== '0'">
-                  <el-form-item label="融资折扣率：">{{form.interestRate}}</el-form-item>
+                  <el-form-item label="融资月利率"><span>{{form.interestRate}}%</span></el-form-item>
                 </el-col>
                 <el-col :span="8" v-if="row.financingProductType === '0'">
                   <el-form-item label="买方企业名称：">{{form.buyerEntName}}</el-form-item>
@@ -286,19 +286,19 @@
         <!-- 审核时 -->
         <el-row slot="right">
           <el-row class="btn-w85 zj-center">
-            <zj-button class="back" @click="goParent">返回</zj-button>
+            <zj-button class="back" @click="back()">返回</zj-button>
           </el-row>
         </el-row>
       </zj-workflow>
       <zj-content-footer  v-if="row.financingProductType === '0'">
-        <zj-button class="back" @click="goParent">返回</zj-button>
+        <zj-button class="back" @click="back()">返回</zj-button>
       </zj-content-footer>
 
     </zj-content-container>
 </template>
 
 <script>
-import operateLog from "@modules/workflow/views/components/operateLog";
+import operateLog from "../components/operateLog";
 import tradeContract from '../components/tradeContract'
 import invoice from '../components/invoice'
 import attaList from '../components/attaList'
@@ -343,6 +343,10 @@ export default {
     }
   },
   methods: {
+    back(){
+      console.log("返回");
+      this.goParent("zhongdengManage",false)
+    },
     getDictionary() {
       this.zjControl.getFinancingTransDirectory().then(res => {
         this.dictionary = Object.assign({}, res.data)
@@ -394,6 +398,11 @@ export default {
     },
   },
   created() {
+    const currentActiveTab = this.getCurrentActiveTab();
+    if (currentActiveTab) {
+      this.activeComp = currentActiveTab;
+      this.removeCurrentTab();
+    }
     this.getApi()
     this.getRow()
     this.getDictionary()

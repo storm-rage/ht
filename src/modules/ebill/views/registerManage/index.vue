@@ -2,11 +2,17 @@
   <zj-content-container>
     <!--  中登登记管理  -->
     <zj-tabs v-model="tabs">
-      <el-tab-pane label="订单保理" name="orderFinancing" >
-        <orderFinancing :zjControl="zjControl" :uDictionary="uDictionary" :uBtn="zjBtn"/>
+      <el-tab-pane label="订单保理" name="orderFinancing">
+        <keep-alive>
+          <orderFinancing :zjControl="zjControl" :uDictionary="uDictionary" :uBtn="zjBtn" />
+        </keep-alive>
+
       </el-tab-pane>
-      <el-tab-pane label="凭证融资" name="voucherFinancing" >
-        <voucherFinancing :zjControl="zjControl" :mDictionary="mDictionary" :mBtn="zjBtn"/>
+      <el-tab-pane label="凭证融资" name="voucherFinancing">
+        <keep-alive>
+          <voucherFinancing :zjControl="zjControl" :mDictionary="mDictionary" :mBtn="zjBtn" />
+        </keep-alive>
+
       </el-tab-pane>
     </zj-tabs>
 
@@ -18,7 +24,7 @@ import voucherFinancing from "./voucherFinancing/voucherFinancing";
 export default {
   name: "registerManage",
   components: {
-    orderFinancing,voucherFinancing
+    orderFinancing, voucherFinancing
   },
   data() {
     return {
@@ -41,11 +47,11 @@ export default {
         }
       ],
       tradeList: [],
-      tabs:'orderFinancing',
-      tabAtive:'orderFinancing',
+      tabs: 'orderFinancing',
+      tabAtive: 'orderFinancing',
       zjControl: {},
-      uDictionary:{},
-      mDictionary:{}
+      uDictionary: {},
+      mDictionary: {}
 
     };
   },
@@ -56,7 +62,7 @@ export default {
      */
     toContractDetail(row) {
       console.error(row);
-      this.$router.push({name: 'businessDetail'});
+      this.$router.push({ name: 'businessDetail' });
     },
     /**
      *
@@ -65,7 +71,7 @@ export default {
     toContractSign(row) {
       console.log(row);
     },
-    handleRadioChange({row}) {
+    handleRadioChange({ row }) {
       this.tradeList.push({
         field1: '佛山市a有限公司',
         field2: '是',
@@ -77,16 +83,16 @@ export default {
         field8: '正常'
       })
     },
-    getApiAfter(){
+    getApiAfter() {
       this.zjBtn.userInfo ? this.tabAtive = 'orderFinancing' : this.tabAtive = 'voucherFinancing'
     },
-    toDetail (row) {
+    toDetail(row) {
       this.goChild('productInfoManageDetail', row)
     },
-    toEdit (row) {
+    toEdit(row) {
       this.goChild('productInfoManageEdit', row)
     },
-    toEditQuota (row) {},
+    toEditQuota(row) { },
   },
   created() {
     this.getApi()
