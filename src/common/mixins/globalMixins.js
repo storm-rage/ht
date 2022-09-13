@@ -1,4 +1,4 @@
-import {windowLsStorege} from '@utils/storageUtils';
+import {windowLsStorege,windowSSStorage} from '@utils/storageUtils';
 export default {
   install(Vue){
     Vue.mixin({
@@ -159,6 +159,30 @@ export default {
             rowData = JSON.parse(windowLsStorege.getItem(`${this.$route.name}Data`))
           }
           this.row = Object.assign({}, rowData)
+          this.storeCurrentTab()
+        },
+        /**
+         * 缓存当前激活的tab页签
+         * @returns {Promise<void>}
+         */
+        async storeCurrentTab() {
+          if (this.row.currentActiveTab) {
+            windowSSStorage.setItem(this.$route.meta.parent+'currentActiveTab',this.row.currentActiveTab)
+          }
+        },
+        /**
+         * 获取当前激活tab页签
+         * @returns {string}
+         */
+        getCurrentActiveTab() {
+          return windowSSStorage.getItem(this.$route.name+'currentActiveTab')
+        },
+        /**
+         * 删除当前激活tab页签
+         * @returns {Promise<void>}
+         */
+        async removeCurrentTab() {
+          windowSSStorage.removeItem(this.$route.name+'currentActiveTab')
         },
         removeRow(){
           windowLsStorege.removeItem(`${this.$route.name}Data`)

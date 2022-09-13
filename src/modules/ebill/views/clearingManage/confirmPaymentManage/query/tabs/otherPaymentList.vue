@@ -77,7 +77,7 @@ export default {
       });
     },
     toSubmitPayment (row) {
-      this.goChild('otherConfirmPaymentApply',{bizId: this.bizId,busTradeId:row.busTradeId})
+      this.goChild('otherConfirmPaymentApply',{bizId: this.bizId,busTradeId:row.busTradeId,currentActiveTab: 'otherPayment'})
     }
   }
 }
