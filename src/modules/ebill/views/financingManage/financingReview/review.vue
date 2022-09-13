@@ -26,7 +26,7 @@
             <el-col :span="12">
               <el-form-item label="融资合同期限：">
                 {{date(form.baseFinancingInfo.contractTimeStart)}}
-                {{form.baseFinancingInfo.contractTimeEnd?`至${date(form.baseFinancingInfo.contractTimeEnd)}`:''}}
+                {{form.baseFinancingInfo.contractTimeEnd?`至 ${date(form.baseFinancingInfo.contractTimeEnd)}`:''}}
               </el-form-item>
             </el-col>
           </el-row>
@@ -71,7 +71,7 @@
               </el-form-item>
             </el-col>
             <el-col :span="12" v-if="row.financingProductType === '0'">
-              <el-form-item label="融资月利率：">{{form.baseFinancingInfo.interestRate}}</el-form-item>
+              <el-form-item label="融资月利率：">{{form.baseFinancingInfo?`${form.baseFinancingInfo.interestRate}%`:''}}</el-form-item>
             </el-col>
             <el-col :span="12" v-if="row.financingProductType !== '0'">
               <el-form-item label="融资开始日：">
@@ -83,13 +83,13 @@
             <el-col :span="12">
               <el-form-item label="预计融资期限：">
                 {{date(form.baseFinancingInfo.estimateTimeStart)}}
-                {{form.baseFinancingInfo.estimateTimeEnd?`至${date(form.baseFinancingInfo.estimateTimeEnd)}`:''}}
+                {{form.baseFinancingInfo.estimateTimeEnd?`至 ${date(form.baseFinancingInfo.estimateTimeEnd)}`:''}}
                 {{form.baseFinancingInfo.estimateDays?`共${form.baseFinancingInfo.estimateDays}天`:''}}
               </el-form-item>
             </el-col>
             <el-col :span="12" v-if="row.financingProductType !== '0'">
               <el-form-item label="融资月利率：">
-                {{form.baseFinancingInfo.interestRate?money(form.baseFinancingInfo.interestRate):''}}
+                {{form.baseFinancingInfo.interestRate?`${form.baseFinancingInfo.interestRate}%`:''}}
               </el-form-item>
             </el-col>
             <el-col :span="12" v-if="row.financingProductType === '0'">
@@ -105,7 +105,9 @@
             <el-col :span="12" v-if="row.financingProductType !== '0'">
               <el-form-item label="预计利息：">
                 {{form.baseFinancingInfo.interestAmt?money(form.baseFinancingInfo.interestAmt):''}}
-                <zj-content-tip text="（预计利息 = 融资申请金额*融资月利率/30*预计融资天数）"/>
+                <div>
+                  <zj-content-tip text="（预计利息 = 融资申请金额*融资月利率/30*预计融资天数）"/>
+                </div>
               </el-form-item>
             </el-col>
             <el-col :span="12">
@@ -267,6 +269,7 @@ export default {
   line-height:40px;
   text-align: right;
   margin-bottom: 20px;
+  padding-bottom: 20px;
   color: #e6a23c;
   background-color: #fdf6ec;
 }
