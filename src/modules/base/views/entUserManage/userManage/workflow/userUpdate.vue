@@ -77,7 +77,7 @@
             }">
           <zj-table-column field="code" title="企业代码" />
           <zj-table-column field="customCode" title="客户业务系统编码" />
-          <zj-table-column field="name" title="企业名称" />
+          <zj-table-column field="entName" title="企业名称" />
           <zj-table-column field="isHtEnterprise" title="是否海天集团" :formatter="(obj) => typeMap(dictionary.isHtEnterprise, obj.cellValue)" />
           <zj-table-column field="entType" title="平台客户类型" :formatter="(obj) => typeMap(dictionary.entType, obj.cellValue)" />
           <zj-table-column field="createDatetime" title="新增日期" :formatter="date" />

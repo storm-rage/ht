@@ -304,7 +304,11 @@ export default {
           if (this.statementAccountTypeArr) {
             params.statementAccountType = this.statementAccountTypeArr.join(',')
           }
-          params.idCardAttach = this.attachInfo // 身份证附件
+          if(this.attachInfo[0].fileId) {
+            params.idCardAttach = this.attachInfo // 身份证附件
+          } else {
+            params.idCardAttach = []
+          }
           this.$emit('formPass', this.form)
         }
       })
