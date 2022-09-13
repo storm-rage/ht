@@ -20,7 +20,8 @@ const billLssueRouter = [
     meta: {
       title: `{0}签发申请详情`,
       keepAlive: true,
-      refreshIndex: 0
+      refreshIndex: 0,
+      notRequireAuth: true
     }
   },
   {

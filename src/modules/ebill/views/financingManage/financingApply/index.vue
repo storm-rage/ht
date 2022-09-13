@@ -5,7 +5,7 @@
       <el-tab-pane label="订单融资" name="orderTab" v-if="tabInfo.orderTab">
         <orderFinancing :zjControl="zjControl" :dictionary="dictionary" :uBtn="zjBtn" @nextStepParams="handelNextStepParams"/>
       </el-tab-pane>
-      <el-tab-pane label="入库融资/凭证融资" name="billTab" v-if="tabInfo.billTab || tabInfo.warehouseTab">
+      <el-tab-pane :label="`${productName}融资`" name="billTab" v-if="tabInfo.billTab || tabInfo.warehouseTab">
         <keep-alive>
           <voucherFinancing :zjControl="zjControl" :dictionary="dictionary" :mBtn="zjBtn" @nextStepParams="handelNextStepParams"/>
         </keep-alive>
@@ -26,6 +26,11 @@ export default {
   name: "financingManage",
   components: {
     orderFinancing,voucherFinancing
+  },
+  computed: {
+    productName() {
+      return this.$store.getters['user/productName']
+    }
   },
   data() {
     return {
@@ -81,15 +86,15 @@ export default {
       }
       if(this.tabs === 'billTab') {
         if(this.nextStepParams.nextStepFlag) {
-          this.$message.error('请选择到期日为同一天的凭证！')
+          this.$message.error(`请选择到期日为同一天的${this.productName}！`)
           return
         }
         if(this.nextStepParams.entId && this.nextStepParams.idList && this.nextStepParams.idList.length) {
           this.goChild('voucherFinancingDetail', {...this.nextStepParams})
         } else if(this.nextStepParams.entId && !this.nextStepParams.idList) {
-          this.$message.error('请选择凭证信息!')
+          this.$message.error(`请选择${this.productName}信息!`)
         } else if(!this.nextStepParams.entId) {
-          this.$message.error(`请选择${this.$store.getters['user/productName']}开单人/转让企业，并选择凭证信息!`)
+          this.$message.error(`请选择${this.productName}开单人/转让企业，并选择凭证信息!`)
         }
       }
     },

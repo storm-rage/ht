@@ -250,7 +250,7 @@
                 props: { multiple: true },
                 options: dictionary.statementAccountTypeListTable,
               }" />
-            <zj-table-column title="操作">
+            <zj-table-column title="操作" v-if="!isDetail">
               <template v-slot="{ row, rowIndex }">
                 <template v-if="!$refs.sysUser.isActiveByRow(row)">
                   <zj-button type="text" @click="sysUserEdit(row)">修改</zj-button>

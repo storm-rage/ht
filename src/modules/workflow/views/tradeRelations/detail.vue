@@ -165,7 +165,9 @@ export default {
         this.notes=""
       });
     },
-    back() { },
+    back() { 
+      this.goParent()
+    },
     downstuff(row) {
       let params = {
         fileUrl: row.fileId,
