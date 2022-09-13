@@ -184,7 +184,8 @@ export default {
           this.goChild('openBillApplyConfirm', {
             list: res.data.accountBillList || [],
             applyType: '1', // 线下
-            isHtEnterprise: res.data.isHtEnterprise
+            isHtEnterprise: res.data.isHtEnterprise,
+            currentActiveTab: "offline"
           })
         }
       })
@@ -194,7 +195,7 @@ export default {
       this.$router.push({
         name: 'offlineDatails',
         params: {
-          rowData: row
+          rowData: {...row, currentActiveTab: "offline"}
         }
       })
     },

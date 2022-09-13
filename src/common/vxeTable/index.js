@@ -17,6 +17,13 @@ export default {
       formatBankcard ({ cellValue }) {
         return XEUtils.commafy(XEUtils.toValueString(cellValue), { spaceNumber: 4, separator: ' ' })
       },
+      // 如果是空值格式化为——
+      formatColumnValue({ cellValue }) {
+        if (cellValue) {
+          return cellValue
+        }
+        return '——';
+      }
     })
     Vue.use(VXETable)
     //通用库
