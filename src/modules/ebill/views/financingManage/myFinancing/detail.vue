@@ -144,7 +144,6 @@ export default {
         fileName: row.fileName,
       })
     },
-
   },
   created() {
     this.getApi()
