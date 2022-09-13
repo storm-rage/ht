@@ -69,7 +69,7 @@ export const myItemsPath = {
       },
       // 复核驳回状态
       'U006': {
-        auditPath: 'maintainUserAudit',
+        auditPath: 'maintainUserReject',
         detailPath: 'maintainUserDetail'
       },
     },

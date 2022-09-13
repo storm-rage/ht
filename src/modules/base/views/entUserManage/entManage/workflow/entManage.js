@@ -2,7 +2,7 @@ import {
   validateEmail, newValidateFixedPhone, validateBankAcct, validateIdCard
 } from '@utils/rules'
 import OperateLog from '@modules/workflow/views/components/operateLog';
-import OtherFileSetting from './components/otherFileSetting';
+import OtherFileSetting from './../components/otherFileSetting';
 
 export default {
   name: "enterpriseManage",

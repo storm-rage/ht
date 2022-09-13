@@ -1,8 +1,8 @@
 <template>
   <zj-content-container>
-    <zj-top-header>修改用户信息申请</zj-top-header>
+    <zj-top-header>新增用户申请</zj-top-header>
 
-    <user-update ref="userUpdate" :form="detailData" :dictionary="dictionary" @formPass="formPass" />
+    <user-add ref="userAdd" :form.sync="detailData" :dictionary="dictionary" @formPass="formPass" />
 
     <zj-content-footer>
       <zj-button type="primary" @click="submit">提交申请</zj-button>
@@ -11,14 +11,16 @@
   </zj-content-container>
 </template>
 <script>
-import userUpdate from '../workflow/userUpdate'
+import userAdd from '../workflow/userAdd'
 export default {
-  components: { userUpdate },
+  components: { userAdd },
   data() {
     return {
       zjControl: this.$api.userInfoManage,
       form: {},
-      detailData: {},
+      detailData: {
+
+      },
       dictionary: {}
     };
   },
@@ -31,22 +33,15 @@ export default {
     getDictionary() {
       this.zjControl.getUserDictionary().then((res) => {
         this.dictionary = res.data;
-        this.getUserInformation();
-      });
-    },
-    // 获取详情
-    getUserInformation() {
-      this.zjControl.getUserInformation({ id: this.row.id }).then((res) => {
-        this.detailData = res.data;
       });
     },
     submit() {
-      this.$refs.userUpdate.handleForm()
+      this.$refs.userAdd.handleForm()
     },
     //修改用户
     formPass(params) {
-      this.zjControl.updateUser(params).then((res) => {
-        this.$message.success("修改用户成功！");
+      this.zjControl.addUser(params).then((res) => {
+        this.$message.success("新增用户成功！");
         this.goParent();
       });
     }

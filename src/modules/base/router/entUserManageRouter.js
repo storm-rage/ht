@@ -102,7 +102,7 @@ const entUserManage = [
   {
     path: '/userAdd',
     name: 'userAdd',
-    component: () => import('../views/entUserManage/userManage/userAdd'),
+    component: () => import('../views/entUserManage/userManage/userAdd/index'),
     meta: {
       title: '企业用户信息管理-新增',
       parent: 'sysUser',
