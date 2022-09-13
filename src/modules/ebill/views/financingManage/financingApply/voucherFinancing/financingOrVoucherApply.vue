@@ -108,12 +108,10 @@
           <zj-header title="融资协议"/>
           <zj-content>
           <el-row class="button-row">
-            <zj-button type="text" @click="downloadAgreement('RKRZXY')" v-if="form.financingFlag === '1'">《
-              {{typeMap(dictionary.agreementTypes,'RKRZXY')}}
-              》</zj-button>
-            <zj-button type="text" @click="downloadAgreement('PZRZXY')" v-if="form.financingFlag === '2'">《
-              {{typeMap(dictionary.agreementTypes,'PZRZXY')}}
-              》</zj-button>
+            <zj-button type="text" @click="downloadAgreement('RKRZXY')" v-if="form.financingFlag === '1'">
+              《 {{typeMap(dictionary.agreementTypes,'RKRZXY')}} 》</zj-button>
+            <zj-button type="text" @click="downloadAgreement('PZRZXY')" v-if="form.financingFlag === '2'">
+              《 {{typeMap(dictionary.agreementTypes,'PZRZXY')}} 》</zj-button>
           </el-row>
           <div class="explain-text zj-m-l-10 zj-m-t-10">
             <div>注：</div>
