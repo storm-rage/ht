@@ -7,16 +7,6 @@
         <el-form :model="form" ref="form" label-width="200px">
           <zj-content-block>
             <zj-content>
-<!--              <el-steps :active="stepActive" process-status="finish" align-center>-->
-<!--                <el-step v-for="(step,index) in stepList" :key="`${index}stp`">-->
-<!--                  <div slot="title">{{step.title}}</div>-->
-<!--                  <div slot="description" style="text-align: left;width: 220px">-->
-<!--                    <p v-if="step.desc">{{step.desc}}</p>-->
-<!--                    <p v-if="step.time">{{step.time}}</p>-->
-<!--                    <p v-if="step.reason">{{step.reason}}</p>-->
-<!--                  </div>-->
-<!--                </el-step>-->
-<!--              </el-steps>-->
               <zj-step :list="stepList"
                        v-show="stepList && stepList.length"
                        :boxWidth="boxWidth"/>
@@ -53,42 +43,42 @@
                 </el-col>
                 <el-col :span="12">
                   <el-form-item label="融资合同期限：">
-                    {{date(form.contractTimeStart)}}
-                    {{`至${date(form.contractTimeEnd)}`}}
+                    {{form.contractTimeStart?date(form.contractTimeStart):''}}
+                    {{form.contractTimeEnd?`至 ${date(form.contractTimeEnd)}`:''}}
                   </el-form-item>
                 </el-col>
               </el-row>
               <el-row>
                 <el-col :span="12">
                   <el-form-item label="融资金额：" >
-                    <span>{{moneyNoSynbol(form.tranAmt)}}</span>
-                    <span>{{digitUp(form.tranAmt)}}</span>
+                    <span>{{form.tranAmt?moneyNoSynbol(form.tranAmt):''}}</span>
+                    <span class="zj-m-l-10" v-if="form.tranAmt">{{digitUp(form.tranAmt)}}</span>
                   </el-form-item>
                 </el-col>
                 <el-col :span="12">
-                  <el-form-item label="融资开始日：">{{date(form.applyDatetime)}}</el-form-item>
+                  <el-form-item label="融资开始日：">{{form.applyDatetime?date(form.applyDatetime):''}}</el-form-item>
                 </el-col>
               </el-row>
               <el-row>
                 <el-col :span="12">
-                  <el-form-item label="融资到期日：">{{date(form.expireDate)}}</el-form-item>
+                  <el-form-item label="融资到期日：">{{form.expireDate?date(form.expireDate):''}}</el-form-item>
                 </el-col>
                 <el-col :span="12">
                   <el-form-item label="预计融资期限：">
-                    {{date(form.estimateTimeStart)}}
-                    {{`至 ${date(form.estimateTimeEnd)}`}}
-                    {{`共${form.estimateDays}天`}}
+                    {{form.estimateTimeStart?date(form.estimateTimeStart):''}}
+                    {{form.estimateTimeEnd?`至 ${date(form.estimateTimeEnd)}`:''}}
+                    {{form.estimateDays?`共${form.estimateDays}天`:''}}
                   </el-form-item>
                 </el-col>
               </el-row>
               <el-row>
                 <el-col :span="12">
-                  <el-form-item label="融资月利率：">{{ `${form.interestRate}%`}}</el-form-item>
+                  <el-form-item label="融资月利率：">{{form.interestRate? `${form.interestRate}%`:''}}</el-form-item>
                 </el-col>
                 <el-col :span="12">
                   <el-form-item label="预计利息：">
-                    {{moneyNoSynbol(form.interestAmt)}}
-                    <div>
+                    {{form.interestAmt?moneyNoSynbol(form.interestAmt):''}}
+                    <div v-if="form.interestAmt">
                       <zj-content-tip text="（预计利息= 融资申请金额*融资月利率/30*预计融资天数）"/>
                     </div>
                   </el-form-item>
@@ -113,8 +103,8 @@
               <el-row>
                 <el-col :span="12">
                   <el-form-item label="融资申请金额：" >
-                    <span>{{moneyNoSynbol(form.tranAmt)}}</span>
-                    <span class="zj-m-l-10">{{digitUp(form.tranAmt)}}</span>
+                    <span>{{form.tranAmt?moneyNoSynbol(form.tranAmt):''}}</span>
+                    <span class="zj-m-l-10" v-if="form.tranAmt">{{digitUp(form.tranAmt)}}</span>
                   </el-form-item>
                 </el-col>
                 <el-col :span="12">
