@@ -116,6 +116,7 @@ export default {
   },
   created () {
     this.getApi()
+    this.getRow()
     this.getDetail()
   },
   activated () {

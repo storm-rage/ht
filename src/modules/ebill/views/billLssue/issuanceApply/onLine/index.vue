@@ -240,7 +240,10 @@ export default {
     minute (row) {
       this.$router.push({
         name: 'openBillApplyDetails',
-        query: { rowId: row.id }
+        query: { rowId: row.id },
+        params: {
+          currentActiveTab: "onLine"
+        }
       })
     },
     //修改单元格
@@ -335,7 +338,8 @@ export default {
           this.goChild('openBillApplyConfirm', {
             list: res.data.accountBillList || [],
             applyType: '0', // 线上
-            isHtEnterprise: res.data.isHtEnterprise
+            isHtEnterprise: res.data.isHtEnterprise,
+            currentActiveTab: "onLine"
           })
         }
       })
