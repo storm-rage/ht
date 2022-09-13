@@ -110,6 +110,11 @@ export default {
   created() {
     this.getApi()
     this.getBillSignDictionary()
-  }
+  },
+  activated() {
+    if(this.dictionary.openType) {
+      this.search()
+    }
+  },
 };
 </script>

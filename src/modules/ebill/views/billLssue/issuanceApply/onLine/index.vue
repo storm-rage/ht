@@ -137,7 +137,7 @@
           </zj-table-column>
           <zj-table-column
             field="isApplyVoucher"
-            title="是否开立凭证"
+            title="是否申请开立债权凭证"
             width="100"
             :formatter="obj => ifOrNot(obj.cellValue)"
           />
@@ -220,6 +220,11 @@ export default {
   },
   created () {
     this.getApi()
+  },
+  activated() {
+    this.$nextTick(()=>{
+      this.search()
+    })
   },
   methods: {
     dateFormat (time) {
