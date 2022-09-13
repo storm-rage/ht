@@ -103,7 +103,9 @@ export default {
         repaymentEntNameLike: ''
       },
       // 尾款金额汇总
-      totalOddAmt: 0
+      totalOddAmt: 0,
+      // 缓存当前激活tab
+      currentActiveTab: 'billFactoringClearing:billBalanceClearingList'
     }
   },
   created() {
@@ -131,7 +133,8 @@ export default {
     toViewDetail(row) {
       this.goChild('billLssueMyBillDetail',{
         ebillCode: row.ebillCode,
-        parentRouteName: 'expireClear'
+        parentRouteName: 'expireClear',
+        currentActiveTab: this.currentActiveTab
       })
     },
     /**
@@ -165,7 +168,7 @@ export default {
             confirmButtonText: '确定',
             cancelButtonText: '取消'
           }).then(() => {
-            this.goChild('billBalanceClearingApply',{clearId, clearType: this.searchForm.clearType})
+            this.goChild('billBalanceClearingApply',{clearId, clearType: this.searchForm.clearType,currentActiveTab: this.currentActiveTab})
           })
         }else if (valid2.length !== records.length) {
           this.$messageBox({
@@ -177,10 +180,10 @@ export default {
           })
           return;
         }else {
-          this.goChild('billBalanceClearingApply',{clearId, clearType: this.searchForm.clearType})
+          this.goChild('billBalanceClearingApply',{clearId, clearType: this.searchForm.clearType,currentActiveTab: this.currentActiveTab})
         }
       }else {
-        this.goChild('billBalanceClearingApply',{clearId, clearType: this.searchForm.clearType})
+        this.goChild('billBalanceClearingApply',{clearId, clearType: this.searchForm.clearType,currentActiveTab: this.currentActiveTab})
       }
     },
     /**
@@ -188,7 +191,7 @@ export default {
      * @param row
      */
     singleClearingApply (row) {
-      this.goChild('billBalanceClearingApply',{clearId: [row.id], clearType: this.searchForm.clearType})
+      this.goChild('billBalanceClearingApply',{clearId: [row.id], clearType: this.searchForm.clearType,currentActiveTab: this.currentActiveTab})
     },
     /**
      * 导出
