@@ -5,8 +5,8 @@
     <biz-apply-info :formData="detailData.businessApplyInfo" :dictionary="dictionary"/>
     <business-detail :formData="detailData" :zjControl="zjControl" :rowData="row" />
     <!--  贸易合同附件  -->
-    <trade-contract-atta :formData="detailData.businessApplyInfo" :dictionary="dictionary"/>
-    <operator-log :formData="detailData.businessApplyInfo" :dictionary="dictionary"/>
+    <trade-contract-atta :tableData="detailData.contractInfoList" :dictionary="dictionary"/>
+    <operator-log :tableData="[]" :dictionary="dictionary"/>
 
     <zj-content-footer>
       <zj-button @click="goParent">返回</zj-button>
