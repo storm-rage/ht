@@ -11,14 +11,14 @@
                   <el-form-item label="融资流水号：">{{form.serialNo}}</el-form-item>
                 </el-col>
                 <el-col :span="8">
-                  <el-form-item label="融资产品：">{{form.financingProductType}}</el-form-item>
+                  <el-form-item label="融资产品：">{{form.financingProductType?typeMap(dictionary.productTypeList,form.financingProductType):'-'}}</el-form-item>
                 </el-col>
                 <el-col :span="8">
-                  <el-form-item label="申请时间：">{{form.applyDatetime}}</el-form-item>
+                  <el-form-item label="申请时间：">{{form.applyDatetime?date(form.applyDatetime):''}}</el-form-item>
                 </el-col>
               </el-row>
               <el-row>
-                <el-form-item label="业务状态：">{{form.workflowState}}</el-form-item>
+                <el-form-item label="业务状态：">{{form.workflowState?typeMap(dictionary.financingStateList,form.workflowState):'-'}}</el-form-item>
               </el-row>
             </zj-content-block>
             <zj-content-block>
@@ -32,13 +32,13 @@
                   <el-form-item label="融资金额：">{{form.buyerEntName}}</el-form-item>
                 </el-col>
                 <el-col :span="8" v-if="row.financingProductType !== '0'">
-                  <el-form-item label="融资折扣率：">{{form.interestRate}}</el-form-item>
+                  <el-form-item label="融资折扣率：">{{form.interestRate?`${form.interestRate}%`:''}}</el-form-item>
                 </el-col>
                 <el-col :span="8" v-if="row.financingProductType === '0'">
                   <el-form-item label="买方企业名称：">{{form.buyerEntName}}</el-form-item>
                 </el-col>
                 <el-col :span="8" v-if="row.financingProductType === '0'">
-                  <el-form-item label="融资月利率：">{{form.interestRate}}</el-form-item>
+                  <el-form-item label="融资月利率：">{{form.interestRate?`${form.interestRate}%`:''}}</el-form-item>
                 </el-col>
               </el-row>
               <el-row>
@@ -51,38 +51,38 @@
                 <el-col :span="8" v-if="row.financingProductType !== '0'">
                   <el-form-item label="申请转让金额：">
                     {{form.tranAmt}}
-                    <div>
-                      <zj-content-tip text="（申请转让金额 = 融资申请金额/折扣率）" v-if="form.tranAmt"></zj-content-tip>
-                    </div>
+                    <el-tooltip content="(申请转让金额 = 融资申请金额/折扣率)" v-if="form.tranAmt" effect="dark" placement="top">
+                      <i class="el-icon-info" style="color:#909399"></i>
+                    </el-tooltip>
                   </el-form-item>
                 </el-col>
                 <el-col :span="8" v-if="row.financingProductType === '0'">
-                  <el-form-item label="融资开始日：">{{form.loanDate}}</el-form-item>
+                  <el-form-item label="融资开始日：">{{form.loanDate?date(form.loanDate):''}}</el-form-item>
                 </el-col>
                 <el-col :span="8" v-if="row.financingProductType === '0'">
-                  <el-form-item label="融资到期日：">{{form.expireDate}}</el-form-item>
+                  <el-form-item label="融资到期日：">{{form.expireDate?date(form.expireDate):''}}</el-form-item>
                 </el-col>
                 <el-col :span="8" v-if="row.financingProductType !== '0'">
-                  <el-form-item label="融资月利率：">{{form.interestRate}}</el-form-item>
+                  <el-form-item label="融资月利率：">{{form.interestRate?`${form.interestRate}%`:''}}</el-form-item>
                 </el-col>
                 <el-col :span="8" v-if="row.financingProductType !== '0'">
-                  <el-form-item label="融资开始日：">{{form.loanDate}}</el-form-item>
+                  <el-form-item label="融资开始日：">{{form.loanDate?date(form.loanDate):''}}</el-form-item>
                 </el-col>
               </el-row>
               <el-row>
                 <el-col :span="8">
                   <el-form-item label="预计融资期限：">
                     {{ date(form.estimateTimeStart) }}
-                    {{ form.estimateTimeEnd ? `至` + date(form.estimateTimeEnd) : '' }}
+                    {{ form.estimateTimeEnd ? `至 ` + date(form.estimateTimeEnd) : '' }}
                     {{ form.totalDay ? `共${form.totalDay}天` : ''}}
                   </el-form-item>
                 </el-col>
                 <el-col :span="8">
                   <el-form-item label="预计利息：">
                     {{form.interestAmt}}
-                    <div>
-                      <zj-content-tip text="（预计利息 = 融资申请金额*融资月利率/30*预计融资天数）" v-if="form.interestAmt"></zj-content-tip>
-                    </div>
+                    <el-tooltip content="(预计利息 = 融资申请金额*融资月利率/30*预计融资天数)" v-if="form.interestAmt" effect="dark" placement="top">
+                      <i class="el-icon-info" style="color:#909399"></i>
+                    </el-tooltip>
                   </el-form-item>
                 </el-col>
               </el-row>
@@ -104,6 +104,7 @@
                   </el-col>
                 </el-row>
               </zj-collapse>
+              <zj-content-block>
               <zj-table ref="searchTable" class="zj-search-table"
                         :dataList="form.phasedAgreements"
                         :pager="false"
@@ -132,17 +133,18 @@
                         :pager="false"
                         v-if="row.financingProductType !== '0'"
               >
-                <zj-table-column field="agreementNo" title="凭证编号" />
-                <zj-table-column field="agreementName" title="原始凭证编号" />
-                <zj-table-column field="agreementStartDate" title="凭证签发人" />
+                <zj-table-column field="agreementNo" :title="`${productName}编号`" />
+                <zj-table-column field="agreementName" :title="`原始${productName}编号`" />
+                <zj-table-column field="agreementStartDate" :title="`${productName}签发人`" />
                 <zj-table-column field="agreementEstimateEndDate" title="转让企业" />
-                <zj-table-column field="agreementNumber" title="凭证金额" :formatter="money"/>
-                <zj-table-column field="price" title="凭证持有日期" :formatter="date"/>
-                <zj-table-column field="agreementEstimatedPrice" title="凭证到期日" :formatter="date"/>
+                <zj-table-column field="agreementNumber" :title="`${productName}金额`" :formatter="money"/>
+                <zj-table-column field="price" :title="`${productName}持有日期`" :formatter="date"/>
+                <zj-table-column field="agreementEstimatedPrice" :title="`${productName}到期日`" :formatter="date"/>
                 <el-row slot="pager-left" class="slotRows" >
-                  凭证金额合计：{{moneyNoSynbol(form.totalAmt)}}
+                  {{productName}}金额合计：{{moneyNoSynbol(form.totalAmt)}}
                 </el-row>
               </zj-table>
+              </zj-content-block>
               </zj-content>
             </zj-content-block>
             <zj-content-block>
@@ -193,7 +195,7 @@
                   </el-form-item>
                 </el-col>
                 <el-col :span="8" v-if="row.financingProductType !== '0'">
-                  <el-form-item label="保理合同到期日：">{{form.availableCreditAmount}}</el-form-item>
+                  <el-form-item label="保理合同到期日：">{{form.availableCreditAmount?date(form.availableCreditAmount):''}}</el-form-item>
                 </el-col>
               </el-row>
               </zj-content>
@@ -230,7 +232,28 @@
               </zj-content>
             </zj-content-block>
             <!--  操作记录  -->
-            <operate-log :logList="form.operEbTranTxListLogs"/>
+            <zj-content-block>
+              <zj-header title="操作记录"></zj-header>
+              <zj-content>
+                <zj-table ref="logTable"
+                          :dataList="form.operEbTranTxListLogs"
+                          :pager="false">
+                  <zj-table-column type="seq" width="60" title="序号"/>
+                  <zj-table-column field="tranType" title="业务节点"/>
+                  <zj-table-column
+                    field="creator"
+                    title="处理人"
+                  />
+                  <zj-table-column
+                    field="createDatetime"
+                    title="处理时间"
+                    formatter="formatDateTime"
+                  />
+                  <zj-table-column field="operFlag" title="审核结果"/>
+                  <zj-table-column field="notes" title="审核意见"/>
+                </zj-table>
+              </zj-content>
+            </zj-content-block>
           </el-form>
       </zj-content-block>
 
@@ -247,13 +270,13 @@
                       :pager="false"
             >
               <zj-table-column type="radio" width="40"/>
-              <zj-table-column field="ebillCode" title="凭证编号" />
-              <zj-table-column field="sourceCode" title="原始凭证编号" />
-              <zj-table-column field="writerName" title="凭证签发人" />
+              <zj-table-column field="ebillCode" :title="`${productName}编号`" />
+              <zj-table-column field="sourceCode" :title="`原始${productName}编号`" />
+              <zj-table-column field="writerName" :title="`${productName}签发人`" />
               <zj-table-column field="transferName" title="转让企业" />
               <zj-table-column field="openDate" title="签发日期" :formatter="date"/>
-              <zj-table-column field="ebillAmt" title="凭证金额" :formatter="money"/>
-              <zj-table-column field="expireDate" title="凭证到期日" :formatter="date"/>
+              <zj-table-column field="ebillAmt" :title="`${productName}金额`" :formatter="money"/>
+              <zj-table-column field="expireDate" :title="`${productName}到期日`" :formatter="date"/>
             </zj-table>
             </zj-content>
           </zj-content-block>
@@ -314,7 +337,6 @@
 </template>
 
 <script>
-import operateLog from "@modules/workflow/views/components/operateLog";
 import tradeContract from './tradeBackgroundInfo/tradeContract'
 import invoice from './tradeBackgroundInfo/invoice'
 import attaList from './tradeBackgroundInfo/attaList'
@@ -326,7 +348,11 @@ export default {
     tradeContract,
     invoice,
     attaList,
-    operateLog,
+  },
+  computed: {
+    productName() {
+      return this.$store.getters['user/productName']
+    },
   },
   watch: {
     workflow() {

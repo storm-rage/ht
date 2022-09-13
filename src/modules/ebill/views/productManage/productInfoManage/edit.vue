@@ -96,7 +96,7 @@
                 </el-col>
                 <el-col :span="8">
                   <el-form-item label="最低订单融资月利率：" prop="lowFinancingMonthRate">
-                    <zj-number-input v-model="infoForm.lowFinancingMonthRate" :precision="2">
+                    <zj-number-input v-model="infoForm.lowFinancingMonthRate" :precision="4">
                       <template slot="append">%</template>
                     </zj-number-input>
                   </el-form-item>
@@ -193,7 +193,7 @@
               </el-row>
               <el-row class="el-claims-voucher">
                 <el-form-item label="最低凭证融资月利率："  prop="lowRdFinancingMonthRate"  label-width="300px">
-                  <zj-number-input :precision="2" v-model="infoForm.lowRdFinancingMonthRate" >
+                  <zj-number-input :precision="4" v-model="infoForm.lowRdFinancingMonthRate" >
                     <template slot="append">%</template>
                   </zj-number-input>
                 </el-form-item>
@@ -384,7 +384,7 @@ export default {
             ...this.infoForm,
           }
           if(this.row.productType === 'RD' || this.infoForm.productType === 'RD') {
-            params.lowRdFinancingMonthRate = Number(this.infoForm.lowRdFinancingMonthRate).toFixed(2)
+            params.lowRdFinancingMonthRate = this.infoForm.lowRdFinancingMonthRate
           }
           if(this.row.id) {
               params.id = this.row.id

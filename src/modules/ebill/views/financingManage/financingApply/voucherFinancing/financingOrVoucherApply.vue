@@ -19,7 +19,7 @@
               <el-col :span="12">
                 <el-form-item label="融资合同期限：">
                   {{form.contractStartDate?date(form.contractStartDate):''}}
-                  {{form.contractEndDate?`至${date(form.contractEndDate)}`:''}}
+                  {{form.contractEndDate?`至 ${date(form.contractEndDate)}`:''}}
                 </el-form-item>
               </el-col>
             </el-row>
@@ -63,7 +63,7 @@
                 </el-form-item>
               </el-col>
               <el-col :span="12">
-                <el-form-item label="融资月利率：">{{form.rdFinancingMonthRate}}</el-form-item>
+                <el-form-item label="融资月利率：">{{form.rdFinancingMonthRate?`${form.rdFinancingMonthRate}%`:''}}</el-form-item>
               </el-col>
             </el-row>
             <el-row>
@@ -131,7 +131,7 @@
           <!--    贸易背景      -->
           <zj-content>
           <el-row>
-            <div class="zj-f-r zj-m-r-10">
+            <div class="zj-f-r zj-m-b-10">
               <zj-button class="append" icon="el-icon-circle-plus-outline" @click="choiceInvoiceItem">选择发票</zj-button>
             </div>
           </el-row>
@@ -314,6 +314,7 @@ export default {
   line-height:40px;
   text-align: right;
   margin-bottom: 20px;
+  padding-right: 20px;
   color: #e6a23c;
   background-color: #fdf6ec;
 }
