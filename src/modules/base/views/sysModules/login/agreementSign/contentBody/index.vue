@@ -20,10 +20,11 @@
           <!-- 协议 -->
           <agreement v-if="showAgreement"
                      :entId="userInfos.loginRes && userInfos.loginRes.entInfoList && userInfos.loginRes.entInfoList[0].entId"
-                     :userServiceAgreementFlag="userInfos.loginRes.userServiceAgreementFlag"
+                     :userServiceAgreementFlag="userInfos.loginRes && userInfos.loginRes.userServiceAgreementFlag"
                      :personalInfoAuthFlag="userInfos.loginRes.personalInfoAuthFlag"
                      :userRegisterAgreementFlag="userInfos.loginRes.userRegisterAgreementFlag"
                      :is-only-agreement="showAgreement&&!showFace"
+                     :isUseYunCert="!(userInfos.loginRes&&userInfos.loginRes.personalInfoAuthFlag=='1'&&userInfos.loginRes.userServiceAgreementFlag!='1'&&userInfos.loginRes.userRegisterAgreementFlag!='1')"
                      @setIsSuccess="setIsSuccess"
                      @done="handleDone"></agreement>
         </div>
