@@ -3,7 +3,7 @@ const billSearchRouter = [
   {
     path: '/queryAccountBill',
     name: 'queryAccountBill',
-    component: () => import('../views/queryStatistics/billSearch'),
+    component: () => import('../views/queryStatistics/billSearch/index.vue'),
     meta: {
       isMock: true,
       title: `对账单查询`,
@@ -16,7 +16,7 @@ const billSearchRouter = [
   {
     path: '/queryAccountBillDetail',
     name: 'queryAccountBillDetail',
-    component: () => import('../views/queryStatistics/billSearch/detail'),
+    component: () => import('../views/queryStatistics/billSearch/detail.vue'),
     meta:{
       isMock:false,
       title:`对账单详情`,
