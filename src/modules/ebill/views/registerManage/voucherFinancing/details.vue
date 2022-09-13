@@ -286,12 +286,12 @@
         <!-- 审核时 -->
         <el-row slot="right">
           <el-row class="btn-w85 zj-center">
-            <zj-button class="back" @click="goParent">返回</zj-button>
+            <zj-button class="back" @click="back()">返回</zj-button>
           </el-row>
         </el-row>
       </zj-workflow>
       <zj-content-footer  v-if="row.financingProductType === '0'">
-        <zj-button class="back" @click="goParent">返回</zj-button>
+        <zj-button class="back" @click="back()">返回</zj-button>
       </zj-content-footer>
 
     </zj-content-container>
@@ -343,6 +343,10 @@ export default {
     }
   },
   methods: {
+    back(){
+      console.log("返回");
+      this.goParent("zhongdengManage",false)
+    },
     getDictionary() {
       this.zjControl.getFinancingTransDirectory().then(res => {
         this.dictionary = Object.assign({}, res.data)
