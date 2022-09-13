@@ -194,7 +194,10 @@ export default {
       }
 
     },
-    back() { },
+    back() { 
+      this.goParent()
+      // console.log("返回");
+    },
     downstuff(row) {
       let params = {
         fileUrl: row.fileId,

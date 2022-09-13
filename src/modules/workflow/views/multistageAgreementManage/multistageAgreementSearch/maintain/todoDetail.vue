@@ -3,7 +3,7 @@
     <zj-top-header title="阶段性协议维护交易详情"></zj-top-header>
     <!--  业务申请信息  -->
     <biz-apply-info :formData="detailData.businessApplyInfo" :dictionary="dictionary"/>
-    <business-detail :formData="detailData" :zjControl="zjControl"/>
+    <business-detail :formData="detailData" :zjControl="zjControl" :rowData="row" />
     <!--  贸易合同附件  -->
     <trade-contract-atta :formData="detailData.businessApplyInfo" :dictionary="dictionary"/>
     <operator-log :formData="detailData.businessApplyInfo" :dictionary="dictionary"/>
@@ -32,6 +32,7 @@ export default {
         getBackPhasedAgreeInfo:this.$api.multistageAgreementManageWorkflow.getBackPhasedAgreeInfo,//运营端-阶段性协议维护-详情
 
         getPhasedAgreeDirectory:this.$api.agreementManage.getPhasedAgreeDirectory,//阶段性协议管理-数据字典
+        queryBasePhasedAgreePage:this.$api.multistageAgreementManageWorkflow.queryBasePhasedAgreePage,// 运营端-阶段性协议信息列表查询
         uploadFile:this.$api.baseCommon.uploadFile,
       },
       detailData: {},

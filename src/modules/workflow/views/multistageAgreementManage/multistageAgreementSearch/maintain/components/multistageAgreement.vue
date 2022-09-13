@@ -46,7 +46,12 @@ export default {
     tableData: Object,
     dictionary: Object,
     zjControl: Object,
-    rowData: Object,
+    rowData: {
+      type: Object,
+      default: ()=>{
+        return {}
+      }
+    },
   },
   components: {
     ZjButton,

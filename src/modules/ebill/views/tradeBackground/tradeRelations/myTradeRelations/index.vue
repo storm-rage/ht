@@ -18,71 +18,77 @@
           </el-form-item>
         </el-form>
       </template>
-      <div class="zj-search-response">
-        <zj-button class="zj-m-l-10 zj-m-t-10 zj-m-b-10 mb-10 mt-10" type="primary" @click="openDialog">新增</zj-button>
-        <zj-content style="padding-top: 0">
-          <zj-content-tip text="注：证明材料可为买卖双方发票，贸易合同等证明双方真实贸易关系的材料，支持上传pdf，图片和压缩包！"></zj-content-tip>
-        </zj-content>
-        <zj-table ref="searchTable" :params="searchForm" :api="zjControl.relationLsit">
-          <zj-table-column field="buyerEntName" title="买方企业名称" />
-          <zj-table-column field="sellerEntName" title="卖方企业名称" />
-          <zj-table-column field="bankAccount" title="卖方银行账号" />
-          <zj-table-column field="bankAccname" title="卖方企业银行账户户名" />
-          <zj-table-column field="bankName" title="卖方企业开户行" />
-          <zj-table-column field="bankNo" title="银行联行号" />
-          <!-- <zj-table-column field="bankType" title="银行类型" /> -->
-          <zj-table-column field="state" title="贸易关系状态" />
-          <!-- <zj-table-column field="agreementName" title="协议" /> -->
-          <zj-table-column title="协议">
-            <template v-slot="{ row }">
-            <zj-button
-            type="text"
-            @click="downsagreement(row)"
-            >
-            {{row.agreementFileName}}
-              </zj-button>
+      <template slot="btnGroups">
+        <div style="padding-top: 20px">
+          <zj-button type="primary" :api="zjBtn.openApply" @click="openDialog">新增</zj-button>
+        </div>
+      </template>
+      <zj-content>
+        <div class="zj-search-response">
+          <zj-content style="padding-top: 0">
+            <zj-text-tip text="注：证明材料可为买卖双方发票，贸易合同等证明双方真实贸易关系的材料，支持上传pdf，图片和压缩包！"></zj-text-tip>
+          </zj-content>
+          <zj-table ref="searchTable" :params="searchForm" :api="zjControl.relationLsit">
+            <zj-table-column field="buyerEntName" title="买方企业名称" />
+            <zj-table-column field="sellerEntName" title="卖方企业名称" />
+            <zj-table-column field="bankAccount" title="卖方银行账号" />
+            <zj-table-column field="bankAccname" title="卖方企业银行账户户名" />
+            <zj-table-column field="bankName" title="卖方企业开户行" />
+            <zj-table-column field="bankNo" title="银行联行号" />
+            <!-- <zj-table-column field="bankType" title="银行类型" /> -->
+            <zj-table-column field="state" title="贸易关系状态" />
+            <!-- <zj-table-column field="agreementName" title="协议" /> -->
+            <zj-table-column title="协议">
+              <template v-slot="{ row }">
+                <zj-button
+                  type="text"
+                  @click="downsagreement(row)"
+                >
+                  {{row.agreementFileName}}
+                </zj-button>
               </template>
-          </zj-table-column>
-          <!-- <zj-table-column field="fileName" title="证明材料" /> -->
-          <zj-table-column title="证明材料">
-            <template v-slot="{ row }">
-            <zj-button
-            type="text"
-            @click="downstuff(row)"
-            >
-            {{row.fileName}}
-              </zj-button>
+            </zj-table-column>
+            <!-- <zj-table-column field="fileName" title="证明材料" /> -->
+            <zj-table-column title="证明材料">
+              <template v-slot="{ row }">
+                <zj-button
+                  type="text"
+                  @click="downstuff(row)"
+                >
+                  {{row.fileName}}
+                </zj-button>
               </template>
-          </zj-table-column>
-          <zj-table-column field="lastUpdateDatetime" title="上次更新时间" :formatter="date" />
-          <zj-table-column title="操作" fixed="right" width="100px">
-            <template v-slot="{ row }">
-              <zj-button type="text" @click="edit(row)" v-if="row.isBuyerFlag==1">修改</zj-button>
-              <!-- <zj-button type="text" @click="edit(row)">修改</zj-button> -->
-              <zj-upload
-              :httpRequest="uploadfg"
-              :data="{row}"
-              accept=".pdf,.jpg,.zip,.bmp,.gif,.jpeg,.png,.rar"
-              style="display: inline-block"
-              :autoUpload="true"
-              v-if="row.fileName"
-              >
-              <zj-button type="text"   :api="zjBtn.getEnterprise"  v-if="row.isBuyerFlag==0&&row.fileName">上传材料证明</zj-button>
-              </zj-upload>
-              <zj-upload
-              :httpRequest="uploadsc"
-              :data="{row}"
-              accept=".pdf,.jpg,.zip,.bmp,.gif,.jpeg,.png,.rar"
-              style="display: inline-block"
-               v-if="!row.fileName"
-              >
-              <zj-button type="text" :api="zjBtn.getEnterprise" v-if="row.isBuyerFlag==0" >上传材料证明</zj-button>
-              </zj-upload>
-              <span type="text" v-if="row.isBuyerFlag!=0&&row.isBuyerFlag!=1">--</span>
-            </template>
-          </zj-table-column>
-        </zj-table>
-      </div>
+            </zj-table-column>
+            <zj-table-column field="lastUpdateDatetime" title="上次更新时间" :formatter="date" />
+            <zj-table-column title="操作" fixed="right" width="100px">
+              <template v-slot="{ row }">
+                <zj-button type="text" @click="edit(row)" v-if="row.isBuyerFlag==1">修改</zj-button>
+                <!-- <zj-button type="text" @click="edit(row)">修改</zj-button> -->
+                <zj-upload
+                  :httpRequest="uploadfg"
+                  :data="{row}"
+                  accept=".pdf,.jpg,.zip,.bmp,.gif,.jpeg,.png,.rar"
+                  style="display: inline-block"
+                  :autoUpload="true"
+                  v-if="row.fileName"
+                >
+                  <zj-button type="text"   :api="zjBtn.getEnterprise"  v-if="row.isBuyerFlag==0&&row.fileName">上传材料证明</zj-button>
+                </zj-upload>
+                <zj-upload
+                  :httpRequest="uploadsc"
+                  :data="{row}"
+                  accept=".pdf,.jpg,.zip,.bmp,.gif,.jpeg,.png,.rar"
+                  style="display: inline-block"
+                  v-if="!row.fileName"
+                >
+                  <zj-button type="text" :api="zjBtn.getEnterprise" v-if="row.isBuyerFlag==0" >上传材料证明</zj-button>
+                </zj-upload>
+                <span type="text" v-if="row.isBuyerFlag!=0&&row.isBuyerFlag!=1">--</span>
+              </template>
+            </zj-table-column>
+          </zj-table>
+        </div>
+      </zj-content>
     </zj-list-layout>
     <el-dialog :visible.sync="dialogVisible" :close-on-click-modal="false" center width="500px"
       :title="type == 'add' ? '新增贸易关系' : '修改贸易关系'" custom-class="mbi-editDialog" @close="cancel" top="6vh">
@@ -267,7 +273,7 @@ export default {
     },
     //云证书返回
     handleCertuficateDone(){
-     
+
       console.log("云证书返回");
       this.lastadd()
     },

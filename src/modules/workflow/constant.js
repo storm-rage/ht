@@ -224,7 +224,9 @@ export const myItemsPath = {
   // 阶段性协议维护
   JDXXY: {
     auditPath: 'multistageAgreementMaintainAudit',
-    detailPath: 'multistageAgreementDetailToDo'
+    detailPath: 'multistageAgreementDetailToDo',
+    // 已办和办结状态
+    doneDetailPath: 'multistageAgreementDetailToDo',
   },
 
   // 融资审核
