@@ -1,6 +1,5 @@
 <template>
-  <zj-content-container>
-    <zj-top-header>新增用户申请</zj-top-header>
+  <zj-content-block>
     <el-form ref="form" :model="form" :rules="rules" label-width="160px">
       <zj-content-block>
         <zj-header title="企业信息"></zj-header>
@@ -8,8 +7,8 @@
           <el-row>
             <el-col :span="24">
               <el-form-item label="企业名称：">
-                <el-input v-model="detailData.name" style="width: 200px" />
-                <zj-button class="zj-m-l-20" type="primary" @click="getEnterpriseConfirm">确认</zj-button>
+                <el-input v-model="detailData.name" style="width: 200px" :disabled="!isEdit" />
+                <zj-button class="zj-m-l-20" type="primary" @click="getEnterpriseConfirm" v-if="isEdit">确认</zj-button>
               </el-form-item>
             </el-col>
             <el-col :span="8">
@@ -40,18 +39,18 @@
           <el-row>
             <el-col :span="24">
               <el-form-item label="海天业务系统账号：" prop="htSysCode">
-                <el-input v-model="form.htSysCode" :disabled="state < 1" />
-                <zj-button class="zj-m-l-20" type="primary" @click="getEmployeeInfo" :disabled="state < 1">确认</zj-button>
+                <el-input v-model="form.htSysCode" :disabled="!isEdit || state < 1" />
+                <zj-button class="zj-m-l-20" type="primary" @click="getEmployeeInfo" v-if="isEdit" :disabled="state < 1">确认</zj-button>
               </el-form-item>
             </el-col>
             <el-col :span="8">
               <el-form-item label="用户姓名：" prop="userName">
-                <el-input v-model="form.userName" :disabled="state < 2" />
+                <el-input v-model="form.userName" :disabled="!isEdit || state < 2" />
               </el-form-item>
             </el-col>
             <el-col :span="8">
               <el-form-item label="证件类型：" prop="certType">
-                <el-select v-model="form.certType" filterable placeholder="请选择" :popper-append-to-body="false" :disabled="state < 2">
+                <el-select v-model="form.certType" filterable placeholder="请选择" :popper-append-to-body="false" :disabled="!isEdit || state < 2">
                   <el-option v-for="item in dictionary.certType" :key="item.code" :label="item.desc" :value="item.code">
                   </el-option>
                 </el-select>
@@ -59,29 +58,29 @@
             </el-col>
             <el-col :span="8">
               <el-form-item label="证件号码：" prop="certNo">
-                <el-input v-model="form.certNo" :disabled="state < 2" />
+                <el-input v-model="form.certNo" :disabled="!isEdit || state < 2" />
               </el-form-item>
             </el-col>
             <el-col :span="8">
               <el-form-item label="证件有效期：">
-                <zj-date-range-picker class="el-form-item__regExpire" :startDate.sync="form.certStartDate" :endDate.sync="form.certEndDate" :disabled="state < 2" />
+                <zj-date-range-picker class="el-form-item__regExpire" :startDate.sync="form.certStartDate" :endDate.sync="form.certEndDate" :disabled="!isEdit || state < 2" />
               </el-form-item>
             </el-col>
             <el-col :span="8">
               <el-form-item label="手机号码/用户名：" prop="mobileNo">
-                <el-input v-model="form.mobileNo" :disabled="state < 2" />
+                <el-input v-model="form.mobileNo" :disabled="!isEdit || state < 2" />
               </el-form-item>
             </el-col>
             <el-col :span="8">
               <el-form-item label="邮箱：">
-                <el-input v-model="form.email" :disabled="state < 2" />
+                <el-input v-model="form.email" :disabled="!isEdit || state < 2" />
               </el-form-item>
             </el-col>
           </el-row>
           <el-row>
             <el-col :span="24">
               <el-form-item label="用户角色：">
-                <el-select class="rolesSelect" v-model="form.roleIds" filterable placeholder="请选择" :popper-append-to-body="false" multiple :disabled="state < 2">
+                <el-select class="rolesSelect" v-model="roleIds" filterable placeholder="请选择" :popper-append-to-body="false" multiple :disabled="!isEdit || state < 2">
                   <el-option v-for="item in dictionary.autoRoleList" :key="item.code" :label="item.desc" :value="item.code" :disabled="item.disabled">
                   </el-option>
                 </el-select>
@@ -89,7 +88,7 @@
             </el-col>
             <el-col :span="24">
               <el-form-item label="请选择开凭证对账单类型权限：" label-width="280px" v-if="isShowType">
-                <el-select v-model="statementAccountTypeArr" filterable placeholder="请选择" :popper-append-to-body="false" multiple :disabled="state < 2">
+                <el-select v-model="statementAccountTypeArr" filterable placeholder="请选择" :popper-append-to-body="false" multiple :disabled="!isEdit || state < 2">
                   <el-option v-for="item in dictionary.statementAccountTypeList" :key="item.code" :label="item.desc" :value="item.code">
                   </el-option>
                 </el-select>
@@ -101,7 +100,7 @@
               <zj-table-column type="seq" width="60" title="序号" />
               <zj-table-column field="type" title="附件类型" />
               <zj-table-column field="fileName" title="附件" />
-              <zj-table-column title="操作" fixed="right">
+              <zj-table-column title="操作" fixed="right" v-if="isEdit">
                 <template v-slot="{ row }">
                   <zj-upload :httpRequest="handleFileUpload" :data="{ row }" class="zj-inline">
                     <zj-button type="text">上传</zj-button>
@@ -116,30 +115,52 @@
         </zj-content>
       </zj-content-block>
     </el-form>
-    <zj-content-footer>
-      <zj-button type="primary" @click="submit">提交申请</zj-button>
-      <zj-button class="back" @click="goParent">返回</zj-button>
-    </zj-content-footer>
-  </zj-content-container>
+  </zj-content-block>
 </template>
 <script>
 import { validateIdCard, newValidateFixedPhone, validateBankAcct } from "@utils/rules";
 
 export default {
   components: {},
+  props: {
+    form: {
+      type: Object,
+      default: () => { }
+    },
+    isEdit: {
+      type: Boolean,
+      default: true
+    },
+    dictionary: {
+      type: Object,
+      default: () => { }
+    },
+  },
+  watch: {
+    form(data) {
+      if (this.isEdit) {
+        this.form.certType = '01'
+      }
+      this.$nextTick(() => {
+        this.roleIds = data.roleIds
+        if (typeof data.statementAccountType === 'string') {
+          this.statementAccountTypeArr = data.statementAccountType.split(',')
+        }
+      })
+    },
+    'form.userName'(val) {
+      this.state = 2
+    }
+  },
   data() {
     return {
       zjControl: {
         ...this.$api.userInfoManage,
         getEmployeeInfo: this.$api.entInfoManage.getEmployeeInfo
       },
-      form: {
-        certType: '01',
-        roleIds: [],
-      },
+      roleIds: [],
       statementAccountTypeArr: [],
       detailData: {},
-      dictionary: {},
       attachInfo: [{ fileId: "", type: "身份证影印件", fileName: "" }],
       rules: {
         userName: [
@@ -194,15 +215,8 @@ export default {
   },
   created() {
     this.getRow();
-    this.getDictionary();
   },
   methods: {
-    //获取字典
-    getDictionary() {
-      this.zjControl.getUserDictionary().then((res) => {
-        this.dictionary = res.data;
-      });
-    },
     //获取企业信息-确认
     getEnterpriseConfirm() {
       this.zjControl
@@ -238,24 +252,24 @@ export default {
             certNo: res.data.idcardNo,//证件号码
             mobileNo: res.data.tel,//手机号码
             email: res.data.email,//电子邮箱
-            // roleIds: [],//操作员角色
+            roleIds: res.data.roleIds,//操作员角色
             // statementAccountType: [], //对账单类型
           }
-          this.form.roleIds = res.data.roleIds
+          this.roleIds = res.data.roleIds
           if (res.data.statementAccountType.split(',')) {
             let statementAccountTypeArr = res.data.statementAccountType.split(',')
             statementAccountTypeArr.forEach((item, index) => {
               this.$set(this.statementAccountTypeArr, index, item)
             })
+            // this.statementAccountTypeArr = res.data.statementAccountType
           }
-          // this.statementAccountTypeArr = res.data.statementAccountType
           // 返回的数据不能修改
           if (!!sysUserItem.htSysCode) sysUserItem.isHtSysCodeDis = true //是否禁用
           if (!!sysUserItem.userName) sysUserItem.isUserNameDis = true //是否禁用
           if (!!sysUserItem.certNo) sysUserItem.isCertNoDis = true //是否禁用
           if (!!sysUserItem.mobileNo) sysUserItem.isMobileNoNameDis = true //是否禁用
           if (!!sysUserItem.email) sysUserItem.isEmailDis = true //是否禁用
-          this.form = Object.assign(sysUserItem, this.form)
+          this.$emit('update:form', Object.assign(sysUserItem, this.form))
           console.log(this.form)
 
           this.$message.success('查询成功！')
@@ -275,23 +289,27 @@ export default {
       });
     },
     // 新增用户
-    submit() {
+    handleForm() {
       this.$refs.form.validate((valid) => {
         if (valid) {
-          let roleArr = this.form.roleIds
-          if (roleArr.includes('5') && roleArr.includes('6') || roleArr.includes('8') && roleArr.includes('9') || roleArr.includes('11') && roleArr.includes('12') || roleArr.includes('14') && roleArr.includes('15')) {
-            this.$message.error('不能同时选经办员和复核员！')
-            return
+          let roleArr = this.roleIds
+          if (roleArr) {
+            if (roleArr.includes('5') && roleArr.includes('6') || roleArr.includes('8') && roleArr.includes('9') || roleArr.includes('11') && roleArr.includes('12') || roleArr.includes('14') && roleArr.includes('15')) {
+              this.$message.error('不能同时选经办员和复核员！')
+              return
+            }
           }
           let params = Object.assign(this.form, this.detailData);
+          params.roleIds = this.roleIds
           if (this.statementAccountTypeArr) {
             params.statementAccountType = this.statementAccountTypeArr.join(',')
           }
-          params.idCardAttach = this.attachInfo // 身份证附件
-          this.zjControl.addUser(params).then((res) => {
-            this.$message.success("新增用户成功！");
-            this.goParent();
-          });
+          if(this.attachInfo[0].fileId) {
+            params.idCardAttach = this.attachInfo // 身份证附件
+          } else {
+            params.idCardAttach = []
+          }
+          this.$emit('formPass', this.form)
         }
       })
     },

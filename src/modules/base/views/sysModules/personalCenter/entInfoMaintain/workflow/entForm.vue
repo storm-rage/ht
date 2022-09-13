@@ -191,7 +191,7 @@
 </template>
 
 <script>
-import bankAccount from "./dialog/bankAccount";
+import bankAccount from "./../dialog/bankAccount";
 import { newValidateFixedPhone, validateIdCard } from "@utils/rules";
 
 export default {

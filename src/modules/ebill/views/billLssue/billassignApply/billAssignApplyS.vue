@@ -88,7 +88,7 @@
 </template>
 
 <script>
-import { validateBankAcct } from "@utils/rules";
+import { validateBankAcct, validateBankNo } from "@utils/rules";
 import tradeBjDialog from './dialog/tradeBjDialog'
 import { mapState } from 'vuex'
 
@@ -140,7 +140,7 @@ export default {
             trigger: "blur",
             max: 50,
           },
-          { validator: validateBankAcct, trigger: "blur" },
+          { validator: validateBankNo, trigger: "blur" },
         ],
         bankName: [
           { required: true, message: "请输入收款账户开户行", trigger: "blur" },

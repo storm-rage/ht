@@ -5,11 +5,14 @@
     <!--  交易信息  -->
     <trade-info :detailData="detailData" :dictionary="dictionary" />
 
-    <!-- 平台方 用户信息  -->
-    <user-update ref="userUpdate" :form="detailData" :dictionary="dictionary" :isEdit="isEdit" @formPass="formPass" v-if="type === 'PT'" />
+    <!-- 平台方 新增  -->
+    <user-add ref="userForm" :form="detailData" :dictionary="dictionary" :isEdit="isEdit" @formPass="formPass" v-if="row.startObject === 'PT' && row.applyType === '1'" />
 
-    <!-- 客户方 用户信息  -->
-    <user-info-kh ref="userInfoKH" :form="detailData" :dictionary="dictionary" v-if="type === 'KH'" />
+    <!-- 平台方 修改  -->
+    <user-update ref="userForm" :form="detailData" :dictionary="dictionary" :isEdit="isEdit" @formPass="formPass" v-if="row.startObject === 'PT' && row.applyType === '2'" />
+
+    <!-- 客户方  -->
+    <user-info-kh ref="userInfoKH" :form="detailData" :dictionary="dictionary" v-if="row.startObject === 'KH'" />
 
     <!--  操作记录  -->
     <operate-log ref="operateLog" :logList="logList"></operate-log>
@@ -36,13 +39,15 @@
 import tradeInfo from "../components/tradeInfo";
 import OperateLog from "../../components/operateLog";
 import AuditRemark from "../../components/auditRemark";
-import userUpdate from '@modules/base/views/entUserManage/userManage/userUpdate/userUpdate.vue'
+import userAdd from '@modules/base/views/entUserManage/userManage/workflow/userAdd.vue'
+import userUpdate from '@modules/base/views/entUserManage/userManage/workflow/userUpdate.vue'
 import userInfoKh from './userInfoKH.vue'
 export default {
   components: {
     tradeInfo,
     OperateLog,
     AuditRemark,
+    userAdd,
     userUpdate,
     userInfoKh
   },
@@ -57,8 +62,7 @@ export default {
       attachInfo: [{ fileId: "", type: "身份证影印件", fileName: "" }],
       logList: [],
       state: 'pass',
-      isEdit: this.$route.meta.pageType === 'edit',
-      type: ""
+      isEdit: this.$route.meta.pageType === 'edit' || false,
     };
   },
   created() {
@@ -75,9 +79,8 @@ export default {
     },
     //详情
     getDetail() {
-      this.type = this.row.startObject
       let autoApi = this.zjControl.getUserInformationDetail // 平台方详情接口
-      if (this.type === 'KH') {
+      if (this.row.startObject === 'KH') {
         autoApi = this.zjControl.getUserInformationKhDetail // 客户方详情接口
       }
       autoApi({ serialNo: this.row.serialNo }).then(res => {
@@ -143,20 +146,20 @@ export default {
     // 通过
     toPass() {
       this.state = 'pass'
-      if (this.type === 'PT') {
-        this.$refs.userUpdate.handleForm()
+      if (this.row.startObject === 'PT') {
+        this.$refs.userForm.handleForm()
       }
-      if (this.type === 'KH') {
+      if (this.row.startObject === 'KH') {
         this.formPass({ serialNo: this.row.serialNo })
       }
     },
     // 拒绝
     toReject() {
       this.state = 'reject'
-      if (this.type === 'PT') {
-        this.$refs.userUpdate.handleForm()
+      if (this.row.startObject === 'PT') {
+        this.$refs.userForm.handleForm()
       }
-      if (this.type === 'KH') {
+      if (this.row.startObject === 'KH') {
         this.formPass({ serialNo: this.row.serialNo })
       }
     },

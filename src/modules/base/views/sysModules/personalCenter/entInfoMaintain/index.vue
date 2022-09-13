@@ -18,7 +18,7 @@
 </template>
 
 <script>
-import entForm from './entForm'
+import entForm from './workflow/entForm'
 export default {
   components: {
     entForm

@@ -31,8 +31,8 @@
  * 复核企业信息申请页面
  */
 import tradeInfo from "../components/tradeInfo";
-import entInfoEdit from '@modules/base/views/entUserManage/entManage/entInfoEdit';
-import entInfoKh from "@modules/base/views/sysModules/personalCenter/entInfoMaintain/entForm"
+import entInfoEdit from '@modules/base/views/entUserManage/entManage/workflow/entInfoEdit';
+import entInfoKh from "@modules/base/views/sysModules/personalCenter/entInfoMaintain/workflow/entForm"
 import AuditRemark from '../../components/auditRemark';
 
 export default {

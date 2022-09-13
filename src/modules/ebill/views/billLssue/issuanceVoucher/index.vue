@@ -41,7 +41,7 @@
             <span v-else class="table-elbill-code" @click="goChild('myOpenBillDetail', row)">{{ row.ebillCode }}</span>
           </template>
         </zj-table-column>
-        <zj-table-column field="payEntName" title="签发人" />
+        <zj-table-column field="payEntName" title="开单人" />
         <zj-table-column field="receiptEntName" title="原始持有人" />
         <zj-table-column field="payableAmt" title="凭证金额" :formatter="money" />
         <zj-table-column field="payableIssuanceDate" title="签发日期" :formatter="date" />
@@ -50,7 +50,7 @@
         <zj-table-column field="state" title="凭证状态">
           <template v-slot="{ row }">
             <el-popover placement="right" width="240" trigger="hover" v-if="row.state === 'P001'">
-              <p class="zj-m-b-5">作废时间：{{ row.rejectDatetime }}</p>
+              <p class="zj-m-b-5">作废时间：{{date(row.rejectDatetime || '-') }}</p>
               <p>作废原因：{{ row.rejectNotes }}</p>
               <span class="table-elbill-code" slot="reference">
                 {{ typeMap(dictionary.stateList, row.state) }}

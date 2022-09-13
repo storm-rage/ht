@@ -13,7 +13,7 @@
 </template>
 
 <script>
-import entInfoEdit from "./entInfoEdit";
+import entInfoEdit from "./workflow/entInfoEdit";
 export default {
   components: {
     entInfoEdit,
