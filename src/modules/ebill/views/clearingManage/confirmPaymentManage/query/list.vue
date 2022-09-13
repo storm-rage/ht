@@ -111,6 +111,11 @@ export default {
     }
   },
   created() {
+    const currentActiveTab = this.getCurrentActiveTab();
+    if (currentActiveTab) {
+      this.activeComp = currentActiveTab;
+      this.removeCurrentTab();
+    }
     this.getApi()
   },
   methods: {
