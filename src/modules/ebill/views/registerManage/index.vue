@@ -49,10 +49,20 @@ export default {
       tradeList: [],
       tabs: 'orderFinancing',
       tabAtive: 'orderFinancing',
-      zjControl: {},
-      uDictionary: {},
-      mDictionary: {}
 
+      uDictionary: {},
+      mDictionary: {},
+      zjControl: {
+        orderPage: this.$api.zhongdengManage.orderPage, //订单保理列表
+        getDictionary: this.$api.zhongdengManage.getDictionary,//字典
+        registerDetails: this.$api.zhongdengManage.registerDetails,//手工登记详情
+        uploadFile: this.$api.baseCommon.uploadFile,//手工登记详情
+        registerSubmit: this.$api.zhongdengManage.registerSubmit,//手工登记提交
+        checkLogin: this.$api.zhongdengManage.checkLogin,//校验登录
+        getCode: this.$api.zhongdengManage.getCode,//获取验证码
+        getPictureCode: this.$api.zhongdengManage.getPictureCode,//获取图形验证码
+        zdLongin: this.$api.zhongdengManage.zdLongin,//登录中登
+      },
     };
   },
   methods: {
@@ -93,8 +103,15 @@ export default {
       this.goChild('productInfoManageEdit', row)
     },
     toEditQuota(row) { },
+    getDic() {
+      this.zjControl.getDictionary().then(res => {
+        this.mDictionary = res.data
+        this.uDictionary = res.data
+      })
+    },
   },
   created() {
+    this.getDic()
     this.getApi()
   }
 };

@@ -11,14 +11,17 @@
                   <el-form-item label="融资流水号：">{{form.serialNo}}</el-form-item>
                 </el-col>
                 <el-col :span="8">
-                  <el-form-item label="融资产品：">{{form.financingProductType}}</el-form-item>
+                  <el-form-item label="融资产品：">{{typeMap(dictionary.financingProductType, form.financingProductType)}}</el-form-item>
                 </el-col>
                 <el-col :span="8">
-                  <el-form-item label="申请时间：">{{form.applyDatetime}}</el-form-item>
+                  <el-form-item label="申请时间：">{{date(form.applyDatetime)}}</el-form-item>
                 </el-col>
               </el-row>
               <el-row>
-                <el-form-item label="业务状态：">{{form.workflowState}}</el-form-item>
+                <!-- <el-form-item label="业务状态：">{{form.workflowState}}</el-form-item> -->
+                <el-form-item label="业务状态："><span>
+                  {{typeMap(dictionary.financingState, form.workflowState)}}
+                </span></el-form-item>
               </el-row>
             </zj-content-block>
             <zj-content-block>
@@ -28,16 +31,16 @@
                   <el-form-item label="融资企业：">{{form.fromEntName}}</el-form-item>
                 </el-col>
                 <el-col :span="8" v-if="row.financingProductType !== '0'">
-                  <el-form-item label="买方企业名称：">{{form.buyerEntName}}</el-form-item>
+                  <el-form-item label="申请转让金额：">{{form.tranAmt}}</el-form-item>
                 </el-col>
                 <el-col :span="8" v-if="row.financingProductType !== '0'">
-                  <el-form-item label="融资月利率"><span>{{form.interestRate}}%</span></el-form-item>
+                  <el-form-item label="融资比例："><span>{{form.interestRate}}%</span></el-form-item>
                 </el-col>
                 <el-col :span="8" v-if="row.financingProductType === '0'">
                   <el-form-item label="买方企业名称：">{{form.buyerEntName}}</el-form-item>
                 </el-col>
                 <el-col :span="8" v-if="row.financingProductType === '0'">
-                  <el-form-item label="融资月利率：">{{form.interestRate}}</el-form-item>
+                  <el-form-item label="融资月利率："><span>{{form.interestRate}}%</span></el-form-item>
                 </el-col>
               </el-row>
               <el-row>
@@ -56,16 +59,16 @@
                   </el-form-item>
                 </el-col>
                 <el-col :span="8" v-if="row.financingProductType === '0'">
-                  <el-form-item label="融资开始日：">{{form.loanDate}}</el-form-item>
+                  <el-form-item label="融资开始日：">{{date(form.loanDate)}}</el-form-item>
                 </el-col>
                 <el-col :span="8" v-if="row.financingProductType === '0'">
-                  <el-form-item label="融资到期日：">{{form.expireDate}}</el-form-item>
+                  <el-form-item label="融资到期日：">{{date(form.expireDate)}}</el-form-item>
                 </el-col>
                 <el-col :span="8" v-if="row.financingProductType !== '0'">
-                  <el-form-item label="融资月利率：">{{form.interestRate}}</el-form-item>
+                  <el-form-item label="融资月利率：">{{form.interestRate}}%</el-form-item>
                 </el-col>
                 <el-col :span="8" v-if="row.financingProductType !== '0'">
-                  <el-form-item label="融资开始日：">{{form.loanDate}}</el-form-item>
+                  <el-form-item label="融资开始日：">{{date(form.loanDate)}}</el-form-item>
                 </el-col>
               </el-row>
               <el-row>
@@ -407,6 +410,7 @@ export default {
     this.getRow()
     this.getDictionary()
     this.getDetail()
+    console.log(this.row);
   }
 }
 </script>
