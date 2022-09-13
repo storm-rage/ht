@@ -15,6 +15,15 @@ export default {
     'billFactoringClearing': billFactoringClearingTab,
     'orderFactoringClearing': orderFactoringClearingTab
   },
+  created() {
+    const currentActiveTab = this.getCurrentActiveTab();
+    if (currentActiveTab) {
+      const tabs = currentActiveTab.split(':');
+      this.activeComp = tabs[0];
+      this.activeSecondTab = tabs[1];
+      this.removeCurrentTab();
+    }
+  },
   data () {
     return {
       tabsList: [
@@ -27,7 +36,8 @@ export default {
           name: 'orderFactoringClearing'
         }
       ],
-      activeComp: 'billFactoringClearing'
+      activeComp: 'billFactoringClearing',
+      activeSecondTab: ''
     }
   }
 };

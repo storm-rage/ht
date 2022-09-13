@@ -92,7 +92,9 @@ export default {
         holderNameLike: ''
       },
       // 实际付款金额汇总
-      totalPayAmt: 0
+      totalPayAmt: 0,
+      // 缓存当前激活tab
+      currentActiveTab: 'orderFactoringClearing:orderClearingList'
     }
   },
   created() {
@@ -102,11 +104,6 @@ export default {
     tableCheckChange ({records}) {
       this.showBottomBtn = records.length > 0;
     },
-    /**
-     * todo:跳转凭证详情
-     * @param row
-     */
-    toViewDetail(row) {},
     /**
      * 列表数据加载前回调
      * @param rows
@@ -151,14 +148,14 @@ export default {
           return;
         }
       }
-      this.goChild('orderClearingApply',{clearId, clearType: this.searchForm.clearType})
+      this.goChild('orderClearingApply',{clearId, clearType: this.searchForm.clearType,currentActiveTab: this.currentActiveTab})
     },
     /**
      * 单笔清算申请
      * @param row
      */
     singleClearingApply (row) {
-      this.goChild('orderClearingApply',{clearId: [row.id], clearType: this.searchForm.clearType})
+      this.goChild('orderClearingApply',{clearId: [row.id], clearType: this.searchForm.clearType,currentActiveTab: this.currentActiveTab})
     },
     /**
      * 导出
