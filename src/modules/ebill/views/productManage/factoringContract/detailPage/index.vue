@@ -158,10 +158,12 @@
               width="60"
               title="序号"/>
             <zj-table-column
-              field="bizType"
+              field="bizTypeDesc"
+              formatter="formatColumnValue"
               title="附件类型"/>
             <zj-table-column
               field="fileName"
+              formatter="formatColumnValue"
               title="附件名称"/>
             <zj-table-column
               field="createDatetime"

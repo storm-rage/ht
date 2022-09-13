@@ -64,12 +64,14 @@
             title="合同/协议编号"/>
           <zj-table-column
             field="buyerName"
+            formatter="formatColumnValue"
             title="核心企业名称"/>
           <zj-table-column
             field="contractName"
             title="合同/协议名称"/>
           <zj-table-column
             field="signer"
+            formatter="formatColumnValue"
             title="签署方"/>
           <zj-table-column title="操作" fixed="right">
             <template v-slot="{ row }">
