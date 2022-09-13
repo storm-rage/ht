@@ -229,12 +229,11 @@ export default {
   methods: {
     dateFormat (time) {
       if (!time) return '-'
-      let dt = typeof time === 'number' ? time : Number(time)
-      return dt.length === 8 ? this.date(dt) : formatDate(dt, 'yyyy-MM-dd')
+      return this.date({cellValue: time})
     },
     afterResetSearch() {
       this.searchForm.isApplyVoucher = '1'
-      window.console.log('this.searchForm', this.searchForm);
+      // window.console.log('this.searchForm', this.searchForm);
     },
     //详情
     minute (row) {
