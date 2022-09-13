@@ -100,7 +100,7 @@
             <zj-table-column field="expireDate" :title="`${productName}到期日`" :formatter="date"/>
           </zj-table>
           <el-row class="slotRows zj-m-l-10 zj-m-t-10" >
-            凭证金额合计：{{form.totalAmt?moneyNoSynbol(form.totalAmt):''}}
+            {{productName}}金额合计：{{form.totalAmt?moneyNoSynbol(form.totalAmt):''}}
           </el-row>
           </zj-content>
         </zj-content-block>
