@@ -190,7 +190,7 @@ export default {
         ],
         email: [
           {
-            required: true,
+            required: false,
             message: "请输入邮箱",
             trigger: ["blur"],
           },

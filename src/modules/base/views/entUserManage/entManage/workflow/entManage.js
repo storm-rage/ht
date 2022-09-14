@@ -37,8 +37,8 @@ export default {
         return new Error('请选择操作员角色')
       }
     }
-    const statementAccountTypeValid = ({ cellValue }) => {
-      if (cellValue.length === 0) {
+    const statementAccountTypeValid = ({ cellValue, row }) => {
+      if (cellValue.length === 0 && !this.isDstatementAccountType) {
         return new Error('请选择对账单类型权限')
       }
     }
@@ -59,6 +59,7 @@ export default {
         statementAccountType: [], //对账单类型
         save: false,//是否保存过
       },
+      isDstatementAccountType: true,
       validRules: { // 企业操作员校验
         htSysCode: [
           { required: true, message: '娅米账号/业务系统账号必须填写' }
@@ -533,6 +534,16 @@ export default {
         this.sysUserList.splice(rowIndex, 1)
       }
       this.$refs.sysUser.clearActived()
+    },
+    // 选择对账单类型
+    statementAccountTypeChange({ row }) {
+      let roleIds = row.roleIds
+      if (roleIds.includes('8') || roleIds.includes('9') || roleIds.includes('11') || roleIds.includes('12')) {
+        this.isDstatementAccountType = false //风险接收人禁用对账单类型
+      } else {
+        this.isDstatementAccountType = true
+        row.statementAccountType = []
+      }
     },
     //企业附件下载
     pubAttachDownload(row) {
