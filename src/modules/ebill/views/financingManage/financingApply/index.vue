@@ -94,14 +94,14 @@ export default {
         } else if(this.nextStepParams.entId && !this.nextStepParams.idList) {
           this.$message.error(`请选择${this.productName}信息!`)
         } else if(!this.nextStepParams.entId) {
-          this.$message.error(`请选择${this.productName}开单人/转让企业，并选择凭证信息!`)
+          this.$message.error(`请选择${this.productName}开单人/转让企业，并选择${this.productName}信息!`)
         }
       }
     },
     handelNextStepParams(val) {
       this.nextStepParams = {...val}
     },
-    tableLocal() {
+    tabLocal() {
       if(windowSSStorage.getItem('task') !== null) {
         this.tabs = windowSSStorage.getItem('task')
       }
@@ -116,7 +116,7 @@ export default {
     this.getTabInfo()
   },
   mounted() {
-    this.tableLocal()
+    this.tabLocal()
   }
 };
 </script>

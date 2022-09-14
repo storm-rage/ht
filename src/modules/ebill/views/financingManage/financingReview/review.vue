@@ -269,7 +269,7 @@ export default {
   line-height:40px;
   text-align: right;
   margin-bottom: 20px;
-  padding-bottom: 20px;
+  padding-right: 20px;
   color: #e6a23c;
   background-color: #fdf6ec;
 }
