@@ -57,13 +57,13 @@ export default {
   created() {
     this.getRow()
     this.getDictionary()
-    this.getDetail()
     this.getTodoBusinessParamLog()
   },
   methods: {
     getDictionary() {
       this.zjControl.queryEntDictionary().then(res => {
         this.dictionary = res.data
+        this.getDetail()
       })
     },
     // 获取操作记录
