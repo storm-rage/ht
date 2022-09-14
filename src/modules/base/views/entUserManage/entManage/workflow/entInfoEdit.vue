@@ -244,11 +244,15 @@
                 <vxe-input v-model="row.email" type="text" :disabled="row.isEmailDis"></vxe-input>
               </template>
             </zj-table-column>
-            <zj-table-column field="roleIds" title="操作员角色" :edit-render="{name: '$select', props: { multiple: true },options: statementAccountTypeTable}" />
-            <zj-table-column field="statementAccountType" title="开凭证对账单类型权限" :edit-render="{
+            <zj-table-column field="roleIds" title="操作员角色" :edit-render="{
+              name: '$select',
+              props: { multiple: true },
+              options: statementAccountTypeTable,
+              events: {change:statementAccountTypeChange}}" />
+            <zj-table-column field="statementAccountType" title="支持开凭证对账单类型" :edit-render="{
                 name: '$select',
-                props: { multiple: true },
-                options: dictionary.statementAccountTypeListTable,
+                props: { multiple: true, disabled: isDstatementAccountType },
+                options: dictionary.statementAccountTypeListTable
               }" />
             <zj-table-column title="操作" v-if="!isDetail">
               <template v-slot="{ row, rowIndex }">
