@@ -180,7 +180,7 @@
               </el-form-item>
 
               <el-form-item label="注册企业简称：" prop="shortName">
-                <el-input v-model.trim="form.shortName" :maxlength="101" placeholder="请填写企业简称" />
+                <el-input v-model.trim="form.shortName" :maxlength="101" placeholder="请填写企业简称" :disabled="form.isHtEnterprise === '1'" />
               </el-form-item>
               <el-form-item label="注册企业曾用名：" prop="beforeName">
                 <el-input v-model.trim="form.beforeName" placeholder="如有多个，使用逗号分隔" :maxlength="200" />
