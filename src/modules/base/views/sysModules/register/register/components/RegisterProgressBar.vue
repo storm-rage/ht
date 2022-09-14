@@ -71,7 +71,7 @@ export default {
 .register-progress-item {
   display: inline-block;
   vertical-align: top;
-  width: 241px;
+  width: 240px;
   font-size: 12px;
   color: #999999;
 }
