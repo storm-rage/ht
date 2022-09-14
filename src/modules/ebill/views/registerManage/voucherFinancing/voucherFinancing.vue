@@ -72,6 +72,11 @@ export default {
     artRegister
   },
   created() {
+    const currentActiveTab = this.getCurrentActiveTab();
+    if (currentActiveTab) {
+      this.activeComp = currentActiveTab;
+      this.removeCurrentTab();
+    }
     this.dictionary=this.mDictionary
     this.getDetail();
     this.getApi();

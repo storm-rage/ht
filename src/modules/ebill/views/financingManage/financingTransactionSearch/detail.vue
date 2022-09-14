@@ -194,8 +194,8 @@
       </zj-content-block>
 
       <zj-content-block>
-        <zj-content>
         <zj-header title="融资协议"/>
+        <zj-content>
         <zj-table ref="searchTable" class="zj-search-table"
                   :dataList="form.financingAgreement"
                   :pager="false"
