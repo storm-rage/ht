@@ -148,9 +148,9 @@ export default {
         sealEntId: [
           { name: '签章企业', required: true, validator: this.radioSelectValidator, trigger: 'change' }
         ],
-        shortName: [
-          { name: '企业简称', max: 200, required: true, validator: this.inputValidator, trigger: 'change' }
-        ],
+        // shortName: [
+        //   { name: '企业简称', max: 200, required: true, validator: this.inputValidator, trigger: 'change' }
+        // ],
         beforeName: [
           { name: '曾用名', max: 200, required: false, validator: this.inputValidator, trigger: 'change' }
         ],
@@ -396,18 +396,18 @@ export default {
 
     //企业开票一填必填
     invoiceOneAndAll() {
-      let invoiceList = ['invoiceEmail', 'invoiceAddress', 'invoicePhone', 'invoiceBankAccno']
-      let boo = false
-      invoiceList.map(item => {
-        if (this.form[item]) {
-          boo = true
-        }
-      })
-      invoiceList.map(item => {
-        this.$set(
-          this.rules[item][0], 'required', boo
-        )
-      })
+      // let invoiceList = ['invoiceEmail', 'invoiceAddress', 'invoicePhone', 'invoiceBankAccno']
+      // let boo = false
+      // invoiceList.map(item => {
+      //   if (this.form[item]) {
+      //     boo = true
+      //   }
+      // })
+      // invoiceList.map(item => {
+      //   this.$set(
+      //     this.rules[item][0], 'required', boo
+      //   )
+      // })
     },
 
     //企业操作员编辑检测
@@ -606,7 +606,7 @@ export default {
           params.sysUserList = this.sysUserList
           if (params.sysUserList) {
             params.sysUserList.forEach(item => {
-              if (item.statementAccountType.join) {
+              if (Array.isArray(item.statementAccountType)) {
                 item.statementAccountType = item.statementAccountType.join(',')
               }
             })
@@ -632,14 +632,14 @@ export default {
         params.sysUserList = this.sysUserList
         if (params.sysUserList) {
           params.sysUserList.forEach(item => {
-            if (item.statementAccountType.join) {
+            if (Array.isArray(item.statementAccountType)) {
               item.statementAccountType = item.statementAccountType.join(',')
             }
           })
         }
         // 企业附件
         params.pubAttachList = this.pubAttachList
-        this.zjControl.saveEnterprise(this.form).then(() => {
+        this.zjControl.saveEnterprise(params).then(() => {
           this.$message.success('暂存成功！')
           this.goParent()
         })

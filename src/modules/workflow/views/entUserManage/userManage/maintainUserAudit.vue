@@ -1,6 +1,7 @@
 <template>
   <zj-content-container>
-    <zj-top-header :title="pageType === 'audit' ? '维护用户信息审核' : '维护用户交易详情'"></zj-top-header>
+    <zj-top-header v-if="row.applyType === '1'" :title="pageType === 'audit' ? '新增用户信息审核' : '新增用户交易详情'"></zj-top-header>
+    <zj-top-header v-else :title="pageType === 'audit' ? '维护用户信息审核' : '维护用户交易详情'"></zj-top-header>
 
     <!--  交易信息  -->
     <trade-info :detailData="detailData" :dictionary="dictionary" />
