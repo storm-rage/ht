@@ -89,7 +89,7 @@
           </el-col>
           <el-col :span="8">
             <el-form-item label="企业规模：" prop="scale">
-              <el-select v-model="form.scale" :popper-append-to-body="false" :disabled="isDetail || isEdit">
+              <el-select v-model="form.scale" :popper-append-to-body="false" :disabled="isDetail">
                 <el-option v-for="(item, index) in dictionary.scaleList" :key="index" :value="item.code" :label="item.desc"></el-option>
               </el-select>
             </el-form-item>
