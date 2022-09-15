@@ -290,8 +290,9 @@ export default {
     },
     //取消单元格
     cancel (row, rowindex) {
-      this.$refs.searchTable.tableData[rowindex] = Object.assign({}, this.openBillApplyRow)
       // row = Object.assign({}, this.openBillApplyRow)
+      row.estimatedPaymentDate = this.openBillApplyRow.estimatedPaymentDate
+      row.openBillAmt = this.openBillApplyRow.openBillAmt
       this.$refs.searchTable.clearActived()
     },
     //勾选
