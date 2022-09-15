@@ -7,7 +7,7 @@
       <register-progress-bar :active="1" v-else/>
     </div>
     <div class="register-inline">
-      <el-form ref="form" :model="form" :rules="rules" class="register-form" label-width="240px">
+      <el-form ref="form" :model="form" :rules="rules" class="register-form" label-width="280px">
         <zj-top-header title="企业基本信息" direction="left"/>
         <div class="border-underline"></div>
         <el-form-item label="企业名称：" prop="name">
@@ -18,17 +18,21 @@
           <el-input v-model="form.bizLicence" maxLength="25" placeholder="请输入统一社会信用代码" :disabled="true"/>
         </el-form-item>
         <el-form-item label="营业执照注册地址：" prop="address">
-          <el-input v-model="form.address" :maxLength="400"/>
+          <el-input v-model="form.address" :maxLength="400" placeholder="请输入营业执照注册地址"/>
         </el-form-item>
-        <el-form-item label="成立日期：" prop="registerStartDate"> <!-- :clearable="false" -->
-          <zj-date-picker :date.sync="form.registerStartDate" :lessNow="true" :disabled="form.isHtEnterprise == '1'" :format="'yyyy年MM月dd日'"/>
+        <el-form-item label="成立日期：" prop="registerStartDate">
+          <zj-date-picker :date.sync="form.registerStartDate" :lessNow="true" :disabled="form.isHtEnterprise == '1'" :format="'yyyy-MM-dd'" placeholder="请选择成立日期"/>
         </el-form-item>
-        <el-form-item label="注册资本：" prop="registerCapital">
-          <el-input v-model="form.registerCapital" :disabled="form.isHtEnterprise == '1'"/>
-        </el-form-item>
+        <el-row>
+          <el-form-item label="注册资本：" prop="registerCapital">
+            <zj-number-input formatterMoney v-model="form.registerCapital" placeholder="请输入注册资本" :disabled="form.isHtEnterprise === '1'">
+            </zj-number-input>
+            <span class="zj-m-l-10">元</span>
+          </el-form-item>
+        </el-row>
         <el-form-item label="企业工商有效期：" required>
           <el-form-item prop="registerEndDate">
-            <zj-date-picker :date.sync="form.registerEndDate" :overNow="true" :format="'yyyy年MM月dd日'" :disabled="form.term" />
+            <zj-date-picker :date.sync="form.registerEndDate" :overNow="true" :format="'yyyy-MM-dd'" :disabled="form.term" placeholder="请选择企业工商有效期"/>
           </el-form-item>
           <el-row>
             <el-checkbox v-model="form.term" @change="isChecked">长期有效</el-checkbox>
@@ -67,13 +71,15 @@
         </el-form-item>
         <el-form-item label="企业联系人姓名：" prop="fastMailName">
           <el-input v-model="form.fastMailName" maxLength="50" placeholder="请输入企业联系人姓名" :disabled="form.isHtEnterprise == '1'"/>
-          <span style="color: #7f7f7f;margin-left: 10px">注：后续平台相关纸质资料将使用该联系人传递。</span>
+          <div class="zj-m-t-10">
+            <zj-content-tip text="注：后续平台相关纸质资料将使用该联系人传递。"/>
+          </div>
         </el-form-item>
         <el-form-item label="企业联系人手机号：" prop="fastMailPhone">
           <el-input v-model="form.fastMailPhone" maxLength="50" placeholder="请输入企业联系人手机号" :disabled="form.isHtEnterprise == '1'"/>
         </el-form-item>
         <el-form-item label="企业联系地址：" class="zj-inline contact-address required">
-          <el-form-item prop="provinceZh">
+          <el-form-item prop="provinceZh" class="zj-inline">
             <el-select v-model="form.provinceZh" placeholder="请选择" class="register102-legalCertType"
                        :popper-append-to-body="false"
             >
@@ -86,11 +92,11 @@
                 </el-option>
             </el-select>
           </el-form-item>
-          <span class="zj-inline zj-center zj-w-20">省</span>
-          <el-form-item prop="cityZh">
+          <div class="zj-inline zj-center zj-w-20 zj-m-l-10 zj-m-r-10">省</div>
+          <el-form-item prop="cityZh" class="zj-inline">
             <el-input v-model="form.cityZh" maxLength="50" placeholder="请输入城市名称"/>
           </el-form-item>
-          <span class="zj-inline zj-center zj-w-20">市</span>
+          <span class="zj-m-l-10">市</span>
         </el-form-item>
         <el-form-item label="详细地址：" prop="fastMailAddress">
           <el-input v-model="form.fastMailAddress" type="textarea" :rows="2" placeholder="请输入详情地址"></el-input>
@@ -104,7 +110,7 @@
           <el-input v-model="form.legalPersonName" maxLength="50" placeholder="请输入法定代表人姓名" :disabled="true"/>
         </el-form-item>
         <!-- 一级供应商独有 -->
-        <div v-if="form.isHtEnterprise == '1'">
+        <div>
           <el-form-item label="法人证件类型：" prop="legalCertType" class="zj-inline required">
             <el-select v-model="form.legalCertType" placeholder="请选择证件类型" class="register102-legalCertType"
                        @change="legalCertTypeChange"
@@ -129,9 +135,9 @@
           </el-row>
         </div>
         <!-- 二级供应商独有 -->
-        <el-form-item label="法人身份证号码：" prop="legalCertNo" class="zj-inline required" v-if="form.isHtEnterprise == '0'">
-          <el-input v-model="form.legalCertNo" placeholder="请输入证件号码" maxLength="50" :disabled="true"/>
-        </el-form-item>
+<!--        <el-form-item label="法人身份证号码：" prop="legalCertNo" class="zj-inline required" v-if="form.isHtEnterprise == '0'">-->
+<!--          <el-input v-model="form.legalCertNo" placeholder="请输入证件号码" maxLength="50" :disabled="true"/>-->
+<!--        </el-form-item>-->
         <!-- 共公部分 -->
         <el-form-item label="法人手机号码：" prop="registerPhone" class="required">
           <el-input v-model="form.registerPhone" maxLength="50" placeholder="请输入法人手机号码" :disabled="true"/>
@@ -142,7 +148,7 @@
                             :lessNow="true"
             ></zj-date-picker>
           </el-form-item>
-          <div class="zj-inline zj-center zj-w-20">至</div>
+          <div class="zj-inline zj-center zj-w-20 zj-m-l-10 zj-m-r-10">至</div>
           <el-form-item prop="legalCertExpireDate" class="zj-inline">
             <zj-date-picker placeholder="年/月/日"  :date.sync="form.legalCertExpireDate" :disabled="form.legalCertTerm"
                             :pickerOptions="{ disabledDate: legalCertExpireDateDisabledDate }"
@@ -173,8 +179,8 @@
         </el-row>
         <el-row v-if="form.isHtEnterprise == '0'">
           <!-- 二级供应商 -->
-          <el-row style="margin: 20px auto">
-            <zj-button class="append" icon="el-icon-circle-plus-outline" @click="contAdd">请录入银行账户</zj-button>
+          <el-row class="zj-m-t-10 zj-m-b-10">
+            <zj-button type="primary" class="append" icon="el-icon-circle-plus-outline" @click="contAdd">请录入银行账户</zj-button>
           </el-row>
           <zj-table ref="bankAccnameTable" class="zj-search-table" :dataList="form.entBankInfoList" v-if="entBankInfo"
                     keep-source :pager="false"
@@ -201,7 +207,7 @@
           </zj-table>
         </el-row>
         <el-row class="zj-m-t-20">
-          <el-form-item label="请确认开户行" prop="confirmBankName">
+          <el-form-item label="请确认开户行：" prop="confirmBankName">
             <el-select v-model="form.confirmBankName"
                        filterable
                        placeholder="请选择" class="sw-year-select register102-legalCertType"
@@ -242,7 +248,7 @@ import {
   validateFixedPhone,
 
   validateBankAcct,//银行账号
-  validateEmail //电子邮箱
+  validateEmail, newValidateFixedPhone //电子邮箱
 } from '@utils/rules'
 import view from "@pubComponent/preview/view.js";
 export default {
@@ -302,6 +308,7 @@ export default {
         legalCertExpireDate: '',
         legalCertTerm: false,
         legalCertNo: '',
+        legalBankAccno: '',//银行卡号，证件类型为非身份证时必填
         legalCertRegDate: '',
         legalCertType: '',
         legalPersonName: '',
@@ -352,11 +359,11 @@ export default {
           { required: true, message: '请填写企业联系人姓名', trigger: ['blur'] }
         ],
         fastMailPhone: [
-          { required: true, message: '请填写企业联系人手机号', trigger: ['blur'] },
-          { validator: validatePhone, trigger: ['blur'] }
+          { required: true, message: '请填写企业联系人手机号', max: 20, trigger: ['blur'] },
+          { validator: newValidateFixedPhone, trigger: ['blur'] }
         ],
         provinceZh: [
-          { required: true, message: '请选择企业联系省份', trigger: ['change'] }
+          { required: true, message: '请选择企业联系省份', trigger: ['blur'] }
         ],
         cityZh: [
           { required: true, message: '请选择企业联系城市', trigger: ['blur'] }
@@ -773,7 +780,7 @@ export default {
             return this.$message.error('请确认开户行一致！')
           }
           if(this.form.isHtEnterprise === '1') {
-            let str = this.form.entBankInfo && this.form.entBankInfo.bankName ? this.form.entBankInfo.bankName.slice(0,4):''
+            let str = this.form.entBankInfo && this.form.entBankInfo.bankName ? this.form.entBankInfo.bankName.trim().slice(0,4):''
             let res = ''
             for(let item of this.bankInfoList) {
               if(item.label === this.form.confirmBankName) {
@@ -842,7 +849,7 @@ export default {
   }
   .register102-legalCertType{
     .el-select-dropdown.el-popper{
-      width: 250px!important;
+      //width: 250px!important;
     }
   }
 </style>
@@ -868,6 +875,9 @@ export default {
 }
 .register-form {
   //width: 800px;
+  /deep/.el-textarea {
+    width: 400px;
+  }
 }
 .register-title {
   border-left: 7px solid #5494F2;
@@ -895,50 +905,6 @@ export default {
     width: 100%;
   }
 }
-//要求说明
-  .yqsm{
-    display:inline-block;
-    width:auto;
-    position: relative;
-    .yqsm-body{
-      width:400px;
-      height:300px;
-      position: absolute;
-      left: 110%;
-      top:-135px;
-      background-color: white;
-      z-index: 1000;
-      border-radius: 12px;
-      box-shadow: 0 0 2px grey;
-      display: none;
-      .yqsm-body-left{
-        border: 1px solid grey;
-        width: 20px;
-        height: 20px;
-        background-color: white;
-        border-top-color: white;
-        border-right-color: white;
-        border-radius: 1px;
-        position: absolute;
-        left: -10px;
-        top: 50%;
-        transform: translateY(-50%) rotate(45deg);
-        z-index: 0;
-      }
-      .yqsm-body-close{
-        width:25px;
-        height: 25px;
-        position: absolute;
-        right: 2px;
-        top: 2px;
-        cursor: pointer
-      }
-      img{
-        width: 100%;
-        height: 100%;
-      }
-    }
-  }
 
 //我的买方企业
   .myBuyers{
@@ -953,45 +919,66 @@ export default {
     }
   }
   .el-input {
-    width: 260px;
+    width: 400px;
   }
   .entType {
     /deep/.el-select{
-      width: 260px;
+      width: 400px;
       .el-input {
-        width: 260px;
+        width: 400px;
       }
     }
   }
+  .register102-legalCertType{
+    .el-select-dropdown.el-popper{
+      //width: 250px!important;
+    }
+    /deep/.el-input {
+      width: 400px;
+    }
+  }
   .contact-address {
+    /deep/.el-form-item__content {
+      width: 100%;
+    }
     /deep/.el-select {
-      .el-input {
-        width: 120px;
+      width: 180px;
+      .el-input--suffix {
+        width: 180px;
+      }
+      .el-input__inner {
+        width: 180px;
+      }
+      .el-select-dropdown.el-popper{
+        width: 100%;
       }
     }
     /deep/.el-form-item__content {
-      display: flex;
       .el-input {
-        width: 120px;
+        width: 180px;
+      }
+      /deep/ .el-input__inner {
+        width: 100%;
       }
     }
   }
   .card-validity {
+    /deep/.el-form-item__content {
+      width: 100%;
+      /deep/.el-input__inner {
+        width: 100%;
+      }
+    }
     /deep/.el-date-editor.el-input {
-      width: 120px;
+      width: 180px;
     }
     /deep/.zj-date-picker .el-input__inner {
       min-width: auto;
-      padding: 0 30px 0 15px !important;
+      padding: 0 30px 0 30px !important;
     }
   }
-.register102-legalCertType{
-  .el-select-dropdown.el-popper{
-    width: 250px!important;
-  }
-  /deep/.el-input {
-    width: 260px;
-  }
+/deep/.el-input__inner {
+  padding: 0 30px 0 30px !important;
 }
 
 </style>

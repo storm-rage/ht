@@ -14,21 +14,22 @@
           <div class="register-body">
             <zj-top-header title="注冊"/>
             <el-form ref="form" :model="form" :rules="rules" class="register-form" label-width="160px">
-              <el-form-item label="企业名称：" prop="name">
-                <el-input class="zj-pw-100" v-model="form.name" placeholder="请输入企业名称" @change="nameChange"/>
-                <zj-button style="margin-left: 20px;" @click="checkIsHtEnterprise">确定</zj-button>
-              </el-form-item>
-
-              <el-row v-if="form.name && form.isHtEnterprise == '0'">
-                <el-form-item label="统一社会信用代码：" prop="bizLicence" class="required">
-                  <el-input v-model="form.bizLicence" maxLength="25" placeholder="请输入统一社会信用代码" />
+              <el-row style="display: flex;margin-bottom: 18px;">
+                <el-form-item label="企业名称：" prop="name" style="margin-bottom: 0;">
+                  <el-input class="zj-pw-100" v-model="form.name" placeholder="请输入企业名称" @change="nameChange"/>
                 </el-form-item>
-                <el-form-item label="企业法人姓名：" prop="legalPersonName" class="required">
-                  <el-input v-model="form.legalPersonName" maxLength="50" placeholder="请输入企业法人姓名" />
+                <zj-button type="primary" class="zj-f-r zj-m-l-10" @click="checkIsHtEnterprise">确定</zj-button>
+              </el-row>
+              <el-row v-if="form.name && form.isHtEnterprise !== ''">
+                <el-form-item label="统一社会信用代码：" prop="bizLicence" :class="form.isHtEnterprise === '1'?'':'required'">
+                  <el-input v-model="form.bizLicence" maxLength="25" placeholder="请输入统一社会信用代码" :disabled="form.isHtEnterprise === '1'"/>
+                </el-form-item>
+                <el-form-item label="企业法人姓名：" prop="legalPersonName" :class="form.isHtEnterprise === '1'?'':'required'">
+                  <el-input v-model="form.legalPersonName" maxLength="50" placeholder="请输入企业法人姓名" :disabled="form.isHtEnterprise === '1'"/>
                 </el-form-item>
                 <el-form-item label="法人证件类型：" prop="legalCertType" class="zj-inline required">
                   <el-select v-model="form.legalCertType" placeholder="请选择法人证件类型" class="register102-legalCertType"
-                             :popper-append-to-body="false" :disabled="true"
+                             :popper-append-to-body="false"
                   >
                     <el-option
                       v-for="(item, index) in dictionary.userCertTypeList"
@@ -40,6 +41,9 @@
                 </el-form-item>
                 <el-form-item label="法人证件号码：" prop="legalCertNo" class="zj-inline required">
                   <el-input v-model="form.legalCertNo" placeholder="请输入证件号码" maxLength="50" />
+                </el-form-item>
+                <el-form-item label="银行卡号：" prop="legalBankAccno" :class="form.legalCertType !== '01'?'required':''" v-if="form.legalCertType !== '01'">
+                  <el-input v-model="form.legalBankAccno" placeholder="请输入银行卡号" maxLength="50" />
                 </el-form-item>
               </el-row>
               <el-row v-if="form.name && form.isHtEnterprise !== ''">
@@ -142,6 +146,7 @@ export default {
         isHtEnterprise: '',//是否海天集团/(是否海天一级供应商)：0-否 1-是
         legalCertExpireDate: '',
         legalCertNo: '',
+        legalBankAccno: '',//银行卡号，证件类型为非身份证时必填
         legalCertRegDate: '',
         legalCertType: '01',//默认居民身份证
         legalPersonName: '',
@@ -158,6 +163,7 @@ export default {
         scale: '',
         smallPaymentCertAmt: '',
         smsCode:'',
+        shortName:'',//企业简称
       },
       //表单校验规则
       rules: {
@@ -166,8 +172,8 @@ export default {
           {validator:this.nameVali, trigger: 'change'}
         ],
         registerPhone: [
-          { required: true, message: '请输入法人手机号码',trigger: 'blur'},
-          {validator:this.validatePhone, trigger: 'blur'}
+          { required: true, message: '请输入法人手机号码'},
+          {validator:this.validatePhone, trigger: 'change'}
         ],
         smsCode: [
           { required: true, message: '请输入验证码', trigger: 'change' },
@@ -222,7 +228,25 @@ export default {
             trigger: ['blur']
           },
         ],
-
+        legalBankAccno: [
+          { message: '请输入银行卡号', trigger: 'blur' },
+          { validator:(rule, value, callback)=>{
+              let bankAcctReg = /^(\d{8,})$/
+              rule.required = this.form.legalCertType !== '01' ? true : false
+              if (!value && rule.required) {
+                callback(new Error(`请输入${rule.name || '银行账号'}`))
+              }else if (value && rule.max && value.length > rule.max) {
+                callback(new Error(`${rule.name || '银行账号'}不可超过${rule.max}字符`))
+              }
+              else if (value && !bankAcctReg.test(value)) {
+                callback(new Error(`${rule.name || '银行账号'}格式不正确`))
+              } else {
+                callback()
+              }
+            },
+            trigger: ['blur']
+          },
+        ],
       },
       emptyObj: {},//暂存供应商信息
       isAgreed: '',
@@ -450,7 +474,7 @@ export default {
   .registerContent{
     position: relative;
     height:calc(100% - 68px - 149px) !important;
-    min-height: 732px;
+    min-height: 780px;
     background-color: #fff;
   }
   .sw_footer{
@@ -510,7 +534,7 @@ export default {
   background: url(~@assets/img/register/icon-tip.png) no-repeat center;
 }
 .register-body {
-  width: 600px;
+  width: 700px;
   /*padding-top: 20px;*/
   margin:  auto;
   background-color: #FFFFFF;
@@ -524,6 +548,9 @@ export default {
 }
 .register-form {
   padding: 20px 20px 0 20px;
+  /deep/.el-input {
+    width: 400px;
+  }
 }
 .btn-row{
   /*text-align: center;*/
@@ -557,6 +584,11 @@ export default {
   border-radius: 0 4px 4px 0;
   /*transform: translateY(-1px);*/
 }
+  .register102-legalCertType {
+    /deep/.el-input {
+      width: 400px;
+    }
+  }
 
   /*@media screen and (max-height: 670px){*/
   /*  .registerContent{*/

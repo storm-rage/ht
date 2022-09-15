@@ -234,7 +234,7 @@ export const myItemsPath = {
     auditPath: 'financingReviewToDoReview',
     detailPath: 'financingReviewToDoDetail',
     // 已办和办结状态
-    doneDetailPath: '',
+    doneDetailPath: 'financingReviewToDoDetail',
   },
 
   // 融资复审
@@ -242,7 +242,7 @@ export const myItemsPath = {
     auditPath: 'financingReviewToDoReview',
     detailPath: 'financingReviewToDoDetail',
     // 已办和办结状态
-    doneDetailPath: '',
+    doneDetailPath: 'financingReviewToDoDetail',
   },
 
   // 清算申请
