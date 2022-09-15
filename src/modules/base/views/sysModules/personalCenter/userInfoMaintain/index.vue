@@ -142,6 +142,7 @@ export default {
         ...this.$api.myBasicInformation,
       },
       form: {},
+      userInfo: {},
       dictionary: {},
       attachInfo: [
         { fileId: "", type: "身份证影印件", fileName: "" },
@@ -223,6 +224,7 @@ export default {
       let params = { roleId: this.roleId };
       this.zjControl.getPersonalInfo(params).then((res) => {
         this.form = res.data.userInfo;
+        this.userInfo = JSON.parse(JSON.stringify(this.form))
         this.platformFastMail = res.data.platformFastMail;
         // 身份证附件
         this.attachInfo[0].fileId = this.form.identitycardFileId
@@ -238,13 +240,26 @@ export default {
     },
     // 确认提交
     submit() {
+      this.form.roleId = this.roleId;
       if (this.pageType === 2) {
-        this.form.roleId = this.roleId;
         this.updatePersonalInfo();
       }
       if (this.pageType === 3) {
-        this.form.roleId = this.roleId;
-        this.updateOperator();
+        if (!!!this.attachInfo[1].fileId) { // 校验是否修改过用户信息
+          let ifArr = ['userName', 'certType', 'certNo', 'mobileNo', 'email']
+          for (let [index, value] of ifArr.entries()) {
+            if (this.userInfo[value] !== this.form[value]) {
+              this.$message.error('修改了用户信息，需要上传委托授权书');
+              break
+            }
+            if (index >= ifArr.length - 1) {
+              console.log(index, ifArr.length)
+              this.updateOperator();
+            }
+          }
+        } else {
+          this.updateOperator();
+        }
       }
     },
     changePageType(val) {
