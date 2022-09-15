@@ -4,7 +4,7 @@
     <!-- 凭证确认收款信息   -->
     <bill-confirm-payment-info :detailInfo="detailInfo"></bill-confirm-payment-info>
     <!-- 附件信息   -->
-    <payment-file ref="paymentFile" is-edit></payment-file>
+    <payment-file ref="paymentFile" is-edit :bus-desc="detailInfo.busDesc"></payment-file>
     <zj-content-footer>
       <zj-button type="primary" :disabled="loading" :loading="loading" @click="toApply">提交申请</zj-button>
       <zj-button @click="goParent">返回</zj-button>
