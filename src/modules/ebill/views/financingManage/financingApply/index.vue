@@ -3,16 +3,19 @@
     <!--  融资申请  -->
     <el-tabs v-model="tabs" class="zj-tabs-card" @tab-click="tabHandle">
       <el-tab-pane label="订单融资" name="orderTab" v-if="tabInfo.orderTab">
-        <orderFinancing :zjControl="zjControl" :dictionary="dictionary" :uBtn="zjBtn" @nextStepParams="handelNextStepParams"/>
+        <orderFinancing :zjControl="zjControl" :dictionary="dictionary" :uBtn="zjBtn"
+          @nextStepParams="handelNextStepParams" />
       </el-tab-pane>
       <el-tab-pane :label="`${productName}融资`" name="billTab" v-if="tabInfo.billTab || tabInfo.warehouseTab">
         <keep-alive>
-          <voucherFinancing :zjControl="zjControl" :dictionary="dictionary" :mBtn="zjBtn" @nextStepParams="handelNextStepParams"/>
+          <voucherFinancing :zjControl="zjControl" :dictionary="dictionary" :mBtn="zjBtn"
+            @nextStepParams="handelNextStepParams" />
         </keep-alive>
       </el-tab-pane>
     </el-tabs>
     <zj-content-footer>
-      <zj-button type="primary" @click="toNext" v-if="tabInfo.orderTab !== '' || tabInfo.billTab !== '' || tabInfo.warehouseTab !== ''">下一步</zj-button>
+      <zj-button type="primary" @click="toNext"
+        v-if="tabInfo.orderTab !== '' || tabInfo.billTab !== '' || tabInfo.warehouseTab !== ''">下一步</zj-button>
     </zj-content-footer>
 
   </zj-content-container>
@@ -21,11 +24,11 @@
 import orderFinancing from "./orderFinancing/orderFinancing";
 import voucherFinancing from "./voucherFinancing/voucherFinancing";
 import financingApply from "../../../api/financingApplyApi";
-import {windowSSStorage} from "@utils/storageUtils";
+import { windowSSStorage } from "@utils/storageUtils";
 export default {
   name: "financingManage",
   components: {
-    orderFinancing,voucherFinancing
+    orderFinancing, voucherFinancing
   },
   computed: {
     productName() {
@@ -35,21 +38,21 @@ export default {
   data() {
     return {
       zjControl: {
-        downloadFinancAgreeTemplate:this.$api.financingApply.downloadFinancAgreeTemplate,//下载融资协议
-        getDirectory:this.$api.financingApply.getDirectory,//数据字典
-        getFinancingApplyBillDetail:this.$api.financingApply.getFinancingApplyBillDetail,//入库/凭证融资详情
-        getFinancingApplyOrderDetail:this.$api.financingApply.getFinancingApplyOrderDetail,//订单融资详情
-        getFinancingApplyTab:this.$api.financingApply.getFinancingApplyTab,//获取tab
-        getOrderFinancingCredit:this.$api.financingApply.getOrderFinancingCredit,//获取贸易关系列表
-        getPhasedAgreement:this.$api.financingApply.getPhasedAgreement,//获取阶段性协议列表
-        queryFinancingApplyBillPage:this.$api.financingApply.queryFinancingApplyBillPage,//获取入库融资/凭证融资列表
-        submitFinancingBillApply:this.$api.financingApply.submitFinancingBillApply,//入库/凭证融资提交
-        submitFinancingOrderApply:this.$api.financingApply.submitFinancingOrderApply,//订单融资提交
-        downloadFile:this.$api.baseCommon.downloadFile,
+        downloadFinancAgreeTemplate: this.$api.financingApply.downloadFinancAgreeTemplate,//下载融资协议
+        getDirectory: this.$api.financingApply.getDirectory,//数据字典
+        getFinancingApplyBillDetail: this.$api.financingApply.getFinancingApplyBillDetail,//入库/凭证融资详情
+        getFinancingApplyOrderDetail: this.$api.financingApply.getFinancingApplyOrderDetail,//订单融资详情
+        getFinancingApplyTab: this.$api.financingApply.getFinancingApplyTab,//获取tab
+        getOrderFinancingCredit: this.$api.financingApply.getOrderFinancingCredit,//获取贸易关系列表
+        getPhasedAgreement: this.$api.financingApply.getPhasedAgreement,//获取阶段性协议列表
+        queryFinancingApplyBillPage: this.$api.financingApply.queryFinancingApplyBillPage,//获取入库融资/凭证融资列表
+        submitFinancingBillApply: this.$api.financingApply.submitFinancingBillApply,//入库/凭证融资提交
+        submitFinancingOrderApply: this.$api.financingApply.submitFinancingOrderApply,//订单融资提交
+        downloadFile: this.$api.baseCommon.downloadFile,
       },
-      tabs:'orderTab',
-      dictionary:{},
-      nextStepParams:{},
+      tabs: 'orderTab',
+      dictionary: {},
+      nextStepParams: {},
       tabInfo: {
         orderTab: '',//订单融资Tab:0-不展示 1-展示
         billTab: '',//凭证融资Tab:0-不展示 1-展示
@@ -60,12 +63,12 @@ export default {
   },
   methods: {
     getDic() {
-      this.zjControl.getDirectory().then(res=>{
+      this.zjControl.getDirectory().then(res => {
         this.dictionary = res.data
       })
     },
     getTabInfo() {
-      this.zjControl.getFinancingApplyTab().then(res=>{
+      this.zjControl.getFinancingApplyTab().then(res => {
         this.tabInfo = res.data
         // for(let key in res.data) {
         //   if(res.data[key] === '1') {
@@ -76,38 +79,40 @@ export default {
         console.log(this.tabs)
       })
     },
-    getApiAfter(){
+    getApiAfter() {
       this.zjBtn.userInfo ? this.tabAtive = 'orderFinancing' : this.tabAtive = 'voucherFinancing'
     },
     toNext() {
-      console.log(JSON.stringify(this.nextStepParams))
-      if(this.tabs === 'orderTab') {
-        this.goChild('orderFinancingDetail', {buyerId: this.nextStepParams.buyerId})
+      // console.log(JSON.stringify(this.nextStepParams))
+      // console.log(this.nextStepParams.idList.length==0)
+      // console.log(this.nextStepParams.entId);
+      if (this.tabs === 'orderTab') {
+        this.goChild('orderFinancingDetail', { buyerId: this.nextStepParams.buyerId })
       }
-      if(this.tabs === 'billTab') {
-        if(this.nextStepParams.nextStepFlag) {
+      if (this.tabs === 'billTab') {
+        if (this.nextStepParams.nextStepFlag) {
           this.$message.error(`请选择到期日为同一天的${this.productName}！`)
           return
         }
-        if(this.nextStepParams.entId && this.nextStepParams.idList && this.nextStepParams.idList.length) {
-          this.goChild('voucherFinancingDetail', {...this.nextStepParams})
-        } else if(this.nextStepParams.entId && !this.nextStepParams.idList) {
+        if (this.nextStepParams.entId && this.nextStepParams.idList && this.nextStepParams.idList.length) {
+          this.goChild('voucherFinancingDetail', { ...this.nextStepParams })
+        } else if (this.nextStepParams.entId && this.nextStepParams.idList.length==0) {
           this.$message.error(`请选择${this.productName}信息!`)
-        } else if(!this.nextStepParams.entId) {
+        } else if (!this.nextStepParams.entId) {
           this.$message.error(`请选择${this.productName}开单人/转让企业，并选择${this.productName}信息!`)
-        }
+        } 
       }
     },
     handelNextStepParams(val) {
-      this.nextStepParams = {...val}
+      this.nextStepParams = { ...val }
     },
     tabLocal() {
-      if(windowSSStorage.getItem('task') !== null) {
+      if (windowSSStorage.getItem('task') !== null) {
         this.tabs = windowSSStorage.getItem('task')
       }
     },
     tabHandle(tab) {
-      windowSSStorage.setItem('task',tab.name)
+      windowSSStorage.setItem('task', tab.name)
     },
   },
   created() {
@@ -125,5 +130,4 @@ export default {
 /deep/.el-tabs__header {
   padding: 0 12px;
 }
-
 </style>

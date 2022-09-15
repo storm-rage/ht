@@ -12,11 +12,11 @@
             <el-row class="hd-row">
               <el-form-item label="融资企业：">{{form.sellerName}}</el-form-item>
             </el-row>
-            <el-row v-if="!form.financingFlag === '2'">
-              <el-col :span="12" v-if="!form.financingFlag === '2'">
+            <el-row v-if="!form.financingFlag != '2'">
+              <el-col :span="12" v-if="!form.financingFlag != '2'">
                 <el-form-item label="融资合同编号：">{{form.contractNo}}</el-form-item>
               </el-col>
-              <el-col :span="12" v-if="!form.financingFlag === '2'">
+              <el-col :span="12" v-if="!form.financingFlag != '2'">
                 <el-form-item label="融资合同期限：">
                   {{form.contractStartDate?date(form.contractStartDate):''}}
                   {{form.contractEndDate?`至 ${date(form.contractEndDate)}`:''}}
