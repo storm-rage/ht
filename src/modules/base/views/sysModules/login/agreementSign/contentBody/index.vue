@@ -24,7 +24,6 @@
                      :personalInfoAuthFlag="userInfos.loginRes.personalInfoAuthFlag"
                      :userRegisterAgreementFlag="userInfos.loginRes.userRegisterAgreementFlag"
                      :is-only-agreement="showAgreement&&!showFace"
-                     :isUseYunCert="!(userInfos.loginRes&&userInfos.loginRes.personalInfoAuthFlag=='1'&&userInfos.loginRes.userServiceAgreementFlag!='1'&&userInfos.loginRes.userRegisterAgreementFlag!='1')"
                      @setIsSuccess="setIsSuccess"
                      @done="handleDone"></agreement>
         </div>

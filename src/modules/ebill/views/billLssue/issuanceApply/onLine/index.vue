@@ -289,8 +289,9 @@ export default {
         .catch(() => {})
     },
     //取消单元格
-    cancel (row) {
-      row = Object.assign({}, this.openBillApplyRow)
+    cancel (row, rowindex) {
+      this.$refs.searchTable.tableData[rowindex] = Object.assign({}, this.openBillApplyRow)
+      // row = Object.assign({}, this.openBillApplyRow)
       this.$refs.searchTable.clearActived()
     },
     //勾选
