@@ -7,9 +7,9 @@
         <zj-table ref="searchTable" class="zj-search-table" :dataList="dataForm.billInfo" :pager="false"
         >
           <zj-table-column field="ebillCode" title="凭证编号" />
-          <zj-table-column field="writerName" title="凭证签发人" />
-          <zj-table-column field="holderName" title="原始持有人" />
-          <zj-table-column field="holderDate" title="签发日期" :formatter="date"/>
+          <zj-table-column field="payEntName" title="凭证签发人" />
+          <zj-table-column field="sourceHolderName" title="原始持有人" />
+          <zj-table-column field="openDate" title="签发日期" :formatter="date"/>
           <zj-table-column field="ebillAmt" title="凭证金额" :formatter="money"/>
           <zj-table-column field="availableAmt" title="剩余可用金额" :formatter="money"/>
           <zj-table-column field="expireDate" title="到期日期" :formatter="date"/>

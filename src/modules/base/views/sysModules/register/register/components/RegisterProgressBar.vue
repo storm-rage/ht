@@ -151,13 +151,13 @@ export default {
 .register-progress-item .register-progress-desc {
   position: relative;
   left: 73px;
-  width: 110px;
+  width: 160px;
   padding: 10px;
   min-height: 56px;
   border: 1px solid #D8D8D8;
   background: #FFFFFF;
   border-radius: 5px;
-  line-height: 14px;
+  line-height: 18px;
   word-wrap: break-word;
   margin-top: 5px;
 }
