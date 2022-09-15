@@ -77,7 +77,7 @@
             <zj-table-column title="操作" fixed="right" width="240px" v-if="pageType !== 'detail'">
               <template v-slot="{ row }">
                 <!-- 是海天集团并且是核心企业、平台、保理公司不显示制key -->
-                <zj-button type="text" @click="makeCertKey(row)" v-if="(row.isHtEnterprise === '1' && !['B','0','BL'].includes(row.entType)) || row.isHtEnterprise === '0'">制key</zj-button>
+                <zj-button type="text" @click="makeCertKey(row)" v-if="(row.isHtEnterprise === '1' && !['B','0','BL'].includes(row.entType)) || row.isHtEnterprise === '0' && row.issueCertState === '0'">制key</zj-button>
                 <zj-button type="text" @click="freezeUser(row)" v-if="row.userState === '1'">冻结</zj-button>
                 <zj-button type="text" @click="unfreezeUser(row)" v-if="row.userState === '5'">解冻</zj-button>
                 <zj-button type="text" @click="cancelUser(row)" v-if="row.userState === '1' || row.userState === '5'">注销</zj-button>
