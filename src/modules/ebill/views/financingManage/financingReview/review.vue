@@ -19,7 +19,7 @@
               </el-col>
             </el-row>
           </el-row>
-          <el-row>
+          <el-row v-show="this.row.financingProductType != '2'"> 
             <el-col :span="12">
               <el-form-item label="融资合同编号：">{{form.baseFinancingInfo.contractNo}}</el-form-item>
             </el-col>

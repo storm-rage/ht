@@ -289,8 +289,10 @@ export default {
         .catch(() => {})
     },
     //取消单元格
-    cancel (row) {
-      row = Object.assign({}, this.openBillApplyRow)
+    cancel (row, rowindex) {
+      // row = Object.assign({}, this.openBillApplyRow)
+      row.estimatedPaymentDate = this.openBillApplyRow.estimatedPaymentDate
+      row.openBillAmt = this.openBillApplyRow.openBillAmt
       this.$refs.searchTable.clearActived()
     },
     //勾选

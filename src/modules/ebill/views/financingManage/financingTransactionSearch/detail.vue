@@ -92,9 +92,10 @@
             </zj-content-block>
             <zj-content-block v-if="row.financingProductType !== '0'">
               <!--     产品为入库融资时     -->
-              <el-row class="hd-row">
+               <el-row class="hd-row"/>
+              <el-row >
                 <el-col :span="12">
-                  <el-form-item label="融资流水号：" >{{form.serialNo}}</el-form-item>
+                  <el-form-item label="融资流水号666：" >{{form.serialNo}}</el-form-item>
                 </el-col>
                 <el-col :span="12">
                   <el-form-item label="融资企业：" >{{form.fromEntName}}</el-form-item>

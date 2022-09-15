@@ -41,7 +41,7 @@
               >
                 <zj-table-column title="融资流水号">
                   <template v-slot="{row}">
-                    <zj-button type="text" @click="toDetail(row)">{{row.serialNo}}</zj-button>
+                    <el-link type="text" @click="toDetail(row)"><span class="blue">{{row.serialNo}}</span></el-link>
                   </template>
                 </zj-table-column>
                 <zj-table-column field="financingProductType" title="融资产品名称" :formatter="obj=>typeMap(dictionary.productTypeList,obj.cellValue)"/>
@@ -93,3 +93,8 @@ export default {
   },
 };
 </script>
+<style scoped>
+.blue{
+  color: blue;
+}
+</style>
