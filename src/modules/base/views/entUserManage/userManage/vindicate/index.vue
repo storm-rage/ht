@@ -48,7 +48,7 @@
                 </el-form-item>
               </el-col>
               <el-col :span="8">
-                <zj-button type="text" style="font-size: 16px" @click="downloadFile(detailData.idCardAttach)" :disabled="Array.isArray(detailData.idCardAttach)&&!detailData.idCardAttach.length">身份证影像件</zj-button>
+                <zj-button v-if="detailData.idCardAttach" type="text" style="font-size: 16px" @click="downloadFile(detailData.idCardAttach)" :disabled="Array.isArray(detailData.idCardAttach)&&!detailData.idCardAttach.length">身份证影像件</zj-button>
               </el-col>
             </el-row>
           </div>

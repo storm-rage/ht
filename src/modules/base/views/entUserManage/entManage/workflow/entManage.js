@@ -286,9 +286,15 @@ export default {
         })
         //   // 新增时
         if (this.isAdd) {
-          this.form.entType = 'B' // 平台客户类型
-          this.form.isHtEnterprise = '1' // 是否海天集团
-          this.form.isDoublePost = '0' // 是否双岗
+          if (!!!this.form.entType) {
+            this.form.entType = 'B' // 平台客户类型
+          }
+          if (!!!this.form.isHtEnterprise) {
+            this.form.isHtEnterprise = '1' // 是否海天集团
+          }
+          if (!!!this.form.isDoublePost) {
+            this.form.isDoublePost = '0' // 是否双岗
+          }
         }
         this.detailsHandle()
         this.$refs.form.clearValidate()
@@ -382,7 +388,7 @@ export default {
 
     //平台客户类型发生改变
     entTypeChange() {
-      // this.sysUserList = []
+      this.sysUserList = []
       if (this.form.entType === "B") {
         this.form.isHtEnterprise = '1' // 是否海天集团
         // this.form.isDoublePost = '1' // 是否双岗
@@ -509,7 +515,7 @@ export default {
       if (!errMap && row.isSave) {
         let items = this.sysUserList.filter(item => item.htSysCode === row.htSysCode)
         if (items.length > 1) {
-          this.$message.error('存在相同的账号！')
+          this.$message.error(`已添加${row.htSysCode}用户，若需维护多个角色，请通过该用户的操作员角色进行维护！！`)
           return
         }
         items = this.sysUserList.filter(item => item.certNo === row.certNo)
@@ -538,8 +544,9 @@ export default {
     // 选择对账单类型
     statementAccountTypeChange({ row }) {
       let roleIds = row.roleIds
-      if (roleIds.includes('8') || roleIds.includes('9') || roleIds.includes('11') || roleIds.includes('12')) {
-        this.isDstatementAccountType = false //风险接收人禁用对账单类型
+      // 核心企业选择经办、复核需要选择对账单类型
+      if (this.form.entType === 'B' && roleIds.includes('8') || roleIds.includes('9')) {
+        this.isDstatementAccountType = false
       } else {
         this.isDstatementAccountType = true
         row.statementAccountType = []
