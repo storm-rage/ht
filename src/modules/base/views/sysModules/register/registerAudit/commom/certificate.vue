@@ -1,5 +1,5 @@
 <template>
-  <el-dialog class="registerAudit-certificate" :show-close="true" @close="close" :center="true" :close-on-click-modal="false" width="800px" :visible.sync="show">
+  <el-dialog class="registerAudit-certificate" :show-close="true" @close="close" :center="true" :close-on-click-modal="false" width="880px" :visible.sync="show">
     <!--  头部信息  -->
     <el-row slot="title" class="zj-f-s-20">发放证书</el-row>
     <!-- 主体 -->

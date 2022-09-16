@@ -103,7 +103,8 @@
         <zj-table :pager="false" :dataList="detailData.entUserList">
           <zj-table-column field="roleName" title="操作员类型" />
           <zj-table-column field="userName" title="姓名" />
-          <zj-table-column field="certNo" title="身份证号" />
+          <zj-table-column field="certType" title="证件类型" :formatter="(obj) => typeMap(dictionary.userCertTypeList, obj.cellValue)" />
+          <zj-table-column field="certNo" title="证件号码" />
           <zj-table-column title="证件有效期">
             <template v-slot="{ row }">
               {{ date(row.certStartDate)
@@ -115,11 +116,17 @@
           <zj-table-column field="email" title="邮箱" />
           <zj-table-column field="bankAcctNo" title="银行卡号" />
           <zj-table-column field="htSysCode" title="海天业务系统账号" />
-          <zj-table-column field="idCheckState" title="核查方式" />
-          <zj-table-column title="附件">
+          <zj-table-column field="checkType" title="核查方式" :formatter="(obj) => typeMap(dictionary.checkType, obj.cellValue)" />
+          <zj-table-column title="附件" width="260px">
             <template v-slot="{ row }">
-              <zj-button type="text" @click="toDownload(row)" v-if="row.attachName">{{row.attachName}}</zj-button>
-              <span v-else>--</span>
+              <zj-button type="text" @click="toDownload({fileId: row.identitycardFileId,fileName: row.identitycardFileName})" v-if="row.identitycardFileId">
+                身份证影印件
+              </zj-button>
+              <span v-if="row.sqsFileId">,</span>
+              <zj-button type="text" @click="toDownload({fileId: row.sqsFileId,fileName: row.sqsFileName})" v-if="row.sqsFileId">
+                个人信息授权书影像件
+              </zj-button>
+              <span v-if="!row.identitycardFileId && !row.sqsFileId">—</span>
             </template>
           </zj-table-column>
         </zj-table>
@@ -130,6 +137,8 @@
 
     <!-- 其他信息 -->
     <ent-else-info :detailData="detailData" />
+    <!--  其他附件    -->
+    <other-file-setting ref="ofileSetting" :isEdit="false" v-if="this.detailData.pubOtherAttachList"></other-file-setting>
     <zj-content-footer>
       <zj-button @click="goParent">返回</zj-button>
     </zj-content-footer>
@@ -143,6 +152,7 @@ import bankAccount from "../components/bankAccount";
 import controller from "../components/controller";
 import entElseInfo from "../components/entElseInfo";
 import relatedAttach from "../components/relatedAttach";
+import OtherFileSetting from './../components/otherFileSetting';
 
 export default {
   components: {
@@ -151,7 +161,8 @@ export default {
     bankAccount,
     controller,
     entElseInfo,
-    relatedAttach
+    relatedAttach,
+    OtherFileSetting
   },
   data() {
     return {
@@ -171,13 +182,13 @@ export default {
   created() {
     this.getRow();
     this.queryEntDictionary();
-    this.getEnterprise();
   },
   methods: {
     // 获取字典
     queryEntDictionary() {
       this.zjControl.queryEntDictionary().then((res) => {
         this.dictionary = res.data;
+        this.getEnterprise();
       });
     },
     // 获取详情
@@ -194,6 +205,8 @@ export default {
           }]
         }
         this.detailData = res.data;
+        // 其他附件
+        this.$refs.ofileSetting.$data.fileList = this.detailData.pubOtherAttachList || []
         this.handleAttach(res.data)
       });
     },
@@ -208,6 +221,7 @@ export default {
         ],
         [
           { label: '法定代表人姓名：', value: this.detailData.legalPersonName },
+          { label: '证件类型：', value: this.typeMap(this.dictionary.userCertTypeList, this.detailData.legalCertType) },
           { label: '证件号码：', value: this.detailData.legalCertNo },
           { label: '证件有效期：', value: this.date(this.detailData.legalCertRegDate) + ' 至 ' + this.date(this.detailData.legalCertExpireDate) }
         ],
@@ -218,7 +232,11 @@ export default {
         { fileId: this.detailData.qyfrzjFileId, fileName: this.detailData.qyfrzjAttachName },
         { fileId: this.detailData.qywtsqsFileId, fileName: this.detailData.qywtsqsAttachName },
       ]
-    }
+    },
+    // 下载
+    toDownload(row) {
+      this.zjControl.downloadFile(row);
+    },
   }
 };
 </script>
