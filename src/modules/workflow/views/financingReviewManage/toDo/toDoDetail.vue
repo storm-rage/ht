@@ -1,5 +1,15 @@
 <template>
     <zj-content-container>
+      <!-- 底部工作流状态 -->
+      <zj-workflow v-model="workflow" :list="workflowList" v-if="form.transInfo.financingProductType !== '0'">
+        <!-- 审核时 -->
+        <el-row slot="right">
+          <el-row class="btn-w85 zj-center">
+            <zj-button class="back" @click="goParent">返回</zj-button>
+          </el-row>
+        </el-row>
+      </zj-workflow>
+
       <!--  融资交易详情  -->
       <zj-top-header title="融资交易详情"/>
       <zj-content-block v-if="workflow === 'sqxx'">
@@ -122,16 +132,6 @@
           </el-tabs>
         </zj-content-block>
       </zj-content-block>
-
-      <!-- 底部工作流状态 -->
-      <zj-workflow v-model="workflow" :list="workflowList" v-if="form.transInfo.financingProductType !== '0'">
-        <!-- 审核时 -->
-        <el-row slot="right">
-          <el-row class="btn-w85 zj-center">
-            <zj-button class="back" @click="goParent">返回</zj-button>
-          </el-row>
-        </el-row>
-      </zj-workflow>
       <!--   融资产品类型：0-订单融资 1-入库融资 2-凭证融资   -->
       <zj-content-footer v-if="form.transInfo.financingProductType === '0'">
         <zj-button class="back" @click="goParent">返回</zj-button>

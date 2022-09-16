@@ -1,5 +1,15 @@
 <template>
     <zj-content-container>
+        <!-- 底部工作流状态 -->
+        <zj-workflow v-model="workflow" :list="workflowList">
+          <!-- 审核时 -->
+          <el-row slot="right">
+            <el-row class="btn-w85 zj-center">
+              <zj-button class="back" @click="goParent">返回</zj-button>
+            </el-row>
+          </el-row>
+        </zj-workflow>
+        
       <!--  订单保理融资详情  -->
         <zj-top-header title="订单保理融资详情"/>
         <zj-content-block v-if="workflow === 'sqxx'">
@@ -147,15 +157,6 @@
           </zj-content-block>
         </zj-content-block>
 
-        <!-- 底部工作流状态 -->
-        <zj-workflow v-model="workflow" :list="workflowList">
-          <!-- 审核时 -->
-          <el-row slot="right">
-            <el-row class="btn-w85 zj-center">
-              <zj-button class="back" @click="goParent">返回</zj-button>
-            </el-row>
-          </el-row>
-        </zj-workflow>
     </zj-content-container>
 </template>
 

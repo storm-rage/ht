@@ -1,5 +1,19 @@
 <template>
   <zj-content-container>
+    <!-- 底部工作流状态 -->
+    <zj-workflow v-model="workflow" :list="workflowList">
+      <!-- 审核时 -->
+      <el-row slot="right">
+        <span v-show="workflow === 'spxx'" v-if="pageType !== 'detail'">
+          <zj-button type="primary" @click="submitAudit('1')" v-if="detailData.applyStatus === 'E001'">暂存</zj-button>
+          <zj-button type="primary" @click="submitAudit('2')">审核通过</zj-button>
+          <zj-button @click="submitAudit('3')" v-if="detailData.applyStatus === 'E002'">审核驳回</zj-button>
+          <zj-button @click="submitAudit('4')" v-if="detailData.applyStatus === 'E001'">注册拒绝</zj-button>
+        </span>
+        <zj-button class="back zj-m-l-15" @click="goParent">返回</zj-button>
+      </el-row>
+    </zj-workflow>
+
     <zj-top-header title="企业注册审核"></zj-top-header>
     <el-form label-width="160px">
       <zj-content-block v-show="workflow === 'sqxx'">
@@ -199,20 +213,6 @@
         <audit-remark ref="auditRemark" v-if="pageType !== 'detail'"></audit-remark>
       </zj-content-block>
     </el-form>
-
-    <!-- 底部工作流状态 -->
-    <zj-workflow v-model="workflow" :list="workflowList">
-      <!-- 审核时 -->
-      <el-row slot="right">
-        <span v-show="workflow === 'spxx'" v-if="pageType !== 'detail'">
-          <zj-button type="primary" @click="submitAudit('1')" v-if="detailData.applyStatus === 'E001'">暂存</zj-button>
-          <zj-button type="primary" @click="submitAudit('2')">审核通过</zj-button>
-          <zj-button @click="submitAudit('3')" v-if="detailData.applyStatus === 'E002'">审核驳回</zj-button>
-          <zj-button @click="submitAudit('4')" v-if="detailData.applyStatus === 'E001'">注册拒绝</zj-button>
-        </span>
-        <zj-button class="back zj-m-l-15" @click="goParent">返回</zj-button>
-      </el-row>
-    </zj-workflow>
 
     <!--   查看器 -->
     <zj-preview :visible.sync="viewShow" :fileUrl="viewUrl" :showFooter="false" :fileType="viewType" @close="viewShow = false" />
@@ -448,12 +448,12 @@ export default {
 
 <style scoped lang="less">
 // 工作流
-/deep/.workflow-bottom {
-  .right {
-    float: none !important;
-    width: calc(100% - 400px) !important;
-    display: flex;
-    justify-content: center;
-  }
-}
+// /deep/.workflow-bottom {
+//   .right {
+//     float: none !important;
+//     width: calc(100% - 400px) !important;
+//     display: flex;
+//     justify-content: center;
+//   }
+// }
 </style>
