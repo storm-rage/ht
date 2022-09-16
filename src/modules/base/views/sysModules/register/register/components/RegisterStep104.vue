@@ -37,7 +37,7 @@
       <el-row>
         <el-row class="agreement">点此下载
           <zj-button type="text" @click="downloadTemplate('WTSQS')">《授权确认书模板》</zj-button>、
-          <zj-button type="text" @click="downloadTemplate('GRXXSQS')">《风险信息接收人-个人信息授权书模板》</zj-button>
+          <zj-button type="text" @click="downloadTemplate('GRXXSQS')">《个人信息授权书模板》</zj-button>
         </el-row>
         <zj-table ref="attaTable" class="zj-search-table" :dataList="registerAttachList" :pager="false"
                   keep-source
@@ -683,7 +683,7 @@ export default {
       let params = {
         id: this.entInfoObj.form.id,
         templateType: type,
-        registerUserList: this.entInfoObj.form.registerUserList
+        registerUserList: this.entInfoObj.form.registerUserList || this.registerUserList,
       }
       this.zjControl.downloadTemplate(params)
     },
