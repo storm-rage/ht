@@ -175,50 +175,15 @@
               </zj-table>
               </zj-content>
             </zj-content-block>
-            <zj-content-block>
-              <zj-header title="保理合同信息"/>
-              <zj-content>
-              <el-row>
-                <el-col :span="8">
-                  <el-form-item label="保理合同编号：">{{form.contractNo}}</el-form-item>
-                </el-col>
-                <el-col :span="8" v-if="row.financingProductType !== '0'">
-                  <el-form-item label="保理类型：">{{form.contractType}}</el-form-item>
-                </el-col>
-                <el-col :span="8" v-if="row.financingProductType === '0'">
-                  <el-form-item label="总金额：">{{form.factoringCreditAmount}}</el-form-item>
-                </el-col>
-                <el-col :span="8" v-if="row.financingProductType !== '0'">
-                  <el-form-item label="合同金额：">{{form.contractAmount}}</el-form-item>
-                </el-col>
-                <el-col :span="8" v-if="row.financingProductType === '0'">
-                  <el-form-item label="剩余可用金额：">{{form.availableCreditAmount}}</el-form-item>
-                </el-col>
-              </el-row>
-              <el-row>
-                <el-col :span="8" v-if="row.financingProductType !== '0'">
-                  <el-form-item label="剩余可用金额：">{{form.availableCreditAmount}}</el-form-item>
-                </el-col>
-                <el-col :span="8" v-if="row.financingProductType === '0'">
-                  <el-form-item label="额度有效期：">{{date(form.factoringCreditStartDate)}}
-                    {{form.factoringCreditStartDate?`至${date(form.factoringCreditStartDate)}`:''}}
-                  </el-form-item>
-                </el-col>
-                <el-col :span="8" v-if="row.financingProductType !== '0'">
-                  <el-form-item label="保理合同到期日：">{{form.expireDate?date(form.expireDate):''}}</el-form-item>
-                </el-col>
-              </el-row>
-              </zj-content>
-            </zj-content-block>
             <zj-content-block v-if="row.financingProductType !== '0'">
               <zj-header title="总控额度信息"/>
               <zj-content>
               <el-row>
                 <el-col :span="8">
-                  <el-form-item label="供应商总控额度：">{{form.contractNo}}</el-form-item>
+                  <el-form-item label="供应商总控额度：">{{form.totalCreditAmount}}</el-form-item>
                 </el-col>
                 <el-col :span="8">
-                  <el-form-item label="剩余可用额度：">{{form.contractNo}}</el-form-item>
+                  <el-form-item label="剩余可用额度：">{{form.availableCreditAmount}}</el-form-item>
                 </el-col>
               </el-row>
               </zj-content>

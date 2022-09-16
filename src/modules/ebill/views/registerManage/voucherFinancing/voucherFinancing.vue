@@ -32,9 +32,11 @@
           <!--   :dataList="list1"-->
           <zj-table-column type="checkbox" width="40" />
           <zj-table-column title="融资流水号">
-            <template v-slot="{ row }">
-              <zj-button type="text" @click="toEdit(row)">{{ row.serialNo }}</zj-button>
-            </template>
+
+             <template v-slot="{ row }">
+                <span class="table-elbill-code" @click="toEdit(row)">{{ row.serialNo
+                }}</span>
+              </template>
           </zj-table-column>
           <zj-table-column field="fromEntName" title="融资企业" />
           <zj-table-column field="financingProductType" title="融资产品名称" :formatter="
