@@ -84,9 +84,3 @@ export default {
   },
 }
 </script>
-
-<style scoped lang="less">
-.financingForm {
-  margin-top: 20px;
-}
-</style>
