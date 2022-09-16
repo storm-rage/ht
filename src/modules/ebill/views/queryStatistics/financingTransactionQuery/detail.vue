@@ -9,7 +9,7 @@
           </el-row>
         </el-row>
       </zj-workflow>
-      
+
       <!--  融资交易详情  -->
       <zj-top-header title="融资交易详情"/>
       <zj-content-block v-if="workflow === 'sqxx'">
@@ -39,10 +39,10 @@
                   <el-form-item label="融资企业：">{{form.fromEntName}}</el-form-item>
                 </el-col>
                 <el-col :span="8" v-if="row.financingProductType !== '0'">
-                  <el-form-item label="融资金额：">{{form.buyerEntName}}</el-form-item>
+                  <el-form-item label="融资金额：">{{form.buyerEntName?moneyNoSynbol(form.buyerEntName):''}}</el-form-item>
                 </el-col>
                 <el-col :span="8" v-if="row.financingProductType !== '0'">
-                  <el-form-item label="融资折扣率：">{{form.interestRate?`${form.interestRate}%`:''}}</el-form-item>
+                  <el-form-item label="融资折扣率：">{{form.interestRate?`${form.discountRate}%`:''}}</el-form-item>
                 </el-col>
                 <el-col :span="8" v-if="row.financingProductType === '0'">
                   <el-form-item label="买方企业名称：">{{form.buyerEntName}}</el-form-item>
@@ -54,13 +54,13 @@
               <el-row>
                 <el-col :span="8" v-if="row.financingProductType === '0'">
                   <el-form-item label="融资申请金额：">
-                    {{form.tranAmt}}
+                    {{form.tranAmt?moneyNoSynbol(form.tranAmt):''}}
                     <div>{{digitUp(form.tranAmt)}}</div>
                   </el-form-item>
                 </el-col>
                 <el-col :span="8" v-if="row.financingProductType !== '0'">
                   <el-form-item label="申请转让金额：">
-                    {{form.tranAmt}}
+                    {{form.tranAmt?moneyNoSynbol(form.tranAmt):''}}
                     <el-tooltip content="(申请转让金额 = 融资申请金额/折扣率)" v-if="form.tranAmt" effect="dark" placement="top">
                       <i class="el-icon-info" style="color:#909399"></i>
                     </el-tooltip>
@@ -89,7 +89,7 @@
                 </el-col>
                 <el-col :span="8">
                   <el-form-item label="预计利息：">
-                    {{form.interestAmt}}
+                    {{form.interestAmt?moneyNoSynbol(form.interestAmt):''}}
                     <el-tooltip content="(预计利息 = 融资申请金额*融资月利率/30*预计融资天数)" v-if="form.interestAmt" effect="dark" placement="top">
                       <i class="el-icon-info" style="color:#909399"></i>
                     </el-tooltip>
@@ -186,18 +186,18 @@
                   <el-form-item label="保理类型：">{{form.contractType}}</el-form-item>
                 </el-col>
                 <el-col :span="8" v-if="row.financingProductType === '0'">
-                  <el-form-item label="总金额：">{{form.factoringCreditAmount}}</el-form-item>
+                  <el-form-item label="总金额：">{{form.factoringCreditAmount?moneyNoSynbol(form.factoringCreditAmount):''}}</el-form-item>
                 </el-col>
                 <el-col :span="8" v-if="row.financingProductType !== '0'">
-                  <el-form-item label="合同金额：">{{form.contractAmount}}</el-form-item>
+                  <el-form-item label="合同金额：">{{form.contractAmount?moneyNoSynbol(form.contractAmount):''}}</el-form-item>
                 </el-col>
                 <el-col :span="8" v-if="row.financingProductType === '0'">
-                  <el-form-item label="剩余可用金额：">{{form.availableCreditAmount}}</el-form-item>
+                  <el-form-item label="剩余可用金额：">{{form.availableCreditAmount?moneyNoSynbol(form.availableCreditAmount):''}}</el-form-item>
                 </el-col>
               </el-row>
               <el-row>
                 <el-col :span="8" v-if="row.financingProductType !== '0'">
-                  <el-form-item label="剩余可用金额：">{{form.availableCreditAmount}}</el-form-item>
+                  <el-form-item label="剩余可用金额：">{{form.availableCreditAmount?moneyNoSynbol(form.availableCreditAmount):''}}</el-form-item>
                 </el-col>
                 <el-col :span="8" v-if="row.financingProductType === '0'">
                   <el-form-item label="额度有效期：">{{date(form.factoringCreditStartDate)}}
