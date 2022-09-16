@@ -7,24 +7,19 @@
     border-radius: 0;
   }
   .vxe-table--header-wrapper{
-    //background-color: rgba(0,0,0,0)!important;
-    //background: rgba(0,0,0,0)!important;
     .vxe-header--row{
-      //background-color: rgba(0,0,0,0)!important;
       .vxe-header--column{
-        //background-color: rgba(0,0,0,0)!important;
-        //background: transparent!important;
-        //&:hover{
-        //  background-color: rgba(0,0,0,0)!important;
-        //}
         .vxe-resizable.is--line{
-          //height: 0;
           height: 100%;
           /*分割线颜色*/
           &::before{
             background-color: #E8E8E8;
           }
         }
+      }
+      //分组加分割线
+      .col--group + .col--group {
+        border-left: 1px solid #E8E8E8;
       }
     }
     .vxe-table--header{
