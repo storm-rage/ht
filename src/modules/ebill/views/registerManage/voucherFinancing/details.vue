@@ -201,7 +201,7 @@
               </el-form-item>
             </el-col>
             <el-col :span="8" v-if="row.financingProductType !== '0'">
-              <el-form-item label="保理合同到期日：">{{ form.availableCreditAmount }}</el-form-item>
+              <el-form-item label="保理合同到期日：">{{ date(form.expireDate) }}</el-form-item>
             </el-col>
           </el-row>
         </zj-content-block>
@@ -209,10 +209,10 @@
           <zj-header title="总控额度信息" />
           <el-row>
             <el-col :span="8">
-              <el-form-item label="供应商总控额度：">{{ form.contractNo }}</el-form-item>
+              <el-form-item label="供应商总控额度：">{{ form.totalCreditAmount }}</el-form-item>
             </el-col>
             <el-col :span="8">
-              <el-form-item label="剩余可用额度：">{{ form.contractNo }}</el-form-item>
+              <el-form-item label="剩余可用额度：">{{ form.availableCreditAmount }}</el-form-item>
             </el-col>
           </el-row>
         </zj-content-block>
