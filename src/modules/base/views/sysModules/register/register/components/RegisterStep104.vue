@@ -600,28 +600,29 @@ export default {
       })
     },
     cancel() {
-      this.formModel.userOperateFlag = 'CANCEL'
-      this.formModel.id = this.entInfoObj.form.id
-      this.formModel.userId = this.formModel.userId ? this.formModel.userId : ''
-      this.formModel.isHtEnterprise  = this.entInfoObj.form.isHtEnterprise
-      this.formModel.certStartDate = this.formModel.certStartDate?this.formModel.certStartDate.replace(/-/g,''):''
-      this.formModel.certEndDate = this.formModel.certEndDate?this.formModel.certEndDate.replace(/-/g,''):''
-      this.zjControl.saveRegisterEntUser(this.formModel).then( res => {
-        //更新列表数据
-        this.operatorTable = false
-        for(let i of this.registerUserList) {
-          if(res.data.roleId === i.roleId) {
-            this.registerUserList[this.registerUserList.indexOf(i)] = res.data
-          }
-        }
-        this.$nextTick(()=>{
-          this.operatorTable = true
-        })
-        let params = Object.assign({},this.entInfoObj)
-        params.form.registerUserList = this.registerUserList
-        this.$emit('update:entInfoObj',params)
-        this.maintainInfo = false
-      })
+      // this.formModel.userOperateFlag = 'CANCEL'
+      // this.formModel.id = this.entInfoObj.form.id
+      // this.formModel.userId = this.formModel.userId ? this.formModel.userId : ''
+      // this.formModel.isHtEnterprise  = this.entInfoObj.form.isHtEnterprise
+      // this.formModel.certStartDate = this.formModel.certStartDate?this.formModel.certStartDate.replace(/-/g,''):''
+      // this.formModel.certEndDate = this.formModel.certEndDate?this.formModel.certEndDate.replace(/-/g,''):''
+      // this.zjControl.saveRegisterEntUser(this.formModel).then( res => {
+      //   //更新列表数据
+      //   this.operatorTable = false
+      //   for(let i of this.registerUserList) {
+      //     if(res.data.roleId === i.roleId) {
+      //       this.registerUserList[this.registerUserList.indexOf(i)] = res.data
+      //     }
+      //   }
+      //   this.$nextTick(()=>{
+      //     this.operatorTable = true
+      //   })
+      //   let params = Object.assign({},this.entInfoObj)
+      //   params.form.registerUserList = this.registerUserList
+      //   this.$emit('update:entInfoObj',params)
+      //   this.maintainInfo = false
+      // })
+      this.maintainInfo = false
     },
     certStartDateDisabledDate (date) {
       if (this.formModel.certEndDate) {

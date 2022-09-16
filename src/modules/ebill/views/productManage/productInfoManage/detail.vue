@@ -89,7 +89,7 @@
                   </el-col>
                 </el-row>
               </zj-collapse>
-              <zj-collapse title="保理专户" class="zj-m-t-10">
+              <zj-collapse title="保理专户" class="zj-m-t-10" tipText="注：业务联系人和保理专户用于后续签署保理合同。">
                 <el-row>
                   <el-col :span="8">
                     <el-form-item label="银行账户名称：" >
@@ -106,11 +106,6 @@
                       <el-input v-model="infoForm.blBankAcctNo" disabled></el-input>
                     </el-form-item>
                   </el-col>
-                </el-row>
-                <el-row>
-                  <el-col :span="8">
-                    <zj-content-tip text="注：业务联系人和保理专户用于后续签署保理合同。"/>
-                    </el-col>
                 </el-row>
               </zj-collapse>
             </el-row>
