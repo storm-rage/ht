@@ -1054,7 +1054,7 @@ function hekl(item,that) {
   return `<div class="fcLendingVoucher-viewVoucher-box " style="width: 750px;">
                       <table cellspacing="0" cellpadding="0" style="width: 100%;">
                           <tr style="width: 100%">
-                              <td colspan="2" align="center" style="font-weight:bold;">${that.$i18n.messages[that.$i18n.locale].lang.financingName}开立凭据</td>
+                              <td colspan="2" align="center" style="font-weight:bold;">${that.$store.getters['user/productName']}开立凭据</td>
                           </tr>
                           <tr style="width: 100%">
                               <td colspan="2" style="text-align: right;width: 100%">打印日期：${that.date(item.printDate)}</td>
@@ -1067,13 +1067,13 @@ function hekl(item,that) {
 
                       <table class="openTable" border="1" cellpadding="0" cellspacing="0" style="width: 100%;table-layout:fixed;text-align: center;word-wrap: break-word;word-break: break-all;">
                           <tr>
-                              <td colspan="1">${that.$i18n.messages[that.$i18n.locale].lang.financingName}编号</td>
+                              <td colspan="1">${that.$store.getters['user/productName']}编号</td>
                               <td colspan="5">${item.ebillCode}</td>
                           </tr>
                           <tr>
-                            <td colspan="1">${that.$i18n.messages[that.$i18n.locale].lang.financingName}开单日期</td>
+                            <td colspan="1">${that.$store.getters['user/productName']}开单日期</td>
                             <td colspan="2">${that.date(item.openDate)}</td>
-                            <td colspan="1">${that.$i18n.messages[that.$i18n.locale].lang.financingName}到期日</td>
+                            <td colspan="1">${that.$store.getters['user/productName']}到期日</td>
                             <td colspan="2">${that.date(item.expireDate)}</td>
                           </tr>
                           <tr>
@@ -1099,7 +1099,7 @@ function hekl(item,that) {
                             <td>${item.receiptBankName || ''}</td>
                           </tr>
                           <tr>
-                              <td>${that.$i18n.messages[that.$i18n.locale].lang.financingName}金额</td>
+                              <td>${that.$store.getters['user/productName']}金额</td>
                               <td>人民币（大写）</td>
                               <td>${item.ebillAmtUpper || ''}</td>
                               <td>（小写）</td>
@@ -1225,7 +1225,7 @@ function herz(item,that) {
   return `<div class="fcLendingVoucher-viewVoucher-box " style="width: 750px;">
                         <table cellspacing="0" cellpadding="0" style="width: 100%;">
                             <tr style="width: 100%">
-                                <td colspan="2" align="center" style="font-weight:bold;">${that.$i18n.messages[that.$i18n.locale].lang.financingName}融资凭据</td>
+                                <td colspan="2" align="center" style="font-weight:bold;">${that.$store.getters['user/productName']}融资凭据</td>
                             </tr>
                             <tr style="width: 100%">
                                 <td colspan="2" style="text-align: right;width: 100%">打印日期：${that.date(item.printDate)}</td>
@@ -1261,13 +1261,13 @@ function herz(item,that) {
                                 <td>${item.receiptBankName}</td>
                             </tr>
                             <tr>
-                              <td colspan="1">转让${that.$i18n.messages[that.$i18n.locale].lang.financingName}编号</td>
+                              <td colspan="1">转让${that.$store.getters['user/productName']}编号</td>
                               <td colspan="2">${item.ebBillCode}</td>
                               <td colspan="1">开单企业</td>
                               <td colspan="2">${item.buyerEntName}</td>
                             </tr>
                             <tr>
-                              <td>${that.$i18n.messages[that.$i18n.locale].lang.financingName}金额</td>
+                              <td>${that.$store.getters['user/productName']}金额</td>
                               <td>人民币（大写）</td>
                               <td>${item.heTranAmtUpper}</td>
                               <td>（小写）</td>
@@ -1283,7 +1283,7 @@ function herz(item,that) {
                             <tr>
                               <td colspan="1">放款日期</td>
                               <td colspan="2">${that.date(item.openDate)}</td>
-                              <td colspan="1">${that.$i18n.messages[that.$i18n.locale].lang.financingName}到期日</td>
+                              <td colspan="1">${that.$store.getters['user/productName']}到期日</td>
                               <td colspan="2">${that.date(item.expireDate)}</td>
                             </tr>
                             <tr>
@@ -1322,7 +1322,7 @@ function hedq(item,that) {
   return `<div class="fcLendingVoucher-viewVoucher-box " style="width: 750px;">
                       <table cellspacing="0" cellpadding="0" style="width: 100%;">
                           <tr style="width: 100%">
-                              <td colspan="2" align="center" style="font-weight:bold;">${that.$i18n.messages[that.$i18n.locale].lang.financingName}到期凭据</td>
+                              <td colspan="2" align="center" style="font-weight:bold;">${that.$store.getters['user/productName']}到期凭据</td>
                           </tr>
                           <tr style="width: 100%">
                               <td colspan="2" style="text-align: right;width: 100%">打印日期：${that.date(item.printDate)}</td>
@@ -1335,15 +1335,15 @@ function hedq(item,that) {
 
                       <table class="openTable" border="1" cellpadding="0" cellspacing="0" style="width: 100%;table-layout:fixed;text-align: center;word-wrap: break-word;word-break: break-all;">
                           <tr>
-                              <td colspan="1">${that.$i18n.messages[that.$i18n.locale].lang.financingName}编号</td>
+                              <td colspan="1">${that.$store.getters['user/productName']}编号</td>
                               <td colspan="2">${item.ebillCode}</td>
-                              <td colspan="1">${that.$i18n.messages[that.$i18n.locale].lang.financingName}金额</td>
+                              <td colspan="1">${that.$store.getters['user/productName']}金额</td>
                               <td colspan="2">¥？</td>
                           </tr>
                           <tr>
-                            <td colspan="1">${that.$i18n.messages[that.$i18n.locale].lang.financingName}开单日期</td>
+                            <td colspan="1">${that.$store.getters['user/productName']}开单日期</td>
                             <td colspan="2">${that.date(item.openDate)}</td>
-                            <td colspan="1">${that.$i18n.messages[that.$i18n.locale].lang.financingName}到期日</td>
+                            <td colspan="1">${that.$store.getters['user/productName']}到期日</td>
                             <td colspan="2">${that.date(item.expireDate)}</td>
                           </tr>
                           <tr>
@@ -1369,7 +1369,7 @@ function hedq(item,that) {
                             <td>${item.receiptBankName || ''}</td>
                           </tr>
                           <tr>
-                              <td>清算${that.$i18n.messages[that.$i18n.locale].lang.financingName}金额</td>
+                              <td>清算${that.$store.getters['user/productName']}金额</td>
                               <td>人民币（大写）</td>
                               <td>${item.ebillAmtUpper || ''}</td>
                               <td>（小写）</td>
@@ -1403,7 +1403,7 @@ function hezf(item,that) {
   return `<div class="fcLendingVoucher-viewVoucher-box " style="width: 750px;">
                       <table cellspacing="0" cellpadding="0" style="width: 100%;">
                           <tr style="width: 100%">
-                              <td colspan="2" align="center" style="font-weight:bold;">${that.$i18n.messages[that.$i18n.locale].lang.financingName}作废凭据</td>
+                              <td colspan="2" align="center" style="font-weight:bold;">${that.$store.getters['user/productName']}作废凭据</td>
                           </tr>
                           <tr style="width: 100%">
                               <td colspan="2" style="text-align: right;width: 100%">打印日期：${that.date(item.printDate)}</td>
@@ -1416,7 +1416,7 @@ function hezf(item,that) {
 
                       <table class="openTable" border="1" cellpadding="0" cellspacing="0" style="width: 100%;table-layout:fixed;text-align: center;word-wrap: break-word;word-break: break-all;">
                           <tr>
-                              <td colspan="1">${that.$i18n.messages[that.$i18n.locale].lang.financingName}编号</td>
+                              <td colspan="1">${that.$store.getters['user/productName']}编号</td>
                               <td colspan="5">${item.ebillCode}</td>
                           </tr>
                           <tr>
@@ -1442,13 +1442,13 @@ function hezf(item,that) {
                             <td>${item.receiptBankName || ''}</td>
                           </tr>
                           <tr>
-                            <td colspan="1">${that.$i18n.messages[that.$i18n.locale].lang.financingName}开单日期</td>
+                            <td colspan="1">${that.$store.getters['user/productName']}开单日期</td>
                             <td colspan="2">${that.date(item.openDate)}</td>
-                            <td colspan="1">${that.$i18n.messages[that.$i18n.locale].lang.financingName}到期日</td>
+                            <td colspan="1">${that.$store.getters['user/productName']}到期日</td>
                             <td colspan="2">${that.date(item.expireDate)}</td>
                           </tr>
                           <tr>
-                              <td>${that.$i18n.messages[that.$i18n.locale].lang.financingName}开单金额</td>
+                              <td>${that.$store.getters['user/productName']}开单金额</td>
                               <td>人民币（大写）</td>
                               <td>${item.ebillAmtUpper || ''}</td>
                               <td>（小写）</td>

@@ -49,14 +49,14 @@
               {{ row.fileType ? typeMap(dictionary.attachTypeList,row.fileType)||row.fileType : '' }}
             </template>
           </zj-table-column>
-          <zj-table-column field="needSeal" title="是否需要加盖企业公章" v-if="form.isHtEnterprise == '1'"/>
+          <zj-table-column field="needSeal" title="是否需要加盖企业公章"/>
           <zj-table-column field="fileName" title="附件名称"/>
           <zj-table-column title="操作" fixed="right" width="120">
             <template v-slot="{row}">
               <zj-upload class="zj-inline" :httpRequest="handleFileUpload" :data="{ row }">
                 <zj-button slot="trigger" type="text">上传</zj-button>
               </zj-upload>
-              <zj-button type="text" @click="handleFileDownload(row)" v-if="form.isHtEnterprise == '1'">下载</zj-button>
+              <zj-button type="text" @click="handleFileDownload(row)">下载</zj-button>
             </template>
           </zj-table-column>
         </zj-table>
