@@ -171,7 +171,7 @@ export default {
     toApply() {
       this.ebillAmt = 0
       this.billInfoList.forEach(item => {
-        this.ebillAmt += parseInt(item.ebillAmt)
+        this.ebillAmt += parseFloat(item.ebillAmt)
       })
       if(this.ebillAmt > this.detailData.ebillAmt) {
         this.$messageBox({
