@@ -19,7 +19,7 @@
               </el-col>
             </el-row>
           </el-row>
-          <el-row v-show="this.row.financingProductType != '2'"> 
+          <el-row v-show="this.row.financingProductType != '2'">
             <el-col :span="12">
               <el-form-item label="融资合同编号：">{{form.baseFinancingInfo.contractNo}}</el-form-item>
             </el-col>
@@ -75,7 +75,7 @@
             </el-col>
             <el-col :span="12" v-if="row.financingProductType !== '0'">
               <el-form-item label="融资开始日：">
-                <zj-date-picker placeholder="年/月/日" :date.sync="form.baseFinancingInfo.contractTimeStart" disabled ></zj-date-picker>
+                <zj-date-picker placeholder="年/月/日" :date.sync="form.baseFinancingInfo.applyDatetime" disabled ></zj-date-picker>
               </el-form-item>
             </el-col>
           </el-row>
@@ -138,13 +138,13 @@
                     :dataList="form.billInfo?form.billInfo.billInfoItems:[]"
                     :pager="false"
           >
-            <zj-table-column field="rootCode" title="原始凭证编号" />
-            <zj-table-column field="ebillCode" title="凭证编号" />
-            <zj-table-column field="writerName" title="凭证签发人" />
+            <zj-table-column field="rootCode" :title="`原始${productName}编号`" />
+            <zj-table-column field="ebillCode" :title="`${productName}编号`" />
+            <zj-table-column field="writerName" :title="`${productName}签发人`" />
             <zj-table-column field="transferName" title="转让企业" />
-            <zj-table-column field="ebillAmt" title="凭证金额" :formatter="money"/>
-            <zj-table-column field="holderDate" title="凭证持有日期" :formatter="date"/>
-            <zj-table-column field="expireDate" title="凭证到期日" :formatter="date"/>
+            <zj-table-column field="ebillAmt" :title="`${productName}金额`" :formatter="money"/>
+            <zj-table-column field="holderDate" :title="`${productName}持有日期`" :formatter="date"/>
+            <zj-table-column field="expireDate" :title="`${productName}到期日`" :formatter="date"/>
           </zj-table>
           <el-row class="zj-m-t-10 zj-m-l-20" >
             {{$store.getters['user/productName']}}金额合计：{{moneyNoSynbol(form.billInfo?form.billInfo.totalEbillAmt:'')}}
@@ -190,6 +190,9 @@ export default {
   computed: {
     titleInfo() {
       return this.typeMap(this.dictionary.financingProductType,this.row.financingProductType)
+    },
+    productName() {
+      return this.$store.getters['user/productName']
     }
   },
   data() {
@@ -230,12 +233,7 @@ export default {
       })
     },
     reject() {
-      if(!this.checked) {
-        return this.$message.error('请勾选我已阅读并同意')
-      }
-      if(this.checked) {
-        this.$refs.rejectDialog.open({form: this.form}, true)
-      }
+      this.$refs.rejectDialog.open({form: this.form}, true)
     },
     reviewResolve() {
       if(!this.checked) {

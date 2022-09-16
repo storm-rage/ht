@@ -20,11 +20,11 @@
           </zj-table-column>
           <zj-table-column
             field="availableDiscountsRate"
-            :formatter="rateEpd"
+            :formatter="['formatColumnRate','2']"
             title="凭证可用折扣"/>
           <zj-table-column
             field="rdFinancingMonthRate"
-            :formatter="rateEpd"
+            formatter="formatColumnRate"
             title="凭证融资月利率"/>
         </zj-table>
         <div class="zj-center zj-m-t-10" v-if="isEdit">

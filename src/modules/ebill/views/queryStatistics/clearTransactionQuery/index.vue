@@ -4,9 +4,9 @@
       <!--  清算交易查询  -->
           <div class="zj-search-condition zj-m-b-20" style="border-bottom: none;">
             <zj-list-layout>
-              <template slot="leftBtns">
-                <vxe-button class="export" icon="el-icon-download" @click="toExport" :api="zjBtn.exportFactoringCredit">导出</vxe-button>
-              </template>
+<!--              <template slot="leftBtns">-->
+<!--                <vxe-button class="export" icon="el-icon-download" @click="toExport" :api="zjBtn.exportFactoringCredit">导出</vxe-button>-->
+<!--              </template>-->
               <template slot="searchForm">
                 <el-form ref="searchForm" :model="searchForm">
                   <el-form-item label="核心企业名称：">
@@ -23,7 +23,7 @@
                     >
                       <el-option label="全部" value=""></el-option>
                       <el-option
-                        v-for="item in dictionary.checkBillStatus"
+                        v-for="item in dictionary.applyType"
                         :key="item.code"
                         :label="item.desc"
                         :value="item.code"
@@ -47,7 +47,7 @@
                     >
                       <el-option label="全部" value=""></el-option>
                       <el-option
-                        v-for="item in dictionary.checkBillStatus"
+                        v-for="item in dictionary.applyStatus"
                         :key="item.code"
                         :label="item.desc"
                         :value="item.code"

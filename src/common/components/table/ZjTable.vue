@@ -7,6 +7,9 @@
       v-on="events">
       <slot></slot>
     </vxe-table>
+    <div class="zj-table-bottom-total" v-if="$slots['bottom-total']">
+      <slot name="bottom-total"></slot>
+    </div>
     <vxe-pager
       class="zj-table_pager"
       v-if="pager"
@@ -1406,7 +1409,13 @@
       }
     }
   }
-
+  .zj-table-bottom-total {
+    background: #E2EBFF;
+    border: 1px solid #E4E7ED;
+    padding: 8px;
+    color: #303133;
+    font-weight: 400;
+  }
 }
 </style>
 <!--<style lang="less" src="./ZjTable.less"/>-->

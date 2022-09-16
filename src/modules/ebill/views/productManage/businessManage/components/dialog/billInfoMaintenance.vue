@@ -130,7 +130,6 @@ export default {
       }
     },
     validateRdDateStart(rule, value, callback) {
-      console.log(rule)
       const rdDateEnd = rule.rdDateEnd
       if(rdDateEnd&&value && value>rdDateEnd) {
         callback(new Error('开始区间不能大于结束区间'));
