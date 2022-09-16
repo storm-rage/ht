@@ -21,14 +21,17 @@
                   <el-form-item label="融资流水号：">{{form.serialNo}}</el-form-item>
                 </el-col>
                 <el-col :span="8">
-                  <el-form-item label="融资产品：">{{form.financingProductType?typeMap(dictionary.productTypeList,form.financingProductType):'-'}}</el-form-item>
+                <el-form-item label="融资产品：">{{ typeMap(dictionary.financingProductType, form.financingProductType) }}
+              </el-form-item>
                 </el-col>
                 <el-col :span="8">
                   <el-form-item label="申请时间：">{{form.applyDatetime?date(form.applyDatetime):''}}</el-form-item>
                 </el-col>
               </el-row>
               <el-row>
-                <el-form-item label="业务状态：">{{form.workflowState?typeMap(dictionary.financingStateList,form.workflowState):'-'}}</el-form-item>
+                <el-form-item label="业务状态："><span>
+                {{ typeMap(dictionary.financingState, form.workflowState) }}
+              </span></el-form-item>
               </el-row>
             </zj-content-block>
             <zj-content-block>
