@@ -29,7 +29,7 @@ const registerManageRouter = [
   {
     path: '/zhongdengManageDetailpz',
     name: 'zhongdengManageDetailpz',
-    component: () => import('../views/registerManage/voucherFinancing/details.vue'),
+    component: () => import('../views/registerManage/voucherFinancing/details copy.vue'),
     meta: {
       isMock: true,
       title: '凭证融资详情',
