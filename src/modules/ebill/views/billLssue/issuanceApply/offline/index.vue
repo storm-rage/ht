@@ -87,7 +87,7 @@
         </zj-table>
         <zj-content style="padding-top: 0">
           <zj-content-tip
-            text="注：1.凭证到期日=付款日期+开单宽限期限。"
+            text="注：1.海诺单到期日=付款日期+开单宽限期限。"
           ></zj-content-tip>
         </zj-content>
       </div>
