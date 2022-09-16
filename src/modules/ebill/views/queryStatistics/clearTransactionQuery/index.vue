@@ -76,8 +76,6 @@
   </div>
 </template>
 <script>
-import clearTransactionQuery from "../../../api/clearTransactionQueryApi";
-
 export default {
   components: {},
   data() {
