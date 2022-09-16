@@ -67,9 +67,9 @@
             field="ebillCode"
             :title="`${productName}编号`"
           >
-            <template v-slot="{row}">
-              <el-link @click="toViewDetail(row)" type="primary" :underline="false">{{row.ebillCode}}</el-link>
-            </template>
+<!--            <template v-slot="{row}">-->
+<!--              <el-link @click="toViewDetail(row)" type="primary" :underline="false">{{row.ebillCode}}</el-link>-->
+<!--            </template>-->
           </zj-table-column>
           <zj-table-column field="payEntName" title="签发人"/>
           <zj-table-column field="openDate" title="签发日期" />
