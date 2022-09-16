@@ -17,6 +17,13 @@ export default {
       formatBankcard ({ cellValue }) {
         return XEUtils.commafy(XEUtils.toValueString(cellValue), { spaceNumber: 4, separator: ' ' })
       },
+      // 格式化利率
+      formatColumnRate ({ cellValue }, digits = 4) {
+        if (cellValue) {
+          return XEUtils.commafy(XEUtils.toNumber(cellValue), {spaceNumber:0, digits })+'%'
+        }
+        return '——';
+      },
       // 如果是空值格式化为——
       formatColumnValue({ cellValue }) {
         if (cellValue) {
