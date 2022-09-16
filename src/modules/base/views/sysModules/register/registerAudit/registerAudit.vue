@@ -127,7 +127,8 @@
             <zj-table :pager="false" :dataList="detailData.entUserList">
               <zj-table-column field="roleName" title="操作员类型" />
               <zj-table-column field="userName" title="姓名" />
-              <zj-table-column field="certNo" title="身份证号" />
+              <zj-table-column field="certType" title="证件类型" :formatter="(obj) => typeMap(dictionary.userCertTypeList, obj.cellValue)" />
+              <zj-table-column field="certNo" title="证件号码" />
               <zj-table-column title="证件有效期">
                 <template v-slot="{ row }">
                   {{ date(row.certStartDate)
@@ -140,6 +141,18 @@
               <zj-table-column field="bankAcctNo" title="银行卡号" />
               <zj-table-column field="htSysCode" title="海天业务系统账号" />
               <zj-table-column field="checkType" title="核查方式" :formatter="(obj) => typeMap(dictionary.checkType, obj.cellValue)" />
+              <zj-table-column title="附件" width="260px">
+                <template v-slot="{ row }">
+                  <zj-button type="text" @click="toDownload({fileId: row.identitycardFileId,fileName: row.identitycardFileName})" v-if="row.identitycardFileId">
+                    身份证影印件
+                  </zj-button>
+                  <span v-if="row.sqsFileId">,</span>
+                  <zj-button type="text" @click="toDownload({fileId: row.sqsFileId,fileName: row.sqsFileName})" v-if="row.sqsFileId">
+                    个人信息授权书影像件
+                  </zj-button>
+                  <span v-if="!row.identitycardFileId && !row.sqsFileId">—</span>
+                </template>
+              </zj-table-column>
             </zj-table>
           </zj-content>
         </zj-content-block>
@@ -249,6 +262,7 @@ export default {
       dictionary: {}, //字典
       zjControl: {
         ...this.$api.registerAudit,
+        downloadFile: this.$api.baseCommon.downloadFile,//文件下载
       }, //api
 
       workflow: "sqxx",
@@ -290,7 +304,6 @@ export default {
     this.getApi();
     this.getRow();
     this.getDirectory();
-    this.getAuditDetail();
   },
   methods: {
     //返回查询页
@@ -306,6 +319,7 @@ export default {
             .replace(/desc/g, "label")
         );
         this.dictionary = res.data;
+        this.getAuditDetail();
       });
     },
     //获取详情
@@ -320,10 +334,8 @@ export default {
     },
     // 处理附件信息
     handleAttach() {
-      let jb = this.detailData.entUserList.find(item => item.roleId == '2' || item.roleId == '5') || {}
-      let fh = this.detailData.entUserList.find(item => item.roleId == '3' || item.roleId == '6') || {}
-      let fx = this.detailData.entUserList.find(item => item.roleId == '4' || item.roleId == '7') || {}
-      this.attachInfo.infoBar = ['营业执照', '法定代表人身份证', '操作用户经办员', '操作用户复核员', '风险信息接收人', '委托授权书'] //导航栏
+      // this.attachInfo.infoBar = ['营业执照', '法定代表人身份证', '操作用户经办员', '操作用户复核员', '风险信息接收人', '委托授权书'] //导航栏
+      this.attachInfo.infoBar = ['营业执照', '法定代表人身份证', '委托授权书'] //导航栏
       this.attachInfo.infoList = [
         [
           { label: '统一社会信用代码：', value: this.detailData.bizLicence },
@@ -332,32 +344,15 @@ export default {
         ],
         [
           { label: '法定代表人姓名：', value: this.detailData.legalPersonName },
+          { label: '证件类型：', value: this.typeMap(this.dictionary.userCertTypeList, this.detailData.legalCertType) },
           { label: '证件号码：', value: this.detailData.legalCertNo },
           { label: '证件有效期：', value: this.date(this.detailData.legalCertRegDate) + ' 至 ' + this.date(this.detailData.legalCertExpireDate) }
-        ],
-        [
-          { label: '经办员姓名:', value: jb.userName },
-          { label: '经办员身份证号码：', value: jb.certNo },
-          { label: '证件有效期：', value: this.date(jb.certStartDate) + ' 至 ' + this.date(jb.certEndDate) }
-        ],
-        [
-          { label: '操作用户复核员：', value: fh.userName },
-          { label: '证件号码：', value: fh.certNo },
-          { label: '证件有效期：', value: this.date(fh.certStartDate) + ' 至 ' + this.date(fh.certEndDate) }
-        ],
-        [
-          { label: '风险信息接收人：', value: fx.userName },
-          { label: '证件号码：', value: fx.certNo },
-          { label: '证件有效期：', value: this.date(fx.certStartDate) + ' 至 ' + this.date(fx.certEndDate) }
         ],
         [{}]
       ]
       this.attachInfo.infoViewList = [
         { fileId: this.detailData.qyyzFileId, fileName: this.detailData.qyyzAttachName },
         { fileId: this.detailData.qyfrzjFileId, fileName: this.detailData.qyfrzjAttachName },
-        { fileId: jb.identitycardFileId, fileName: jb.identitycardFileName },
-        { fileId: fh.identitycardFileId, fileName: fh.identitycardFileName },
-        { fileId: fx.identitycardFileId, fileName: fx.identitycardFileName },
         { fileId: this.detailData.qywtsqsFileId, fileName: this.detailData.qywtsqsAttachName },
       ]
     },
@@ -365,12 +360,6 @@ export default {
     submitAudit(type) {
       this.$refs.auditForm.validate((valid) => {
         if (valid) {
-          // if (
-          //   !this.form.notes ||
-          //   (this.form.notes && this.form.notes.trim().length < 1)
-          // ) {
-          //   return this.$Message.warning("驳回时审核意见必须填写!");
-          // }
           if (type === "3" || type === "4") {
             let flag = false;
             this.$refs.auditRemark.getForm().validate((valid) => {
@@ -441,6 +430,10 @@ export default {
           this.pcaSuccess = true
         }
       }
+    },
+    // 下载
+    toDownload(params) {
+      this.zjControl.downloadFile(params);
     },
   },
 };

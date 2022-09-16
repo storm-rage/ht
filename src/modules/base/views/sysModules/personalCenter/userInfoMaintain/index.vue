@@ -71,8 +71,8 @@
       <div v-show="pageType === 3">
         <zj-header>附件信息</zj-header>
         <p class="zj-m-l-20">点此下载<zj-button type="text">
-            <span @click="downloadTemplate">《委托授权书模板》</span>
-            <span @click="downloadAuthorization">《个人信息授权书》</span>
+            <span @click="downloadTemplate">《用户授权人员变更申请表模板》</span>
+            <span @click="downloadAuthorization">《个人信息授权书模板板》</span>
           </zj-button>
         </p>
       </div>
@@ -80,6 +80,7 @@
         <zj-table :pager="false" ref="attach" :dataList="pageType===3?attachInfo:[attachInfo[0]]">
           <zj-table-column type="seq" width="60" title="序号" />
           <zj-table-column field="type" title="附件类型" />
+          <zj-table-column field="isGZ" title="是否需要加盖企业公章" v-if="pageType===3" />
           <zj-table-column field="fileName" title="附件" />
           <zj-table-column title="操作" fixed="right">
             <template v-slot="{ row }">
@@ -148,9 +149,9 @@ export default {
       userInfo: {},
       dictionary: {},
       attachInfo: [
-        { fileId: "", type: "身份证影印件", fileName: "" },
-        { fileId: "", type: "委托授权书", fileName: "" },
-        { fileId: "", type: "个人信息授权书", fileName: "" }
+        { fileId: "", type: "身份证影印件", fileName: "", isGZ: "否" },
+        { fileId: "", type: "用户授权人员变更申请表模板", fileName: "", isGZ: "是" },
+        { fileId: "", type: "个人信息授权书模板板", fileName: "", isGZ: "否" }
       ],
       platformFastMail: {},
       pageType: 1, // 1详情 2维护本人信息 3更换操作人员

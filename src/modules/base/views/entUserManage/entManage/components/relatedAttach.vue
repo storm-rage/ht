@@ -121,7 +121,6 @@ export default {
       this.infoBarActive = index
       //查看
       this.infoViewitem = this.infoViewList[index]
-      console.log(this.infoViewitem)
       if (!this.infoViewitem.fileId) {
         this.infoViewitem = { fileId: null, fileName: null }
         this.viewItemUrl = ''
