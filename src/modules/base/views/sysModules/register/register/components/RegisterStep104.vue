@@ -23,7 +23,7 @@
           <zj-table-column field="email" title="邮箱"/>
           <zj-table-column field="bankAcctNo" title="银行卡号"/>
           <zj-table-column field="htSysCode" title="海天业务系统账号" v-if="form.isHtEnterprise == '1'"/>
-          <zj-table-column field="idCheckState" title="是否完成身份核验" v-if="form.isHtEnterprise == '1'" :formatter="obj=>typeMap(dictionary.idCheckStateList,obj.cellValue)"/>
+          <zj-table-column field="idCheckState" title="是否完成身份核验" :formatter="obj=>typeMap(dictionary.idCheckStateList,obj.cellValue)"/>
           <zj-table-column  title="操作" fixed="right">
             <template v-slot="{row}">
               <zj-button type="text" @click="maintainOperator(row)">维护</zj-button>
@@ -63,7 +63,7 @@
         <div class="explain-text">
           <div>注：</div>
           <ol class="explain-content">
-            <li class="explain-item">除“风险接收人员个人信息授权模版”外，其余上传的影像件请加盖公司公章。</li>
+            <li class="explain-item">请在需要加盖企业公章的影像件上加盖公司公章后，上传影印件。</li>
             <li class="explain-item">支持上传的文档格式：PDF。</li>
             <li class="explain-item">若上传身份证，请将身份证正、反面完整放在同一页上。请确保身份证在有效期内。</li>
             <li class="explain-item">若上传营业执照，请确保营业执照为最新版本。</li>
@@ -93,7 +93,7 @@
       <zj-top-header title="开票信息" direction="left"/>
       <div class="border-underline"></div>
       <el-row>
-        <el-form :model="form" ref="form" :rules="InvoiceRules" label-width="160px" class="invoiceForm">
+        <el-form :model="form" ref="form" :rules="InvoiceRules" label-width="200px" class="invoiceForm">
           <el-form-item label="纳税人识别号：" prop="invoiceTaxpayerId">
             <el-input type="text" placeholder="请输入内容" v-model="form.invoiceTaxpayerId" :disabled="true"></el-input>
           </el-form-item>
@@ -118,9 +118,12 @@
       <el-row v-if="form.isHtEnterprise == '0'">
         <zj-top-header title="贸易信息" direction="left"/>
         <div class="border-underline"></div>
-        <el-form :model="tradeInfoForm" :rules="tradeInfoRules" label-width="160px" class="invoiceForm">
+        <el-form :model="tradeInfoForm" :rules="tradeInfoRules" label-width="200px" class="invoiceForm">
           <el-form-item label="请选择：" prop="supplier">
-            <el-radio v-model="tradeInfoForm.supplier" label="1">我是供应商</el-radio>
+            <el-radio-group v-model="tradeInfoForm.supplier">
+              <el-radio label="S" >我是供应商</el-radio>
+              <!--            <el-radio label="B">我是核心企业</el-radio>-->
+            </el-radio-group>
           </el-form-item>
           <el-form-item label="我的买方企业：" prop="myBuyers">
             <el-input type="text" placeholder="支持录入多个，请用'，'分隔开" v-model="tradeInfoForm.myBuyers"></el-input>
@@ -130,7 +133,7 @@
       <el-row class="btn-row">
         <zj-button status="primary" @click="pre">上一步</zj-button>
         <zj-button status="primary" @click="save('SAVE')">保存</zj-button>
-        <zj-button status="primary" @click="registerSuccess">完成注册</zj-button>
+        <zj-button type="primary" @click="registerSuccess">完成注册</zj-button>
       </el-row>
     </div>
     <RegisterFooter/>
@@ -138,7 +141,7 @@
     <el-dialog :visible.sync="maintainInfo" :close-on-click-modal="false" left
                width="800px" :title="`维护${dialogTitle}`" custom-class="mbi-editDialog" top="6vh"
     >
-      <el-form ref="formModel" class="mbi-form" :model="formModel" :rules="formRules" :class="editFlag ? '' :'nmb0'" label-width="180px">
+      <el-form ref="formModel" class="operator-form" :model="formModel" :rules="formRules" :class="editFlag ? '' :'nmb0'" label-width="200px">
         <el-form-item label="姓名：" prop="userName" >
           <el-input v-model="formModel.userName"></el-input>
         </el-form-item>
@@ -159,9 +162,9 @@
         </el-form-item>
         <el-form-item label="证件有效期：" class="card-validity required" >
           <el-form-item prop="certStartDate" class="zj-inline">
-            <zj-date-picker placeholder="年/月/日" :date.sync="formModel.certStartDate" :pickerOptions="{ disabledDate:certStartDateDisabledDate }" ></zj-date-picker>
+            <zj-date-picker placeholder="年/月/日" :date.sync="formModel.certStartDate" :lessNow="true" ></zj-date-picker>
           </el-form-item>
-          <div class="zj-inline zj-center zj-w-20">至</div>
+          <div class="zj-inline zj-center zj-w-20 zj-m-l-10 zj-m-r-10">至</div>
           <el-form-item prop="certEndDate" class="zj-inline">
             <zj-date-picker placeholder="年/月/日" :date.sync="formModel.certEndDate" :pickerOptions="{ disabledDate: certEndDateDisabledDate }" :disabled="formModel.term" ></zj-date-picker>
           </el-form-item>
@@ -181,7 +184,9 @@
         <!--     一级供应商独有     -->
         <el-form-item label="海天业务系统账号：" prop="htBusinessId" v-if="form.isHtEnterprise == '1'">
           <el-input v-model="formModel.htSysCode"/>
-          <span style="color: #7f7f7f;margin-left: 10px">注：该账号用于绑定平台和海天业务系统。</span>
+          <div class="zj-m-t-10">
+            <zj-content-tip text="注：该账号用于绑定平台和海天业务系统。"/>
+          </div>
         </el-form-item>
       </el-form>
       <el-row slot="footer" class="dialog-footer">
@@ -202,7 +207,7 @@
         <p>提交成功！请您将上传影像件对应的的纸质版文件邮寄至平台方对应地址，谢谢！</p>
       </div>
       <div slot="footer" class="dialog-footer">
-        <zj-button status="primary" @click="onConfirm">
+        <zj-button type="primary" @click="onConfirm">
           确认
         </zj-button>
       </div>
@@ -256,7 +261,9 @@ export default {
         invoiceTaxpayerId: this.entInfoObj.form.bizLicence,//开票信息
         isHtEnterprise: '',
         legalCertExpireDate: '',
+        legalCertTerm: false,
         legalCertNo: '',
+        legalBankAccno: '',//银行卡号，证件类型为非身份证时必填
         legalCertRegDate: '',
         legalCertType: '',
         legalPersonName: '',
@@ -266,6 +273,7 @@ export default {
         provinceZh: '',
         registerCapital: '',
         registerEndDate: '',
+        term: false,
         registerOperateFlag: '',
         registerPhone: '',
         registerStartDate: '',
@@ -277,7 +285,7 @@ export default {
       registerAttachList:[],
       //贸易信息
       tradeInfoForm: {
-        supplier:'1',
+        supplier:'S',
         myBuyers:'',
       },
       //贸易信息规则
@@ -433,33 +441,20 @@ export default {
       this.$emit('update:step','103')
     },
     registerSuccess() {
+      console.log(this.registerUserList)
       //校验操作用户数据是否完整
       if(!this.entInfoObj.form.registerUserList) {
         for(let i of this.registerUserList){
-          let resCheck = (i.certEndDate===''||null) ||
-            (i.certNo===''||null) ||
-            (i.certStartDate===''||null) ||
-            (i.certType===''||null) ||
-            (i.mobileNo===''||null) ||
-            (i.roleId===''||null) ||
-            (i.userId===''||null) ||
-            (i.userName===''||null)
-          if(resCheck){
+          if(!i.userId || !i.userName || !i.certNo || !i.certStartDate || !i.mobileNo) {
+            console.log(i.mobileNo)
             this.$message.error(`请补全操作用户的信息！`)
             return
           }
         }
       }else{
         for(let i of this.entInfoObj.form.registerUserList){
-          let resCheck = (i.certEndDate===''||null) ||
-            (i.certNo===''||null) ||
-            (i.certStartDate===''||null) ||
-            (i.certType===''||null) ||
-            (i.mobileNo===''||null) ||
-            (i.roleId===''||null) ||
-            (i.userId===''||null) ||
-            (i.userName===''||null)
-          if(resCheck){
+          if(!i.userId || !i.userName || !i.certNo || !i.certStartDate || !i.mobileNo) {
+            console.log(i.mobileNo)
             this.$message.error(`请补全操作用户的信息！`)
             return
           }
@@ -488,7 +483,7 @@ export default {
           return
         }else{
           //校验贸易信息
-          if(this.entInfoObj.form.isHtEnterprise === '0' && this.tradeInfoForm.supplier !== '1'){
+          if(this.entInfoObj.form.isHtEnterprise === '0' && this.tradeInfoForm.supplier !== 'S'){
             this.$message.error(`请勾选"我是供应商"！`)
             return
           }
@@ -499,6 +494,7 @@ export default {
           this.entInfoObj.form.invoicePhone = this.form.invoicePhone
           this.entInfoObj.form.invoiceTaxpayerId = this.form.invoiceTaxpayerId
           this.entInfoObj.form.myBuyers = this.tradeInfoForm.myBuyers
+          this.entInfoObj.form.entType = this.tradeInfoForm.supplier
           let params = {
             ...this.entInfoObj.form,
             id: this.entInfoObj.form.id,
@@ -528,6 +524,7 @@ export default {
       this.formModel.certType = row.certType
       this.formModel.certStartDate = row.certStartDate
       this.formModel.certEndDate = row.certEndDate
+      this.formModel.term = row.term
       this.formModel.mobileNo = row.mobileNo
       this.formModel.email = row.email
       this.formModel.bankAcctNo = row.bankAcctNo
@@ -592,7 +589,8 @@ export default {
       this.entInfoObj.form.invoicePhone = this.form.invoicePhone
       this.entInfoObj.form.invoiceTaxpayerId = this.form.invoiceTaxpayerId
       this.entInfoObj.form.myBuyers = this.tradeInfoForm.myBuyers
-      this.zjControl.saveEntInfo(this.entInfoObj.form).then(res => {
+      this.entInfoObj.form.entType = this.tradeInfoForm.supplier
+      this.zjControl.completeRegister(this.entInfoObj.form).then(res => {
         this.$message.success('提交企业资料成功！')
         let params = Object.assign({},this.entInfoObj)
         params.form.registerUserList = this.registerUserList//操作用户
@@ -607,7 +605,7 @@ export default {
       this.formModel.userId = this.formModel.userId ? this.formModel.userId : ''
       this.formModel.isHtEnterprise  = this.entInfoObj.form.isHtEnterprise
       this.formModel.certStartDate = this.formModel.certStartDate?this.formModel.certStartDate.replace(/-/g,''):''
-      this.formModel.certEndDate = this.formModel.certEndDate.replace(/-/g,'')
+      this.formModel.certEndDate = this.formModel.certEndDate?this.formModel.certEndDate.replace(/-/g,''):''
       this.zjControl.saveRegisterEntUser(this.formModel).then( res => {
         //更新列表数据
         this.operatorTable = false
@@ -633,6 +631,8 @@ export default {
     certEndDateDisabledDate (date) {
       if (this.formModel.certStartDate) {
         return date.getTime() < this.$moment(this.formModel.certStartDate)
+      } else {
+        return date.getTime()
       }
     },
     //上传影像资料附件
@@ -664,30 +664,16 @@ export default {
       //下载前需要校验操作用户信息是否完整
       if(!this.entInfoObj.form.registerUserList) {
         for(let i of this.registerUserList){
-          let resCheck = (i.certEndDate===''||null) ||
-            (i.certNo===''||null) ||
-            (i.certStartDate===''||null) ||
-            (i.certType===''||null) ||
-            (i.mobileNo===''||null) ||
-            (i.roleId===''||null) ||
-            (i.userId===''||null) ||
-            (i.userName===''||null)
-          if(resCheck){
+          if(!i.userId || !i.userName || !i.certNo || !i.certStartDate || !i.mobileNo) {
+            console.log(i.mobileNo)
             this.$message.error(`请补全操作用户的信息！`)
             return
           }
         }
       }else{
         for(let i of this.entInfoObj.form.registerUserList){
-          let resCheck = (i.certEndDate===''||null) ||
-            (i.certNo===''||null) ||
-            (i.certStartDate===''||null) ||
-            (i.certType===''||null) ||
-            (i.mobileNo===''||null) ||
-            (i.roleId===''||null) ||
-            (i.userId===''||null) ||
-            (i.userName===''||null)
-          if(resCheck){
+          if(!i.userId || !i.userName || !i.certNo || !i.certStartDate || !i.mobileNo) {
+            console.log(i.mobileNo)
             this.$message.error(`请补全操作用户的信息！`)
             return
           }
@@ -767,10 +753,6 @@ export default {
   min-height: 790px;
   min-width: 805px;
 }
-.sw_footer{
-  //position: absolute;
-  //bottom: 0;
-}
 .register-inline {
   position: relative;
   z-index: 1;
@@ -780,38 +762,6 @@ export default {
   background: #FFFFFF;
   //box-shadow: 0 1px 5px 0 rgba(133,133,133,0.50);
   padding: 20px 0 20px 0;
-}
-.register-tip {
-  background: #E2F1FF;
-  border: 1px solid #5494F2;
-  width: 553px;
-  margin: 0 auto;
-  font-size: 12px;
-  color: #666666;
-  line-height: 16px;
-  padding: 3px 10px;
-}
-.register-tip-icon {
-  display: inline-block;
-  vertical-align: middle;
-  width: 14px;
-  height: 14px;
-  background: url(~@assets/img/register/icon-tip.png) no-repeat center;
-}
-.register-msg {
-  background: #F4F9FF;
-  border: 1px solid #E0E0E0;
-  border-radius: 5px;
-  margin: 20px 50px;
-  padding: 10px 20px;
-}
-.register-point {
-  display: inline-block;
-  color: rgb(84, 148, 242);
-  vertical-align: top;
-  margin-top: 4px;
-  margin-right: 5px;
-  transform: scale(0.5);
 }
 .operator-table {
   margin-bottom: 20px;
@@ -835,7 +785,20 @@ export default {
   width: 80%;
   margin: 0 auto;
   /deep/.el-input__inner {
-    width: 300px;
+    width: 400px;
+  }
+}
+.operator-form {
+  /deep/.el-input__inner {
+    width: 400px;
+  }
+  .entType {
+    /deep/.el-select{
+      width: 400px;
+      .el-input {
+        width: 400px;
+      }
+    }
   }
 }
 .agreement {
@@ -849,21 +812,21 @@ export default {
 .el-input {
   width: 260px;
 }
-.entType {
-  /deep/.el-select{
-    width: 260px;
-    .el-input {
-      width: 260px;
-    }
-  }
-}
+
 .card-validity {
   /deep/.el-date-editor.el-input {
-    width: 120px;
+    width: 180px;
+  }
+  /deep/.el-form-item__content {
+    width: 100%;
+    /deep/.el-input__inner {
+      width: 180px;
+    }
   }
   /deep/.zj-date-picker .el-input__inner {
+    width: 180px;
     min-width: auto;
-    padding: 0 30px 0 15px !important;
+    padding: 0 30px 0 30px !important;
   }
 }
 

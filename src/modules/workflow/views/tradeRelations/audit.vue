@@ -92,7 +92,7 @@
         <zj-content>
           <zj-table :dataList="xq.attachList">
             <zj-table-column type="seq" title="序号" />
-            <zj-table-column field="fileId" title="附件名称" />
+            <zj-table-column field="fileName" title="附件名称" />
             <zj-table-column title="操作">
               <template v-slot="{ row }">
                 <zj-button type="text" @click="downstuff(row)">下载</zj-button>
@@ -146,8 +146,8 @@ export default {
       },
       xq: {},
       notes: "",
-      serialNo: "1533483500706979840",
-      // 1533450545422729216
+      // serialNo: "1533483500706979840",
+      // // 1533450545422729216
       // 1533450558307631104
       // 1533453571227164672
       // 1533453914824548352
@@ -164,8 +164,8 @@ export default {
     pass() {
       let params = {
         notes: this.notes,
-        // serialNo: row.serialNo
-        serialNo: this.serialNo
+        serialNo: this.row.serialNo
+        // serialNo: this.serialNo
       }
       this.zjControl.pass(params).then((res) => {
         this.back()
@@ -176,8 +176,8 @@ export default {
       if (this.notes) {
         let params = {
           notes: this.notes,
-          // serialNo: row.serialNo
-          serialNo: this.serialNo
+          serialNo: this.row.serialNo
+          // serialNo: this.serialNo
         }
         this.zjControl.refuse(params).then((res) => {
           this.back()
@@ -194,13 +194,15 @@ export default {
       }
 
     },
-    back() { },
+    back() { 
+      this.goParent()
+      // console.log("返回");
+    },
     downstuff(row) {
       let params = {
         fileUrl: row.fileId,
         fileId: row.fileId,
         fileName: row.fileName
-        //后端字段取反，等会改完再看看
       }
       this.zjControl.downloadFile(params).then((res) => {
       });
@@ -208,8 +210,8 @@ export default {
     getDetails() {
       console.log(this.row.id);
       let params = {
-        // id: this.row.id
-        serialNo: this.serialNo
+        // serialNo: this.serialNo
+        serialNo: this.row.serialNo
       }
       this.zjControl.auditDetail(params).then((res) => {
         this.xq = res.data;

@@ -10,6 +10,7 @@
                             :sellerName="businessParamModel.sellerName"
                             :is-edit="isEdit"
                             :params="tradeRelationModel"
+                            v-bind="$attrs"
                             :dictionary="dictionary"></quota-maintenance-form>
     <!--  其他附件    -->
     <other-file-setting ref="ofileSetting"

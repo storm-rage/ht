@@ -2,11 +2,11 @@
   <zj-content-container>
     <!--  产品详情  -->
     <zj-content-block>
-      <zj-content>
         <zj-top-header :title="row.id?'修改产品信息':'新增产品'" direction="center"/>
         <el-form :model="infoForm" ref="infoForm" :rules="rules" label-width="220px">
             <el-row>
               <zj-header title="产品基础信息"></zj-header>
+              <zj-content>
               <el-row>
                 <el-col :span="8">
                   <el-form-item label="产品名称：" prop="productName">
@@ -62,11 +62,13 @@
                   </el-select>
                 </el-form-item>
               </el-row>
+              </zj-content>
             </el-row>
           <zj-content-block>
-            <zj-header :title="`产品设置-${typeMap(dictionary.productType,infoForm.productType)}`" v-if="!row.id && this.infoForm.productType"></zj-header>
+            <zj-header :title="`产品设置-${typeMap(dictionary.productType,infoForm.productType)}`" v-if="!row.id && infoForm.productType"></zj-header>
             <zj-header :title="`产品设置-${typeMap(dictionary.productType,infoForm.productType)}`" v-if="row.id"></zj-header>
-            <el-row v-if="this.row.productType === 'DDBL' || this.infoForm.productType === 'DDBL'">
+            <zj-content>
+            <el-row v-if="row.productType === 'DDBL' || infoForm.productType === 'DDBL'">
               <el-row>
                 <el-col :span="8">
                   <el-form-item label="保理追索方式：" prop="factoringRecourse">
@@ -94,7 +96,7 @@
                 </el-col>
                 <el-col :span="8">
                   <el-form-item label="最低订单融资月利率：" prop="lowFinancingMonthRate">
-                    <zj-number-input v-model="infoForm.lowFinancingMonthRate" :precision="2">
+                    <zj-number-input v-model="infoForm.lowFinancingMonthRate" :precision="4">
                       <template slot="append">%</template>
                     </zj-number-input>
                   </el-form-item>
@@ -154,11 +156,11 @@
                   </el-col>
                 </el-row>
               </zj-collapse>
-              <el-row>
-                <el-col :span="8">注：业务联系人和保理专户用于后续签署保理合同。</el-col>
+              <el-row class="zj-m-t-10">
+                  <zj-content-tip text="注：业务联系人和保理专户用于后续签署保理合同。"/>
               </el-row>
             </el-row>
-            <el-row v-if="this.row.productType === 'RD' || this.infoForm.productType === 'RD'">
+            <el-row v-if="row.productType === 'RD' || infoForm.productType === 'RD'">
               <el-row class="el-claims-voucher">
                 <el-form-item label="对账单付款日前N天通知核心企业："  prop="rdEndNoticeCompanyDays" label-width="300px">
                   <zj-number-input :precision="0" v-model="infoForm.rdEndNoticeCompanyDays" >
@@ -171,7 +173,7 @@
                   <zj-number-input :precision="0" v-model="infoForm.rdBeforeStopDays" >
                     <template slot="append">天</template>
                   </zj-number-input>
-                  <span class="zj-m-l-10">注：对账单付款日前X天至凭证到期日，凭证即不能融资，也不能转让。</span>
+                  <zj-content-tip class="zj-m-l-10" text="注：对账单付款日前X天至凭证到期日，凭证即不能融资，也不能转让。"></zj-content-tip>
                 </el-form-item>
               </el-row>
               <el-row class="el-claims-voucher">
@@ -179,7 +181,7 @@
                   <zj-number-input :precision="0" v-model="infoForm.rdEndNoticeBlDays" >
                     <template slot="append">天</template>
                   </zj-number-input>
-                  <span class="zj-m-l-10">注：对账单付款日前Z天，若对账单未发起结算，则通知保理公司。</span>
+                  <zj-content-tip class="zj-m-l-10" text="注：对账单付款日前Z天，若对账单未发起结算，则通知保理公司。"></zj-content-tip>
                 </el-form-item>
               </el-row>
               <el-row class="el-claims-voucher">
@@ -191,13 +193,13 @@
               </el-row>
               <el-row class="el-claims-voucher">
                 <el-form-item label="最低凭证融资月利率："  prop="lowRdFinancingMonthRate"  label-width="300px">
-                  <zj-number-input :precision="2" v-model="infoForm.lowRdFinancingMonthRate" >
+                  <zj-number-input :precision="4" v-model="infoForm.lowRdFinancingMonthRate" >
                     <template slot="append">%</template>
                   </zj-number-input>
                 </el-form-item>
               </el-row>
             </el-row>
-            <el-row v-if="this.row.productType === 'JXD' || this.infoForm.productType === 'JXD'">
+            <el-row v-if="row.productType === 'JXD' || infoForm.productType === 'JXD'">
               <el-row>
                 <el-col :span="8">
                   <el-form-item label="资金方名称："  prop="fundingName" >
@@ -225,9 +227,9 @@
                 </el-col>
               </el-row>
             </el-row>
+            </zj-content>
           </zj-content-block>
           </el-form>
-      </zj-content>
     </zj-content-block>
     <zj-content-footer>
       <zj-button type="primary" @click="submit">提交</zj-button>
@@ -380,7 +382,9 @@ export default {
         } else {
           let params = {
             ...this.infoForm,
-            lowRdFinancingMonthRate: Number(this.infoForm.lowRdFinancingMonthRate).toFixed(2)
+          }
+          if(this.row.productType === 'RD' || this.infoForm.productType === 'RD') {
+            params.lowRdFinancingMonthRate = this.infoForm.lowRdFinancingMonthRate
           }
           if(this.row.id) {
               params.id = this.row.id

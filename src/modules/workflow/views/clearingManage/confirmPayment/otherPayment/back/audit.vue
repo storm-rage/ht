@@ -11,7 +11,7 @@
     <audit-remark ref="auditRemark"></audit-remark>
     <zj-content-footer>
       <zj-button type="primary" :disabled="rejectLoading" :loading="passLoading" :api="zjBtn.noBillReceiptReview" @click="toPass">审核通过</zj-button>
-      <zj-button type="primary" :disabled="rejectLoading" :loading="passLoading" :api="zjBtn.noBillReceiptReview" @click="toReject">驳回</zj-button>
+      <zj-button type="primary" :disabled="rejectLoading" :loading="passLoading" :api="zjBtn.noBillReceiptReview" @click="toReject">拒绝</zj-button>
       <zj-button  @click="goParent">返回</zj-button>
     </zj-content-footer>
   </zj-content-container>
@@ -46,7 +46,10 @@ export default {
       dictionary: {},
       rejectLoading: false,
       passLoading: false,
-      detailInfo: {}
+      detailInfo: {
+        operateLogList: [],
+        bankCapitalFlow: {}
+      }
     };
   },
   created() {

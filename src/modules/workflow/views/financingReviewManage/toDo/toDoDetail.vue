@@ -1,5 +1,15 @@
 <template>
     <zj-content-container>
+      <!-- 底部工作流状态 -->
+      <zj-workflow v-model="workflow" :list="workflowList" v-if="form.transInfo.financingProductType !== '0'">
+        <!-- 审核时 -->
+        <el-row slot="right">
+          <el-row class="btn-w85 zj-center">
+            <zj-button class="back" @click="goParent">返回</zj-button>
+          </el-row>
+        </el-row>
+      </zj-workflow>
+
       <!--  融资交易详情  -->
       <zj-top-header title="融资交易详情"/>
       <zj-content-block v-if="workflow === 'sqxx'">
@@ -9,6 +19,8 @@
                                   :voucherList="form.voucherList"
                                   :proType="form.transInfo.financingProductType"
                                   :phasedAgreementList="form.phasedAgreementList"
+                                  :dictionary="dictionary"
+                                  :ddTotalAmt="form.ddTotalAmt"
             />
             <agreement-info-list :dataList="form.agreementInfoList"/>
 
@@ -80,13 +92,13 @@
                     :pager="false"
           >
             <zj-table-column type="radio" width="40"/>
-            <zj-table-column field="ebillCode" title="海e单编号" />
-            <zj-table-column field="rootCode" title="原始海e单编号" />
+            <zj-table-column field="ebillCode" :title="`${productName}编号`" />
+            <zj-table-column field="rootCode" :title="`原始${productName}编号`" />
             <zj-table-column field="writerName" title="凭证开单人" />
             <zj-table-column field="transferName" title="转让企业" />
             <zj-table-column field="holderDate" title="签发日期" :formatter="date"/>
-            <zj-table-column field="ebillAmt" title="海e单金额" :formatter="money"/>
-            <zj-table-column field="expireDate" title="海e单到期日" :formatter="date"/>
+            <zj-table-column field="ebillAmt" :title="`${productName}金额`" :formatter="money"/>
+            <zj-table-column field="expireDate" :title="`${productName}到期日`" :formatter="date"/>
           </zj-table>
         </zj-content-block>
         <zj-content-block>
@@ -120,16 +132,6 @@
           </el-tabs>
         </zj-content-block>
       </zj-content-block>
-
-      <!-- 底部工作流状态 -->
-      <zj-workflow v-model="workflow" :list="workflowList" v-if="form.transInfo.financingProductType !== '0'">
-        <!-- 审核时 -->
-        <el-row slot="right">
-          <el-row class="btn-w85 zj-center">
-            <zj-button class="back" @click="goParent">返回</zj-button>
-          </el-row>
-        </el-row>
-      </zj-workflow>
       <!--   融资产品类型：0-订单融资 1-入库融资 2-凭证融资   -->
       <zj-content-footer v-if="form.transInfo.financingProductType === '0'">
         <zj-button class="back" @click="goParent">返回</zj-button>
@@ -153,6 +155,11 @@ export default {
   props: {
     ebillCode: String,
     id : String,
+  },
+  computed: {
+    productName() {
+      return this.$store.getters['user/productName']
+    }
   },
   components: {
     tradeContract,
@@ -183,6 +190,7 @@ export default {
         phasedAgreementList: [],
         agreementInfoList: [],
         blContractInfo: {},
+        ddTotalAmt:'',
       },
       tabs:'tradeContract',
       dictionary:{},

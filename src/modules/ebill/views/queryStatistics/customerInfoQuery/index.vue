@@ -128,7 +128,7 @@
               field="finalAuditDatetime"
               title="创建日期"
               width="167px"
-              :formatter="date"
+              :formatter="obj=>formatDate( obj.cellValue )"
             >
               <!-- <template v-slot="{ row }">
                 {{ date(row.finalAuditDatetimeStart)

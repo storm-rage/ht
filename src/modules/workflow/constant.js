@@ -14,16 +14,84 @@ export const myItemsPath = {
 
   // 企业管理
   QYGL: {
-    // 审核路由
-    auditPath: 'entApplyAudit',
-    // 详情路由
-    detailPath: 'entApplyAuditDetail'
+    '1': {
+      // 初审状态（apply）
+      'E001': {
+        auditPath: 'entApplyAuditAdd',
+        detailPath: 'entApplyAuditAddDetail'
+      },
+      // 复审状态
+      'E002': {
+        auditPath: 'entApplyAuditAdd',
+        detailPath: 'entApplyAuditAddDetail'
+      },
+      // 复核驳回状态
+      'E005': {
+        auditPath: 'entApplyRejectAdd',
+        detailPath: 'entApplyAuditAddDetail'
+      },
+      // 已办和办结状态
+      doneDetailPath: 'entApplyAuditAddDetail',
+    },
+    '2': {
+      // 初审状态（apply）
+      'E001': {
+        auditPath: 'entApplyAuditEdit',
+        detailPath: 'entApplyAuditEditDetail'
+      },
+      // 复审状态
+      'E002': {
+        auditPath: 'entApplyAuditEdit',
+        detailPath: 'entApplyAuditEditDetail'
+      },
+      // 复核驳回状态
+      'E005': {
+        auditPath: 'entApplyRejectEdit',
+        detailPath: 'entApplyAuditEditDetail'
+      },
+      // 已办和办结状态
+      doneDetailPath: 'entApplyAuditEditDetail',
+    },
   },
 
   // 用户管理
   YHGL: {
-    auditPath: 'maintainUserAudit',
-    detailPath: 'maintainUserDetail'
+    '1': {
+      // 初审状态（apply）
+      'U001': {
+        auditPath: 'maintainUserAudit',
+        detailPath: 'maintainUserDetail'
+      },
+      // 复审状态
+      'U002': {
+        auditPath: 'maintainUserAudit',
+        detailPath: 'maintainUserDetail'
+      },
+      // 复核驳回状态
+      'U006': {
+        auditPath: 'maintainUserReject',
+        detailPath: 'maintainUserDetail'
+      },
+    },
+    '2': {
+      // 初审状态（apply）
+      'U001': {
+        auditPath: 'maintainUserAudit',
+        detailPath: 'maintainUserDetail'
+      },
+      // 复审状态
+      'U002': {
+        auditPath: 'maintainUserAudit',
+        detailPath: 'maintainUserDetail'
+      },
+      // 复核驳回状态
+      'U006': {
+        auditPath: 'maintainUserReject',
+        detailPath: 'maintainUserDetail'
+      },
+    },
+    // 已办和办结状态
+    doneDetailPath: 'maintainUserDetail',
   },
 
   // 产品开通申请
@@ -51,7 +119,7 @@ export const myItemsPath = {
   },
   // 业务管理
   HTXQ: {
-// 业务管理-合同续签
+    // 业务管理-合同续签
     HTXQ: {
       // 复审状态
       'C003': {
@@ -81,8 +149,8 @@ export const myItemsPath = {
       // 已办和办结状态
       doneDetailPath: 'tradeChangeReviewAuditDetail',
     },
-    // 业务管理-额度管理
-    EDGL: {
+    // 业务管理-额度续签
+    EDXQ: {
       // 复审状态
       'C003': {
         auditPath: 'quotaChangeReviewAudit',
@@ -95,7 +163,22 @@ export const myItemsPath = {
       },
       // 已办和办结状态
       doneDetailPath: 'quotaChangeReviewAuditDetail',
-    }
+    },
+    // 业务管理-额度变更
+    EDBG: {
+      // 复审状态
+      'C003': {
+        auditPath: 'quotaChangeReviewAudit',
+        detailPath: 'quotaChangeReviewAuditDetail'
+      },
+      // 复核驳回状态
+      'C006': {
+        auditPath: 'quotaChangeBackAudit',
+        detailPath: 'quotaChangeBackAuditDetail'
+      },
+      // 已办和办结状态
+      doneDetailPath: 'quotaChangeReviewAuditDetail',
+    },
   },
   // 确认收款
   QRSK: {
@@ -140,16 +223,18 @@ export const myItemsPath = {
 
   // 阶段性协议维护
   JDXXY: {
-    auditPath: 'multistageAgreementMaintain',
-    detailPath: 'multistageAgreementDetailToDo'
+    auditPath: 'multistageAgreementMaintainAudit',
+    detailPath: 'multistageAgreementDetailToDo',
+    // 已办和办结状态
+    doneDetailPath: 'multistageAgreementDetailToDo',
   },
 
   // 融资审核
-  RZSHGL:{
+  RZSHGL: {
     auditPath: 'financingReviewToDoReview',
     detailPath: 'financingReviewToDoDetail',
     // 已办和办结状态
-    doneDetailPath: '',
+    doneDetailPath: 'financingReviewToDoDetail',
   },
 
   // 融资复审
@@ -157,7 +242,7 @@ export const myItemsPath = {
     auditPath: 'financingReviewToDoReview',
     detailPath: 'financingReviewToDoDetail',
     // 已办和办结状态
-    doneDetailPath: '',
+    doneDetailPath: 'financingReviewToDoDetail',
   },
 
   // 清算申请
@@ -226,7 +311,8 @@ export const myItemsPath = {
 
   // 贸易关系管理
   MYGXGL: {
-    auditPath: '',
-    detailPath: ''
+    auditPath: 'tradeRelationsAudit',
+    detailPath: 'tradeRelationsDetail',
+    doneDetailPath: 'tradeRelationsDetail',
   }
 }

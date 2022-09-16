@@ -1,10 +1,10 @@
 <template>
   <zj-content-block>
-    <zj-top-header title="电子债权凭证签收"/>
+    <zj-top-header :title="`${productName}签收`"/>
     <zj-content>
       <!--凭证详情-->
       <div>
-        <span>融单编号：{{ detailData.ebillCode }}</span>
+        <span>{{productName}}编号：{{ detailData.ebillCode }}</span>
 <!--        <span>业务方：{{ detailData.payEntName }}</span>-->
       </div>
       <table
@@ -39,7 +39,7 @@
           <td colspan="3">{{ detailData.receiptBankNo }}</td>
         </tr>
         <tr>
-          <td rowspan="2">融单</td>
+          <td rowspan="2">{{productName}}</td>
           <td colspan="2">金额（大写）</td>
           <td colspan="9">
           <span style="float: left">{{ detailData.ebillAmtUpper }}</span>
@@ -48,13 +48,13 @@
         </tr>
         <tr>
           <td colspan="2">开立日期</td>
-          <td colspan="3">{{ detailData.openDate }}</td>
+          <td colspan="3">{{ detailData.openDate?date(detailData.openDate):'' }}</td>
           <td colspan="3">到期日期</td>
-          <td colspan="3">{{ detailData.expireDate }}</td>
+          <td colspan="3">{{ detailData.expireDate?date(detailData.expireDate):'' }}</td>
         </tr>
         <tr>
           <td colspan="12">我司同意按照
-            <zj-button type="text" @click="attaDownload(detailData.kdProtocolFileId)">《{{ detailData.kdProtocolName }}》</zj-button>
+            <zj-button type="text" @click="attaDownload()">《{{ detailData.kdProtocolName }}》</zj-button>
             的约定，到期无条件向融单最终持有人兑付融单项下全部应付款项。</td>
         </tr>
         <tr>
@@ -113,6 +113,11 @@ import view from "@pubComponent/preview/view";
 export default {
   name:'billSignForDetail',
   mixins:[view],
+  computed: {
+    productName() {
+      return this.$store.getters['user/productName']
+    }
+  },
   data() {
     return {
       zjControl: {
@@ -120,7 +125,6 @@ export default {
         passBillSign:this.$api.billLssueBillSignFor.passBillSign,//融单签收-审核通过
         getOneBillSignAgreement:this.$api.billLssueBillSignFor.getOneBillSignAgreement,//融单签收-查询融单签收协议信息-单个协议查看
 
-        downloadFile:this.$api.baseCommon.downloadFile,
       },
       detailData: {},
       protocols: [],//协议列表
@@ -129,6 +133,21 @@ export default {
       dialogHtml: '',
       idChecked: false,//是否验证云证书
     };
+  },
+  watch: {
+    idChecked() {
+      if(this.idChecked) {
+        let params = {
+          id: this.row.id,
+          protocols: this.protocols,
+          state: this.row.state,
+        }
+        this.zjControl.passBillSign(params).then(res => {
+          this.$message.success(res.msg)
+          this.goParent()
+        })
+      }
+    }
   },
   methods: {
     //收单通知书查看
@@ -142,8 +161,11 @@ export default {
         this.dialogShow = true
       })
     },
-    attaDownload(fileId) {
-      this.zjControl.downloadFile(fileId)
+    attaDownload() {
+      this.$api.baseCommon.downloadFile({
+        fileId: this.detailData.kdProtocolFileId,
+        fileName: this.detailData.kdProtocolTypeName,
+      })
     },
     confirmSignFor() {
       if(!this.agreeCheck) {
@@ -152,16 +174,6 @@ export default {
       // 调用云证书验证
       this.$refs.zjCertuficte.open()
 
-      if(this.idChecked) {
-        let params = {
-          id: this.row.id,
-          protocols: this.protocols,
-          state: this.row.state,
-        }
-        this.zjControl.passBillSign(params).then(res => {
-          this.$message.success(res.msg)
-        })
-      }
     },
     getBillSignBillInfoDetail() {
       let params = {

@@ -1,23 +1,25 @@
 <template>
   <zj-content-block>
-    <zj-content>
       <!--贸易背景-->
       <zj-content-block>
         <zj-header title="凭证信息"/>
+        <zj-content>
         <zj-table ref="searchTable" class="zj-search-table" :dataList="dataForm.billInfo" :pager="false"
         >
           <zj-table-column field="ebillCode" title="凭证编号" />
-          <zj-table-column field="writerName" title="凭证签发人" />
-          <zj-table-column field="holderName" title="原始持有人" />
-          <zj-table-column field="holderDate" title="签发日期" :formatter="date"/>
+          <zj-table-column field="payEntName" title="凭证签发人" />
+          <zj-table-column field="sourceHolderName" title="原始持有人" />
+          <zj-table-column field="openDate" title="签发日期" :formatter="date"/>
           <zj-table-column field="ebillAmt" title="凭证金额" :formatter="money"/>
           <zj-table-column field="availableAmt" title="剩余可用金额" :formatter="money"/>
           <zj-table-column field="expireDate" title="到期日期" :formatter="date"/>
           <zj-table-column field="state" title="凭证状态" :formatter="obj=>typeMap(dictionary.state,obj.cellValue)"/>
         </zj-table>
+        </zj-content>
       </zj-content-block>
       <zj-content-block>
         <zj-header :title="`对账单信息-${dataForm.billInfo?dataForm.billInfo[0].ebillCode:''}`"/>
+        <zj-content>
         <zj-table ref="searchTable" :dataList="dataForm.accountBillInner" :pager="false"
         >
           <zj-table-column field="acctBillCode" title="对账单编号"/>
@@ -31,9 +33,11 @@
           <zj-table-column field="checkBillAmt" title="对账单金额" :formatter="money"/>
           <zj-table-column field="billSource" title="对账单来源" />
         </zj-table>
+        </zj-content>
       </zj-content-block>
       <zj-content-block>
         <zj-header :title="`对账单明细-${dataForm.accountBillInner?dataForm.accountBillInner[0].acctBillCode:''}`"/>
+        <zj-content>
         <zj-table ref="searchTable" :dataList="dataForm.accountBillDetailInner">
           <zj-table-column field="poNo" title="po单号"/>
           <zj-table-column field="dnNo" title="dn单号"/>
@@ -53,12 +57,14 @@
           <zj-table-column field="taxAmount" title="税额" :formatter="money"/>
           <zj-table-column field="totalAmount" title="总计金额" :formatter="money"/>
         </zj-table>
+        </zj-content>
       </zj-content-block>
       <zj-content-block>
         <zj-header :title="`贸易背景资料-${dataForm.accountBillInner?dataForm.accountBillInner[0].acctBillCode:''}`"/>
+        <zj-content>
         <el-tabs v-model="tabs" class="zj-tabs-card">
           <el-tab-pane label="贸易合同信息" name="tradeContract" >
-            <trade-contract :zjControl="zjControl" :form="dataForm.contractInfo"/>
+            <trade-contract :zjControl="zjControl" :form="dataForm.contractList"/>
           </el-tab-pane>
           <el-tab-pane label="发票信息" name="invoice" >
             <invoice :invoiceList="dataForm.invoices"/>
@@ -67,8 +73,8 @@
             <attaList :attaList="dataForm.otherAttachs"/>
           </el-tab-pane>
         </el-tabs>
+        </zj-content>
       </zj-content-block>
-    </zj-content>
   </zj-content-block>
 </template>
 

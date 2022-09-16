@@ -56,7 +56,7 @@
           <br>
             <zj-popover trigger="hover" placement="top" v-show="applyStatus==Y001">
             <p>&nbsp;</p>
-              <p>拒绝时间:{{row.rejectDatetime}}</p> 
+              <p>拒绝时间:{{date(row.rejectDatetime)}}</p> 
               <p>&nbsp;</p>
                <p>拒绝原因：{{row.rejectReason}}</p>
             </zj-popover>

@@ -16,7 +16,7 @@
             </el-form-item>
           </el-col>
           <el-col :span="8">
-            <el-form-item label="待清算凭证金额总计：">
+            <el-form-item :label="`待清算${productName}金额总计：`">
               {{money(baseInfo.totalEbillAmt)}}
             </el-form-item>
           </el-col>
@@ -54,7 +54,7 @@
         <zj-table ref="billTable"
                   :pager="false"
                   :dataList="billList" >
-          <zj-table-column field="rootCode" title="原始凭证编号"/>
+          <zj-table-column field="rootCode" :title="`原始${productName}编号`"/>
           <zj-table-column field="repaymentOrderNo" title="收款单号"/>
           <zj-table-column
             field="capitalSerialno"
@@ -62,14 +62,14 @@
           />
           <zj-table-column
             field="ebillCode"
-            title="凭证编号"
+            :title="`${productName}编号`"
           />
           <zj-table-column field="payEntName" title="签发人"/>
           <zj-table-column field="openDate" title="签发日期" />
           <zj-table-column field="receiptEntName" title="原始持有人"/>
           <zj-table-column field="holderName" title="当前持有人"/>
-          <zj-table-column field="ebillAmt" title="凭证金额" :formatter="money"/>
-          <zj-table-column field="expireDate" title="凭证到期日"/>
+          <zj-table-column field="ebillAmt" :title="`${productName}金额`" :formatter="money"/>
+          <zj-table-column field="expireDate" :title="`${productName}到期日`"/>
           <zj-table-column field="actualExpireDate" title="凭证实际到期日"/>
           <zj-table-column field="payAmt" title="最终付款金额" :formatter="money"/>
         </zj-table>
@@ -94,6 +94,11 @@ export default {
       default:() => {
         return [];
       }
+    }
+  },
+  computed: {
+    productName () {
+      return this.$store.getters['user/productName']
     }
   }
 }

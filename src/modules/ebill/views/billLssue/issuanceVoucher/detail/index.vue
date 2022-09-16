@@ -1,5 +1,15 @@
 <template>
   <zj-content-container>
+    <!-- 底部工作流状态 -->
+    <zj-workflow v-model="workflow" :list="workflowList">
+      <!-- 审核时 -->
+      <el-row slot="right">
+        <el-row class="btn-w85 zj-center">
+          <zj-button class="back" @click="goParent">返回</zj-button>
+        </el-row>
+      </el-row>
+    </zj-workflow>
+
     <!--  电子债权凭证详情  -->
     <zj-top-header :title="titleInfo"></zj-top-header>
     <zj-content-block v-if="workflow === 'pzxx'">
@@ -14,16 +24,6 @@
       <!--    流转轨迹    -->
       <locus :dataTraceTree="form.billTraceTree" />
     </zj-content-block>
-
-    <!-- 底部工作流状态 -->
-    <zj-workflow v-model="workflow" :list="workflowList">
-      <!-- 审核时 -->
-      <el-row slot="right">
-        <el-row class="btn-w85 zj-center">
-          <zj-button class="back" @click="goParent">返回</zj-button>
-        </el-row>
-      </el-row>
-    </zj-workflow>
   </zj-content-container>
 </template>
 
@@ -111,18 +111,4 @@ export default {
 </script>
 
 <style scoped lang="less">
-/deep/#ZjWorkflow {
-  .workflow-top {
-    .el-row {
-      padding: 5px 0 0;
-      text-align: center;
-    }
-  }
-  .workflow-bottom {
-    .right {
-      width: calc(50% - 100px);
-      text-align: center;
-    }
-  }
-}
 </style>

@@ -1,25 +1,25 @@
 <template>
     <zj-content-container>
       <!--  入库融资申请/凭证融资申请  -->
-      <zj-content>
         <zj-content-block>
-          <div class="quota-manage">
-            剩余可用额度：<span>{{form.surplusQuota}}</span>
-            总额度：<span>{{form.totalQuota}}</span>
+          <div class="quota-manage" v-if="form.financingFlag === '1'">
+            剩余可用额度：<span>{{form.availableCreditAmount}}</span>
+            总额度：<span>{{form.totalCreditAmount}}</span>
           </div>
-          <zj-top-header :title="`${titleInfo}申请`"/>
+          <zj-top-header :title="`${titleInfo?titleInfo:''}申请`"/>
+          <zj-content>
           <el-form :model="form" ref="form" :rules="rules" label-width="200px" class="zj-m-t-20">
             <el-row class="hd-row">
               <el-form-item label="融资企业：">{{form.sellerName}}</el-form-item>
             </el-row>
-            <el-row>
-              <el-col :span="12">
+            <el-row v-if="!form.financingFlag != '2'">
+              <el-col :span="12" v-if="!form.financingFlag != '2'">
                 <el-form-item label="融资合同编号：">{{form.contractNo}}</el-form-item>
               </el-col>
-              <el-col :span="12">
+              <el-col :span="12" v-if="!form.financingFlag != '2'">
                 <el-form-item label="融资合同期限：">
                   {{form.contractStartDate?date(form.contractStartDate):''}}
-                  {{form.contractEndDate?`至${date(form.contractEndDate)}`:''}}
+                  {{form.contractEndDate?`至 ${date(form.contractEndDate)}`:''}}
                 </el-form-item>
               </el-col>
             </el-row>
@@ -57,13 +57,13 @@
             <el-row>
               <el-col :span="12">
                 <el-form-item label="预计融资期限：">
-                  {{form.applyDateTime}}
-                  {{form.expireDate?`至${form.expireDate}`:''}}
-                  {{form.estimateDays?`共${form.estimateDays}天`:''}}
+                  {{form.applyDatetime?date(form.applyDatetime):''}}
+                  {{form.expireDate?`至 ${date(form.expireDate)}`:''}}
+                  {{form.estimateDays?` 共${form.estimateDays}天`:''}}
                 </el-form-item>
               </el-col>
               <el-col :span="12">
-                <el-form-item label="融资月利率：">{{form.rdFinancingMonthRate}}</el-form-item>
+                <el-form-item label="融资月利率：">{{form.rdFinancingMonthRate?`${form.rdFinancingMonthRate}%`:''}}</el-form-item>
               </el-col>
             </el-row>
             <el-row>
@@ -78,30 +78,40 @@
               </el-col>
             </el-row>
           </el-form>
+          </zj-content>
         </zj-content-block>
         <zj-content-block>
+          <zj-content>
           <zj-table ref="searchTable" class="zj-search-table"
                     :dataList="form.ebBillModelList"
                     :pager="false"
           >
-            <zj-table-column field="ebillCode" title="海e单编号" />
-            <zj-table-column field="rootCode" title="原始海e单编号" />
+            <zj-table-column field="ebillCode" :title="`${productName}编号`" />
+            <zj-table-column field="rootCode" :title="`原始${productName}编号`" />
             <zj-table-column field="writerName" title="开单人" />
-            <zj-table-column field="transferName" title="转让企业" />
-            <zj-table-column field="ebillAmt" title="海e单金额" :formatter="money"/>
-            <zj-table-column field="voucherAcc" title="剩余可用金额" :formatter="money"/>
-            <zj-table-column field="holderDate" title="海e单持有日期" :formatter="date"/>
-            <zj-table-column field="expireDate" title="海e单到期日" :formatter="date"/>
+            <zj-table-column field="transferName" title="转让企业" >
+              <template v-slot="{row}">
+                {{row.transferName?row.transferName:'-'}}
+              </template>
+            </zj-table-column>
+            <zj-table-column field="ebillAmt" :title="`${productName}金额`" :formatter="money"/>
+            <zj-table-column field="availableAmt" title="剩余可用金额" :formatter="money"/>
+            <zj-table-column field="holderDate" :title="`${productName}持有日期`" :formatter="date"/>
+            <zj-table-column field="expireDate" :title="`${productName}到期日`" :formatter="date"/>
           </zj-table>
           <el-row class="slotRows zj-m-l-10 zj-m-t-10" >
-            凭证金额合计：{{form.totalAmt?moneyNoSynbol(form.totalAmt):''}}
+            {{productName}}金额合计：{{form.totalAmt?moneyNoSynbol(form.totalAmt):''}}
           </el-row>
+          </zj-content>
         </zj-content-block>
         <zj-content-block>
           <zj-header title="融资协议"/>
+          <zj-content>
           <el-row class="button-row">
-            <zj-button type="text" @click="downloadAgreement('RKRZXY')" v-if="form.financingFlag === '1'">《入库融资协议》</zj-button>
-            <zj-button type="text" @click="downloadAgreement('PZRZXY')" v-if="form.financingFlag === '2'">《凭证融资协议》</zj-button>
+            <zj-button type="text" @click="downloadAgreement('RKRZXY')" v-if="form.financingFlag === '1'">
+              《 {{typeMap(dictionary.agreementTypes,'RKRZXY')}} 》</zj-button>
+            <zj-button type="text" @click="downloadAgreement('PZRZXY')" v-if="form.financingFlag === '2'">
+              《 {{typeMap(dictionary.agreementTypes,'PZRZXY')}} 》</zj-button>
           </el-row>
           <div class="explain-text zj-m-l-10 zj-m-t-10">
             <div>注：</div>
@@ -110,6 +120,7 @@
               <li class="explain-item">剩余可用额度=额度总额-实际已用额度-在途使用额度。</li>
             </ol>
           </div>
+          </zj-content>
         </zj-content-block>
         <zj-content-block v-if="form.isGysHtEnterprise === '1'">
           <zj-header title="贸易背景">
@@ -118,12 +129,12 @@
             </template>
           </zj-header>
           <!--    贸易背景      -->
+          <zj-content>
           <el-row>
-            <div class="zj-f-r zj-m-r-10">
+            <div class="zj-f-r zj-m-b-10">
               <zj-button class="append" icon="el-icon-circle-plus-outline" @click="choiceInvoiceItem">选择发票</zj-button>
             </div>
           </el-row>
-          <zj-content-block>
             <zj-table ref="invoiceItemListsTable" class="zj-search-table"
                       :dataList="form.invoiceItemLists"
                       v-if="invoiceShow"
@@ -143,10 +154,9 @@
               </span>
             </zj-table>
 
-          </zj-content-block>
+          </zj-content>
 
         </zj-content-block>
-      </zj-content>
 
       <zj-content-footer>
         <zj-button class="back" @click="goParent">上一步</zj-button>
@@ -182,6 +192,9 @@ export default {
       }
       return res
     },
+    productName() {
+      return this.$store.getters['user/productName']
+    }
   },
   data() {
     return {
@@ -267,7 +280,7 @@ export default {
       this.$refs.invoiceItemListsTable.iRefresh()
     },
     submit(){
-      if(this.form.isGysHtEnterprise === '1' && this.form.tranAmt > this.ebillAmtTotal) {
+      if(this.form.isGysHtEnterprise === '1' && Number(this.form.tranAmt) > Number(this.ebillAmtTotal)) {
         return this.$message.error('本次融资发票金额不足！')
       }
       let params = {
@@ -301,6 +314,7 @@ export default {
   line-height:40px;
   text-align: right;
   margin-bottom: 20px;
+  padding-right: 20px;
   color: #e6a23c;
   background-color: #fdf6ec;
 }

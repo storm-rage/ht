@@ -45,6 +45,10 @@ const entInfoManage = {
   getEbBusinessParamLog: (params) => {
     return request.get('/sys-enterprise/get-eb-business-param-log', {params})
   },
+   //企业信息管理-企业信息管理-娅米账号/业务系统账号校验(获取海天员工信息)
+   getEmployeeInfo: (params) => {
+    return request.get('/sys-enterprise/get-ht-employee-info', {params})
+  },
 }
 
 export default entInfoManage

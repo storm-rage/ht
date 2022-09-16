@@ -1036,6 +1036,436 @@ function expire5(item,that) {
                     </div>`
 }
 
+
+// 海天供应链平台
+// 融单开立凭证
+function hekl(item,that) {
+  let imgs = '<div style="display: inline-block">'
+  if(item.sealPngList && item.sealPngList.length){
+    item.sealPngList.map((subItem, key) => {
+      imgs += '<img src=' + subItem + '/>'
+      if (key === item.sealPngList.length-1) {
+        imgs += '</div>'
+      }
+    })
+  }else{
+    imgs = ''
+  }
+  return `<div class="fcLendingVoucher-viewVoucher-box " style="width: 750px;">
+                      <table cellspacing="0" cellpadding="0" style="width: 100%;">
+                          <tr style="width: 100%">
+                              <td colspan="2" align="center" style="font-weight:bold;">${that.$i18n.messages[that.$i18n.locale].lang.financingName}开立凭据</td>
+                          </tr>
+                          <tr style="width: 100%">
+                              <td colspan="2" style="text-align: right;width: 100%">打印日期：${that.date(item.printDate)}</td>
+                          </tr>
+                          <tr style="width: 100%">
+                              <td style="text-align: left;width: 50%">单据编号：${item.voucherNo}</td>
+                              <td style="text-align: right;width: 50%">凭证日期：${that.date(item.voucherDate)}</td>
+                          </tr>
+                      </table>
+
+                      <table class="openTable" border="1" cellpadding="0" cellspacing="0" style="width: 100%;table-layout:fixed;text-align: center;word-wrap: break-word;word-break: break-all;">
+                          <tr>
+                              <td colspan="1">${that.$i18n.messages[that.$i18n.locale].lang.financingName}编号</td>
+                              <td colspan="5">${item.ebillCode}</td>
+                          </tr>
+                          <tr>
+                            <td colspan="1">${that.$i18n.messages[that.$i18n.locale].lang.financingName}开单日期</td>
+                            <td colspan="2">${that.date(item.openDate)}</td>
+                            <td colspan="1">${that.$i18n.messages[that.$i18n.locale].lang.financingName}到期日</td>
+                            <td colspan="2">${that.date(item.expireDate)}</td>
+                          </tr>
+                          <tr>
+                              <td rowspan="4" class="ta-c">开单人</td>
+                              <td rowspan="2">企业名称</td>
+                              <td rowspan="2">${item.payEntName}</td>
+                              <td rowspan="4" class="ta-c">收单人</td>
+                              <td>企业名称</td>
+                              <td>${item.receiptEntName}</td>
+                          </tr>
+                          <tr>
+                            <td>银行账户户名</td>
+                            <td>${item.receiptBankAccname}</td>
+                          </tr>
+                          <tr>
+                            <td rowspan="2">统一社会信信用代码</td>
+                            <td rowspan="2">${item.payBizLicence}</td>
+                            <td>银行账号</td>
+                            <td>${item.receiptBankAccno || ''}</td>
+                          </tr>
+                          <tr>
+                            <td>开户行</td>
+                            <td>${item.receiptBankName || ''}</td>
+                          </tr>
+                          <tr>
+                              <td>${that.$i18n.messages[that.$i18n.locale].lang.financingName}金额</td>
+                              <td>人民币（大写）</td>
+                              <td>${item.ebillAmtUpper || ''}</td>
+                              <td>（小写）</td>
+                              <td colspan="2">
+                                ¥${item.ebillAmt || '0.00'}元
+                              </td>
+                          </tr>
+                          <tr>
+                              <td>开单说明</td>
+                              <td colspan="5" style="word-wrap: break-word;word-break: break-all;">${item.remark || ''}</td>
+                          </tr>
+                      </table>
+                      <div>
+                            <div style="display:inline-block;width: 25%">经办人：${item.handler || ''}</div>
+                            <div style="display:inline-block;width: 25%">复核人：${item.reviewer || ''}</div>
+                      </div>
+                    </div>`
+}
+
+// 订单融资凭据
+function ddrz(item,that) {
+  let imgs = '<div style="display: inline-block">'
+  if(item.sealPngList && item.sealPngList.length){
+    item.sealPngList.map((subItem, key) => {
+      imgs += '<img src=' + subItem + '/>'
+      if (key === item.sealPngList.length-1) {
+        imgs += '</div>'
+      }
+    })
+  }else{
+    imgs = ''
+  }
+  return `<div class="fcLendingVoucher-viewVoucher-box " style="width: 750px;">
+                        <table cellspacing="0" cellpadding="0" style="width: 100%;">
+                            <tr style="width: 100%">
+                                <td colspan="2" align="center" style="font-weight:bold;">订单保理融资凭据</td>
+                            </tr>
+                            <tr style="width: 100%">
+                                <td colspan="2" style="text-align: right;width: 100%">打印日期：${that.date(item.printDate)}</td>
+                            </tr>
+                            <tr style="width: 100%">
+                                <td style="text-align: left;width: 50%">凭据编号：${item.voucherNo}</td>
+                                <td style="text-align: right;width: 50%">凭证日期：${that.date(item.voucherDate)}</td>
+                            </tr>
+                        </table>
+
+                        <table class="openTable" border="1" cellpadding="0" cellspacing="0" style="width: 100%;table-layout:fixed;text-align: center;word-wrap: break-word;word-break: break-all;">
+                            <tr>
+                                <td>融资申请人</td>
+                                <td colspan="5">${item.fromEntName}</td>
+                            </tr>
+                            <tr>
+                                <td rowspan="4" class="ta-c">受理人</td>
+                                <td colspan="2" rowspan="4">${item.toEntName}</td>
+                                <td rowspan="4" class="ta-c">收款人</td>
+                                <td>企业名称</td>
+                                <td>${item.receiptEntName}</td>
+                            </tr>
+                            <tr>
+                                <td>银行账户户名</td>
+                                <td>${item.receiptBankAccname}</td>
+                            </tr>
+                            <tr>
+                                <td>银行账号</td>
+                                <td>${item.receiptBankAccno}</td>
+                            </tr>
+                            <tr>
+                                <td>开户行</td>
+                                <td>${item.receiptBankName}</td>
+                            </tr>
+                            <tr>
+                              <td>融资总金额</td>
+                              <td>人民币（大写）</td>
+                              <td>${item.tranAmtUpper}</td>
+                              <td>（小写）</td>
+                              <td colspan="2">¥${item.tranAmt}</td>
+                            </tr>
+                            <tr>
+                              <td colspan="1">放款日期</td>
+                              <td colspan="2">${that.date(item.openDate)}</td>
+                              <td colspan="1">融资月利率</td>
+                              <td colspan="2">${item.interestRate || '0.00'}%</td>
+                            </tr>
+                            <tr>
+                              <td colspan="1">未偿还本金</td>
+                              <td colspan="2">¥${item.unrepaymentPrincipalAmt || '0.00'}</td>
+                              <td colspan="1">本次还款总额</td>
+                              <td colspan="2">¥${item.repaymentAmt || '0.00'}</td>
+                            </tr>
+                            <tr>
+                              <td colspan="1">本次还款日期</td>
+                              <td colspan="2">${that.date(item.repayDate)}</td>
+                              <td colspan="1">计息天数</td>
+                              <td colspan="2">${item.interestDays || '0'}</td>
+                            </tr>
+                            <tr>
+                              <td colspan="1">本次偿还息费</td>
+                              <td colspan="2">¥${item.repaymentInterestAmt || '0.00'}</td>
+                              <td colspan="1">本次偿还本金</td>
+                              <td colspan="2">¥${item.repaymentPrincipalAmt || '0.00'}</td>
+                            </tr>
+                            <tr>
+                                <td colspan="1">备注</td>
+                                <td colspan="5">${item.remark || ''}</td>
+                            </tr>
+                        </table>
+                      </div>`
+}
+
+// 海e单融资凭据
+function herz(item,that) {
+  let imgs = '<div style="display: inline-block">'
+  if(item.sealPngList && item.sealPngList.length){
+    item.sealPngList.map((subItem, key) => {
+      imgs += '<img src=' + subItem + '/>'
+      if (key === item.sealPngList.length-1) {
+        imgs += '</div>'
+      }
+    })
+  }else{
+    imgs = ''
+  }
+  return `<div class="fcLendingVoucher-viewVoucher-box " style="width: 750px;">
+                        <table cellspacing="0" cellpadding="0" style="width: 100%;">
+                            <tr style="width: 100%">
+                                <td colspan="2" align="center" style="font-weight:bold;">${that.$i18n.messages[that.$i18n.locale].lang.financingName}融资凭据</td>
+                            </tr>
+                            <tr style="width: 100%">
+                                <td colspan="2" style="text-align: right;width: 100%">打印日期：${that.date(item.printDate)}</td>
+                            </tr>
+                            <tr style="width: 100%">
+                                <td style="text-align: left;width: 50%">凭据编号：${item.voucherNo}</td>
+                                <td style="text-align: right;width: 50%">凭证日期：${that.date(item.voucherDate)}</td>
+                            </tr>
+                        </table>
+
+                        <table class="openTable" border="1" cellpadding="0" cellspacing="0" style="width: 100%;table-layout:fixed;text-align: center;word-wrap: break-word;word-break: break-all;">
+                            <tr>
+                                <td>融资申请人</td>
+                                <td colspan="5">${item.fromEntName}</td>
+                            </tr>
+                            <tr>
+                                <td rowspan="4" class="ta-c">受理人</td>
+                                <td colspan="2" rowspan="4">${item.toEntName}</td>
+                                <td rowspan="4" class="ta-c">收款人</td>
+                                <td>企业名称</td>
+                                <td>${item.receiptEntName}</td>
+                            </tr>
+                            <tr>
+                                <td>银行账户户名</td>
+                                <td>${item.receiptBankAccname}</td>
+                            </tr>
+                            <tr>
+                                <td>银行账号</td>
+                                <td>${item.receiptBankAccno}</td>
+                            </tr>
+                            <tr>
+                                <td>开户行</td>
+                                <td>${item.receiptBankName}</td>
+                            </tr>
+                            <tr>
+                              <td colspan="1">转让${that.$i18n.messages[that.$i18n.locale].lang.financingName}编号</td>
+                              <td colspan="2">${item.ebBillCode}</td>
+                              <td colspan="1">开单企业</td>
+                              <td colspan="2">${item.buyerEntName}</td>
+                            </tr>
+                            <tr>
+                              <td>${that.$i18n.messages[that.$i18n.locale].lang.financingName}金额</td>
+                              <td>人民币（大写）</td>
+                              <td>${item.heTranAmtUpper}</td>
+                              <td>（小写）</td>
+                              <td colspan="2">¥${item.heTranAmt}</td>
+                            </tr>
+                            <tr>
+                              <td>融资金额</td>
+                              <td>人民币（大写）</td>
+                              <td>${item.tranAmtUpper}</td>
+                              <td>（小写）</td>
+                              <td colspan="2">¥${item.tranAmt}</td>
+                            </tr>
+                            <tr>
+                              <td colspan="1">放款日期</td>
+                              <td colspan="2">${that.date(item.openDate)}</td>
+                              <td colspan="1">${that.$i18n.messages[that.$i18n.locale].lang.financingName}到期日</td>
+                              <td colspan="2">${that.date(item.expireDate)}</td>
+                            </tr>
+                            <tr>
+                              <td colspan="1">实际到期日</td>
+                              <td colspan="2">${that.date(item.actExpireDate)}</td>
+                              <td colspan="1">息费</td>
+                              <td colspan="2">¥${item.interestAmt || '0.00'}</td>
+                            </tr>
+                            <tr>
+                              <td colspan="1">计息天数</td>
+                              <td colspan="2">${item.interestDays || '0'}</td>
+                              <td colspan="1">融资月利率</td>
+                              <td colspan="2">${item.interestRate || '0.00'}%</td>
+                            </tr>
+                            <tr>
+                                <td colspan="1">备注</td>
+                                <td colspan="5">${item.remark || ''}</td>
+                            </tr>
+                        </table>
+                      </div>`
+}
+
+// 海e单到期凭据
+function hedq(item,that) {
+  let imgs = '<div style="display: inline-block">'
+  if(item.sealPngList && item.sealPngList.length){
+    item.sealPngList.map((subItem, key) => {
+      imgs += '<img src=' + subItem + '/>'
+      if (key === item.sealPngList.length-1) {
+        imgs += '</div>'
+      }
+    })
+  }else{
+    imgs = ''
+  }
+  return `<div class="fcLendingVoucher-viewVoucher-box " style="width: 750px;">
+                      <table cellspacing="0" cellpadding="0" style="width: 100%;">
+                          <tr style="width: 100%">
+                              <td colspan="2" align="center" style="font-weight:bold;">${that.$i18n.messages[that.$i18n.locale].lang.financingName}到期凭据</td>
+                          </tr>
+                          <tr style="width: 100%">
+                              <td colspan="2" style="text-align: right;width: 100%">打印日期：${that.date(item.printDate)}</td>
+                          </tr>
+                          <tr style="width: 100%">
+                              <td style="text-align: left;width: 50%">凭据编号：${item.voucherNo}</td>
+                              <td style="text-align: right;width: 50%">凭证日期：${that.date(item.voucherDate)}</td>
+                          </tr>
+                      </table>
+
+                      <table class="openTable" border="1" cellpadding="0" cellspacing="0" style="width: 100%;table-layout:fixed;text-align: center;word-wrap: break-word;word-break: break-all;">
+                          <tr>
+                              <td colspan="1">${that.$i18n.messages[that.$i18n.locale].lang.financingName}编号</td>
+                              <td colspan="2">${item.ebillCode}</td>
+                              <td colspan="1">${that.$i18n.messages[that.$i18n.locale].lang.financingName}金额</td>
+                              <td colspan="2">¥？</td>
+                          </tr>
+                          <tr>
+                            <td colspan="1">${that.$i18n.messages[that.$i18n.locale].lang.financingName}开单日期</td>
+                            <td colspan="2">${that.date(item.openDate)}</td>
+                            <td colspan="1">${that.$i18n.messages[that.$i18n.locale].lang.financingName}到期日</td>
+                            <td colspan="2">${that.date(item.expireDate)}</td>
+                          </tr>
+                          <tr>
+                              <td rowspan="4" class="ta-c">开单人</td>
+                              <td rowspan="2">企业名称</td>
+                              <td rowspan="2">${item.payEntName}</td>
+                              <td rowspan="4" class="ta-c">收单人</td>
+                              <td>企业名称</td>
+                              <td>${item.receiptEntName}</td>
+                          </tr>
+                          <tr>
+                            <td>银行账户名称</td>
+                            <td>${item.receiptBankAccname}</td>
+                          </tr>
+                          <tr>
+                            <td rowspan="2">统一社会信信用代码</td>
+                            <td rowspan="2">${item.payBizLicence}</td>
+                            <td>银行账号</td>
+                            <td>${item.receiptBankAccno || ''}</td>
+                          </tr>
+                          <tr>
+                            <td>开户行</td>
+                            <td>${item.receiptBankName || ''}</td>
+                          </tr>
+                          <tr>
+                              <td>清算${that.$i18n.messages[that.$i18n.locale].lang.financingName}金额</td>
+                              <td>人民币（大写）</td>
+                              <td>${item.ebillAmtUpper || ''}</td>
+                              <td>（小写）</td>
+                              <td colspan="2">
+                                ¥${item.ebillAmt || '0.00'}元
+                              </td>
+                          </tr>
+                          <tr>
+                              <td>实际付款日</td>
+                              <td colspan="2"">？</td>
+                              <td>备注</td>
+                              <td colspan="2" style="word-wrap: break-word;word-break: break-all;">${item.remark || ''}</td>
+                          </tr>
+                      </table>
+                    </div>`
+}
+
+// 海e单作废凭据
+function hezf(item,that) {
+  let imgs = '<div style="display: inline-block">'
+  if(item.sealPngList && item.sealPngList.length){
+    item.sealPngList.map((subItem, key) => {
+      imgs += '<img src=' + subItem + '/>'
+      if (key === item.sealPngList.length-1) {
+        imgs += '</div>'
+      }
+    })
+  }else{
+    imgs = ''
+  }
+  return `<div class="fcLendingVoucher-viewVoucher-box " style="width: 750px;">
+                      <table cellspacing="0" cellpadding="0" style="width: 100%;">
+                          <tr style="width: 100%">
+                              <td colspan="2" align="center" style="font-weight:bold;">${that.$i18n.messages[that.$i18n.locale].lang.financingName}作废凭据</td>
+                          </tr>
+                          <tr style="width: 100%">
+                              <td colspan="2" style="text-align: right;width: 100%">打印日期：${that.date(item.printDate)}</td>
+                          </tr>
+                          <tr style="width: 100%">
+                              <td style="text-align: left;width: 50%">凭据编号：${item.voucherNo}</td>
+                              <td style="text-align: right;width: 50%">凭证日期：${that.date(item.voucherDate)}</td>
+                          </tr>
+                      </table>
+
+                      <table class="openTable" border="1" cellpadding="0" cellspacing="0" style="width: 100%;table-layout:fixed;text-align: center;word-wrap: break-word;word-break: break-all;">
+                          <tr>
+                              <td colspan="1">${that.$i18n.messages[that.$i18n.locale].lang.financingName}编号</td>
+                              <td colspan="5">${item.ebillCode}</td>
+                          </tr>
+                          <tr>
+                              <td rowspan="4" class="ta-c">开单人</td>
+                              <td rowspan="2">企业名称</td>
+                              <td rowspan="2">${item.payEntName}</td>
+                              <td rowspan="4" class="ta-c">收单人</td>
+                              <td>企业名称</td>
+                              <td>${item.receiptEntName}</td>
+                          </tr>
+                          <tr>
+                            <td>银行账户名称</td>
+                            <td>${item.receiptBankAccname}</td>
+                          </tr>
+                          <tr>
+                            <td rowspan="2">统一社会信信用代码</td>
+                            <td rowspan="2">${item.payBizLicence}</td>
+                            <td>银行账号</td>
+                            <td>${item.receiptBankAccno || ''}</td>
+                          </tr>
+                          <tr>
+                            <td>开户行</td>
+                            <td>${item.receiptBankName || ''}</td>
+                          </tr>
+                          <tr>
+                            <td colspan="1">${that.$i18n.messages[that.$i18n.locale].lang.financingName}开单日期</td>
+                            <td colspan="2">${that.date(item.openDate)}</td>
+                            <td colspan="1">${that.$i18n.messages[that.$i18n.locale].lang.financingName}到期日</td>
+                            <td colspan="2">${that.date(item.expireDate)}</td>
+                          </tr>
+                          <tr>
+                              <td>${that.$i18n.messages[that.$i18n.locale].lang.financingName}开单金额</td>
+                              <td>人民币（大写）</td>
+                              <td>${item.ebillAmtUpper || ''}</td>
+                              <td>（小写）</td>
+                              <td colspan="2">
+                                ¥${item.ebillAmt || '0.00'}元
+                              </td>
+                          </tr>
+                          <tr>
+                              <td>作废日期</td>
+                              <td colspan="2"">？</td>
+                              <td>备注</td>
+                              <td colspan="2" style="word-wrap: break-word;word-break: break-all;">${item.remark || ''}</td>
+                          </tr>
+                      </table>
+                    </div>`
+}
+
 export default function (item,vType,that) {
   if(item[vType] === 'KD01'){
     return open(item,that)
@@ -1061,6 +1491,16 @@ export default function (item,vType,that) {
     return expire5(item,that)
   }else if(item[vType] === 'DQ06'){
     return alter(item,that)
+  }else if(item[vType] === 'HEKL'){
+    return hekl(item,that)
+  }else if(item[vType] === 'DDRZ'){
+    return ddrz(item,that)
+  }else if(item[vType] === 'HERZ'){
+    return herz(item,that)
+  }else if(item[vType] === 'HEDQ'){
+    return hedq(item,that)
+  }else if(item[vType] === 'HEZF'){
+    return hezf(item,that)
   }else{
     return '<div>凭证类型错误</div>'
   }

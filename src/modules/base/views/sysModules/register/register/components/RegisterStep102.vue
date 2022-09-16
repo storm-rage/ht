@@ -7,7 +7,7 @@
       <register-progress-bar :active="1" v-else/>
     </div>
     <div class="register-inline">
-      <el-form ref="form" :model="form" :rules="rules" class="register-form" label-width="240px">
+      <el-form ref="form" :model="form" :rules="rules" class="register-form" label-width="280px">
         <zj-top-header title="企业基本信息" direction="left"/>
         <div class="border-underline"></div>
         <el-form-item label="企业名称：" prop="name">
@@ -18,16 +18,25 @@
           <el-input v-model="form.bizLicence" maxLength="25" placeholder="请输入统一社会信用代码" :disabled="true"/>
         </el-form-item>
         <el-form-item label="营业执照注册地址：" prop="address">
-          <el-input v-model="form.address" :maxLength="400"/>
+          <el-input v-model="form.address" :maxLength="400" placeholder="请输入营业执照注册地址"/>
         </el-form-item>
-        <el-form-item label="成立日期：" prop="registerStartDate"> <!-- :clearable="false" -->
-          <zj-date-picker :date.sync="form.registerStartDate" :lessNow="true" :disabled="form.isHtEnterprise == '1'" :format="'yyyy年MM月dd日'"/>
+        <el-form-item label="成立日期：" prop="registerStartDate">
+          <zj-date-picker :date.sync="form.registerStartDate" :lessNow="true" :disabled="form.isHtEnterprise == '1'" :format="'yyyy-MM-dd'" placeholder="请选择成立日期"/>
         </el-form-item>
-        <el-form-item label="注册资本：" prop="registerCapital">
-          <el-input v-model="form.registerCapital" :disabled="form.isHtEnterprise == '1'"/>
-        </el-form-item>
-        <el-form-item label="企业工商有效期：" prop="registerEndDate">
-          <zj-date-picker :date.sync="form.registerEndDate" :overNow="true" :format="'yyyy年MM月dd日'"/>
+        <el-row>
+          <el-form-item label="注册资本：" prop="registerCapital">
+            <zj-number-input formatterMoney v-model="form.registerCapital" placeholder="请输入注册资本" :disabled="form.isHtEnterprise === '1'">
+            </zj-number-input>
+            <span class="zj-m-l-10">元</span>
+          </el-form-item>
+        </el-row>
+        <el-form-item label="企业工商有效期：" required>
+          <el-form-item prop="registerEndDate">
+            <zj-date-picker :date.sync="form.registerEndDate" :overNow="true" :format="'yyyy-MM-dd'" :disabled="form.term" placeholder="请选择企业工商有效期"/>
+          </el-form-item>
+          <el-row>
+            <el-checkbox v-model="form.term" @change="isChecked">长期有效</el-checkbox>
+          </el-row>
         </el-form-item>
         <!-- 企业 -->
         <el-form-item label="企业规模：" prop="scale" class="no-required entType">
@@ -62,13 +71,15 @@
         </el-form-item>
         <el-form-item label="企业联系人姓名：" prop="fastMailName">
           <el-input v-model="form.fastMailName" maxLength="50" placeholder="请输入企业联系人姓名" :disabled="form.isHtEnterprise == '1'"/>
-          <span style="color: #7f7f7f;margin-left: 10px">注：后续平台相关纸质资料将使用该联系人传递。</span>
+          <div class="zj-m-t-10">
+            <zj-content-tip text="注：后续平台相关纸质资料将使用该联系人传递。"/>
+          </div>
         </el-form-item>
         <el-form-item label="企业联系人手机号：" prop="fastMailPhone">
           <el-input v-model="form.fastMailPhone" maxLength="50" placeholder="请输入企业联系人手机号" :disabled="form.isHtEnterprise == '1'"/>
         </el-form-item>
         <el-form-item label="企业联系地址：" class="zj-inline contact-address required">
-          <el-form-item prop="provinceZh">
+          <el-form-item prop="provinceZh" class="zj-inline">
             <el-select v-model="form.provinceZh" placeholder="请选择" class="register102-legalCertType"
                        :popper-append-to-body="false"
             >
@@ -81,11 +92,11 @@
                 </el-option>
             </el-select>
           </el-form-item>
-          <span class="zj-inline zj-center zj-w-20">省</span>
-          <el-form-item prop="cityZh">
+          <div class="zj-inline zj-center zj-w-20 zj-m-l-10 zj-m-r-10">省</div>
+          <el-form-item prop="cityZh" class="zj-inline">
             <el-input v-model="form.cityZh" maxLength="50" placeholder="请输入城市名称"/>
           </el-form-item>
-          <span class="zj-inline zj-center zj-w-20">市</span>
+          <span class="zj-m-l-10">市</span>
         </el-form-item>
         <el-form-item label="详细地址：" prop="fastMailAddress">
           <el-input v-model="form.fastMailAddress" type="textarea" :rows="2" placeholder="请输入详情地址"></el-input>
@@ -99,7 +110,7 @@
           <el-input v-model="form.legalPersonName" maxLength="50" placeholder="请输入法定代表人姓名" :disabled="true"/>
         </el-form-item>
         <!-- 一级供应商独有 -->
-        <div v-if="form.isHtEnterprise == '1'">
+        <div>
           <el-form-item label="法人证件类型：" prop="legalCertType" class="zj-inline required">
             <el-select v-model="form.legalCertType" placeholder="请选择证件类型" class="register102-legalCertType"
                        @change="legalCertTypeChange"
@@ -124,21 +135,28 @@
           </el-row>
         </div>
         <!-- 二级供应商独有 -->
-        <el-form-item label="法人身份证号码：" prop="legalCertNo" class="zj-inline required" v-if="form.isHtEnterprise == '0'">
-          <el-input v-model="form.legalCertNo" placeholder="请输入证件号码" maxLength="50" :disabled="true"/>
-        </el-form-item>
+<!--        <el-form-item label="法人身份证号码：" prop="legalCertNo" class="zj-inline required" v-if="form.isHtEnterprise == '0'">-->
+<!--          <el-input v-model="form.legalCertNo" placeholder="请输入证件号码" maxLength="50" :disabled="true"/>-->
+<!--        </el-form-item>-->
         <!-- 共公部分 -->
         <el-form-item label="法人手机号码：" prop="registerPhone" class="required">
           <el-input v-model="form.registerPhone" maxLength="50" placeholder="请输入法人手机号码" :disabled="true"/>
         </el-form-item>
-        <el-form-item label="证件有效期：" class="zj-h-28 card-validity required">
-            <el-form-item prop="legalCertRegDate" class="zj-inline">
-              <zj-date-picker placeholder="年/月/日"  :date.sync="form.legalCertRegDate" :pickerOptions="{ disabledDate:legalCertRegDateDisabledDate }" ></zj-date-picker>
-            </el-form-item>
-            <div class="zj-inline zj-center zj-w-20">至</div>
-            <el-form-item prop="legalCertExpireDate" class="zj-inline">
-              <zj-date-picker placeholder="年/月/日"  :date.sync="form.legalCertExpireDate" :pickerOptions="{ disabledDate: legalCertExpireDateDisabledDate }" ></zj-date-picker>
-            </el-form-item>
+        <el-form-item label="证件有效期：" class="card-validity required">
+          <el-form-item prop="legalCertRegDate" class="zj-inline">
+            <zj-date-picker placeholder="年/月/日"  :date.sync="form.legalCertRegDate"
+                            :lessNow="true"
+            ></zj-date-picker>
+          </el-form-item>
+          <div class="zj-inline zj-center zj-w-20 zj-m-l-10 zj-m-r-10">至</div>
+          <el-form-item prop="legalCertExpireDate" class="zj-inline">
+            <zj-date-picker placeholder="年/月/日"  :date.sync="form.legalCertExpireDate" :disabled="form.legalCertTerm"
+                            :pickerOptions="{ disabledDate: legalCertExpireDateDisabledDate }"
+            ></zj-date-picker>
+          </el-form-item>
+          <el-row>
+            <el-checkbox v-model="form.legalCertTerm" @change="isLegalCertChecked">长期有效</el-checkbox>
+          </el-row>
         </el-form-item>
 
         <!--   银行账户信息     -->
@@ -161,8 +179,8 @@
         </el-row>
         <el-row v-if="form.isHtEnterprise == '0'">
           <!-- 二级供应商 -->
-          <el-row style="margin: 20px auto">
-            <zj-button class="append" icon="el-icon-circle-plus-outline" @click="contAdd">请录入银行账户</zj-button>
+          <el-row class="zj-m-t-10 zj-m-b-10">
+            <zj-button type="primary" class="append" icon="el-icon-circle-plus-outline" @click="contAdd">请录入银行账户</zj-button>
           </el-row>
           <zj-table ref="bankAccnameTable" class="zj-search-table" :dataList="form.entBankInfoList" v-if="entBankInfo"
                     keep-source :pager="false"
@@ -171,15 +189,15 @@
             <zj-table-column field="bankAccname" title="银行账户名称" :edit-render="{name: '$input'}"/>
             <zj-table-column field="bankAccno" title="银行账号" :edit-render="{name: '$input'}"/>
             <zj-table-column field="bankName" title="开户行"
-                             :edit-render="{name: '$select', options: bankInfoList ,optionProps: {value:'status', label:'label', key: 'status' }}"
+                             :edit-render="{name: '$select', options: bankInfoList ,optionProps: {value:'label', label:'label', key: 'status' }}"
             >
             </zj-table-column>
-            <zj-table-column field="bankNo" title="銀行联行号" :edit-render="{name: '$input'}"/>
+            <zj-table-column field="bankNo" title="银行联行号" :edit-render="{name: '$input'}"/>
             <zj-table-column title="操作" fixed="right">
-              <template v-slot="{row}">
+              <template v-slot="{row,rowIndex}">
                 <template v-if="$refs.bankAccnameTable.isActiveByRow(row)">
                   <zj-button type="text" @click="saveRow(row)">保存</zj-button>
-                  <zj-button type="text" @click="cancel(row)">取消</zj-button>
+                  <zj-button type="text" @click="cancel(row,rowIndex)">取消</zj-button>
                 </template>
                 <template v-if="!$refs.bankAccnameTable.isActiveByRow(row)">
                   <zj-button type="text" @click="edit(row)">维护</zj-button>
@@ -189,17 +207,16 @@
           </zj-table>
         </el-row>
         <el-row class="zj-m-t-20">
-          <el-form-item label="请确认开户行" prop="confirmBankId">
-            <el-select v-model="form.confirmBankId"
+          <el-form-item label="请确认开户行：" prop="confirmBankName">
+            <el-select v-model="form.confirmBankName"
                        filterable
                        placeholder="请选择" class="sw-year-select register102-legalCertType"
-                       :popper-append-to-body="false"
-                       @change="bankChange"
+                       :popper-append-to-body="true"
             >
               <el-option
                 v-for="item in bankInfoList"
                 :label="item.label"
-                :value="item.status"
+                :value="item.label"
                 :key="item.status"
               />
             </el-select>
@@ -210,7 +227,7 @@
       </el-form>
       <el-row class="btn-row">
         <zj-button status="primary" @click="save('SAVE')">保存</zj-button>
-        <zj-button status="primary" @click="next('NEXT')">下一步</zj-button>
+        <zj-button type="primary" @click="next('NEXT')">下一步</zj-button>
       </el-row>
     </div>
     <RegisterFooter/>
@@ -231,7 +248,7 @@ import {
   validateFixedPhone,
 
   validateBankAcct,//银行账号
-  validateEmail //电子邮箱
+  validateEmail, newValidateFixedPhone //电子邮箱
 } from '@utils/rules'
 import view from "@pubComponent/preview/view.js";
 export default {
@@ -289,7 +306,9 @@ export default {
         invoiceTaxpayerId: '',
         isHtEnterprise: '',//是否海天集团/(是否海天一级供应商)：0-否 1-是
         legalCertExpireDate: '',
+        legalCertTerm: false,
         legalCertNo: '',
+        legalBankAccno: '',//银行卡号，证件类型为非身份证时必填
         legalCertRegDate: '',
         legalCertType: '',
         legalPersonName: '',
@@ -299,6 +318,7 @@ export default {
         provinceZh: '',
         registerCapital: '',
         registerEndDate: '',
+        term: false,
         registerOperateFlag: '',
         registerPhone: '',
         registerStartDate: '',
@@ -322,7 +342,15 @@ export default {
           { required: true, message: '请选择成立日期', trigger: ['blur'] }
         ],
         registerEndDate: [
-          { required: true, message: '请填写企业工商有效期', trigger: ['blur'] }
+          { message: '请填写企业工商有效期', trigger: ['blur'] },
+          { validator:(rule, value, callback) => {
+              let reqHandle = this.form.term ? false : true
+              if (!value && reqHandle) {
+                callback(new Error('请填写企业工商有效期'))
+              } else {
+                callback()
+              }
+            }, trigger: 'blur'},
         ],
         registerCapital: [
           { required: true, message: '请填写注册资本', trigger: ['blur'] }
@@ -331,11 +359,11 @@ export default {
           { required: true, message: '请填写企业联系人姓名', trigger: ['blur'] }
         ],
         fastMailPhone: [
-          { required: true, message: '请填写企业联系人手机号', trigger: ['blur'] },
-          { validator: validatePhone, trigger: ['blur'] }
+          { required: true, message: '请填写企业联系人手机号', max: 20, trigger: ['blur'] },
+          { validator: newValidateFixedPhone, trigger: ['blur'] }
         ],
         provinceZh: [
-          { required: true, message: '请选择企业联系省份', trigger: ['change'] }
+          { required: true, message: '请选择企业联系省份', trigger: ['blur'] }
         ],
         cityZh: [
           { required: true, message: '请选择企业联系城市', trigger: ['blur'] }
@@ -358,9 +386,17 @@ export default {
           { required: true, message: '请选择证件有效期起始日', trigger: ['blur'] }
         ],
         legalCertExpireDate: [
-          { required: true, message: '请选择证件有效期截止日', trigger: ['blur'] }
+          { message: '请选择证件有效期截止日', trigger: ['blur'] },
+          { validator:(rule, value, callback) => {
+              let reqHandle = this.form.legalCertTerm ? false : true
+              if (!value && reqHandle) {
+                callback(new Error('请选择证件有效期截止日'))
+              } else {
+                callback()
+              }
+            }, trigger: 'blur'},
         ],
-        confirmBankId: [
+        confirmBankName: [
           { required: true, message: '请确认开户行', trigger: ['blur'] }
         ],
         //-----------------  企业
@@ -385,17 +421,36 @@ export default {
     this.zjControl.querySysDistrictDictList().then(res=>{
       this.provinceList = res.data.sysDistrictDictList
     })
-    this.setFormValue()
     this.getOpenBankInfo()
   },
   mounted(){
+    this.setFormValue()
     this.handleDataChange()
   },
+  updated() {
+    // this.handleDataChange()
+  },
   methods: {
+    isChecked() {
+      if(this.form.term === true) {
+        this.form.registerEndDate = ''
+      }
+    },
+    isLegalCertChecked() {
+      if(this.form.legalCertTerm === true) {
+        this.form.legalCertExpireDate = ''
+      }
+    },
     //回显form
     setFormValue(){
       this.form = {
         ...this.entInfoObj.form
+      }
+      console.log(this.bankInfoList)
+      for(let i of this.bankInfoList) {
+        if(i.status === this.form.confirmBankId) {
+          this.form.confirmBankName = i.label
+        }
       }
     },
     //企业注册-获取开户行信息
@@ -498,7 +553,9 @@ export default {
     },
     legalCertExpireDateDisabledDate (date) {
       if (this.form.legalCertRegDate) {
-        return date.getTime() < this.$moment(this.form.legalCertRegDate)
+        return date.getTime() <= this.$moment(this.form.legalCertRegDate)
+      } else {
+        return date.getTime()
       }
     },
     //附件下载
@@ -549,25 +606,32 @@ export default {
     handleDataChange() {
       //回显 勾选之前选中的银行账户
       let rows = this.form.entBankInfoList
+      let checkedBankInfo = rows.filter(item=>item.platExist === true)//platExist为true的账户为之前选中的账户
+      this.entInfoObj.form.entBankInfo = {...checkedBankInfo[0]}
       console.log(this.entInfoObj.form.entBankInfo)
       let rowIndex = ''
       for(let i of rows) {
-        if(this.entInfoObj.form.entBankInfo.bankAccId === i.bankAccId) {
+        if(this.entInfoObj.form.entBankInfo && this.entInfoObj.form.entBankInfo.bankAccId === i.bankAccId) {
           rowIndex = rows.indexOf(i)
           break
         }
       }
       console.log('银行账户index=='+rowIndex)
-      if (rows && rows.length) {
-        setTimeout(()=>{
-          this.$refs.entBankInfoTable.setRadioRow(rows[rowIndex])
-        },0)
-        this.handleRadioChange({row: rows[rowIndex]})
+      if (rows && rows.length && this.entInfoObj.form.entBankInfo) {
+        this.$nextTick(()=>{
+          console.log(this.$refs)
+          console.log(this.$refs.entBankInfoTable)
+          if(this.$refs.entBankInfoTable && this.$refs.entBankInfoTable.dataList && this.$refs.entBankInfoTable.dataList.length) {
+            this.$refs.entBankInfoTable.setRadioRow(rows[rowIndex])
+            console.log('in')
+            this.handleRadioChange({row: rows[rowIndex]})
+          }
+        })
       }
     },
     handleRadioChange({ row }) {
       this.form.entBankInfo = row
-      this.form.isSelectEntBankInfo = true
+      console.log(this.form.entBankInfo)
     },
     bankChange(val) {
 
@@ -623,11 +687,11 @@ export default {
       })
     },
     //取消
-    cancel(row){
+    cancel(row,rowIndex){
       if(row.bankAccId){
-        this.form.entBankInfoList.splice(0,1,this.oldRowInfo)
+        this.form.entBankInfoList.splice(rowIndex,1,this.oldRowInfo)
       } else{
-        this.form.entBankInfoList.splice(0,1)
+        this.form.entBankInfoList.splice(rowIndex,1)
       }
       this.$refs.bankAccnameTable.clearActived()
     },
@@ -654,9 +718,9 @@ export default {
     },
     //暂存form信息
     save(flag) {
-
+      if(!this.tableEditReport(['bankAccnameTable'])){return}
       //不校验保存注册信息
-      if(this.form.isHtEnterprise === '0') {
+      if(this.form.isHtEnterprise === '0' && this.form.entBankInfoList && this.form.entBankInfoList.length) {
         this.form.entBankInfo = this.form.entBankInfoList[0]
       }
       this.form.registerOperateFlag = flag
@@ -671,6 +735,7 @@ export default {
     },
     //下一步按钮
     next(flag) {
+      if(!this.tableEditReport(['bankAccnameTable'])){return}
       let valiArr = []
       let key = true
       for(let nm in this.rules){
@@ -695,7 +760,7 @@ export default {
             this.$message.error('银行账户不能为空！')
             return
           }
-          if(this.form.isHtEnterprise === '1' && !this.form.isSelectEntBankInfo) {
+          if(this.form.isHtEnterprise === '1' && !this.form.entBankInfo) {
             this.$message.error('请选择主结算银行账户！')
             return
           }
@@ -711,20 +776,41 @@ export default {
             this.form.entBankInfo = this.form.entBankInfoList[0]
           }
           console.log(this.form.entBankInfo)
-          if(this.form.confirmBankId !== this.form.entBankInfo.bankName) {
+          if(this.form.isHtEnterprise === '0' && this.form.confirmBankName !== this.form.entBankInfo.bankName) {
             return this.$message.error('请确认开户行一致！')
           }
-          this.form.confirmBankName = this.form.confirmBankId
+          if(this.form.isHtEnterprise === '1') {
+            let str = this.form.entBankInfo && this.form.entBankInfo.bankName ? this.form.entBankInfo.bankName.trim().slice(0,4):''
+            let res = ''
+            for(let item of this.bankInfoList) {
+              if(item.label === this.form.confirmBankName) {
+                res = item.label.slice(0,4)
+              }
+            }
+            console.log(str)
+            console.log(res)
+            if(str !== res) {
+              return this.$message.error('请确认开户行一致！')
+            }
+          }
+          for(let i of this.bankInfoList) {
+            if(i.label === this.form.confirmBankName) {
+              this.form.confirmBankId = i.status
+              this.form.confirmBankName = i.label
+            }
+          }
           this.form.registerOperateFlag = flag
           this.form.legalCertType = this.entInfoObj.form.legalCertType
           this.zjControl.saveEntInfo(this.form).then(res => {
             this.$message.success('提交企业资料成功！')
+            this.entInfoObj.form = this.form
             this.entInfoObj.form.id = res.data.id
-            this.entInfoObj.form.entBankInfo = this.form.entBankInfo
-            this.entInfoObj.form.isSelectEntBankInfo = this.form.isSelectEntBankInfo
-            this.entInfoObj.form.defaultSelectRowId = this.form.defaultSelectRowId
-            this.entInfoObj.form.confirmBankId = this.form.confirmBankId
-            this.entInfoObj.form.confirmBankName = this.form.confirmBankName
+            // this.entInfoObj.form.entBankInfo = this.form.entBankInfo
+            // this.entInfoObj.form.defaultSelectRowId = this.form.defaultSelectRowId
+            // this.entInfoObj.form.confirmBankId = this.form.confirmBankId
+            // this.entInfoObj.form.confirmBankName = this.form.confirmBankName
+            // this.entInfoObj.form.term = this.form.term
+            // this.entInfoObj.form.legalCertTerm = this.form.legalCertTerm
             this.entInfoObj.form.token = res.data.token
             let params = Object.assign({},this.entInfoObj)
             params.form = params.form ? params.form : this.form
@@ -763,7 +849,7 @@ export default {
   }
   .register102-legalCertType{
     .el-select-dropdown.el-popper{
-      width: 250px!important;
+      //width: 250px!important;
     }
   }
 </style>
@@ -789,6 +875,9 @@ export default {
 }
 .register-form {
   //width: 800px;
+  /deep/.el-textarea {
+    width: 400px;
+  }
 }
 .register-title {
   border-left: 7px solid #5494F2;
@@ -816,50 +905,6 @@ export default {
     width: 100%;
   }
 }
-//要求说明
-  .yqsm{
-    display:inline-block;
-    width:auto;
-    position: relative;
-    .yqsm-body{
-      width:400px;
-      height:300px;
-      position: absolute;
-      left: 110%;
-      top:-135px;
-      background-color: white;
-      z-index: 1000;
-      border-radius: 12px;
-      box-shadow: 0 0 2px grey;
-      display: none;
-      .yqsm-body-left{
-        border: 1px solid grey;
-        width: 20px;
-        height: 20px;
-        background-color: white;
-        border-top-color: white;
-        border-right-color: white;
-        border-radius: 1px;
-        position: absolute;
-        left: -10px;
-        top: 50%;
-        transform: translateY(-50%) rotate(45deg);
-        z-index: 0;
-      }
-      .yqsm-body-close{
-        width:25px;
-        height: 25px;
-        position: absolute;
-        right: 2px;
-        top: 2px;
-        cursor: pointer
-      }
-      img{
-        width: 100%;
-        height: 100%;
-      }
-    }
-  }
 
 //我的买方企业
   .myBuyers{
@@ -874,45 +919,66 @@ export default {
     }
   }
   .el-input {
-    width: 260px;
+    width: 400px;
   }
   .entType {
     /deep/.el-select{
-      width: 260px;
+      width: 400px;
       .el-input {
-        width: 260px;
+        width: 400px;
       }
     }
   }
+  .register102-legalCertType{
+    .el-select-dropdown.el-popper{
+      //width: 250px!important;
+    }
+    /deep/.el-input {
+      width: 400px;
+    }
+  }
   .contact-address {
+    /deep/.el-form-item__content {
+      width: 100%;
+    }
     /deep/.el-select {
-      .el-input {
-        width: 120px;
+      width: 180px;
+      .el-input--suffix {
+        width: 180px;
+      }
+      .el-input__inner {
+        width: 180px;
+      }
+      .el-select-dropdown.el-popper{
+        width: 100%;
       }
     }
     /deep/.el-form-item__content {
-      display: flex;
       .el-input {
-        width: 120px;
+        width: 180px;
+      }
+      /deep/ .el-input__inner {
+        width: 100%;
       }
     }
   }
   .card-validity {
+    /deep/.el-form-item__content {
+      width: 100%;
+      /deep/.el-input__inner {
+        width: 100%;
+      }
+    }
     /deep/.el-date-editor.el-input {
-      width: 120px;
+      width: 180px;
     }
     /deep/.zj-date-picker .el-input__inner {
       min-width: auto;
-      padding: 0 30px 0 15px !important;
+      padding: 0 30px 0 30px !important;
     }
   }
-.register102-legalCertType{
-  .el-select-dropdown.el-popper{
-    width: 250px!important;
-  }
-  /deep/.el-input {
-    width: 260px;
-  }
+/deep/.el-input__inner {
+  padding: 0 30px 0 30px !important;
 }
 
 </style>

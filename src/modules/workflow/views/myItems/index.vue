@@ -45,12 +45,13 @@
         <zj-table-column field="applyTypeDesc" title="申请类型" v-if="tabAtive === 'agenda'" />
         <zj-table-column field="operateType" title="操作类型" v-else />
         <zj-table-column field="startObject" title="发起方" :formatter="(obj) => typeMap(dictionary.startObjectList, obj.cellValue)" />
-        <zj-table-column field="startTime" title="接收时间" v-if="tabAtive === 'agenda'" />
-        <zj-table-column field="endTime" title="处理时间" v-else />
-        <zj-table-column field="workflowStateDesc" title="申请状态" />
+        <zj-table-column field="startTime" title="接收时间" :formatter="obj=>formatDate(obj.cellValue)" v-if="tabAtive === 'agenda'" />
+        <zj-table-column field="endTime" title="处理时间" :formatter="obj=>formatDate(obj.cellValue)" v-else />
+        <zj-table-column field="workflowState" title="申请状态" :formatter="(obj) => typeMap(dictionary.workflowStateList, obj.cellValue)" />
         <zj-table-column title="操作" fixed="right" v-if="tabAtive === 'agenda'">
           <template v-slot="{ row }">
-            <zj-button type="text" @click="toHandle(row)">处理</zj-button>
+            <zj-button type="text" @click="toHandle(row)" v-if="!['A000','D010','E000','S001','U000'].includes(row.workflowState)">处理</zj-button>
+            <span v-else>—</span>
             <zj-button type="text" @click="toCancellation(row)" v-if="['E005','U006','S004'].includes(row.workflowState) && row.startObject === 'PT'">作废</zj-button>
           </template>
         </zj-table-column>
@@ -112,23 +113,27 @@ export default {
         // 代办
         if (myItemsPath[row.busType].detailPath) {
           this.goChild(myItemsPath[row.busType].detailPath, row);
-        } else if (myItemsPath[row.busType][row.applyType][row.workflowState].detailPath) {
+        }
+        else if (myItemsPath[row.busType][row.applyType][row.workflowState].detailPath) {
           this.goChild(myItemsPath[row.busType][row.applyType][row.workflowState].detailPath, row);
         }
       } else {
         // 已办和已办结
-        this.goChild(myItemsPath[row.busType][row.applyType].doneDetailPath, row);
+        if (myItemsPath[row.busType].doneDetailPath) {
+          this.goChild(myItemsPath[row.busType].doneDetailPath, { ...row, tabAtive: this.tabAtive });
+        } else {
+          this.goChild(myItemsPath[row.busType][row.applyType].doneDetailPath, { ...row, tabAtive: this.tabAtive });
+        }
       }
-
     },
     // 跳转对应的审核
     toHandle(row) {
       if (this.tabAtive === 'agenda') {
         // 代办
         if (myItemsPath[row.busType].auditPath) {
-          this.goChild(myItemsPath[row.busType].auditPath, row);
+          this.goChild(myItemsPath[row.busType].auditPath, row, 'todo');
         } else if (myItemsPath[row.busType][row.applyType][row.workflowState].auditPath) {
-          this.goChild(myItemsPath[row.busType][row.applyType][row.workflowState].auditPath, row);
+          this.goChild(myItemsPath[row.busType][row.applyType][row.workflowState].auditPath, row, 'todo');
         }
       }
     },

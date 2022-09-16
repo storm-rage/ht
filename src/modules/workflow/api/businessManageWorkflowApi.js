@@ -101,13 +101,22 @@ export default {
     return request.post('/business-manage/recheck-contract-renewal',params);
   },
   /**
-   * 业务管理-额度管理复核
+   * 业务管理-额度续签复核
    * 工作流
    * @param params
    * @returns {Promise<AxiosResponse<any>>}
    */
   recheckLimit (params) {
     return request.post('/business-manage/recheck-limit',params);
+  },
+  /**
+   * 业务管理-额度变更复核
+   * 工作流
+   * @param params
+   * @returns {Promise<AxiosResponse<any>>}
+   */
+  recheckLimitChange (params) {
+    return request.post('/business-manage/recheck-limit-change',params);
   },
   /**
    *业务管理-合同续签驳回提交

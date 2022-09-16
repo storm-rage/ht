@@ -5,7 +5,7 @@ const billLssueMyBillRouter = [
     component: () => import('../views/billLssue/myBill'),
     meta: {
       isMock: true,
-      title: '我的凭证',
+      title: '我的{0}',
       root: '电子债权凭证',
       keepAlive: true,
       refreshIndex: 0,
@@ -17,7 +17,7 @@ const billLssueMyBillRouter = [
     name: 'billLssueMyBillDetail',
     component: () => import('../views/billLssue/myBill/detail'),
     meta: {
-      title: '电子债权凭证详情',
+      title: '{0}详情',
       root: '电子债权凭证',
       keepAlive: true,
       refreshIndex: 0,

@@ -11,7 +11,7 @@
               @keyup.enter.native="search"
             />
           </el-form-item>
-          <el-form-item label="供应商业务系统编码" class="col-center">
+          <el-form-item label="供应商业务系统编码：" class="col-center">
             <el-input
               v-model.trim="searchForm.supplierCode"
               clearable
@@ -39,14 +39,14 @@
           </el-form-item>
           <el-form-item label="是否开立凭证：" class="col-center">
             <el-select
-              v-model="searchForm.isIssueVoucher"
+              v-model="searchForm.isApplyVoucher"
               placeholder="请选择"
               clearable
               :popper-append-to-body="false"
             >
               <el-option value="" label="全部"></el-option>
               <el-option
-                v-for="item in dictionary.isIssueVoucher"
+                v-for="item in dictionary.isApplyVoucher"
                 :key="item.code"
                 :label="item.desc"
                 :value="item.code"
@@ -109,6 +109,7 @@
                 <zj-date-picker
                   class="table-date-picker"
                   :date.sync="row.estimatedPaymentDate"
+                  :overNow="true"
                 />
               </div>
               <div v-else>{{ date(row.estimatedPaymentDate) }}</div>
@@ -128,14 +129,15 @@
                   digits="2"
                   :controls="false"
                   style="width: 100%;"
+                  @change="openBillAmtChange(row)"
                 ></vxe-input>
               </div>
               <div v-else>{{ money(row.openBillAmt) }}</div>
             </template>
           </zj-table-column>
           <zj-table-column
-            field="isIssueVoucher"
-            title="是否开立凭证"
+            field="isApplyVoucher"
+            title="是否申请开立债权凭证"
             width="100"
             :formatter="obj => ifOrNot(obj.cellValue)"
           />
@@ -203,10 +205,10 @@ export default {
         checkBillDateEnd: '',
         estimatedPaymentDateStart: '',
         estimatedPaymentDateEnd: '',
-        isIssueVoucher: ''
+        isApplyVoucher: '1'
       },
       dictionary: {
-        isIssueVoucher: [
+        isApplyVoucher: [
           { desc: '是', code: '1' },
           { desc: '否', code: '0' }
         ]
@@ -219,17 +221,28 @@ export default {
   created () {
     this.getApi()
   },
+  activated() {
+    this.$nextTick(()=>{
+      this.search()
+    })
+  },
   methods: {
     dateFormat (time) {
       if (!time) return '-'
-      let dt = typeof time === 'number' ? time : Number(time)
-      return dt.length === 8 ? this.date(dt) : formatDate(dt, 'yyyy-MM-dd')
+      return this.date({cellValue: time})
+    },
+    afterResetSearch() {
+      this.searchForm.isApplyVoucher = '1'
+      // window.console.log('this.searchForm', this.searchForm);
     },
     //详情
     minute (row) {
       this.$router.push({
         name: 'openBillApplyDetails',
-        query: { rowId: row.id }
+        query: { rowId: row.id },
+        params: {
+          currentActiveTab: "onLine"
+        }
       })
     },
     //修改单元格
@@ -241,6 +254,11 @@ export default {
       // this.openBillApplyRow = Object.assign({}, row)
       this.openBillApplyRow = JSON.parse(JSON.stringify(row))
       this.$refs.searchTable.setActiveRow(row)
+    },
+    openBillAmtChange(row) {
+      if(+row.openBillAmt > +row.checkBillAmt) {
+        row.openBillAmt = row.checkBillAmt
+      }
     },
     isTableEdit () {
       let key = true
@@ -271,8 +289,10 @@ export default {
         .catch(() => {})
     },
     //取消单元格
-    cancel (row) {
-      row = Object.assign({}, this.openBillApplyRow)
+    cancel (row, rowindex) {
+      // row = Object.assign({}, this.openBillApplyRow)
+      row.estimatedPaymentDate = this.openBillApplyRow.estimatedPaymentDate
+      row.openBillAmt = this.openBillApplyRow.openBillAmt
       this.$refs.searchTable.clearActived()
     },
     //勾选
@@ -283,7 +303,33 @@ export default {
       // console.log(this.list, '勾选的值22222')
     },
     //签发凭证
-    toIssuance (row) {
+    toIssuance () {
+      let overtimeAcctBillCodelist = []
+      let isError = this.list.some(item=>{
+        if(item.isApplyVoucher != '1') {
+          return true
+        }
+        if(this.$moment(item.estimatedPaymentDate).diff(this.$moment(),'days') >= 180) {
+          overtimeAcctBillCodelist.push(item.acctBillCode)
+        }
+      })
+      isError && (this.$message.warning('只允许“是否申请开立债权凭证=是”的对账单开立债权凭证。'))
+      if(overtimeAcctBillCodelist.length) {
+        this.$messageBox({
+          type:'confirm',
+          title:'提交确认',
+          content: `海诺单天数大于180天，请确认是否签发?对账单号：${overtimeAcctBillCodelist.join(',')}`,
+          showCancelButton:true,
+          messageResolve:()=>{
+            this.toIssuanceSave()
+          },
+          messageReject: ()=>{}
+        })
+      } else {
+        this.toIssuanceSave()
+      }
+    },
+    toIssuanceSave() {
       let params = {
         applyType: '0',
         accountBillList: this.list
@@ -292,7 +338,9 @@ export default {
         if (res.code === 200) {
           this.goChild('openBillApplyConfirm', {
             list: res.data.accountBillList || [],
-            applyType: '0' // 线上
+            applyType: '0', // 线上
+            isHtEnterprise: res.data.isHtEnterprise,
+            currentActiveTab: "onLine"
           })
         }
       })
@@ -316,20 +364,6 @@ export default {
   /deep/ .el-input__inner {
     width: 100%;
     min-width: auto;
-  }
-}
-/deep/#ZjWorkflow {
-  .workflow-top {
-    .el-row {
-      padding: 5px 0 0;
-      text-align: center;
-    }
-  }
-  .workflow-bottom {
-    .right {
-      width: 100%;
-      text-align: center;
-    }
   }
 }
 </style>

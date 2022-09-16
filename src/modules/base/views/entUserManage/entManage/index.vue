@@ -14,6 +14,7 @@
           </el-form-item>
           <el-form-item label="平台客户类型：">
             <el-select v-model="searchForm.entType" :popper-append-to-body="false">
+              <el-option label="全部" value="" />
               <el-option v-for="(item, index) in dictionary.entTypeList" :key="index" :value="item.code" :label="item.desc"></el-option>
             </el-select>
           </el-form-item>
@@ -25,7 +26,7 @@
           <zj-button type="primary" icon="el-icon-download" @click="exportList" :api="zjBtn.exportEnterpriseList">导出数据</zj-button>
         </zj-content>
       </template>
-      <zj-table ref="searchTable" :params="searchForm" :api="zjControl.tableApi">
+      <zj-table ref="searchTable" :syncUpdateFlag="dicLoadingFlag" v-if="Object.keys(dictionary).length" :params="searchForm" :api="zjControl.tableApi">
         <zj-table-column title="企业编码">
           <template v-slot="{ row }">
             <span class="table-elbill-code" @click="goChild('entDetail', row)">{{ row.code }}</span>
@@ -41,7 +42,7 @@
           " />
         <zj-table-column title="操作" fixed="right">
           <template v-slot="{ row }">
-            <zj-button type="text" @click="goChild('entManageEdit', row)" :api="zjBtn.updateEnterprise" v-if="row.isHtEnterprise==='1'">维护</zj-button>
+            <zj-button type="text" @click="goChild('entManageEdit', row)" :api="zjBtn.updateEnterprise" v-if="row.isHtEnterprise==='1' && row.entType !== 'S'">维护</zj-button>
             <span v-else>—</span>
           </template>
         </zj-table-column>

@@ -24,13 +24,13 @@
               @keyup.enter.native="enterSearch"
             />
           </el-form-item>
-          <el-form-item label="原始凭证编号：">
+          <el-form-item :label="`原始${productName}编号：`">
             <el-input
               v-model.trim="searchForm.rootCode"
               @keyup.enter.native="enterSearch"
             />
           </el-form-item>
-          <el-form-item label="凭证实际到期日：" class="col-right">
+          <el-form-item :label="`${productName}实际到期日：`" class="col-right">
             <zj-date-range-picker
               :startDate.sync="searchForm.actualExpireDateBegin"
               :endDate.sync="searchForm.actualExpireDateEnd"
@@ -42,7 +42,7 @@
               @keyup.enter.native="enterSearch"
             />
           </el-form-item>
-          <el-form-item label="凭证编号：">
+          <el-form-item :label="`${productName}编号：`">
             <el-input
               v-model.trim="searchForm.ebillCode"
               @keyup.enter.native="enterSearch"
@@ -64,10 +64,10 @@
           width="40px"
           fixed="left"
         ></zj-table-column>
-        <zj-table-column title="原始凭证编号">
+        <zj-table-column :title="`原始${productName}编号`">
           <template v-slot="{ row }">
             <el-link
-              @click="toViewDetail(row)"
+              @click="toViewDetail(row.rootCode)"
               type="primary"
               :underline="false"
               >{{ row.rootCode }}</el-link
@@ -76,10 +76,10 @@
         </zj-table-column>
         <zj-table-column field="repaymentOrderNo" title="收款单号" />
         <zj-table-column field="capitalSerialno" title="资金流水号" />
-        <zj-table-column field="ebillCode" title="凭证编号">
+        <zj-table-column field="ebillCode" :title="`${productName}编号`">
           <template v-slot="{ row }">
             <el-link
-              @click="toViewDetail(row)"
+              @click="toViewDetail(row.ebillCode)"
               type="primary"
               :underline="false"
               >{{ row.ebillCode }}</el-link
@@ -88,7 +88,7 @@
         </zj-table-column>
         <zj-table-column field="payEntName" title="签发人" />
         <zj-table-column field="openDate" title="签发日期" :formatter="date" />
-        <zj-table-column field="ebillAmt" title="凭证金额" :formatter="money" />
+        <zj-table-column field="ebillAmt" :title="`${productName}金额`" :formatter="money" />
         <zj-table-column
           field="expireDate"
           title="到期日期"
@@ -145,6 +145,11 @@ import footerBtnMixin from "../mixins/footerBtnMixin";
 import BigNumber from 'bignumber.js';
 export default {
   mixins: [footerBtnMixin],
+  computed: {
+    productName () {
+      return this.$store.getters['user/productName']
+    }
+  },
   data() {
     return {
       showBottomBtn: false,
@@ -194,10 +199,15 @@ export default {
       this.showBottomBtn = records.length > 0;
     },
     /**
-     * todo:跳转凭证详情
+     *
      * @param row
      */
-    toViewDetail(row) {},
+    toViewDetail(ebillCode) {
+      this.goChild('billLssueMyBillDetail',{
+        ebillCode: ebillCode,
+        parentRouteName: 'expireClear'
+      })
+    },
     /**
      * 批量清算申请
      */

@@ -70,7 +70,10 @@
       <zj-header v-show="pageType !== 3">身份证</zj-header>
       <div v-show="pageType === 3">
         <zj-header>附件信息</zj-header>
-        <p class="zj-m-l-20">点此下载<zj-button type="text" @click="downloadTemplate">《委托授权书模板》</zj-button>
+        <p class="zj-m-l-20">点此下载<zj-button type="text">
+            <span @click="downloadTemplate">《委托授权书模板》</span>
+            <span @click="downloadAuthorization">《个人信息授权书》</span>
+          </zj-button>
         </p>
       </div>
       <zj-content>
@@ -92,7 +95,7 @@
           <br />
           <zj-content-tip text="2.支持上传的文档格式：PDF。"></zj-content-tip>
           <br />
-          <zj-content-tip v-show="pageType === 3" text=" 3.委托授权书请下载，加盖公司公章后上传。"></zj-content-tip>
+          <zj-content-tip v-show="pageType === 3" text="3.委托授权书请下载，加盖公司公章后上传。"></zj-content-tip>
         </zj-content>
       </zj-content>
     </zj-content-block>
@@ -142,10 +145,12 @@ export default {
         ...this.$api.myBasicInformation,
       },
       form: {},
+      userInfo: {},
       dictionary: {},
       attachInfo: [
         { fileId: "", type: "身份证影印件", fileName: "" },
-        { fileId: "", type: "委托授权书", fileName: "" }
+        { fileId: "", type: "委托授权书", fileName: "" },
+        { fileId: "", type: "个人信息授权书", fileName: "" }
       ],
       platformFastMail: {},
       pageType: 1, // 1详情 2维护本人信息 3更换操作人员
@@ -190,7 +195,7 @@ export default {
         ],
         email: [
           {
-            required: true,
+            required: false,
             message: "请输入邮箱",
             trigger: ["blur"],
           },
@@ -223,6 +228,7 @@ export default {
       let params = { roleId: this.roleId };
       this.zjControl.getPersonalInfo(params).then((res) => {
         this.form = res.data.userInfo;
+        this.userInfo = JSON.parse(JSON.stringify(this.form))
         this.platformFastMail = res.data.platformFastMail;
         // 身份证附件
         this.attachInfo[0].fileId = this.form.identitycardFileId
@@ -230,6 +236,9 @@ export default {
         // 委托书附件
         this.attachInfo[1].fileId = this.form.wtsqsFileId
         this.attachInfo[1].fileName = this.form.wtsqsFileName
+        // 个人信息授权书
+        this.attachInfo[2].fileId = this.form.grxxsqsFileId
+        this.attachInfo[2].fileName = this.form.grxxsqsFileName
         // 角色权限
         this.dictionary.roleId = this.dictionary.roleId.filter((item) => {
           return this.form.roleIds.indexOf(item.code) !== -1;
@@ -238,13 +247,38 @@ export default {
     },
     // 确认提交
     submit() {
+      this.form.roleId = this.roleId;
       if (this.pageType === 2) {
-        this.form.roleId = this.roleId;
         this.updatePersonalInfo();
       }
       if (this.pageType === 3) {
-        this.form.roleId = this.roleId;
-        this.updateOperator();
+        if (!!!this.attachInfo[1].fileId) { // 校验是否修改过用户信息
+          let ifArr = ['userName', 'certType', 'certNo', 'mobileNo', 'email']
+          for (let [index, value] of ifArr.entries()) {
+            if (this.userInfo[value] !== this.form[value]) {
+              this.$message.error('修改了用户信息，需要上传委托授权书');
+              break
+            }
+            if (index >= ifArr.length - 1) {
+              console.log(index, ifArr.length)
+              this.updateOperator();
+            }
+          }
+        } else if (!!!this.attachInfo[1].fileId) { // 校验是否修改过用户信息
+          let ifArr = ['userName', 'certNo', 'mobileNo']
+          for (let [index, value] of ifArr.entries()) {
+            if (this.userInfo[value] !== this.form[value]) {
+              this.$message.error('修改了用户信息，需要上传个人信息授权书');
+              break
+            }
+            if (index >= ifArr.length - 1) {
+              console.log(index, ifArr.length)
+              this.updateOperator();
+            }
+          }
+        } else {
+          this.updateOperator();
+        }
       }
     },
     changePageType(val) {
@@ -285,8 +319,12 @@ export default {
               // 身份证附件
               this.form.identitycardFileId = this.attachInfo[0].fileId;
               this.form.identitycardFileName = this.attachInfo[0].fileName;
+              // 委托书附件
               this.form.wtsqsFileId = this.attachInfo[1].fileId;
               this.form.wtsqsFileName = this.attachInfo[1].fileName;
+              // 个人信息授权书
+              this.form.grxxsqsFileId = this.attachInfo[2].fileId;
+              this.form.grxxsqsFileName = this.attachInfo[2].fileName;
               this.zjControl.updateOperator(this.form).then((res) => {
                 this.getPersonalInfo();
                 this.$message.success(res.msg);
@@ -314,11 +352,20 @@ export default {
         if (valid) {
           let params = {
             userInfo: this.form,
-            templateType: "WTSQS"
+            templateType: "YHSQRYBG",
           }
+          params.userInfo.roleId = this.roleId
           this.zjControl.downloadTemplate(params)
         }
       })
+    },
+    //下载个人信息授权书
+    downloadAuthorization() {
+      let params = {
+        userInfo: this.form,
+        templateType: "YH_GRXXSQS",
+      }
+      this.zjControl.downloadTemplate(params)
     },
     //下载附件
     toDownload(row) {

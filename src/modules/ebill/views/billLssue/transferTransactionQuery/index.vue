@@ -37,7 +37,7 @@
                     <zj-button type="text" @click="toDetail(row)">{{row.serialNo}}</zj-button>
                   </template>
                 </zj-table-column>
-                <zj-table-column field="tranNumber" title="转让凭证总数"/>
+                <zj-table-column field="tranNumber" :title="`转让${productName}总数`"/>
                 <zj-table-column field="tranAmt" title="转让总金额" :formatter="money"/>
                 <zj-table-column field="applyDate" title="转让申请时间" :formatter="date"/>
                 <zj-table-column field="workflowState" title="申请状态" :formatter="obj=>typeMap(dictionary.workflowState,obj.cellValue)"/>
@@ -52,7 +52,11 @@ import transferTransactionQuery from "../../../api/transferTransactionQueryApi";
 
 export default {
   name: 'transferTransactionQuery',
-  components: {},
+  computed: {
+    productName() {
+      return this.$store.getters['user/productName']
+    }
+  },
   data() {
     return {
       zjControl: {

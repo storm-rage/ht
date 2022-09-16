@@ -20,7 +20,9 @@
                              :label="item.desc"
                              :value="item.code"></el-option>
                 </el-select>
-                &nbsp;<zj-text-tip text="注：结算周期从mdm取值仅供参考，最终以平台维护为准。"></zj-text-tip>
+                &nbsp;<el-tooltip content="注：结算周期从mdm取值仅供参考，最终以平台维护为准。"  effect="dark" placement="top">
+                <i class="el-icon-info" style="color:#909399"></i>
+              </el-tooltip>
               </el-form-item>
             </el-col>
             <el-col :span="12">

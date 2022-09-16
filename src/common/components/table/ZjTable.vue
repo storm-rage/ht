@@ -7,6 +7,9 @@
       v-on="events">
       <slot></slot>
     </vxe-table>
+    <div class="zj-table-bottom-total" v-if="$slots['bottom-total']">
+      <slot name="bottom-total"></slot>
+    </div>
     <vxe-pager
       class="zj-table_pager"
       v-if="pager"
@@ -64,6 +67,8 @@
       autoResize: { type: Boolean, default: true },
       // 自动跟随某个属性的变化去重新计算表格，和手动调用 recalculate 方法是一样的效果（对于通过某个属性来控制显示/隐藏切换的场景可能会用到）
       syncResize: [Boolean, String, Number],
+      // 监听同步属性变化，更新表格数据
+      syncUpdateFlag: {type: Boolean, default: true},
       // 所有的列是否允许拖动列宽调整大小
       resizable: {
         type: Boolean,
@@ -1384,7 +1389,13 @@
       },
       api () {
         this.getList()
-      }
+      },
+      syncUpdateFlag() {
+        if (this.syncUpdateFlag&&this.tableData&&this.tableData.length&&this.$refs.zjTable) {
+          console.log('syncUpdateData')
+          this.syncData()
+        }
+      },
     },
   }
 </script>
@@ -1398,7 +1409,13 @@
       }
     }
   }
-
+  .zj-table-bottom-total {
+    background: #E2EBFF;
+    border: 1px solid #E4E7ED;
+    padding: 8px;
+    color: #303133;
+    font-weight: 400;
+  }
 }
 </style>
 <!--<style lang="less" src="./ZjTable.less"/>-->

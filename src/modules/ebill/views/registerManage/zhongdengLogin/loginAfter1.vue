@@ -168,12 +168,11 @@ export default {
         }
     },
     created() {
+        this.getDictionary()
         this.getApi()
         this.getRow()
         console.log(this.row, "传来的row");
-
         this.idList = this.row.idList,
-            this.getDictionary()
         this.getDetail()
     },
     methods: {
@@ -255,7 +254,8 @@ export default {
                 debtorInfoList: this.debtorInfoList,
                 initRegisterToken1: this.row.checkLogin.initRegisterToken1,
                 validateFlownNo: this.row.checkLogin.validateFlownNo,
-                filemsg: this.filemsg
+                filemsg: this.filemsg,
+                dictionary:this.dictionary
             }
             this.goChild('zhongdengManagexq2', row)
         },

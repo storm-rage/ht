@@ -33,7 +33,7 @@
             </el-col>
             <el-col :span="8">
               <el-form-item label="合同生成时间：">
-                <span>{{contractInfo.contractStartDate}}</span>
+                <span>{{contractInfo.contractGenerateDate}}</span>
               </el-form-item>
             </el-col>
           </el-row>
@@ -74,15 +74,18 @@
             title="合同/协议编号"/>
           <zj-table-column
             field="buyerName"
+            formatter="formatColumnValue"
             title="买方企业名称"/>
           <zj-table-column
             field="contractName"
             title="合同/协议名称"/>
           <zj-table-column
             field="signTypeDesc"
+            formatter="formatColumnValue"
             title="签署类型"/>
           <zj-table-column
             field="agreementPerson"
+            formatter="formatColumnValue"
             title="协议相关方"/>
           <zj-table-column title="操作" fixed="right">
             <template v-slot="{ row }">

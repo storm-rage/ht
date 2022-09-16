@@ -64,10 +64,13 @@ export default {
     clearIcon: String
   },
   watch:{
-    date(newDate){
-      if(newDate){
-        this.dateModel = newDate.replace(/-/g,'')
-      }
+    date: {
+      handler(newDate) {
+        if(newDate){
+          this.dateModel = newDate.replace(/-/g,'')
+        }
+      },
+      immediate: true // 在首次赋值时也能触发
     }
   },
   methods: {

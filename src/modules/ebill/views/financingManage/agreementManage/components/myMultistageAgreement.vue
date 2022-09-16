@@ -3,6 +3,7 @@
     <!--  我的阶段性协议  -->
     <zj-content-block>
       <zj-header title="贸易关系"></zj-header>
+      <zj-content>
       <zj-table ref="tradeRelationTable" :pager="false"
                 :dataList="tradeRelationList"
                 @radio-change="handleRadioChange"
@@ -26,13 +27,14 @@
           <li class="explain-item">以上额度信息仅供参考，实际以融资时额度为准。</li>
         </ol>
       </div>
+      </zj-content>
     </zj-content-block>
     <zj-content-block>
       <zj-header title="阶段性协议信息"></zj-header>
       <zj-list-layout>
         <template slot="rightBtns">
-          <vxe-button class="reset" icon="el-icon-refresh" @click="resetSearch()">重置</vxe-button>
-          <vxe-button class="search" icon="el-icon-search" @click="search(true,'searchTable')">查询</vxe-button>
+          <vxe-button class="reset" icon="el-icon-refresh" @click="reset({'coreCompanyName': buyerName})">重置</vxe-button>
+          <vxe-button class="search" icon="el-icon-search" @click="queryMyPhasedAgreePage({'coreCompanyName': buyerName})">查询</vxe-button>
         </template>
         <template slot="searchForm">
           <el-form ref="searchForm" :model="searchForm">
@@ -53,8 +55,8 @@
                 :endDate.sync="searchForm.agreementStartDateEnd"
               />
             </el-form-item>
-            <el-form-item label="贸易合同编号：">
-              <el-input v-model="searchForm.entName" @keyup.enter.native="enterSearch"/>
+            <el-form-item label="阶段性协议编号：">
+              <el-input v-model="searchForm.agreementNo" @keyup.enter.native="enterSearch"/>
             </el-form-item>
             <el-form-item label="协议类型：">
               <el-select v-model="searchForm.agreementType">
@@ -69,6 +71,7 @@
             </el-form-item>
           </el-form>
         </template>
+        <zj-content>
         <zj-table ref="searchTable" :dataList="myPhasedAgreePageList" :params="searchForm" :api="zjControl.queryMyPhasedAgreePage">
           <zj-table-column field="coreCompanyName" title="买方企业名称"/>
           <zj-table-column field="agreementNo" title="阶段性协议编号"/>
@@ -84,6 +87,7 @@
             </template>
           </zj-table-column>
         </zj-table>
+        </zj-content>
       </zj-list-layout>
     </zj-content-block>
 
@@ -103,17 +107,19 @@ export default {
         agreementState: '',
         agreementStartDateBegin:'',
         agreementStartDateEnd:'',
-        entName: '',
+        agreementNo: '',
         agreementType: '',
       },
       tradeRelationList: [],
       dictionary: {},
       myPhasedAgreePageList: [],
+      buyerName: '',
     };
   },
   methods: {
     handleRadioChange({row}) {
       let coreComName = row.buyerName
+      this.buyerName = row.buyerName
       this.queryMyPhasedAgreePage({'coreCompanyName': coreComName})
     },
     attaDownload(row) {
@@ -133,6 +139,17 @@ export default {
     queryMyPhasedAgreePage(coreName) {
       this.searchForm = {...this.searchForm, ...coreName}
       console.log(this.searchForm)
+      this.$nextTick(() => {
+        this.$refs.searchTable.getList(this.searchForm)
+      })
+    },
+    reset(coreName) {
+      this.searchForm.agreementState = ''
+      this.searchForm.agreementStartDateBegin = ''
+      this.searchForm.agreementStartDateEnd = ''
+      this.searchForm.agreementNo = ''
+      this.searchForm.agreementType = ''
+      this.searchForm = {...this.searchForm, ...coreName}
       this.$nextTick(() => {
         this.$refs.searchTable.getList(this.searchForm)
       })

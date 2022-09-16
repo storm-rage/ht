@@ -154,9 +154,9 @@ export default {
   justify-content: center;
   margin: 20px auto;
 }
-form {
+.register-form {
   /deep/.el-input__inner {
-    width: 220px;
+    width: 400px;
   }
 }
 

@@ -19,14 +19,6 @@ const forgotPasswordApi = {
   //4.保存新密码
   saveNewPassword:(params) => {
     return request.post('/forget-password/save-new-password',params)
-  },
-  //5.获取平台信息
-  getForgetPasswordDetail:(params) => {
-    return request.post('/forget-password/get-forget-password-detail',params)
-  },
-  //6.获取用户邮箱
-  getUserName:(params) => {
-    return request.post('/forget-password/get-user-name',params)
   }
 }
 

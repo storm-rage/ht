@@ -101,22 +101,39 @@
                 <zj-table-column field="supplierCode" title="供应商业务系统编码"/>
                 <zj-table-column field="supplierName" title="供应商名称"/>
                 <zj-table-column field="checkBillDate" title="对账日期" :formatter="date"/>
-                <zj-table-column title="入库日期/放行日期">
+                <zj-table-column title="入库日期/放行日期" width="160">
                   <template v-slot="{row}">
-                    {{date(row.earliestInputOrPassDate)}}{{row.latestInputOrPassDate?`~${date(row.latestInputOrPassDate)}`:''}}
+                    <div v-if="row.earliestInputOrPassDate || row.latestInputOrPassDate">
+                      {{date(row.earliestInputOrPassDate)}}{{row.latestInputOrPassDate?`~${date(row.latestInputOrPassDate)}`:''}}
+                    </div>
+                    <div v-else>—</div>
                   </template>
                 </zj-table-column>
                 <zj-table-column field="estimatedPaymentDate" title="预计付款日期" :formatter="date"/>
                 <zj-table-column field="checkBillAmt" title="对账单金额" :formatter="money"/>
-                <zj-table-column field="isApplyVoucher" title="是否申请开立债权凭证" :formatter="obj=>typeMap(dictionary.isApplyVoucher, obj.cellValue)"/>
-                <zj-table-column field="billSource" title="对账单来源"/>
-                <zj-table-column field="checkBillStatus" title="对账单状态"/>
-                <zj-table-column field="isSettle" title="对账单是否已结算" :formatter="obj=>typeMap(dictionary.isSettle, obj.cellValue)"/>
-                <zj-table-column field="outOrederNo" title="业务系统单号"/>
-                <zj-table-column field="isBusPush" title="开立凭证状态是否已推送业务系统" :formatter="obj=>typeMap(dictionary.isBusPush, obj.cellValue)"/>
-                <zj-table-column field="isHbkPush" title="开立凭证状态是否已推送海天银行" :formatter="obj=>typeMap(dictionary.isHbkPush, obj.cellValue)"/>
-                <zj-table-column field="accountBillStatus" title="业务系统对账单结算系统状态" :formatter="obj=>typeMap(dictionary.accountBillStatus, obj.cellValue)"/>
-                <zj-table-column field="isPay" title="对账单是否已支付" :formatter="obj=>typeMap(dictionary.isPay, obj.cellValue)"/>
+                <zj-table-column field="isApplyVoucher" title="是否申请开立债权凭证">
+                  <template v-slot="{row}">{{formatterCellVal(typeMap(dictionary.isApplyVoucher, row.cellValue))}}</template>
+                </zj-table-column>
+                <zj-table-column field="billSource" title="对账单来源" :formatter="formatterCellVal"/>
+                <zj-table-column field="checkBillStatus" title="对账单状态">
+                  <template v-slot="{row}">{{formatterCellVal(typeMap(dictionary.checkBillStatus, row.cellValue))}}</template>
+                </zj-table-column>
+                <zj-table-column field="isSettle" title="对账单是否已结算">
+                  <template v-slot="{row}">{{formatterCellVal(typeMap(dictionary.isSettle, row.cellValue))}}</template>
+                </zj-table-column>
+                <zj-table-column field="outOrederNo" title="业务系统单号" :formatter="formatterCellVal"/>
+                <zj-table-column field="isBusPush" title="开立凭证状态是否已推送业务系统">
+                  <template v-slot="{row}">{{formatterCellVal(typeMap(dictionary.isBusPush, row.cellValue))}}</template>
+                </zj-table-column>
+                <zj-table-column field="isHbkPush" title="开立凭证状态是否已推送海天银行">
+                  <template v-slot="{row}">{{formatterCellVal(typeMap(dictionary.isHbkPush, row.cellValue))}}</template>
+                </zj-table-column>
+                <zj-table-column field="accountBillStatus" title="业务系统对账单结算系统状态">
+                  <template v-slot="{row}">{{formatterCellVal(typeMap(dictionary.accountBillStatus, row.cellValue))}}</template>
+                </zj-table-column>
+                <zj-table-column field="isPay" title="对账单是否已支付">
+                  <template v-slot="{row}">{{formatterCellVal(typeMap(dictionary.isPay, row.cellValue))}}</template>
+                </zj-table-column>
               </zj-table>
             </zj-list-layout>
           </div>

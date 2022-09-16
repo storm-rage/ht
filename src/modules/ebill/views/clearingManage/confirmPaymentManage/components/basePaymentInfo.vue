@@ -28,6 +28,7 @@
           <zj-table-column
             field="repayDate"
             title="收款时间"
+            :formatter="formateRepayDate"
           />
           <zj-table-column field="repayEntName" title="收款方名称"/>
           <zj-table-column field="repayAcctNo" title="收款账号" />
@@ -56,6 +57,14 @@ export default {
     bankCapitalFlow: {
       type: Object,
       required: true
+    }
+  },
+  methods: {
+    formateRepayDate({cellValue}) {
+      if (cellValue) {
+        return this.$moment(cellValue,'YYYYMMDD').format('YYYY-MM-DD')
+      }
+      return '';
     }
   }
 }

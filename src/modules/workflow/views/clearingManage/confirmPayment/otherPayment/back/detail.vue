@@ -4,7 +4,7 @@
     <!--  业务申请信息  -->
     <biz-apply-info :biz-info="detailInfo"></biz-apply-info>
     <!--  具体业务信息  -->
-    <other-confirm-payment-detaill :biz-detail-info="detailInfo" :dictionary="dictionary"></other-confirm-payment-detaill>
+    <other-confirm-payment-detail :biz-detail-info="detailInfo" :dictionary="dictionary"></other-confirm-payment-detail>
     <!--  操作记录  -->
     <operate-log :log-list="detailInfo.operateLogList"></operate-log>
     <zj-content-footer>
@@ -35,7 +35,10 @@ export default {
       },
       // 字典
       dictionary: {},
-      detailInfo: {}
+      detailInfo: {
+        operateLogList: [],
+        bankCapitalFlow: {}
+      }
     };
   },
   created() {

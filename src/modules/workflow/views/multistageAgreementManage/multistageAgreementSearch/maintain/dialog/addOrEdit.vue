@@ -38,14 +38,14 @@
             </el-col>
             <el-col :span="8">
               <el-form-item label="阶段性协议编号：" prop="agreementNo">
-                <el-input v-model="form.agreementNo" :disabled="row.isAgreementOnline === '0'"/>
+                <el-input v-model="form.agreementNo" />
               </el-form-item>
             </el-col>
           </el-row>
           <el-row>
             <el-col :span="8">
               <el-form-item label="阶段性协议名称："  prop="agreementName">
-                <el-input v-model="form.agreementName" :disabled="row.isAgreementOnline === '0'"/>
+                <el-input v-model="form.agreementName" />
               </el-form-item>
             </el-col>
             <el-col :span="8">

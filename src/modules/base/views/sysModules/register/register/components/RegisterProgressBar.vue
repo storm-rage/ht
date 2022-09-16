@@ -3,23 +3,23 @@
     <div class="register-progress-item w120px" :class="itemClass(1)">
       <div class="register-progress-index-start">{{ index[1] }}</div>
       <div class="register-progress-title left75px">线上注册申请</div>
-      <div class="register-progress-desc left50px">
+      <div class="register-progress-desc left50">
         <div class="register-progress-desc-prefix">{{ descPrefix[1] }}</div>
         {{ desc[1] }}
       </div>
     </div>
     <div class="register-progress-item" :class="itemClass(2)">
       <div class="register-progress-index">{{ index[2] }}</div>
-      <div class="register-progress-title left108px">平台审核</div>
-      <div class="register-progress-desc">
+      <div class="register-progress-title left212">平台审核</div>
+      <div class="register-progress-desc left173">
         <div class="register-progress-desc-prefix">{{ descPrefix[2] }}</div>
         {{ desc[2] }}
       </div>
     </div>
     <div class="register-progress-item" :class="itemClass(3)">
       <div class="register-progress-index">{{ index[3] }}</div>
-      <div class="register-progress-title left108px">注册成功</div>
-      <div class="register-progress-desc">
+      <div class="register-progress-title left212">注册成功</div>
+      <div class="register-progress-desc left173">
         <div class="register-progress-desc-prefix">{{ descPrefix[3] }}</div>
         {{ desc[3] }}
       </div>
@@ -71,7 +71,7 @@ export default {
 .register-progress-item {
   display: inline-block;
   vertical-align: top;
-  width: 141px;
+  width: 240px;
   font-size: 12px;
   color: #999999;
 }
@@ -151,13 +151,13 @@ export default {
 .register-progress-item .register-progress-desc {
   position: relative;
   left: 73px;
-  width: 110px;
+  width: 160px;
   padding: 10px;
   min-height: 56px;
   border: 1px solid #D8D8D8;
   background: #FFFFFF;
   border-radius: 5px;
-  line-height: 14px;
+  line-height: 18px;
   word-wrap: break-word;
   margin-top: 5px;
 }
@@ -181,5 +181,16 @@ export default {
 }
 .register-progress-item .register-progress-desc-prefix {
   color: #333333;
+}
+.register-progress-item {
+  .left50 {
+    left: 50px;
+  }
+  .left212 {
+    left: 212px;
+  }
+  .left173 {
+    left: 173px;
+  }
 }
 </style>

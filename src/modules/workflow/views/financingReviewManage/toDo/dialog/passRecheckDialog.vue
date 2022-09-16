@@ -38,6 +38,7 @@ export default {
       dialogShow:false,
       dialogForm: {
         transInfo: {},
+        financingApplyInfo: {},
       },
       titleInfo: '',
       bizId: '',
@@ -45,15 +46,48 @@ export default {
   },
   methods: {
     onConfirm(flag) {
+      let loanDate = this.dialogForm.financingApplyInfo.loanDate//融资开始日
+      let loanDateStart = new Date(loanDate.substr(0,4)+'/'+loanDate.substr(4,2)+'/'+loanDate.substr(6,2))
+      let timeNow = new Date()
+      let submitTime = timeNow.getHours()
+      let blSetTime = this.dialogForm.blSetTime.slice(0,2)
+      // if(loanDateStart.getTime() < timeNow.getTime()
+      // ) {
+      //   this.$message.error('客户融资开始日早于当天，不允许提交！')
+      //   return
+      // }
+      // if(loanDateStart.getDate() === timeNow.getDate() && submitTime > blSetTime.toNumber() && this.dialogForm.blSetTime) {
+      //   this.$messageBox({
+      //     type:'warning',
+      //     content:'已超过保理公司设置工作时间，是否继续提交？',
+      //     showCancelButton: true,
+      //     messageResolve:()=>{
+      //       let params = {
+      //         attachList: this.dialogForm.otherAttachList,
+      //         creditId: this.dialogForm.blContractInfo.creditId,
+      //         isRiskFlag: this.dialogForm.isRiskFlag,
+      //         operateFlag: flag,//融资审核操作标志：1-保理公司初审通过 2-保理公司初审驳回 3-保理公司复审通过 4-保理公司复审驳回上一级
+      //         remark: this.dialogForm.rejectReason,
+      //         voucherId: this.dialogForm.voucherCreditInfo?this.dialogForm.voucherCreditInfo.voucherId:'',
+      //         bizId: this.bizId,
+      //       }
+      //
+      //     },
+      //     messageReject:()=>{
+      //       this.dialogShow = false
+      //     }
+      //   })
+      //
+      // }
       let params = {
-        attachList: this.dialogForm.otherAttachList,
-        creditId: this.dialogForm.blContractInfo.creditId,
-        isRiskFlag: this.dialogForm.isRiskFlag,
-        operateFlag: flag,//融资审核操作标志：1-保理公司初审通过 2-保理公司初审驳回 3-保理公司复审通过 4-保理公司复审驳回上一级
-        remark: this.dialogForm.rejectReason,
-        voucherId: this.dialogForm.voucherCreditInfo?this.dialogForm.voucherCreditInfo.voucherId:'',
-        bizId: this.bizId,
-      }
+                  attachList: this.dialogForm.otherAttachList?this.dialogForm.otherAttachList:[],
+                  creditId: this.dialogForm.blContractInfo?this.dialogForm.blContractInfo.creditId:'',
+                  isRiskFlag: this.dialogForm.isRiskFlag,
+                  operateFlag: flag,//融资审核操作标志：1-保理公司初审通过 2-保理公司初审驳回 3-保理公司复审通过 4-保理公司复审驳回上一级
+                  remark: this.dialogForm.remark,
+                  voucherId: this.dialogForm.voucherCreditInfo?this.dialogForm.voucherCreditInfo.voucherId:'',
+                  bizId: this.bizId,
+                }
       //初审
       this.zjControl.submitFirstAudit(params).then(res=>{
         this.$message.success(res.msg)
@@ -63,11 +97,11 @@ export default {
     },
     reviewConfirm(flag) {
       let params = {
-        attachList: this.dialogForm.otherAttachList,
-        creditId: this.dialogForm.blContractInfo.creditId,
+        attachList: this.dialogForm.otherAttachList?this.dialogForm.otherAttachList:[],
+        creditId: this.dialogForm.blContractInfo?this.dialogForm.blContractInfo.creditId:'',
         isRiskFlag: this.dialogForm.isRiskFlag,
         operateFlag: flag,//融资审核操作标志：1-保理公司初审通过 2-保理公司初审驳回 3-保理公司复审通过 4-保理公司复审驳回上一级
-        remark: this.dialogForm.rejectReason,
+        remark: this.dialogForm.remark,
         voucherId: this.dialogForm.voucherCreditInfo?this.dialogForm.voucherCreditInfo.voucherId:'',
         bizId: this.bizId,
       }

@@ -55,14 +55,14 @@
                 </el-form>
               </template>
               <zj-table ref="searchTable" :params="searchForm" :api="zjControl.queryFactoringCreditPage">
-                <zj-table-column field="companyName" title="供应商名称"/>
-                <zj-table-column field="supplierCode" title="核心企业名称"/>
-                <zj-table-column field="supplierName" title="核心企业是否海天集团"/>
-                <zj-table-column field="checkBillDate" title="额度开始日" :formatter="date"/>
-                <zj-table-column field="estimatedPaymentDate" title="额度到期日" :formatter="date"/>
-                <zj-table-column field="estimatedPaymentDate" title="授信额度" :formatter="money"/>
-                <zj-table-column field="estimatedPaymentDate" title="剩余可用额度" :formatter="money"/>
-                <zj-table-column field="billSource" title="融资状态" :formatter="obj=>typeMap(dictionary.factoringCreditStatus,obj.cellValue)"/>
+                <zj-table-column field="sellerName" title="供应商名称"/>
+                <zj-table-column field="buyerName" title="核心企业名称"/>
+                <zj-table-column field="isHtEnterprise" title="核心企业是否海天集团"/>
+                <zj-table-column field="factoringCreditStartDate" title="额度开始日" :formatter="date"/>
+                <zj-table-column field="factoringCreditEndDate" title="额度到期日" :formatter="date"/>
+                <zj-table-column field="adjustCreditAmount" title="授信额度" :formatter="money"/>
+                <zj-table-column field="availableCreditAmount" title="剩余可用额度" :formatter="money"/>
+                <zj-table-column field="factoringCreditStatus" title="额度状态" :formatter="obj=>typeMap(dictionary.factoringCreditStatus,obj.cellValue)"/>
               </zj-table>
             </zj-list-layout>
           </div>

@@ -12,6 +12,7 @@
 
           <el-form-item label="对账单状态：" class="col-center">
             <el-select v-model="searchForm.checkBillStatus">
+              <el-option label="全部" value="" />
               <el-option v-for="item in dictionary.checkBillStatus" :key="item.code" :label="item.desc" :value="item.code">
               </el-option>
             </el-select>
@@ -23,6 +24,7 @@
 
           <el-form-item label="是否申请开立债权凭证：">
             <el-select v-model="searchForm.isApplyVoucher">
+              <el-option label="全部" value="" />
               <el-option v-for="item in dictionary.isApplyVoucher" :key="item.code" :label="item.desc" :value="item.code">
               </el-option>
             </el-select>

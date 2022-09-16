@@ -6,16 +6,16 @@
             <zj-list-layout>
               <template slot="searchForm">
                 <el-form ref="searchForm" :model="searchForm">
-                  <el-form-item label="凭证开立/转让日期：">
+                  <el-form-item label="签发日期开立/转让日期：">
                     <zj-date-range-picker
                       :startDate.sync="searchForm.stateChangeDateStart"
                       :endDate.sync="searchForm.stateChangeDateEnd"
                     ></zj-date-range-picker>
                   </el-form-item>
-                  <el-form-item label="签发人/转让方：">
+                  <el-form-item label="开单人/转让方：">
                     <el-input v-model="searchForm.fromEntNameLike" @keyup.enter.native="search"></el-input>
                   </el-form-item>
-                  <el-form-item label="凭证金额：">
+                  <el-form-item :label="`${productName}金额：`">
                     <zj-amount-range :startAmt.sync="searchForm.ebillAmt" :endAmt.sync="searchForm.ebillAmt"></zj-amount-range>
                   </el-form-item>
                   <el-form-item label="签收类型：">
@@ -32,13 +32,12 @@
                 </el-form>
               </template>
               <zj-table ref="searchTable" :api="zjControl.queryBillSignPage" :params="searchForm">
-<!--              <zj-table ref="searchTable"  :dataList="list">-->
-                <zj-table-column field="ebillCode" title="凭证编号"/>
-                <zj-table-column field="fromEntName" title="签发人/转让方"/>
+                <zj-table-column field="ebillCode" :title="`${productName}编号`"/>
+                <zj-table-column field="fromEntName" title="开单人/转让方"/>
                 <zj-table-column field="operType" title="签收类型" :formatter="obj=>typeMap(dictionary.openType,obj.cellValue)"/>
-                <zj-table-column field="ebillAmt" title="凭证金额" :formatter="money"/>
-                <zj-table-column field="expireDate" title="凭证到期日" :formatter="date"/>
-                <zj-table-column field="stateChangeDate" title="凭证开立/转让日期" :formatter="date"/>
+                <zj-table-column field="ebillAmt" :title="`${productName}金额`" :formatter="money"/>
+                <zj-table-column field="expireDate" :title="`${productName}到期日`" :formatter="date"/>
+                <zj-table-column field="stateChangeDate" title="签发/转让日期" :formatter="date"/>
                 <zj-table-column title="操作">
                   <template v-slot="{row}">
                     <zj-button type="text" @click="signFor(row)">签收</zj-button>
@@ -60,6 +59,11 @@ export default {
   components: {
     rejectDialog,
   },
+  computed: {
+    productName() {
+      return this.$store.getters['user/productName']
+    }
+  },
   data() {
     return {
       zjControl: {
@@ -77,19 +81,6 @@ export default {
         ebillAmt: '',
         operType: '',
       },
-      list: [
-        {
-          field1: 'scm00001',
-          field2: '某某产品一号',
-          field3: '上游',
-          field4: '订单保理',
-          field5: '2022.09.08 11:18:19',
-          field6: '生效',
-          field7: '是',
-          id: '1',
-          state: 'B002',
-        }
-      ],
       dictionary: {},
       rowId: '',
       rowState: '',
@@ -119,6 +110,11 @@ export default {
   created() {
     this.getApi()
     this.getBillSignDictionary()
-  }
+  },
+  activated() {
+    if(this.dictionary.openType) {
+      this.search()
+    }
+  },
 };
 </script>

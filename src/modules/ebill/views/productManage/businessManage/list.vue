@@ -57,6 +57,7 @@
           <zj-table ref="searchContractTable"
                     :api="zjControl.contractTableApi"
                     row-id="id"
+                    :syncUpdateFlag="dicLoadingFlag"
                     :params="searchForm"
                     @after-load="handleDataChange"
                     @radio-change="handleRadioChange"
@@ -97,7 +98,7 @@
     <zj-content-block v-if="currentContractRow.id">
       <zj-header title="贸易关系"></zj-header>
       <zj-content>
-        <zj-table ref="searchTradeTable" :pager="false" :dataList="tradeList">
+        <zj-table ref="searchTradeTable" :pager="false" :syncUpdateFlag="dicLoadingFlag" :dataList="tradeList">
           <zj-table-column field="buyerName" title="核心企业名称"/>
           <zj-table-column field="isHtEnterprise" title="核心企业是否海天集团" :formatter="(obj) => typeMap(dictionary.isHtEnterprise, obj.cellValue)"/>
           <zj-table-column
@@ -110,12 +111,13 @@
           <zj-table-column field="totalCreditAmount" title="供应商总额度" :formatter="money"/>
           <zj-table-column field="estimatedAnnualProcurementAmount" title="预计年采购金额" :formatter="money"/>
           <zj-table-column field="state" title="贸易关系状态" :formatter="(obj) => typeMap(dictionary.state, obj.cellValue)"/>
-          <zj-table-column title="操作" fixed="right">
+          <zj-table-column width="230" title="操作" fixed="right">
             <template v-slot="{ row }">
               <!--贸易关系状态为“正常”时，才展示维护和额度管理-->
               <template v-if="row.state === '1'">
                 <zj-button type="text" :api="zjBtn.maintainTradeRelation" @click="toMaintenance(row)">维护</zj-button>
-                <zj-button type="text" v-if="isDDBL" :api="zjBtn.applyLimit" @click="toMaintenanceQuota(row)">额度管理</zj-button>
+                <zj-button type="text" v-if="isDDBL" :api="zjBtn.applyLimit" @click="toMaintenanceQuota(row, 'EDBG')">额度维护</zj-button>
+                <zj-button type="text" v-if="isDDBL" :api="zjBtn.applyLimit" @click="toMaintenanceQuota(row, 'EDXQ')">额度续签</zj-button>
               </template>
               <template v-else>
                 ——
@@ -172,12 +174,6 @@ export default {
     this.getApi();
     this.zjControl.getDataDirectory().then(res => {
       this.dictionary = res.data
-      this.$nextTick(() => {
-        if (this.$refs.searchContractTable) {
-          console.log('hhhh')
-          this.$refs.searchContractTable.refreshColumn();
-        }
-      })
     })
   },
   methods: {
@@ -242,8 +238,8 @@ export default {
      * 额度管理
      * @param row
      */
-    toMaintenanceQuota (row) {
-      this.goChild('quotaMaintenance',{id: this.currentContractRow.id,busTradeId:row.busTradeId,tradeId:row.tradeId});
+    toMaintenanceQuota (row,applyType) {
+      this.goChild('quotaMaintenance',{id: this.currentContractRow.id,busTradeId:row.busTradeId,tradeId:row.tradeId, applyType});
     },
   }
 };

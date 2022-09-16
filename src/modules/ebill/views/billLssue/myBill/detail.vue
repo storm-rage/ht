@@ -1,5 +1,15 @@
 <template>
     <zj-content-container>
+      <!-- 底部工作流状态 -->
+      <zj-workflow v-model="workflow" :list="workflowList">
+        <!-- 审核时 -->
+        <el-row slot="right">
+          <el-row class="btn-w85 zj-center">
+            <zj-button @click="back">返回</zj-button>
+          </el-row>
+        </el-row>
+      </zj-workflow>
+
       <!--  电子债权凭证详情  -->
       <zj-top-header :title="titleInfo"></zj-top-header>
       <zj-content-block v-if="workflow === 'pzxx'">
@@ -14,17 +24,6 @@
         <!--    流转轨迹    -->
         <locus :billTraceTree="form.billTraceTree"/>
       </zj-content-block>
-
-      <!-- 底部工作流状态 -->
-      <zj-workflow v-model="workflow" :list="workflowList">
-        <!-- 审核时 -->
-        <el-row slot="right">
-          <el-row class="btn-w85 zj-center">
-            <zj-button class="back" @click="goParent">返回</zj-button>
-          </el-row>
-        </el-row>
-      </zj-workflow>
-
     </zj-content-container>
 </template>
 
@@ -33,6 +32,9 @@ import billDetail from './components/billDetail'
 import locus from './components/locus'
 import tradeBackground from './components/tradeBackground'
 
+/**
+ * 公共凭证详情
+ */
 export default {
   name: "billLssueMyBillDetail",
   components: {
@@ -41,9 +43,12 @@ export default {
     tradeBackground,
   },
   computed: {
+    productName() {
+      return this.$store.getters['user/productName']
+    },
     titleInfo() {
-      return this.workflow === 'lzgj'?'电子凭证流转轨迹':this.workflow === 'pzxx'||'mybj'?'电子债权凭证详情':''
-    }
+      return this.workflow === 'lzgj'?`${this.productName}流转轨迹`:this.workflow === 'pzxx'||'mybj'?`${this.productName}详情`:''
+    },
   },
   watch: {
     workflow() {
@@ -68,6 +73,13 @@ export default {
     }
   },
   methods: {
+    back() {
+      if (this.row.parentRouteName) {
+        this.goParent(this.row.parentRouteName)
+      }else {
+        this.goParent();
+      }
+    },
     //获取凭证详情
     getHoldBillDetail() {
       let params = {

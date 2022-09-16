@@ -5,7 +5,9 @@
       <zj-table ref="searchTable" class="zj-search-table" :dataList="baseInfoList" :pager="false">
         <zj-table-column field="sellerName" title="供应商名称" />
         <zj-table-column field="buyerName" title="核心企业名称" />
-        <zj-table-column field="cactoringLogo" title="保理标识" />
+        <zj-table-column field="cactoringLogo" title="保理标识" :formatter="
+          (obj) => typeMap(dictionary.cactoringLogo, obj.cellValue)
+        " />
       </zj-table>
     </zj-content-block>
     <zj-content-block>
