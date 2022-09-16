@@ -37,7 +37,7 @@
         <div class="zj-m-t-20 zj-center">
           <el-button style="width: 100px" size="small" type="primary" v-if="isEdit" @click="toAddFile">新增</el-button>
         </div>
-        <el-row class="zj-m-t-20">
+        <el-row class="zj-m-t-20" v-if="isShowDesc">
           <el-col>
             <el-form-item label="业务描述：" prop="busDesc">
               <el-input type="textarea" v-model="form.busDesc" :disabled="!isEdit"></el-input>
@@ -64,6 +64,11 @@ export default {
     },
     busDesc:String,
     isEdit: {
+      type: Boolean,
+      default: true
+    },
+    // 是否显示业务描述
+    isShowDesc: {
       type: Boolean,
       default: true
     }

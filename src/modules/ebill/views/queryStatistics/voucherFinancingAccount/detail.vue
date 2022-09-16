@@ -6,7 +6,7 @@
       <el-form :model="form" ref="form" label-width="200px" class="financingForm">
         <zj-content-block>
           <zj-header title="融资信息" />
-          <el-row>
+          <zj-content><el-row>
             <el-col :span="12">
               <el-form-item label="融资企业：">
                 {{ xqx.toEntName }}
@@ -73,11 +73,13 @@
               <zj-table-column field="yearAmt" title="年化本金" :formatter="money" />
 
             </zj-table>
-          </zj-collapse>
+          </zj-collapse></zj-content>
+          
         </zj-content-block>
         <zj-content-block>
+          
           <zj-header title="融资协议" />
-          <zj-table ref="searchTable" class="zj-search-table" :dataList="xqx.agreementFileList">
+          <zj-content> <zj-table ref="searchTable" class="zj-search-table" :dataList="xqx.agreementFileList">
             <zj-table-column type="seq" title="序号" />
             <zj-table-column field="fileName" title="协议附件" />
             <zj-table-column title="操作">
@@ -85,11 +87,12 @@
                 <zj-button type="text" @click="agreementDownLoad(row.fileId)">下载</zj-button>
               </template>
             </zj-table-column>
-          </zj-table>
+          </zj-table></zj-content>
+         
         </zj-content-block>
         <zj-content-block>
           <zj-header title="其他附件" />
-          <zj-table ref="searchTable" class="zj-search-table" :dataList="xqx.otherAttachList">
+          <zj-content> <zj-table ref="searchTable" class="zj-search-table" :dataList="xqx.otherAttachList">
             <zj-table-column type="seq" title="序号" />
             <zj-table-column field="bizType" title="附件类型" />
             <zj-table-column field="remark" title="补充说明" />
@@ -98,7 +101,8 @@
                 <zj-button type="text" @click="attaDownLoad(row.fileId)">下载</zj-button>
               </template>
             </zj-table-column>
-          </zj-table>
+          </zj-table></zj-content>
+         
         </zj-content-block>
 
       </el-form>
@@ -107,7 +111,7 @@
     <zj-content-block v-show="workflow === 'pzxx' && row.financingProductType !== '0'">
       <zj-content-block>
         <zj-header title="凭证信息" />
-        <zj-table ref="billtable" class="zj-search-table" :dataList="voucherInfoList" 
+        <zj-content><zj-table ref="billtable" class="zj-search-table" :dataList="voucherInfoList" 
           :params="{ id: row.writerId, serialNo: row.serialNo, }" 
           @radio-change="handleRadioChange" :radio-config="{ highlight: true }" :pager="false">
           <!-- :api="zjControl.getFinancingBillInfos" -->
@@ -119,12 +123,13 @@
           <zj-table-column field="payableIssuanceDate" title="签发日期" :formatter="date" />
           <zj-table-column field="payableAmt" :title="`${productName}金额`" :formatter="money" />
           <zj-table-column field="payableExpireDate" :title="`${productName}到期日`" :formatter="date" />
-        </zj-table>
+        </zj-table></zj-content>
+        
       </zj-content-block>
       <div class="zz"></div>
       <zj-content-block>
         <zj-header :title="`对账单信息:（${productName}编号：${this.bjcode})`" />
-        <zj-table ref="searchTable" :dataList="billList" :pager="false">
+        <zj-content> <zj-table ref="searchTable" :dataList="billList" :pager="false">
           <zj-table-column field="acctBillCode" title="对账单编号" />
           <zj-table-column field="companyName" title="买方名称" />
           <zj-table-column field="supplierCode" title="供应商业务系统编码" />
@@ -136,12 +141,13 @@
           <zj-table-column field="isApplyVoucher" title="是否申请开立债权凭证" />
           <zj-table-column field="checkBillPerson" title="对账人" />
           <zj-table-column field="billSource" title="对账单来源" />
-        </zj-table>
+        </zj-table></zj-content>
+       
       </zj-content-block>
       <div class="zz"></div>
       <zj-content-block>
         <zj-header :title="`贸易背景资料（资产编号：${this.bjcode})`" />
-        <el-tabs v-model="tabs" class="zj-tabs-card">
+        <zj-content><el-tabs v-model="tabs" class="zj-tabs-card">
           <el-tab-pane label="贸易合同信息" name="tradeContract">
             <zj-table ref="searchTable" :dataList="BusinessContract">
               <zj-table-column field="contractNo" title="贸易合同编号：" />
@@ -190,7 +196,8 @@
               </zj-table-column>
             </zj-table>
           </el-tab-pane>
-        </el-tabs>
+        </el-tabs></zj-content>
+        
       </zj-content-block>
 
     </zj-content-block>
