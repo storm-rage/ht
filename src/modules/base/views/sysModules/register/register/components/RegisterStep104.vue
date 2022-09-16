@@ -767,6 +767,7 @@ export default {
 .operator-table {
   margin-bottom: 20px;
 }
+
 .explain-text {
   display: flex;
   padding: 20px 0;
