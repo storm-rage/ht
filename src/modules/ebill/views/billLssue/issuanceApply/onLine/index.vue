@@ -364,18 +364,4 @@ export default {
     min-width: auto;
   }
 }
-/deep/#ZjWorkflow {
-  .workflow-top {
-    .el-row {
-      padding: 5px 0 0;
-      text-align: center;
-    }
-  }
-  .workflow-bottom {
-    .right {
-      width: 100%;
-      text-align: center;
-    }
-  }
-}
 </style>

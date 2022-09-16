@@ -12,7 +12,7 @@
         </div>
         <div class="register-white">
           <div class="register-body">
-            <zj-top-header title="注冊"/>
+            <zj-top-header title="注册"/>
             <el-form ref="form" :model="form" :rules="rules" class="register-form" label-width="160px">
               <el-form-item label="企业名称：" prop="name">
                 <el-input class="zj-pw-100" v-model="form.name" placeholder="请输入企业名称" @change="nameChange"/>
