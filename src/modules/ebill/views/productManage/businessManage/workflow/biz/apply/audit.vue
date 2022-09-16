@@ -7,6 +7,7 @@
     <!-- 贸易关系   -->
     <trade-list
       ref="tradeInfo"
+      :product-type="businessParamModel.productType"
       :tradeList="tradeRelationModelList"
       :is-edit-cactoring-logo="true"
       :bizId="businessParamModel.id"

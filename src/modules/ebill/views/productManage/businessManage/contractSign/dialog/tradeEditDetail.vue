@@ -127,7 +127,9 @@ export default {
     isEditCactoringLogo: {
       type: Boolean,
       default: false
-    }
+    },
+    // 产品类型
+    productType:String
   },
   computed: {
     cactoringLogoList () {
@@ -184,7 +186,7 @@ export default {
           this.form = res.data.tradeRelationModel
           const businessParamModel = res.data.businessParamModel;
           this.prodInfo = {
-            productTypes: businessParamModel.productType.split(','),
+            productTypes: this.productType.split(','),
             rdProductName: businessParamModel.rdProductName,
             ddProductName: businessParamModel.ddProductName
           }

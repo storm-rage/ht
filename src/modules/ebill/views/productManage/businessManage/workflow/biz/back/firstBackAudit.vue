@@ -8,6 +8,7 @@
     <trade-list
     ref="tradeInfo"
     :tradeList="tradeRelationModelList"
+    :product-type="businessParamModel.productType"
     :is-edit-cactoring-logo="true"
     :bizId="businessParamModel.id"
     :dic="dictionary"></trade-list>
