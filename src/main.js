@@ -9,6 +9,8 @@ import store from './store'
 // plugin style import
 import ElementUI from './common/elementUI'
 import VxeTable from './common/vxeTable'
+import i18n from './common/i18n';
+
 import {
   ZjComponents,
   ZjDirectives,
@@ -45,6 +47,7 @@ let vm = new Vue({
   },
   router,
   store,
+  i18n,
   render: h => h(App)
 })
 export default vm
