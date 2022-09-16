@@ -14,7 +14,7 @@ const clearTransactionQueryRouter = [
   {
     path: '/queryExpireClearDetail',
     name: 'queryExpireClearDetail',
-    component: () => import('../views/queryStatistics/clearTransactionQuery/detail'),
+    component: () => import('../views/queryStatistics/clearTransactionQuery/detail.vue'),
     meta: {
       title: `凭证尾款清算交易详情`,
       root: '查询统计',

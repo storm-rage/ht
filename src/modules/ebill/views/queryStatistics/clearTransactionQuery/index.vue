@@ -59,7 +59,7 @@
               <zj-table ref="searchTable" :params="searchForm" :api="zjControl.queryExpireClearPage">
                 <zj-table-column title="申请流水号">
                   <template v-slot="{row}">
-                    <zj-button type="text" @click="toDetail(row)" :api="zjBtn.getExpireClearDetail">{{row.serialNo}}</zj-button>
+                    <el-link type="text" @click="toDetail(row)"><span class="blue">{{row.serialNo}}</span></el-link>
                   </template>
                 </zj-table-column>
                 <zj-table-column field="clearType" title="申请类型" :formatter="obj=>typeMap(dictionary.applyType,obj.cellValue)"/>
@@ -118,3 +118,8 @@ export default {
   }
 };
 </script>
+<style scoped>
+.blue{
+  color: blue;
+}
+</style>

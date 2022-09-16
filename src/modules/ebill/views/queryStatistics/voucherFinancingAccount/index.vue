@@ -129,3 +129,8 @@ export default {
   },
 };
 </script>
+<style scoped lang="less">
+/deep/.vxe-cell{
+display: inline-flex;
+}
+</style>
