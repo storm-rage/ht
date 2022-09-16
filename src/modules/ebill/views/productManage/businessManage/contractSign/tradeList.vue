@@ -30,6 +30,7 @@
       </zj-content>
     </zj-content-block>
     <trade-edit-detail ref="tradeEditDetail"
+                       :productType="productType"
                        :dic="dic"
                        :bizId="bizId"
                        :is-edit-cactoring-logo="isEditCactoringLogo"
@@ -50,6 +51,8 @@ export default {
     dic: Object,
     // 业务ID
     bizId: String,
+    // 产品类型
+    productType:String,
     // 是否可以修改保理标识，初审可以修改
     isEditCactoringLogo: {
       type: Boolean,

@@ -11,6 +11,7 @@
       <!--  贸易关系  -->
       <trade-list  ref="tradeInfo"
                    :tradeList="tradeRelationModelList"
+                   :product-type="businessParamModel.productType"
                    :bizId="row.id"
                    :dic="dictionary"></trade-list>
     </el-form>

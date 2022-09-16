@@ -7,6 +7,7 @@
     <!-- 贸易关系   -->
     <trade-list
       ref="tradeInfo"
+      :product-type="businessParamModel.productType"
       :tradeList="tradeRelationModelList"
       :bizId="businessParamModel.id"
       :dic="dictionary"></trade-list>

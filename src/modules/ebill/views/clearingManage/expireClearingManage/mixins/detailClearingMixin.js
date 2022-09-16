@@ -42,6 +42,7 @@ export default {
         clearType: this.row.clearType
       }).then(res => {
         this.basicInfo = res.data.basicInfo;
+        this.basicInfo.bizDesc = res.data.bizDesc;
         this.billList = res.data.waitClearInfoList;
         if (this.billList)
           this.attachList = this.transferListToCommon(res.data.attachInfoList || []);
