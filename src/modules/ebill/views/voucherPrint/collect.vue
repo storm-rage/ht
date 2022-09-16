@@ -116,7 +116,7 @@ export default {
         return this.$messageBox({
           type: "info",
           content: `请输入${
-            this.$i18n.messages[this.$i18n.locale].lang.financingName
+            this.$store.getters['user/productName']
           }编号`,
           title: "提示",
           showConfirmButton: true,
