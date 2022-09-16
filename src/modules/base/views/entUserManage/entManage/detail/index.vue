@@ -138,7 +138,7 @@
     <!-- 其他信息 -->
     <ent-else-info :detailData="detailData" />
     <!--  其他附件    -->
-    <other-file-setting ref="ofileSetting" :isEdit="false" v-if="this.detailData.pubOtherAttachList"></other-file-setting>
+    <other-file-setting ref="ofileSetting" :isEdit="false" v-show="this.detailData.pubOtherAttachList"></other-file-setting>
     <zj-content-footer>
       <zj-button @click="goParent">返回</zj-button>
     </zj-content-footer>
@@ -206,7 +206,9 @@ export default {
         }
         this.detailData = res.data;
         // 其他附件
-        this.$refs.ofileSetting.$data.fileList = this.detailData.pubOtherAttachList || []
+        this.$nextTick(() => {
+          this.$refs.ofileSetting.$data.fileList = this.detailData.pubOtherAttachList || []
+        })
         this.handleAttach(res.data)
       });
     },
