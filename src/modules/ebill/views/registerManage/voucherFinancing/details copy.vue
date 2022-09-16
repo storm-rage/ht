@@ -1,18 +1,18 @@
 <template>
-    <zj-content-container>
-      <!-- 底部工作流状态 -->
-      <zj-workflow v-model="workflow" :list="workflowList" v-if="row.financingProductType !== '0'">
-        <!-- 审核时 -->
-        <el-row slot="right">
-          <el-row class="btn-w85 zj-center">
-            <zj-button class="back" @click="goParent">返回</zj-button>
-          </el-row>
+  <zj-content-container>
+    <!-- 底部工作流状态 -->
+    <zj-workflow v-model="workflow" :list="workflowList" v-if="row.financingProductType !== '0'">
+      <!-- 审核时 -->
+      <el-row slot="right">
+        <el-row class="btn-w85 zj-center">
+          <zj-button class="back" @click="back()">返回</zj-button>
         </el-row>
-      </zj-workflow>
-      
-      <!--  融资交易详情  -->
-      <zj-top-header title="融资交易详情"/>
-      <zj-content-block v-if="workflow === 'sqxx'">
+      </el-row>
+    </zj-workflow>
+
+    <!--  融资交易详情  -->
+    <zj-top-header title="融资交易详情" />
+       <zj-content-block v-if="workflow === 'sqxx'">
           <el-form :model="form" ref="form" label-width="200px" class="zj-m-t-20">
             <zj-content-block>
               <zj-header title="交易信息"/>
@@ -205,7 +205,7 @@
                   </el-form-item>
                 </el-col>
                 <el-col :span="8" v-if="row.financingProductType !== '0'">
-                  <el-form-item label="保理合同到期日：">{{form.availableCreditAmount?date(form.availableCreditAmount):''}}</el-form-item>
+                  <el-form-item label="保理合同到期日：">{{form.expireDate?date(form.expireDate):''}}</el-form-item>
                 </el-col>
               </el-row>
               </zj-content>
@@ -330,53 +330,57 @@
 
       </zj-content-block>
 
-      <zj-content-footer  v-if="row.financingProductType === '0'">
-        <zj-button class="back" @click="goParent">返回</zj-button>
-      </zj-content-footer>
+    <zj-content-footer v-if="row.financingProductType === '0'">
+      <zj-button class="back" @click="back()">返回</zj-button>
+    </zj-content-footer>
 
-    </zj-content-container>
+  </zj-content-container>
 </template>
 
 <script>
+// import operateLog from "../components/operateLog";
+// import tradeContract from '../components/tradeContract'
+// import invoice from '../components/invoice'
+// import attaList from '../components/attaList'
+
 import tradeContract from './tradeBackgroundInfo/tradeContract'
 import invoice from './tradeBackgroundInfo/invoice'
 import attaList from './tradeBackgroundInfo/attaList'
-
-
 export default {
   name: "toDoDetail",
   components: {
     tradeContract,
     invoice,
     attaList,
-  },
-  computed: {
-    productName() {
-      return this.$store.getters['user/productName']
-    },
+
   },
   watch: {
     workflow() {
       this.getDetail()
     }
   },
+  computed: {
+    productName() {
+      return this.$store.getters['user/productName']
+    },
+  },
   data() {
     return {
-      form:{
-        operEbTranTxListLogs:[],
+      form: {
+        operEbTranTxListLogs: [],
       },
-      ebillInfo:{
-        accountBillInners:[],
+      ebillInfo: {
+        accountBillInners: [],
       },
       ebillCode: '',//选中的凭证信息的编号
       activeEbillCodeNo: '',//选中的凭证信息的对账单编号
-      dictionary:{},
-      tabs:'tradeContract',
+      dictionary: {},
+      tabs: 'tradeContract',
       zjControl: {
-        getFinancingTransDetail:this.$api.zhongdengManage.detailssq,//融资交易查询-详情
-        getFinancingTransDirectory:this.this.$api.zhongdengManage.getDictionary,//数据字典
-        getFinancingBillInfos:this.$api.zhongdengManage.detailspz,//凭证信息
-        getOtherInfoByBill:this.$api.zhongdengManage.changedata,//凭证信息-详情
+        getFinancingTransDetail: this.$api.zhongdengManage.detailssq,//融资申请信息-详情
+        getFinancingTransDirectory: this.$api.zhongdengManage.getDictionary,//数据字典
+        getFinancingBillInfos: this.$api.zhongdengManage.detailspz,//凭证信息
+        getOtherInfoByBill: this.$api.zhongdengManage.changedata,//凭证信息-详情
 
       },
       workflow: 'sqxx',
@@ -386,6 +390,10 @@ export default {
     }
   },
   methods: {
+    back() {
+      console.log("返回");
+      this.goParent("zhongdengManage", false)
+    },
     getDictionary() {
       this.zjControl.getFinancingTransDirectory().then(res => {
         this.dictionary = Object.assign({}, res.data)
@@ -393,58 +401,63 @@ export default {
     },
     getDetail() {
       let params = {
-        id : this.row.id,
+        id: this.row.id,
         serialNo: this.row.serialNo,
       }
       //申请信息
-      if(this.workflow === 'sqxx') {
-        this.zjControl.getFinancingTransDetail(params).then(res=>{
+      if (this.workflow === 'sqxx') {
+        this.zjControl.getFinancingTransDetail(params).then(res => {
           this.form = res.data
         })
       }
       //凭证信息
-      if(this.workflow === 'pzxx') {
+      if (this.workflow === 'pzxx') {
 
       }
     },
     agreementDownLoad() {
 
     },
-    attaDownLoad() {},
+    attaDownLoad() { },
 
     handleDataChange(rows) {
       //默认勾选第一个凭证信息
-      if(rows&& rows.length) {
+      if (rows && rows.length) {
         this.$refs.billInfoTable.setRadioRow(rows[0])
-        this.handleRadioChange({row: rows[0]})
+        this.handleRadioChange({ row: rows[0] })
       }
     },
-    handleRadioChange({row}) {
+    handleRadioChange({ row }) {
       this.ebillCode = row.ebillCode
       let params = {
-        ebBillCode : row.ebillCode ,
+        ebBillCode: row.ebillCode,
       }
-      this.zjControl.getOtherInfoByBill(params).then(res=>{
+      this.zjControl.getOtherInfoByBill(params).then(res => {
         //对账单列表
         this.ebillInfo.accountBillInners = res.data.accountBillInners
         //对账单编号
         this.activeEbillCodeNo = this.ebillInfo.accountBillInners[0].acctBillCode
         //背景资料信息列表
-        this.ebillInfo.contractInfos = res.data.contractInfos
+        this.ebillInfo.contractInfo = res.data.contractInfos[0]
         this.ebillInfo.invoices = res.data.invoices
         this.ebillInfo.otherAttachs = res.data.otherAttachs
       })
     },
   },
   created() {
+    const currentActiveTab = this.getCurrentActiveTab();
+    if (currentActiveTab) {
+      this.activeComp = currentActiveTab;
+      this.removeCurrentTab();
+    }
     this.getApi()
     this.getRow()
     this.getDictionary()
     this.getDetail()
+    console.log(this.row);
   }
 }
 </script>
 
 <style scoped lang="less">
-
 </style>
