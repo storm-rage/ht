@@ -180,7 +180,7 @@ export default {
   methods: {
     show(row,isEdit = false,isNeedReq = true) {
       if (isNeedReq) {
-        this.$api.businessManage.getTradeRelationDetail({busTradeId: row.busTradeId,id: this.bizId,tradeId: row.tradeId}).then(res => {
+        this.$api.businessManage.getTradeRelationDetail({busTradeId: row.busTradeId,busTradeTmpId: row.busTradeTmpId,id: this.bizId,tradeId: row.tradeId}).then(res => {
           this.form = res.data.tradeRelationModel
           const businessParamModel = res.data.businessParamModel;
           this.prodInfo = {

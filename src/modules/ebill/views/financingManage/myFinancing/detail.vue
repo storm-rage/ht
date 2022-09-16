@@ -4,6 +4,7 @@
     <zj-top-header :title="titleInfo"/>
     <zj-content-block>
       <zj-header title="融资信息"/>
+      <zj-content>
       <el-form ref="form" label-width="200px" class="zj-m-t-20">
         <zj-content-block>
           <el-row class="hd-row">
@@ -23,7 +24,7 @@
             <el-col :span="12">
               <el-form-item label="融资申请金额：">
                 <span>{{detail.tranAmt ? moneyNoSynbol(detail.tranAmt) : ''}}</span>
-                <span>{{detail.tranAmt ? digitUp(detail.tranAmt) : ''}}</span>
+                <span class="zj-m-l-10">{{detail.tranAmt ? digitUp(detail.tranAmt) : ''}}</span>
               </el-form-item>
             </el-col>
           </el-row>
@@ -31,12 +32,12 @@
             <el-col :span="12">
               <el-form-item label="融资期限：">
                 {{date(detail.applyDatetime)}}
-                {{detail.expireDate ? `至`+date(detail.expireDate) : ''}}
-                {{detail.estimateDays ? `共${detail.estimateDays}` : ''}}
+                {{detail.expireDate ? `至 ${date(detail.expireDate)}` : ''}}
+                {{detail.estimateDays ? `共${detail.estimateDays}天` : ''}}
               </el-form-item>
             </el-col>
             <el-col :span="12">
-              <el-form-item label="融资月利率：">{{detail.interestRate}}</el-form-item>
+              <el-form-item label="融资月利率：">{{detail.interestRate?`${rate(detail.interestRate)}%`:''}}</el-form-item>
             </el-col>
           </el-row>
           <el-row>
@@ -44,12 +45,12 @@
               <el-form-item label="收款银行账号：">{{detail.receiptAcctNo}}</el-form-item>
             </el-col>
             <el-col :span="12">
-              <el-form-item label="融资状态：">{{detail.workflowState}}</el-form-item>
+              <el-form-item label="融资状态：">{{detail.workflowState?typeMap(dictionary.workflowState,detail.workflowState):''}}</el-form-item>
             </el-col>
           </el-row>
           <el-row>
             <el-col :span="12">
-              <el-form-item label="还款状态：">{{detail.repaymentFlag}}</el-form-item>
+              <el-form-item label="还款状态：">{{detail.repaymentFlag?typeMap(dictionary.repaymentType,detail.repaymentFlag):''}}</el-form-item>
             </el-col>
           </el-row>
         </zj-content-block>
@@ -59,8 +60,8 @@
                     :pager="false"
           >
             <zj-table-column type="seq" title="序号" width="60"/>
-            <zj-table-column field="voucherNo" title="还款方式" />
-            <zj-table-column field="entName" title="凭证编号" />
+            <zj-table-column field="voucherNo" title="还款方式" :formatter="obj=>typeMap(dictionary.repaymentType,obj.cellValue)"/>
+            <zj-table-column field="entName" :title="`${productName}编号`" />
             <zj-table-column field="repaymentDate" title="还款日期" :formatter="date"/>
             <zj-table-column field="repaymentAmt" title="还款金额" :formatter="money"/>
             <zj-table-column field="repaymentPrincipalAmt" title="还款本金" :formatter="money"/>
@@ -73,9 +74,11 @@
           </el-row>
         </zj-collapse>
       </el-form>
+      </zj-content>
     </zj-content-block>
     <zj-content-block>
       <zj-header title="融资协议"/>
+      <zj-content>
       <zj-table ref="searchTable" class="zj-search-table"
                 :dataList="detail.voucherList"
                 :pager="false"
@@ -88,6 +91,7 @@
           </template>
         </zj-table-column>
       </zj-table>
+      </zj-content>
     </zj-content-block>
     <zj-content-footer>
       <zj-button class="submit-button" @click="goParent">返回</zj-button>
@@ -101,8 +105,12 @@
 export default {
   name: "myFinancingDetail",
   computed: {
+    productName() {
+      return this.$store.getters['user/productName']
+    },
     titleInfo() {
-      return this.row.financingProductType === '0' ? '订单保理融资详情' : '入库融资/凭证融资详情'
+      return this.row.financingProductType === '0' ? '订单保理融资详情' :
+        this.row.financingProductType === '1' || '2' ? `${this.productName}融资详情` : '融资详情'
     }
   },
   data() {
@@ -132,11 +140,10 @@ export default {
     },
     attaDownLoad(row) {
       this.zjControl.downloadFile({
-        fileUrl: row.fileId,
+        fileId: row.fileId,
         fileName: row.fileName,
       })
     },
-
   },
   created() {
     this.getApi()

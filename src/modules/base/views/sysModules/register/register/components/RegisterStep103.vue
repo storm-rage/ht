@@ -27,7 +27,7 @@
         <el-row>
           <zj-button status="primary" @click="pre">上一步</zj-button>
           <zj-button status="primary" @click="save('SAVE')">保存</zj-button>
-          <zj-button status="primary" @click="next('NEXT')">下一步</zj-button>
+          <zj-button type="primary" @click="next('NEXT')">下一步</zj-button>
           <zj-button status="primary" @click="testAgain('AGAIN')">重新发起验证</zj-button>
         </el-row>
       </el-row>
@@ -104,7 +104,9 @@ export default {
         invoiceTaxpayerId: '',
         isHtEnterprise: '',
         legalCertExpireDate: '',
+        legalCertTerm: false,
         legalCertNo: '',
+        legalBankAccno: '',//银行卡号，证件类型为非身份证时必填
         legalCertRegDate: '',
         legalCertType: '',
         legalPersonName: '',
@@ -114,6 +116,7 @@ export default {
         provinceZh: '',
         registerCapital: '',
         registerEndDate: '',
+        term: false,
         registerOperateFlag: '',
         registerPhone: '',
         registerStartDate: '',
@@ -420,55 +423,13 @@ export default {
   border-radius: 5px;
 }
 </style>
-<style lang="less">
-  //证件有效期
-  .certnoIndate{
-      width: 100%;
-      div{
-        float: left;
-      }
-      .el-form-item{
-        /*width: 45%;*/
-        width: 140px!important;
-        float: left;
-        margin-bottom: 0!important;
-        .el-form-item__content,.el-date-editor{
-          width: 100% !important;
+<style lang="less" scoped>
+  .register-form {
+    .el-form-item {
+      .el-form-item__content {
+        /deep/.el-input {
+          width: 600px!important;
         }
-        .el-form-item__label{
-          display: block!important;
-
-        }
-        .el-form-item__error{
-          width: 110%!important;
-        }
-        //input
-        .el-input__inner{
-          padding-left:5px;
-          padding-right:15px;
-        }
-        // icon
-        /*.el-input__prefix,.el-input__suffix{*/
-        /*  width: 24px;*/
-        /*  left: unset;*/
-        /*  right: 3px;*/
-        /*}*/
-        /*.el-input__suffix{*/
-        /*  right: 1px;*/
-        /*}*/
-      }
-      /*span{*/
-      /*  width: 10%;*/
-      /*  float: left;*/
-      /*}*/
-  }
-</style>
-<style lang="less">
-  .one-row-max{
-    .el-form-item__content{
-      width: 640px;
-      .el-input{
-        width: 100%;
       }
     }
   }

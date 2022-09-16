@@ -4,7 +4,7 @@
 
     <zj-content>
       <!--   代办和已办结没有新增按钮   -->
-      <el-row class="button-row">
+      <el-row class="button-row" style="margin-bottom: 10px;" >
         <zj-button type="primary" icon="el-icon-circle-plus-outline" @click="addEditAgreement('','新增')" :api="zjControl.getAddDetail">新增</zj-button>
       </el-row>
       <zj-table ref="agreementTable"
@@ -46,7 +46,12 @@ export default {
     tableData: Object,
     dictionary: Object,
     zjControl: Object,
-    rowData: Object,
+    rowData: {
+      type: Object,
+      default: ()=>{
+        return {}
+      }
+    },
   },
   components: {
     ZjButton,

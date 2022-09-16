@@ -7,6 +7,7 @@
     <!--  贸易关系  -->
     <trade-detail :tradeList="tradeRelationModelList"
                   :dic="dictionary"
+                  :is-show-contract-info="isShowContractInfo"
                   :prodInfo="prodInfo"></trade-detail>
   </div>
 </template>
@@ -23,7 +24,13 @@ export default {
     detailApi: {
       type: Function,
       required: true
-    }
+    },
+    //是否显示合同信息
+    isShowContractInfo: {
+      type: Boolean,
+      default: false
+    },
+    rowData: Object
   },
   components: {
     SupplierBaseInfo,
@@ -52,9 +59,13 @@ export default {
   },
   methods: {
     getDetail() {
-      this.detailApi({id: this.bizId}).then(res => {
+      let params = {id: this.bizId}
+      if(this.rowData && this.rowData.tabAtive!='agenda') {
+        params.finish = true
+      }
+      this.detailApi(params).then(res => {
         this.businessParamModel = res.data.businessParamModel;
-        this.tradeRelationModelList = res.data.tradeRelationModelList;
+        this.tradeRelationModelList = res.data.tradeRelationModelList || Array.isArray(res.data.tradeRelationModel)?res.data.tradeRelationModel:[res.data.tradeRelationModel];
         this.prodInfo = {
           productTypes: this.businessParamModel.productType.split(','),
           rdProductName: this.businessParamModel.rdProductName,

@@ -45,7 +45,10 @@ export default {
       dictionary: {},
       rejectLoading: false,
       passLoading: false,
-      detailInfo: {}
+      detailInfo: {
+        operateLogList: [],
+        bankCapitalFlow: {}
+      }
     };
   },
   created() {
@@ -61,7 +64,7 @@ export default {
       });
     },
     getDetail() {
-      this.zjControl.getBillReceiptReviewDetail({id: this.row.bizId}).then(res => {
+      this.zjControl.getNoBillReceiptReviewDetail({id: this.row.bizId}).then(res => {
         this.detailInfo = res.data;
       });
     },
@@ -74,7 +77,7 @@ export default {
       }).then(() => {
         const {notes} = this.$refs.auditRemark.getData()
         this.passLoading = true;
-        this.zjControl.recheckContractRenewal({
+        this.zjControl.noBillReceiptReview({
           id: this.row.bizId,
           notes,
           operResult: OperResult.PASS
@@ -95,7 +98,7 @@ export default {
         if (valid) {
           const {notes} = this.$refs.auditRemark.getData()
           this.rejectLoading = true;
-          this.zjControl.recheckContractRenewal({
+          this.zjControl.noBillReceiptReview({
             id: this.row.bizId,
             notes,
             operResult: OperResult.BACK

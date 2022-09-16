@@ -64,13 +64,14 @@ export default {
         busTradeId: this.row.busTradeId,
         buyerId: this.row.buyerId,
         buyerName: this.row.buyerName,
-        maintainType: this.row.maintainType?this.row.maintainType:'0',//0-待办维护 1-保理公司直接维护,现仅阶段性维护跳转给row加maintainType
+        // maintainType: this.row.maintainType?this.row.maintainType:'0',//0-待办维护 1-保理公司直接维护,现仅阶段性维护跳转给row加maintainType
+        maintainType: '0',//0-待办维护 1-保理公司直接维护,现仅阶段性维护跳转给row加maintainType
         sellerId: this.row.sellerId,
         sellerName: this.row.sellerName,
         serialNo: this.row.serialNo,
       }
-      let requestUrl = this.row.maintainType=='1'?this.zjControl.getBackPhasedAgreeInfo:this.zjControl.getWaitPhasedAgreeInfo
-      requestUrl(params).then(res=>{
+      // let requestUrl = this.row.maintainType=='1'?this.zjControl.getBackPhasedAgreeInfo:this.zjControl.getWaitPhasedAgreeInfo
+      this.zjControl.getWaitPhasedAgreeInfo(params).then(res=>{
         this.detailData = res.data
       })
     },
@@ -92,7 +93,7 @@ export default {
       if(flag=='1' && !this.rejectReason) {
         this.$message.error('请填写审核意见')
       }
-      if(isHaveFinancingAgreement) {
+      if(isHaveFinancingAgreement || flag==='拒绝') {
         let params = {
           busTradeId: this.row.busTradeId,
           applyId: this.detailData.businessApplyInfo?.applyId,//申请记录id：保理公司直接维护时不需要传
@@ -101,14 +102,14 @@ export default {
           rejectReason: this.rejectReason,
           serialNo: this.detailData.businessApplyInfo?.serialNo,//申请流水号：保理公司直接维护时不需要传
         }
-        let requestUrl = this.row.maintainType=='1'?this.zjControl.submitBackPhasedAgree:this.zjControl.submitWaitBackPhasedAgree
+        // let requestUrl = this.row.maintainType=='1'?this.zjControl.submitBackPhasedAgree:this.zjControl.submitWaitBackPhasedAgree
         this.$messageBox({
           type:'info',
           title:'温馨提示',
           content:`是否确认${flag}？`,
           showCancelButton: true,
           messageResolve:()=>{
-            requestUrl(params).then(res=>{
+            this.zjControl.submitWaitBackPhasedAgree(params).then(res=>{
               this.getDetail()
               this.$message.success(res.msg)
               this.goParent()

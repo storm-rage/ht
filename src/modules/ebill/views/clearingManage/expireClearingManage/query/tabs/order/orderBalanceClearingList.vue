@@ -40,7 +40,7 @@
         <zj-table-column field="holderCode" title="供应商编码"/>
         <zj-table-column field="holderName" title="供应商名称"></zj-table-column>
         <zj-table-column field="repaymentOrderNo" title="收款单号"/>
-        <zj-table-column field="ebillCode" title="凭证编号"/>
+        <zj-table-column field="ebillCode" :title="`${$store.getters['user/productName']}编号`"/>
         <zj-table-column field="financingSerialno" title="融资流水号"/>
         <zj-table-column field="repayDate" title="还款日期" :formatter="date"/>
         <zj-table-column field="oddAmt" title="尾款金额" :formatter="money"/>
@@ -88,7 +88,9 @@ export default {
         repaymentOrderNo: ''
       },
       // 尾款金额汇总
-      totalOddAmt: 0
+      totalOddAmt: 0,
+      // 缓存当前激活tab
+      currentActiveTab: 'orderFactoringClearing:orderBalanceClearingList'
     }
   },
   created() {
@@ -110,7 +112,7 @@ export default {
       }
     },
     /**
-     * todo:跳转凭证详情
+     * 跳转凭证详情
      * @param row
      */
     toViewDetail(row) {},
@@ -147,14 +149,14 @@ export default {
           return;
         }
       }
-      this.goChild('orderBalanceClearingApply',{clearId, clearType: this.searchForm.clearType})
+      this.goChild('orderBalanceClearingApply',{clearId, clearType: this.searchForm.clearType,currentActiveTab: this.currentActiveTab})
     },
     /**
      * 单笔尾款清算申请
      * @param row
      */
     singleClearingApply (row) {
-      this.goChild('orderBalanceClearingApply',{clearId: [row.id], clearType: this.searchForm.clearType})
+      this.goChild('orderBalanceClearingApply',{clearId: [row.id], clearType: this.searchForm.clearType,currentActiveTab: this.currentActiveTab})
     },
     /**
      * 导出

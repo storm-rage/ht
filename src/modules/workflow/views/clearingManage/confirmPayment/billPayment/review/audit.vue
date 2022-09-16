@@ -45,7 +45,10 @@ export default {
       dictionary: {},
       rejectLoading: false,
       passLoading: false,
-      detailInfo: {}
+      detailInfo: {
+        operateLogList: [],
+        bankCapitalFlow: {}
+      }
     }
   },
   created() {

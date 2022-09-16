@@ -6,15 +6,27 @@
         <el-col :span="8">
           <el-form-item label="融资企业：">{{form.fromEntName}}</el-form-item>
         </el-col>
-        <el-col :span="8">
+        <el-col :span="8" v-if="proType === '0'">
+          <el-form-item label="买方企业名称：">{{form.fromEntName}}</el-form-item>
+        </el-col>
+        <el-col :span="8" v-if="proType !== '0'">
           <el-form-item label="申请转让金额：">{{form.tranferAmt}}</el-form-item>
         </el-col>
-        <el-col :span="8">
+        <el-col :span="8" v-if="proType === '0'">
+          <el-form-item label="融资月利率：">{{form.interestRate}}</el-form-item>
+        </el-col>
+        <el-col :span="8" v-if="proType !== '0'">
           <el-form-item label="融资比例：">{{ form.discountRate?`${form.discountRate}%`:'-'}}</el-form-item>
         </el-col>
       </el-row>
       <el-row>
-        <el-col :span="8">
+        <el-col :span="8" v-if="proType === '0'">
+          <el-form-item label="应收账款金额：">{{form.tranferAmt?`${form.tranferAmt}元`:''}}</el-form-item>
+        </el-col>
+        <el-col :span="8" v-if="proType === '0'">
+          <el-form-item label="应收账款转让比例：">{{form.discountRate?`${form.discountRate}%`:''}}</el-form-item>
+        </el-col>
+        <el-col :span="8" v-if="proType === '0'">
           <el-form-item label="融资申请金额：">
             {{form.tranAmt}}
             <div>
@@ -22,13 +34,26 @@
             </div>
           </el-form-item>
         </el-col>
-        <el-col :span="8">
+      </el-row>
+      <el-row>
+        <el-col :span="8" v-if="proType !== '0'">
+          <el-form-item label="融资申请金额：">
+            {{form.tranAmt}}
+            <div>
+              <zj-content-tip text="（融资申请金额=申请转让金额*融资比例）"/>
+            </div>
+          </el-form-item>
+        </el-col>
+        <el-col :span="8" v-if="proType !== '0'">
           <el-form-item label="融资月利率：">{{form.interestRate}}</el-form-item>
         </el-col>
         <el-col :span="8" v-if="proType === '0'">
-          <el-form-item label="融资开始日：">{{form.loanDate}}</el-form-item>
+          <el-form-item label="融资开始日：">{{form.loanDate?date(form.loanDate):''}}</el-form-item>
         </el-col>
-        <el-col :span="8" v-if="proType !== '0'">
+        <el-col :span="8" v-if="proType === '0'">
+          <el-form-item label="融资到期日：">{{form.loanDate?date(form.loanDate):''}}</el-form-item>
+        </el-col>
+        <el-col :span="8">
           <el-form-item label="预计融资期限：">
             {{date(form.estimateTimeStart)}}
             {{`至${date(form.estimateTimeEnd)}`}}
@@ -37,7 +62,7 @@
         </el-col>
       </el-row>
       <el-row>
-        <el-col :span="8" v-if="proType === '0'">
+        <el-col :span="8" v-if="proType !== '0'">
           <el-form-item label="预计融资期限：">
             {{date(form.estimateTimeStart)}}
             {{`至${date(form.estimateTimeEnd)}`}}
@@ -74,7 +99,6 @@
       <zj-content-block v-if="proType === '0'">
         <zj-table ref="searchTable" class="zj-search-table"
                   :dataList="phasedAgreementList"
-                  :pager="false"
         >
           <zj-table-column field="agreementNo" title="阶段性协议编号" />
           <zj-table-column field="agreementName" title="阶段性协议名称" />
@@ -92,24 +116,23 @@
           </zj-table-column>
         </zj-table>
         <el-row class="zj-m-l-10 zj-m-t-10" >
-          订单预估总额合计：{{moneyNoSynbol(totalAccount)}}
+          订单预估总额合计：{{moneyNoSynbol(ddTotalAmt)}}
         </el-row>
       </zj-content-block>
       <zj-content-block v-if="proType !== '0'">
         <zj-table ref="searchTable" class="zj-search-table"
                   :dataList="voucherList"
-                  :pager="false"
         >
-          <zj-table-column field="ebillCode" title="海e单编号" />
-          <zj-table-column field="rootCode" title="原始海e单编号" />
+          <zj-table-column field="ebillCode" :title="`${productName}编号`" />
+          <zj-table-column field="rootCode" :title="`原始${productName}编号`" />
           <zj-table-column field="writerName" title="凭证签发人" />
           <zj-table-column field="transferName" title="转让企业" />
-          <zj-table-column field="ebillAmt" title="海e单金额" :formatter="money"/>
+          <zj-table-column field="ebillAmt" :title="`${productName}金额`" :formatter="money"/>
           <zj-table-column field="holderDate" title="凭证持有日期" :formatter="date"/>
-          <zj-table-column field="expireDate" title="海e单到期日" :formatter="date"/>
+          <zj-table-column field="expireDate" :title="`${productName}到期日`" :formatter="date"/>
         </zj-table>
         <el-row class="zj-m-l-10 zj-m-t-10" >
-          海e单金额合计：{{moneyNoSynbol(totalAccount)}}
+          {{productName}}金额合计：{{moneyNoSynbol(ddTotalAmt)}}
         </el-row>
       </zj-content-block>
 
@@ -126,6 +149,7 @@ export default {
     phasedAgreementList: Array,
     proType: String,
     dictionary: Object,
+    ddTotalAmt: String,
   },
   computed: {
     totalAccount() {
@@ -138,6 +162,9 @@ export default {
       return arr.reduce((pre,cur)=>
         pre + cur , 0
       )
+    },
+    productName() {
+      return this.$store.getters['user/productName']
     }
   },
   data() {

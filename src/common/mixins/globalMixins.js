@@ -1,4 +1,4 @@
-import {windowLsStorege} from '@utils/storageUtils';
+import {windowLsStorege,windowSSStorage} from '@utils/storageUtils';
 export default {
   install(Vue){
     Vue.mixin({
@@ -6,6 +6,12 @@ export default {
         return {
           zjBtn: {},
           row: {},
+        }
+      },
+      computed: {
+        // 字典加载成功标识，用于需要字典格式化表格数据场景
+        dicLoadingFlag() {
+          return this.dictionary&&!this.XEUtils.isEmpty(this.dictionary)
         }
       },
       methods:{
@@ -107,6 +113,8 @@ export default {
 
           if(this.afterResetSearch && typeof(this.afterResetSearch) === 'function'){
             this.afterResetSearch()
+          } else if (this.$parent && this.$parent.afterResetSearch && typeof(this.$parent.afterResetSearch) === 'function') {
+            this.$parent.afterResetSearch()
           }
           this.search(boo)
         },
@@ -123,15 +131,19 @@ export default {
             }
           }
         },
-        goChild(routerName,row = {}){
+        goChild(routerName,row = {}, type){
           if(this.beforeGoChild && typeof(this.beforeGoChild) === 'function'){
             this.beforeGoChild()
           }
+          let fromRouteName = this.$route.name
           this.$router.push({
             name:routerName,
             params:{
               rowData:row
             }
+          }).then(()=>{
+            // 是否是待办里点处理，此时的route已是跳转后的route
+            if(type=='todo') this.$route.meta.newParent = fromRouteName
           })
           this.$nextTick(() => {
             this.tabRefresh()
@@ -147,6 +159,30 @@ export default {
             rowData = JSON.parse(windowLsStorege.getItem(`${this.$route.name}Data`))
           }
           this.row = Object.assign({}, rowData)
+          this.storeCurrentTab()
+        },
+        /**
+         * 缓存当前激活的tab页签
+         * @returns {Promise<void>}
+         */
+        async storeCurrentTab() {
+          if (this.row.currentActiveTab) {
+            windowSSStorage.setItem(this.$route.meta.parent+'currentActiveTab',this.row.currentActiveTab)
+          }
+        },
+        /**
+         * 获取当前激活tab页签
+         * @returns {string}
+         */
+        getCurrentActiveTab() {
+          return windowSSStorage.getItem(this.$route.name+'currentActiveTab')
+        },
+        /**
+         * 删除当前激活tab页签
+         * @returns {Promise<void>}
+         */
+        async removeCurrentTab() {
+          windowSSStorage.removeItem(this.$route.name+'currentActiveTab')
         },
         removeRow(){
           windowLsStorege.removeItem(`${this.$route.name}Data`)
@@ -155,7 +191,7 @@ export default {
           if(this.beforeGoParent && typeof(this.beforeGoParent) === 'function'){
             this.beforeGoParent()
           }
-          //父,todo:需要改造
+          //父,todo:需要改造，上面goChild已改造
           let rItem = {
             name: typeof(parentName) !== 'object' && parentName ? parentName : this.row.parent ||  this.$route.meta.newParent || this.$route.meta.parent,
             meta:Object.assign({},this.$route.meta),

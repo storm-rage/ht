@@ -12,7 +12,6 @@ import VxeTable from './common/vxeTable'
 import {
   ZjComponents,
   ZjDirectives,
-  ZjI18N as i18n,
   ZjFilters,
   ZjCommonMixins,
   Moment
@@ -44,7 +43,6 @@ let vm = new Vue({
   data: {
     Hub: new Vue() //组件之间的交互
   },
-  i18n,
   router,
   store,
   render: h => h(App)

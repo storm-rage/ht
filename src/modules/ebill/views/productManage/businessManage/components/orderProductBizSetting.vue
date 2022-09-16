@@ -3,6 +3,23 @@
     <zj-content-block>
       <zj-header :title="title"></zj-header>
       <zj-content>
+        <el-row :gutter="10" v-if="isShowContractInfo&&form.contractNo">
+          <el-col :span="8">
+            <el-form-item label="保理合同编号：" >
+              {{form.contractNo}}
+            </el-form-item>
+          </el-col>
+          <el-col :span="8">
+            <el-form-item label="保理合同有效期：" >
+              {{form.contractStartDate}}~{{form.contractEndDate}}
+            </el-form-item>
+          </el-col>
+          <el-col :span="8">
+            <el-form-item label="保理合同状态：" >
+              {{typeMap(dic.contractStatus, form.contractStatus)}}
+            </el-form-item>
+          </el-col>
+        </el-row>
         <el-row :gutter="10">
           <el-col :span="12">
             <el-form-item label="保理追索方式："
@@ -32,25 +49,13 @@
               </el-select>
             </el-form-item>
           </el-col>
-          <el-col :span="12">
-            <el-form-item label="订单保理额度开始日："
-                          prop="factoringCreditStartDate"
-                          :rules="[
-                          {required: true,message: '请选择订单保理额度开始日',trigger: ['change','blur']}
-                        ]">
-              <zj-date-picker :date.sync="form.factoringCreditStartDate"
-                              :pickerOptions="factoringCreditStartDateConfig"
-                              :disabled="!isEdit"/>
-            </el-form-item>
-          </el-col>
-          <el-col :span="12">
+          <el-col :span="24">
             <el-form-item label="订单保理额度到期日："
                           prop="factoringCreditEndDate"
                           :rules="[
                           {required: true,message: '请选择订单保理额度到期日',trigger: ['change','blur']}
                         ]">
               <zj-date-picker :date.sync="form.factoringCreditEndDate"
-                              :pickerOptions="factoringCreditEndDateConfig"
                               :disabled="!isEdit"/>
             </el-form-item>
           </el-col>
@@ -76,7 +81,7 @@
                               :disabled="!isEdit"/>&nbsp;共{{cacluateAccountDays}}天
             </el-form-item>
           </el-col>
-          <el-col :span="24">
+          <el-col :span="12">
             <el-form-item label="订单融资月利率："
                           prop="factoringFinancingMonthRate"
                           :rules="[
@@ -84,7 +89,16 @@
                         ]">
               <zj-number-input :disabled="!isEdit&&!isOnlyMonthRateEdit" :max="100" :precision="4" v-model.trim="form.factoringFinancingMonthRate">
                 <template slot="append">%</template>
-              </zj-number-input>&nbsp;<zj-text-tip text="注：订单融资日利率=订单融资月利率/30"></zj-text-tip>
+              </zj-number-input><br/><zj-text-tip text="注：订单融资日利率=订单融资月利率/30"></zj-text-tip>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12" v-if="isShowContractInfo&&!form.contractNo">
+            <el-form-item label="订单保理额度："
+                          prop="factoringCreditAmount"
+                          :rules="[
+                          {required: true,message: '请输入订单保理额度',trigger: ['change','blur']}
+                        ]">
+                <zj-number-input :disabled="!isEdit&&!isOnlyMonthRateEdit" :precision="2" v-model.trim="form.factoringCreditAmount"></zj-number-input>
             </el-form-item>
           </el-col>
         </el-row>
@@ -114,6 +128,11 @@ export default {
       default: false
     },
     title:String,
+    //是否显示合同信息
+    isShowContractInfo: {
+      type: Boolean,
+      default: false
+    },
     // 字典
     dic: Object
   },
@@ -146,7 +165,8 @@ export default {
         factoringCreditStartDate: '',
         factoringCreditEndDate: '',
         accountStartDate: '',
-        accountEndDate: ''
+        accountEndDate: '',
+        factoringCreditAmount: ""
       },
       accountStartDateConfig: {
         disabledDate:(time)=>{

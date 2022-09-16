@@ -52,10 +52,11 @@ router.beforeEach((to, from, next) => {
       if (res.isSuccess) {
         if (res.needSignAgreement) {
           next({
-            path: '/signAgreement',
+            name: 'signAgreement',
             params:{
               rowData:res.model
-            }
+            },
+            replace: true
           })
         }else {
           next('/home')
@@ -112,7 +113,7 @@ router.beforeEach((to, from, next) => {
 
   //头部标题
   if (to.meta.title) {
-    window.document.title = to.meta.title
+    window.document.title = to.meta.title.replace(new RegExp("\\{0\\}","g"),store.getters['user/productName'])
   } else {
     // const menu = store.state.menu.menuList.find(item => item.url === to.name)
     window.document.title = process.env.VUE_APP_TITLE

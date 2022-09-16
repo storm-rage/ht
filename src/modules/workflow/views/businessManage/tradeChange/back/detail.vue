@@ -4,7 +4,7 @@
     <!--  业务申请信息  -->
     <biz-apply-info :biz-info="applyModel"></biz-apply-info>
     <!--  具体业务信息  -->
-    <business-detail :biz-id="row.bizId" :detail-api="zjControl.getDetail"></business-detail>
+    <business-detail :biz-id="row.bizId" :isShowContractInfo="true" :detail-api="zjControl.getDetail"></business-detail>
     <!--  操作记录  -->
     <operate-log :log-list="operateLogList"></operate-log>
     <zj-content-footer>

@@ -3,7 +3,8 @@
     <zj-content-block>
       <zj-header title="其他附件"/>
       <el-row v-if="opeType">是否已完成中登查询？若无，点此前往
-        <zj-button type="text" @click="toZdNet">中登网</zj-button>
+        <!-- <zj-button type="text" @click="toZdNet">中登网</zj-button> -->
+        <a href="https://www.zhongdengwang.org.cn/" target="_blank">中登网</a>
       </el-row>
       <zj-table ref="otherAttachTable" class="zj-search-table"
                 :dataList="dataList" :pager="false"
@@ -67,9 +68,9 @@ export default {
     }
   },
   methods: {
-    toZdNet() {
-      //this.$router.push({path: ''})
-    },
+    // toZdNet() {
+    //   this.$router.push({path: 'https://www.zhongdengwang.org.cn/'})
+    // },
     attaDownLoad(row) {
       this.$api.baseCommon.downloadFile({
         fileUrl: row.fileId,

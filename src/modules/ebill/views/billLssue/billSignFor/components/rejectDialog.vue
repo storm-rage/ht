@@ -10,7 +10,7 @@
       </el-form-item>
     </el-form>
     <div slot="footer" class="dialog-footer">
-      <zj-button status="primary" @click="onConfirm">确认</zj-button>
+      <zj-button type="primary" @click="onConfirm">确认</zj-button>
       <zj-button status="primary" @click="cancel">取消</zj-button>
     </div>
 
@@ -48,6 +48,7 @@ export default {
           state: this.state,
         }
         this.zjControl.rejectBillSign(params).then(res=>{
+          this.$message.success(res.msg)
           this.dialogShow = false
         })
       })

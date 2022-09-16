@@ -4,7 +4,7 @@
       <ZjTopHeader>请确认电子债权凭证签发申请</ZjTopHeader>
     </div>
     <zj-table ref="searchTable" :dataList="row.list">
-      <zj-table-column field="ebillCode" title="海e单编号" />
+      <zj-table-column field="ebillCode" :title="`${productName}编号`" />
       <zj-table-column field="acctBillCode" title="对账单编号" />
       <zj-table-column field="companyName" title="买方名称" />
       <zj-table-column field="supplierName" title="供应商名称" />
@@ -30,7 +30,7 @@
       />
       <zj-table-column
         field="dueBillDate"
-        title="海e单到期日"
+        :title="`${productName}到期日`"
         :formatter="date"
       />
       <zj-table-column field="voucherRemark" title="备注" />
@@ -69,6 +69,8 @@
       <div v-html="dialogHtml"></div>
     </el-dialog>
     <!-- 工作流 -->
+    <!-- 云证书签章 -->
+    <zj-certuficate ref="certuficate" @confirm="handleCertuficateDone" />
   </div>
 </template>
 
@@ -77,6 +79,7 @@ export default {
   data () {
     return {
       zjControl: {
+        signUserProtocol: this.$api.login.signUserProtocol, //人脸签署
         billCommit: this.$api.openBillApply.billCommit, //对账单-提交复核
         getKdAgreeemnt: this.$api.openBillApply.getKdAgreeemnt // 开单确认书-协议查看
       },
@@ -92,6 +95,9 @@ export default {
       return this.row.list
         ? this.row.list.reduce((all, item) => (all += +item.totalOpenAmt), 0)
         : 0
+    },
+    productName() {
+      return this.$store.getters['user/productName']
     }
   },
   activated () {
@@ -112,19 +118,27 @@ export default {
           this.$message.warning('请检查我已阅读并同意相关协议是否勾选')
           return
         } else {
-          this.zjControl
-            .billCommit({
-              accountBillList: this.row.list,
-              applyType: this.row.applyType
-            })
-            .then(res => {
-              if (res.code === 200) {
-                this.toParent()
-                this.$message.success('提交成功!')
-              }
-            }).catch(()=>{})
+          if(this.row.isHtEnterprise=='1') {
+            this.save()
+          } else {
+            this.signUserProtocol()
+          }
         }
       })
+    },
+    save () {
+      this.zjControl
+        .billCommit({
+          accountBillList: this.row.list,
+          applyType: this.row.applyType
+        })
+        .then(res => {
+          if (res.code === 200) {
+            this.toParent()
+            this.$message.success('提交成功!')
+          }
+        })
+        .catch(() => {})
     },
     //取消
     toParent () {
@@ -150,7 +164,16 @@ export default {
           this.dialogShow = true
         })
         .catch(() => {})
-    }
+    },
+    // 去签协议
+    signUserProtocol () {
+      this.$refs.certuficate.open()
+    },
+    //云证书返回
+    handleCertuficateDone() {
+      console.log("云证书返回");
+      this.save()
+    },
   }
 }
 </script>

@@ -1,5 +1,5 @@
 import { toDateString, toTimeString, formatNumberRgx,formatNumberRgxNoSymbol, formatBankNum, getPreMonthDate, getPreDayDate, extension, isHasValue, digitUp,
-        tycDate,swArrDate
+        tycDate,swArrDate, formatDate
 } from './index.js'
 export default {
   install (Vue) {
@@ -89,17 +89,8 @@ export default {
             return String(item.code)===String(data);
           });
           // row有可能为undefined，直接取值会报错
-          typeName = row?.desc
-        }else {
-          //当上面循环娶不到值时，则为不正规字典，进行下方循环
-          if(typeName === '—'){
-            for(var j=0; j<list.length; j++){
-              for(var k in list[j]){
-                if(k === data){
-                  typeName = list[j][k]
-                }
-              }
-            }
+          if (row&&row.desc) {
+            typeName = row.desc
           }
         }
       }
@@ -193,6 +184,9 @@ export default {
     Vue.prototype.ifOrNot = function (val) {
       // 1: '是'    0/其他: '否'
       return val&&val=='1'? '是' : '否'
+    },
+    Vue.prototype.formatDate = function (str) {
+      return formatDate(str)
     }
   }
 }

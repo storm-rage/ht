@@ -1,6 +1,6 @@
 <template>
   <header class="LoginHeader">
-    <div class="logo"><img src="@assets/img/layout/Logo.png" class="pointer"/></div>
+    <div class="logo"><img src="@assets/img/layout/Logo2.png" class="pointer"/></div>
     <i class="el-icon-switch-button close" v-if="close" @click="closeClick"></i>
     <ul class="nav" :class="close ? 'zj-m-r-20' : 'zj-m-r-010'">
       <li v-for="(item,index) in routerList" :key="index">
@@ -62,8 +62,8 @@ export default {
     width: 119px;
     height: 52px;
     img {
-      width: 100px;
-      height: 70px;
+      width: 60px;
+      height: 60px;
       border-bottom: 5px solid rgba(0,0,0,0);
     }
   }

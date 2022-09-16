@@ -6,7 +6,7 @@
         剩余可用额度：{{form.availableCreditAmount}}
         总额度：{{form.totalCreditAmount}}
       </div>
-      <zj-content-block>
+      <zj-content>
         <zj-top-header :title="`${titleInfo}复核`"/>
         <el-form :model="form" ref="form" label-width="200px" class="zj-m-t-20">
           <el-row class="hd-row">
@@ -19,14 +19,14 @@
               </el-col>
             </el-row>
           </el-row>
-          <el-row>
+          <el-row v-show="this.row.financingProductType != '2'"> 
             <el-col :span="12">
               <el-form-item label="融资合同编号：">{{form.baseFinancingInfo.contractNo}}</el-form-item>
             </el-col>
             <el-col :span="12">
               <el-form-item label="融资合同期限：">
                 {{date(form.baseFinancingInfo.contractTimeStart)}}
-                {{form.baseFinancingInfo.contractTimeEnd?`至${date(form.baseFinancingInfo.contractTimeEnd)}`:''}}
+                {{form.baseFinancingInfo.contractTimeEnd?`至 ${date(form.baseFinancingInfo.contractTimeEnd)}`:''}}
               </el-form-item>
             </el-col>
           </el-row>
@@ -71,7 +71,7 @@
               </el-form-item>
             </el-col>
             <el-col :span="12" v-if="row.financingProductType === '0'">
-              <el-form-item label="融资月利率：">{{form.baseFinancingInfo.interestRate}}</el-form-item>
+              <el-form-item label="融资月利率：">{{form.baseFinancingInfo?`${form.baseFinancingInfo.interestRate}%`:''}}</el-form-item>
             </el-col>
             <el-col :span="12" v-if="row.financingProductType !== '0'">
               <el-form-item label="融资开始日：">
@@ -83,13 +83,13 @@
             <el-col :span="12">
               <el-form-item label="预计融资期限：">
                 {{date(form.baseFinancingInfo.estimateTimeStart)}}
-                {{form.baseFinancingInfo.estimateTimeEnd?`至${date(form.baseFinancingInfo.estimateTimeEnd)}`:''}}
+                {{form.baseFinancingInfo.estimateTimeEnd?`至 ${date(form.baseFinancingInfo.estimateTimeEnd)}`:''}}
                 {{form.baseFinancingInfo.estimateDays?`共${form.baseFinancingInfo.estimateDays}天`:''}}
               </el-form-item>
             </el-col>
             <el-col :span="12" v-if="row.financingProductType !== '0'">
               <el-form-item label="融资月利率：">
-                {{form.baseFinancingInfo.interestRate?money(form.baseFinancingInfo.interestRate):''}}
+                {{form.baseFinancingInfo.interestRate?`${form.baseFinancingInfo.interestRate}%`:''}}
               </el-form-item>
             </el-col>
             <el-col :span="12" v-if="row.financingProductType === '0'">
@@ -105,7 +105,9 @@
             <el-col :span="12" v-if="row.financingProductType !== '0'">
               <el-form-item label="预计利息：">
                 {{form.baseFinancingInfo.interestAmt?money(form.baseFinancingInfo.interestAmt):''}}
-                <zj-content-tip text="（预计利息 = 融资申请金额*融资月利率/30*预计融资天数）"/>
+                <div>
+                  <zj-content-tip text="（预计利息 = 融资申请金额*融资月利率/30*预计融资天数）"/>
+                </div>
               </el-form-item>
             </el-col>
             <el-col :span="12">
@@ -145,7 +147,7 @@
             <zj-table-column field="expireDate" title="凭证到期日" :formatter="date"/>
           </zj-table>
           <el-row class="zj-m-t-10 zj-m-l-20" >
-            海e单金额合计：{{moneyNoSynbol(form.billInfo?form.billInfo.totalEbillAmt:'')}}
+            {{$store.getters['user/productName']}}金额合计：{{moneyNoSynbol(form.billInfo?form.billInfo.totalEbillAmt:'')}}
           </el-row>
         </zj-content-block>
         <zj-content-block>
@@ -157,12 +159,13 @@
             </ol>
           </div>
         </zj-content-block>
-      </zj-content-block>
+      </zj-content>
     </zj-content-container>
     <zj-content-footer>
       <el-checkbox v-model="checked">我已阅读并同意
         <el-link type="primary" @click="getAgreement('DDBLRZXY')" v-if="row.financingProductType === '0'">《订单保理融资协议》</el-link>
-        <el-link type="primary" @click="getAgreement('RKRZXY')" v-if="row.financingProductType !== '0'">《入库融资协议》</el-link>
+        <el-link type="primary" @click="getAgreement('RKRZXY')" v-if="row.financingProductType === '1'">《入库融资协议》</el-link>
+        <el-link type="primary" @click="getAgreement('PZRZXY')" v-if="row.financingProductType === '2'">《凭证融资协议》</el-link>
       </el-checkbox>
       <zj-button type="primary" @click="reviewResolve">复核通过</zj-button>
       <zj-button class="reject" @click="reject">拒绝</zj-button>
@@ -222,7 +225,7 @@ export default {
     },
     attaDownLoad(row) {
       this.$api.baseCommon.downloadFile({
-        fileUrl: row.fileId,
+        fileId: row.fileId,
         fileName: row.fileName,
       })
     },
@@ -266,6 +269,7 @@ export default {
   line-height:40px;
   text-align: right;
   margin-bottom: 20px;
+  padding-right: 20px;
   color: #e6a23c;
   background-color: #fdf6ec;
 }

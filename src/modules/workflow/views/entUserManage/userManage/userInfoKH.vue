@@ -12,9 +12,10 @@
             </el-col>
             <el-col :span="8">
               <el-form-item label="角色：">
-                <el-select v-model="roleId" filterable placeholder="请选择" :popper-append-to-body="false" disabled>
+                <el-input v-model.trim="form.roleName" disabled />
+                <!-- <el-select v-model="roleId" filterable placeholder="请选择" :popper-append-to-body="false" disabled>
                   <el-option v-for="item in dictionary.roleId" :key="item.code" :label="item.desc" :value="item.code" />
-                </el-select>
+                </el-select> -->
               </el-form-item>
             </el-col>
             <el-col :span="8">
@@ -25,7 +26,7 @@
             <el-col :span="8">
               <el-form-item label="证件类型：" prop="certType">
                 <el-select v-model="form.certType" filterable placeholder="请选择" :popper-append-to-body="false" disabled>
-                  <el-option v-for="item in dictionary.legalCertType" :key="item.code" :label="item.desc" :value="item.code" />
+                  <el-option v-for="item in dictionary.certType" :key="item.code" :label="item.desc" :value="item.code" />
                 </el-select>
               </el-form-item>
             </el-col>

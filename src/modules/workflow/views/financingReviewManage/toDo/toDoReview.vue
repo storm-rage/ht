@@ -1,5 +1,19 @@
 <template>
     <zj-content-container>
+      <div v-if="titleHandle">
+        <!-- 底部工作流状态 -->
+        <zj-workflow v-model="workflow" :list="workflowList" v-if="form.transInfo && form.transInfo.financingProductType !== '0'">
+          <!-- 审核时 -->
+          <el-row slot="right">
+            <el-row class="btn-w85 zj-center">
+              <zj-button type="primary" @click="recheck('复核通过')" v-if="form.transInfo.workflowState === 'F003'||'F004'">审核通过</zj-button>
+              <zj-button class="btn-warning" @click="recheck('复核拒绝')" v-if="form.transInfo.workflowState === 'F003'">审核拒绝</zj-button>
+              <zj-button class="btn-warning" @click="recheck('复核拒绝')" v-if="form.transInfo.workflowState === 'F004'">驳回上一级</zj-button>
+              <zj-button class="back" @click="goParent">返回</zj-button>
+            </el-row>
+          </el-row>
+        </zj-workflow>
+      </div>
       <zj-content>
         <!--  融资审核  -->
         <zj-top-header title="融资审核" v-if="titleHandle"/>
@@ -9,6 +23,7 @@
             <financing-apply-info :form="form.financingApplyInfo" :voucherList="form.voucherList"
                                   :proType="form.transInfo.financingProductType" :phased-agreement-list="form.phasedAgreementList"
                                   :dictionary="dictionary"
+                                  :ddTotalAmt="form.ddTotalAmt"
             />
             <agreement-info-list :dataList="form.agreementInfoList"/>
 
@@ -98,13 +113,13 @@
                       :pager="false"
             >
               <zj-table-column type="radio" width="40"/>
-              <zj-table-column field="ebillCode" title="海e单编号" />
-              <zj-table-column field="rootCode" title="原始海e单编号" />
+              <zj-table-column field="ebillCode" :title="`${productName}编号`" />
+              <zj-table-column field="rootCode" :title="`原始${productName}编号`" />
               <zj-table-column field="writerName" title="凭证开单人" />
               <zj-table-column field="transferName" title="转让企业" />
               <zj-table-column field="holderDate" title="签发日期" :formatter="date"/>
-              <zj-table-column field="ebillAmt" title="海e单金额" :formatter="money"/>
-              <zj-table-column field="expireDate" title="海e单到期日" :formatter="date"/>
+              <zj-table-column field="ebillAmt" :title="`${productName}金额`" :formatter="money"/>
+              <zj-table-column field="expireDate" :title="`${productName}到期日`" :formatter="date"/>
             </zj-table>
           </zj-content-block>
           <zj-content-block>
@@ -141,26 +156,15 @@
           </zj-content-block>
         </zj-content-block>
 
-        <!-- 底部工作流状态 -->
-        <zj-workflow v-model="workflow" :list="workflowList" v-if="form.transInfo.financingProductType !== '0'">
-          <!-- 审核时 -->
-          <el-row slot="right">
-            <el-row class="btn-w85 zj-center">
-              <zj-button type="primary" @click="recheck('复核通过')">审核通过</zj-button>
-              <zj-button class="btn-warning" @click="recheck('复核拒绝')" v-if="form.transInfo.workflowState === 'F003'">审核拒绝</zj-button>
-              <zj-button class="btn-warning" @click="recheck('复核拒绝')" v-if="form.transInfo.workflowState === 'F004'">驳回上一级</zj-button>
-              <zj-button class="btn-warning" @click="recheck('复核拒绝')">审核拒绝</zj-button>
-              <zj-button class="back" @click="goParent">返回</zj-button>
-            </el-row>
-          </el-row>
-        </zj-workflow>
-        <!--   融资产品类型：0-订单融资 1-入库融资 2-凭证融资   -->
-        <zj-content-footer v-if="form.transInfo.financingProductType === '0'">
-          <zj-button type="primary" @click="recheck('复核通过')">审核通过</zj-button>
-          <zj-button class="btn-warning" @click="recheck('复核拒绝')" v-if="form.transInfo.workflowState === 'F003'">审核拒绝</zj-button>
-          <zj-button class="btn-warning" @click="recheck('复核拒绝')" v-if="form.transInfo.workflowState === 'F004'">驳回上一级</zj-button>
-          <zj-button class="back" @click="goParent">返回</zj-button>
-        </zj-content-footer>
+        <div v-if="titleHandle">
+          <!--   融资产品类型：0-订单融资 1-入库融资 2-凭证融资   -->
+          <zj-content-footer v-if="form.transInfo && form.transInfo.financingProductType === '0'">
+            <zj-button type="primary" @click="recheck('复核通过')" v-if="form.transInfo.workflowState === 'F003'||'F004'">审核通过</zj-button>
+            <zj-button class="btn-warning" @click="recheck('复核拒绝')" v-if="form.transInfo.workflowState === 'F003'">审核拒绝</zj-button>
+            <zj-button class="btn-warning" @click="recheck('复核拒绝')" v-if="form.transInfo.workflowState === 'F004'">驳回上一级</zj-button>
+            <zj-button class="back" @click="goParent">返回</zj-button>
+          </zj-content-footer>
+        </div>
 
         <pass-recheck-dialog ref="passRecheckDialog" :zj-control="zjControl" :zj-btn="zjBtn"/>
       </zj-content>
@@ -186,9 +190,20 @@ export default {
     operateRecordList,
   },
   props: {
-    isEdit: Boolean,
+    isEdit: {
+      type: Boolean,
+      default: true,
+    },
     bizId: String,
-    titleHandle: Boolean,
+    titleHandle: {
+      type: Boolean,
+      default: true,
+    },
+  },
+  computed: {
+    productName() {
+      return this.$store.getters['user/productName']
+    }
   },
   data() {
     return {
@@ -212,6 +227,7 @@ export default {
         agreementInfoList: [],
         isRiskFlag:'0',
         remark:'',
+        ddTotalAmt:'',
       },
       rules: {
         isRiskFlag: [

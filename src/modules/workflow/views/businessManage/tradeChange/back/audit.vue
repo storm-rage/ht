@@ -59,7 +59,7 @@ export default {
         if (valid) {
           const tradeRelationParamModel = this.$refs.tradeInfo.getData();
           this.passLoading = true;
-          this.zjControl.submitTradeRecheck({
+          this.zjControl.submitTradeRebut({
             id: this.row.bizId,
             notes,
             operResult: OperResult.PASS,
@@ -82,7 +82,7 @@ export default {
         if (valid) {
           const {notes} = this.$refs.auditRemark.getData()
           this.rejectLoading = true;
-          this.zjControl.submitTradeRecheck({
+          this.zjControl.submitTradeRebut({
             id: this.row.bizId,
             notes,
             operResult: OperResult.REJECT

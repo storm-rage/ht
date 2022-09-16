@@ -2,8 +2,8 @@
   <div class="content-body-center-title">
     <h2>
       <template v-if="isSuccess">
-        <img src="~@assets/img/faceRecognition/success.png"/>
-        恭喜您！已成功注册！
+<!--        <img src="~@assets/img/faceRecognition/success.png"/>-->
+        协议签署
       </template>
       <template v-else>
         <img src="~@assets/img/faceRecognition/warningRrror.png" style="transform: translateY(0.8vh)"/>
@@ -27,8 +27,9 @@ export default {
   text-align: center;
   padding-bottom: 15px;
   h2{
-    color: #8ec31f;
-    font-weight: normal;
+    //color: #8ec31f;
+    margin-top: 40px;
+    font-weight: bold;
     text-indent: 3px;
     img{
       width: 28px;

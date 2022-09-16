@@ -3,6 +3,7 @@
     <!--  阶段性协议维护  -->
     <zj-content-block>
       <zj-header title="贸易关系"/>
+      <zj-content>
       <zj-table ref="tradeRelationTable" :pager="false"
                 :api="zjControl.getTradeRelationList"
                 @after-load="handleDataChange"
@@ -22,9 +23,11 @@
           <li class="explain-item">是否已有订单保理额度，不影响维护阶段性协议。</li>
         </ol>
       </div>
+      </zj-content>
     </zj-content-block>
     <zj-content-block>
       <zj-header title="阶段性协议信息"/>
+      <zj-content>
       <zj-table ref="searchTable" :dataList="agreementList" >
         <zj-table-column field="coreCompanyName" title="买方企业名称"/>
         <zj-table-column field="agreementNo" title="阶段性协议编号"/>
@@ -34,9 +37,11 @@
         <zj-table-column field="agreementEstimateEndDate" title="协议预计到期日" :formatter="date"/>
         <zj-table-column field="agreementStatus" title="状态"/>
       </zj-table>
+      </zj-content>
     </zj-content-block>
     <zj-content-block>
       <zj-header title="请上传贸易合同附件"/>
+      <zj-content>
       <div class="explain-text">
         <div>注：</div>
         <ol class="explain-content">
@@ -53,13 +58,13 @@
         <zj-table-column field="fileName" title="合同附件" />
         <zj-table-column field="fileRemark" title="附件说明" :edit-render="{name: '$input'}"/>
         <zj-table-column title="操作">
-          <template v-slot="{row}">
+          <template v-slot="{row,rowIndex}">
             <template v-if="$refs.attaTable.isActiveByRow(row)">
               <zj-upload class="zj-inline" :httpRequest="handleFileUpload" :data="{ row }">
                 <zj-button slot="trigger" type="text" :api="zjBtn.uploadFile">上传</zj-button>
               </zj-upload>
               <zj-button type="text" @click="saveRow(row)" :api="zjBtn.delContract">保存</zj-button>
-              <zj-button type="text" @click="cancel(row)">取消</zj-button>
+              <zj-button type="text" @click="cancel(row,rowIndex)">取消</zj-button>
             </template>
             <template v-if="!$refs.attaTable.isActiveByRow(row)">
               <zj-button type="text" @click="attaDownload(row)" :api="zjBtn.downloadFile">下载</zj-button>
@@ -71,6 +76,7 @@
       <el-row class="button-row zj-center zj-m-t-10">
         <zj-button type="primary" icon="el-icon-circle-plus-outline" @click="addAtta">新增</zj-button>
       </el-row>
+      </zj-content>
     </zj-content-block>
   </zj-content-container>
 </template>
@@ -145,34 +151,45 @@ export default {
       if(this.businessApplyInfo && this.businessApplyInfo.applyStatus === 'D002') {
         return this.$message.error('提交审核中，不能删除合同附件！')
       }
-      let params = {
-        attachId : row.attachId,
-        fileId : row.fileId,
-        fileName : row.fileName,
-        fileRemark : row.fileRemark,
-        phasedOperateFlag : OperateFlag.DEL,
-        recordId : row.recordId || '',
-        tradeId : this.agreementParams.tradeId || '',
-      }
-      this.zjControl.delContract(params).then(res => {
-        //刷新当前贸易关系下的合同附件列表
-        this.zjControl.queryPhasedAgreePage(this.agreementParams).then(res=>{
-          this.agreementList = res.data.phasedAgreeInfoList
-          this.attaTableShow = false
-          this.contractInfoList = res.data.contractInfoList || []
-          this.$nextTick(()=>{
-            this.attaTableShow = true
-          })
+      this.$messageBox({
+        type:'confirm',
+        title:'删除确认',
+        content: `是否确认删除?`,
+        showCancelButton:true,
+        messageResolve:()=>{
           let params = {
-            recordId : res.data.businessApplyInfo ? res.data.businessApplyInfo.recordId || '' : '',
-            contractInfoList : this.contractInfoList,
-            ...this.agreementParams,
+            attachId : row.attachId,
+            fileId : row.fileId,
+            fileName : row.fileName,
+            fileRemark : row.fileRemark,
+            phasedOperateFlag : OperateFlag.DEL,
+            recordId : row.recordId || '',
+            tradeId : this.agreementParams.tradeId || '',
           }
-          console.log(params)
-          this.$emit('update',params)
-          this.$message.success('删除附件成功！')
-          this.$refs.attaTable.clearActived()
-        })
+          this.zjControl.delContract(params).then(res => {
+            //刷新当前贸易关系下的合同附件列表
+            this.zjControl.queryPhasedAgreePage(this.agreementParams).then(res=>{
+              this.agreementList = res.data.phasedAgreeInfoList
+              this.attaTableShow = false
+              this.contractInfoList = res.data.contractInfoList || []
+              this.$nextTick(()=>{
+                this.attaTableShow = true
+              })
+              let params = {
+                recordId : res.data.businessApplyInfo ? res.data.businessApplyInfo.recordId || '' : '',
+                contractInfoList : this.contractInfoList,
+                ...this.agreementParams,
+              }
+              console.log(params)
+              this.$emit('update',params)
+              this.$message.success('删除附件成功！')
+              this.$refs.attaTable.clearActived()
+            })
+          })
+        },
+        messageReject: ()=>{
+
+        }
       })
     },
     //新增合同附件
@@ -182,7 +199,7 @@ export default {
         return this.$message.error('提交审核中，不能新增合同附件！')
       }
       if(!this.tableEditReport(["attaTable"])){return}
-      let item = {attachId:'', fileId:'', fileName:'', fileRemark:'',}
+      let item = {attachId:'', fileId:'', fileName:'', fileRemark:'',recordId: this.businessApplyInfo?this.businessApplyInfo.recordId : '',}
       this.contractInfoList.push(item)
       this.$refs.attaTable.setActiveRow(item)
     },
@@ -210,7 +227,7 @@ export default {
         recordId : row.recordId || '',
         tradeId : this.agreementParams.tradeId || '',
       }
-      this.zjControl.delContract(params).then(res => {
+      return this.zjControl.delContract(params).then(res => {
         //刷新当前贸易关系下的合同附件列表
         this.zjControl.queryPhasedAgreePage(this.agreementParams).then(res=>{
           this.agreementList = res.data.phasedAgreeInfoList
@@ -226,10 +243,11 @@ export default {
           this.$message.success('保存成功！')
           this.$refs.attaTable.clearActived()
         })
+        return Promise.resolve(res)
       })
     },
-    cancel(row) {
-      this.contractInfoList.splice(row.index,1)
+    cancel(row,rowIndex) {
+      this.contractInfoList.splice(rowIndex,1)
       this.$refs.attaTable.clearActived()
     },
     //检测是否正在编辑     tableRefList需要检测的table数组

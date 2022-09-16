@@ -53,10 +53,10 @@
 
     </zj-content-container>
     <zj-workflow v-model="workflow">
-      <el-row slot="right">
-        <zj-button @click="zdlogin">中登登记</zj-button>
-        <zj-button @click="openDialog1">手工登记</zj-button>
-        <zj-button @click="daqian">确认放款</zj-button>
+      <el-row slot="right" class="buttoni">
+        <zj-button type="primary" @click="zdlogin">中登登记</zj-button>
+        <zj-button type="primary" @click="openDialog1">手工登记</zj-button>
+        <zj-button type="primary" @click="daqian">确认放款</zj-button>
       </el-row>
     </zj-workflow>
     <loginDialog ref="loginDialog"></loginDialog>
@@ -70,6 +70,16 @@ export default {
   components: {
     loginDialog,
     artRegister
+  },
+  created() {
+    const currentActiveTab = this.getCurrentActiveTab();
+    if (currentActiveTab) {
+      this.activeComp = currentActiveTab;
+      this.removeCurrentTab();
+    }
+    this.dictionary=this.mDictionary
+    this.getDetail();
+    this.getApi();
   },
   data() {
     return {
@@ -98,10 +108,7 @@ export default {
       idlist: [],
     };
   },
-  created() {
-    this.getApi();
-    this.getDetail();
-  },
+  
   methods: {
     daqian() {
       if (this.idlist.length == 0) {
@@ -114,10 +121,22 @@ export default {
           idList: this.idlist
         }
         this.zjControl.confirmLoan(params).then(res => {
-          this.$messageBox({
-            type: 'success',
-            content: '放款成功'
-          })
+          console.log(res.data);
+          // this.$messageBox({
+          //   type: 'success',
+          //   content: '放款成功'
+          // })
+          if (res.data.errorMsg) {
+            this.$messageBox({
+              type: 'warning',
+              content: `${res.data.errorMsg}`
+            })
+          } else {
+            this.$messageBox({
+              type: 'success',
+              content: '放款成功'
+            })
+          }
         })
       }
     },
@@ -165,7 +184,8 @@ export default {
       this.goChild('zhongdengManagexq1', row)
     },
     toEdit(row) {
-      this.goChild('zhongdengManageDetailpz', row)
+      // this.goChild('zhongdengManageDetailpz', row)
+      this.goChild('zhongdengManageDetailpz',row={id:row.id,serialNo:row.serialNo,currentActiveTab:"voucherFinancing"})
     },
     checkChange() {
       this.idlist = []
@@ -220,3 +240,5 @@ export default {
   }
 };
 </script>
+<style lang="less" scoped>
+</style>

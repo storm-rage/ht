@@ -6,7 +6,7 @@
       </template>
       <template slot="searchForm">
         <el-form ref="searchForm" :model="searchForm">
-          <el-form-item label="原始凭证编号：">
+          <el-form-item :label="`原始${productName}编号：`">
             <el-input v-model.trim="searchForm.rootCode" @keyup.enter.native="enterSearch"/>
           </el-form-item>
           <el-form-item label="签发人：">
@@ -15,7 +15,7 @@
           <el-form-item label="收款人：">
             <el-input v-model.trim="searchForm.repaymentEntNameLike" @keyup.enter.native="enterSearch"/>
           </el-form-item>
-          <el-form-item label="凭证编号：">
+          <el-form-item :label="`${productName}编号：`">
             <el-input v-model.trim="searchForm.ebillCode" @keyup.enter.native="enterSearch"/>
           </el-form-item>
           <el-form-item label="凭证实际到期日：" class="col-right">
@@ -34,25 +34,25 @@
                 @checkbox-change="tableCheckChange"
                 @checkbox-all="tableCheckChange">
         <zj-table-column type="checkbox" width="40px" fixed="left"></zj-table-column>
-        <zj-table-column title="原始凭证编号">
+        <zj-table-column :title="`原始${productName}编号`">
           <template v-slot="{ row }">
             <el-link @click="toViewDetail(row)" type="primary" :underline="false">{{row.rootCode}}</el-link>
           </template>
         </zj-table-column>
         <zj-table-column field="repaymentOrderNo" title="收款单号" />
         <zj-table-column field="capitalSerialno" title="资金流水号"/>
-        <zj-table-column field="ebillCode" title="凭证编号">
+        <zj-table-column field="ebillCode" :title="`${productName}编号`">
           <template v-slot="{row}">
             <el-link @click="toViewDetail(row)" type="primary" :underline="false">{{row.ebillCode}}</el-link>
           </template>
         </zj-table-column>
         <zj-table-column field="payEntName" title="签发人"/>
         <zj-table-column field="openDate" title="签发日期" :formatter="date"/>
-        <zj-table-column field="ebillAmt" title="凭证金额" :formatter="money"/>
+        <zj-table-column field="ebillAmt" :title="`${productName}金额`" :formatter="money"/>
         <zj-table-column field="paymentOrderNo" title="放款单号"/>
         <zj-table-column field="loanAmt" title="放款金额" :formatter="money"/>
         <zj-table-column field="oddAmt" title="尾款金额" :formatter="money"/>
-        <zj-table-column field="expireDate" title="凭证到期日期" :formatter="date"/>
+        <zj-table-column field="expireDate" :title="`${productName}到期日期`" :formatter="date"/>
         <zj-table-column field="actualExpireDate" title="凭证实际到期" :formatter="date"/>
         <zj-table-column field="repaymentEntName" title="收款人"/>
         <zj-table-column field="bankAccname" title="收款账户户名"/>
@@ -80,6 +80,11 @@ import footerBtnMixin from '../mixins/footerBtnMixin';
 import BigNumber from "bignumber.js";
 export default {
   mixins: [footerBtnMixin],
+  computed: {
+    productName () {
+      return this.$store.getters['user/productName']
+    }
+  },
   data () {
     return {
       showBottomBtn: false,
@@ -98,7 +103,9 @@ export default {
         repaymentEntNameLike: ''
       },
       // 尾款金额汇总
-      totalOddAmt: 0
+      totalOddAmt: 0,
+      // 缓存当前激活tab
+      currentActiveTab: 'billFactoringClearing:billBalanceClearingList'
     }
   },
   created() {
@@ -120,10 +127,16 @@ export default {
       }
     },
     /**
-     * todo:跳转凭证详情
+     *
      * @param row
      */
-    toViewDetail(row) {},
+    toViewDetail(row) {
+      this.goChild('billLssueMyBillDetail',{
+        ebillCode: row.ebillCode,
+        parentRouteName: 'expireClear',
+        currentActiveTab: this.currentActiveTab
+      })
+    },
     /**
      * 批量尾款清算申请
      */
@@ -155,7 +168,7 @@ export default {
             confirmButtonText: '确定',
             cancelButtonText: '取消'
           }).then(() => {
-            this.goChild('billBalanceClearingApply',{clearId, clearType: this.searchForm.clearType})
+            this.goChild('billBalanceClearingApply',{clearId, clearType: this.searchForm.clearType,currentActiveTab: this.currentActiveTab})
           })
         }else if (valid2.length !== records.length) {
           this.$messageBox({
@@ -167,10 +180,10 @@ export default {
           })
           return;
         }else {
-          this.goChild('billBalanceClearingApply',{clearId, clearType: this.searchForm.clearType})
+          this.goChild('billBalanceClearingApply',{clearId, clearType: this.searchForm.clearType,currentActiveTab: this.currentActiveTab})
         }
       }else {
-        this.goChild('billBalanceClearingApply',{clearId, clearType: this.searchForm.clearType})
+        this.goChild('billBalanceClearingApply',{clearId, clearType: this.searchForm.clearType,currentActiveTab: this.currentActiveTab})
       }
     },
     /**
@@ -178,7 +191,7 @@ export default {
      * @param row
      */
     singleClearingApply (row) {
-      this.goChild('billBalanceClearingApply',{clearId: [row.id], clearType: this.searchForm.clearType})
+      this.goChild('billBalanceClearingApply',{clearId: [row.id], clearType: this.searchForm.clearType,currentActiveTab: this.currentActiveTab})
     },
     /**
      * 导出

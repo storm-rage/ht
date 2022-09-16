@@ -104,7 +104,7 @@ export default {
   background: #FFFFFF;
   border-radius: 4px;
   padding: 15px 12px 15px 20px;
-  min-height: 200px;
+  min-height: 180px;
 
   &.select {
     border: 1.5px solid rgba(22, 93, 255,.5);

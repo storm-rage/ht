@@ -4,8 +4,6 @@
                :visible.sync="show"
                :close-on-click-modal="false"
     >
-<!--                  :before-close="beforeClose"
-   -->
 
       <zj-content-block class="zj-m-b-30">
         <zj-content-block class="zj-center">
@@ -107,8 +105,6 @@ export default {
       this.applyInvoiceList = checkArr
       console.log(`checkedInvoice===`+this.applyInvoiceList)
     },
-    beforeClose() {},
-
     submit() {
       for(let item of this.applyInvoiceList) {
         if(!item.financingUsedAmt) {
@@ -143,7 +139,7 @@ export default {
     },
     downloadFile(row) {
       this.$api.baseCommon.downloadFile({
-        fileUrl: row.fileId,
+        fileId: row.fileId,
         fileName: row.fileName,
       })
     },

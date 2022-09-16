@@ -8,7 +8,7 @@ const entUserManage = [
   {
     path: '/sysEnterprise',
     name: 'sysEnterprise',
-    component: () => import('../views/entUserManage/entManage'),
+    component: () => import('../views/entUserManage/entManage/index.vue'),
     meta: {
       title: '企业信息管理',
       root: '客户信息管理',
@@ -102,7 +102,7 @@ const entUserManage = [
   {
     path: '/userAdd',
     name: 'userAdd',
-    component: () => import('../views/entUserManage/userManage/userAdd'),
+    component: () => import('../views/entUserManage/userManage/userAdd/index'),
     meta: {
       title: '企业用户信息管理-新增',
       parent: 'sysUser',

@@ -1,10 +1,10 @@
 <template>
   <zj-content-container>
     <!--  融资企业与签发企业/转让企业的贸易背景  -->
-    <zj-content>
       <zj-top-header title="融资企业与签发企业/转让企业的贸易背景"/>
       <zj-content-block>
         <zj-header title="凭证信息"/>
+        <zj-content>
         <zj-table ref="ebBillTable"
                   :dataList="ebBillModelList"
                   @radio-change="handleRadioChange"
@@ -12,18 +12,24 @@
                   :pager="false"
         >
           <zj-table-column type="radio" width="40"/>
-          <zj-table-column field="rootCode" title="原始海e单编号"/>
-          <zj-table-column field="ebillCode" title="海e单编号"/>
+          <zj-table-column field="rootCode" :title="`原始${productName}编号`"/>
+          <zj-table-column field="ebillCode" :title="`${productName}编号`"/>
           <zj-table-column field="writerName" title="凭证签发人"/>
-          <zj-table-column field="transferName" title="转让企业"/>
-          <zj-table-column field="ebillAmt" title="海e单金额" :formatter="money"/>
+          <zj-table-column field="transferName" title="转让企业">
+            <template v-slot="{row}">
+              {{row.transferName?row.transferName:'-'}}
+            </template>
+          </zj-table-column>
+          <zj-table-column field="ebillAmt" :title="`${productName}金额`" :formatter="money"/>
           <zj-table-column field="holderDate" title="凭证持有日期" :formatter="date"/>
-          <zj-table-column field="expireDate" title="海e单到期日" :formatter="date"/>
+          <zj-table-column field="expireDate" :title="`${productName}到期日`" :formatter="date"/>
         </zj-table>
+        </zj-content>
       </zj-content-block>
       <!--    贸易合同    -->
       <zj-content-block>
         <zj-header title="贸易合同信息"/>
+        <zj-content>
         <zj-button type="primary" icon="el-icon-circle-plus-outline" class="zj-m-b-10" @click="addContract">新增</zj-button>
         <zj-table ref="contractTable"
                   :dataList="form.contractList"
@@ -58,10 +64,12 @@
             </template>
           </zj-table-column>
         </zj-table>
+        </zj-content>
         <!--    发票信息    -->
       </zj-content-block>
       <zj-content-block>
         <zj-header title="发票信息"/>
+        <zj-content>
         <zj-button type="primary" icon="el-icon-circle-plus-outline" class="zj-m-b-10" @click="addInvoice">新增发票</zj-button>
         <zj-table ref="invoiceTable"
                   :dataList="form.invoiceList"
@@ -107,10 +115,12 @@
           </zj-table-column>
         </zj-table>
         <el-row class="zj-m-t-10 zj-m-l-10">发票金额（含税）合计：{{ invoiceTotalAmount?moneyNoSynbol(invoiceTotalAmount):0 }}元</el-row>
+        </zj-content>
       </zj-content-block>
       <!--    其他附件    -->
       <zj-content-block>
         <zj-header title="其他附件"/>
+        <zj-content>
         <zj-button type="primary" icon="el-icon-circle-plus-outline" class="zj-m-b-10" @click="addAttach">新增</zj-button>
         <zj-table ref="otherAttachTable"
                   :dataList="form.otherAttachList"
@@ -139,9 +149,9 @@
             </template>
           </zj-table-column>
         </zj-table>
+        </zj-content>
       </zj-content-block>
 
-    </zj-content>
     <zj-content-footer>
       <zj-button type="primary" @click="maintainSuccess">维护完成</zj-button>
       <zj-button class="submit-button" @click="goParent">返回</zj-button>
@@ -165,6 +175,9 @@ export default {
         })
       }
       return res
+    },
+    productName() {
+      return this.$store.getters['user/productName']
     }
   },
   data() {

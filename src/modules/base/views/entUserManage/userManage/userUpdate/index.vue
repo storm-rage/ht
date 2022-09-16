@@ -11,7 +11,7 @@
   </zj-content-container>
 </template>
 <script>
-import userUpdate from './userUpdate'
+import userUpdate from '../workflow/userUpdate'
 export default {
   components: { userUpdate },
   data() {
@@ -24,13 +24,14 @@ export default {
   },
   created() {
     this.getRow();
-    this.getUserInformation();
+    this.getDictionary()
   },
   methods: {
     //获取字典
     getDictionary() {
       this.zjControl.getUserDictionary().then((res) => {
         this.dictionary = res.data;
+        this.getUserInformation();
       });
     },
     // 获取详情

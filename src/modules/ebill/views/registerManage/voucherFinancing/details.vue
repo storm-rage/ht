@@ -1,5 +1,15 @@
 <template>
     <zj-content-container>
+      <!-- 底部工作流状态 -->
+      <zj-workflow v-model="workflow" :list="workflowList" v-if="row.financingProductType !== '0'">
+        <!-- 审核时 -->
+        <el-row slot="right">
+          <el-row class="btn-w85 zj-center">
+            <zj-button class="back" @click="back()">返回</zj-button>
+          </el-row>
+        </el-row>
+      </zj-workflow>
+      
       <!--  融资交易详情  -->
       <zj-top-header title="融资交易详情"/>
       <zj-content-block v-if="workflow === 'sqxx'">
@@ -11,14 +21,17 @@
                   <el-form-item label="融资流水号：">{{form.serialNo}}</el-form-item>
                 </el-col>
                 <el-col :span="8">
-                  <el-form-item label="融资产品：">{{form.financingProductType}}</el-form-item>
+                  <el-form-item label="融资产品：">{{typeMap(dictionary.financingProductType, form.financingProductType)}}</el-form-item>
                 </el-col>
                 <el-col :span="8">
-                  <el-form-item label="申请时间：">{{form.applyDatetime}}</el-form-item>
+                  <el-form-item label="申请时间：">{{date(form.applyDatetime)}}</el-form-item>
                 </el-col>
               </el-row>
               <el-row>
-                <el-form-item label="业务状态：">{{form.workflowState}}</el-form-item>
+                <!-- <el-form-item label="业务状态：">{{form.workflowState}}</el-form-item> -->
+                <el-form-item label="业务状态："><span>
+                  {{typeMap(dictionary.financingState, form.workflowState)}}
+                </span></el-form-item>
               </el-row>
             </zj-content-block>
             <zj-content-block>
@@ -28,16 +41,16 @@
                   <el-form-item label="融资企业：">{{form.fromEntName}}</el-form-item>
                 </el-col>
                 <el-col :span="8" v-if="row.financingProductType !== '0'">
-                  <el-form-item label="融资金额：">{{form.buyerEntName}}</el-form-item>
+                  <el-form-item label="申请转让金额：">{{form.tranAmt}}</el-form-item>
                 </el-col>
                 <el-col :span="8" v-if="row.financingProductType !== '0'">
-                  <el-form-item label="融资折扣率：">{{form.interestRate}}</el-form-item>
+                  <el-form-item label="融资比例："><span>{{form.interestRate}}%</span></el-form-item>
                 </el-col>
                 <el-col :span="8" v-if="row.financingProductType === '0'">
                   <el-form-item label="买方企业名称：">{{form.buyerEntName}}</el-form-item>
                 </el-col>
                 <el-col :span="8" v-if="row.financingProductType === '0'">
-                  <el-form-item label="融资月利率：">{{form.interestRate}}</el-form-item>
+                  <el-form-item label="融资月利率："><span>{{form.interestRate}}%</span></el-form-item>
                 </el-col>
               </el-row>
               <el-row>
@@ -56,16 +69,16 @@
                   </el-form-item>
                 </el-col>
                 <el-col :span="8" v-if="row.financingProductType === '0'">
-                  <el-form-item label="融资开始日：">{{form.loanDate}}</el-form-item>
+                  <el-form-item label="融资开始日：">{{date(form.loanDate)}}</el-form-item>
                 </el-col>
                 <el-col :span="8" v-if="row.financingProductType === '0'">
-                  <el-form-item label="融资到期日：">{{form.expireDate}}</el-form-item>
+                  <el-form-item label="融资到期日：">{{date(form.expireDate)}}</el-form-item>
                 </el-col>
                 <el-col :span="8" v-if="row.financingProductType !== '0'">
-                  <el-form-item label="融资月利率：">{{form.interestRate}}</el-form-item>
+                  <el-form-item label="融资月利率：">{{form.interestRate}}%</el-form-item>
                 </el-col>
                 <el-col :span="8" v-if="row.financingProductType !== '0'">
-                  <el-form-item label="融资开始日：">{{form.loanDate}}</el-form-item>
+                  <el-form-item label="融资开始日：">{{date(form.loanDate)}}</el-form-item>
                 </el-col>
               </el-row>
               <el-row>
@@ -281,24 +294,15 @@
 
       </zj-content-block>
 
-      <!-- 底部工作流状态 -->
-      <zj-workflow v-model="workflow" :list="workflowList" v-if="row.financingProductType !== '0'">
-        <!-- 审核时 -->
-        <el-row slot="right">
-          <el-row class="btn-w85 zj-center">
-            <zj-button class="back" @click="goParent">返回</zj-button>
-          </el-row>
-        </el-row>
-      </zj-workflow>
       <zj-content-footer  v-if="row.financingProductType === '0'">
-        <zj-button class="back" @click="goParent">返回</zj-button>
+        <zj-button class="back" @click="back()">返回</zj-button>
       </zj-content-footer>
 
     </zj-content-container>
 </template>
 
 <script>
-import operateLog from "@modules/workflow/views/components/operateLog";
+import operateLog from "../components/operateLog";
 import tradeContract from '../components/tradeContract'
 import invoice from '../components/invoice'
 import attaList from '../components/attaList'
@@ -343,6 +347,10 @@ export default {
     }
   },
   methods: {
+    back(){
+      console.log("返回");
+      this.goParent("zhongdengManage",false)
+    },
     getDictionary() {
       this.zjControl.getFinancingTransDirectory().then(res => {
         this.dictionary = Object.assign({}, res.data)
@@ -394,10 +402,16 @@ export default {
     },
   },
   created() {
+    const currentActiveTab = this.getCurrentActiveTab();
+    if (currentActiveTab) {
+      this.activeComp = currentActiveTab;
+      this.removeCurrentTab();
+    }
     this.getApi()
     this.getRow()
     this.getDictionary()
     this.getDetail()
+    console.log(this.row);
   }
 }
 </script>

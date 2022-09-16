@@ -1,27 +1,33 @@
 <template>
   <zj-content-container>
-    <zj-top-header :title="pageType === 'audit' ? '维护用户信息审核' : '维护用户交易详情'"></zj-top-header>
+    <zj-top-header v-if="row.applyType === '1'" :title="pageType === 'audit' ? '新增用户信息审核' : '新增用户交易详情'"></zj-top-header>
+    <zj-top-header v-else :title="pageType === 'audit' ? '维护用户信息审核' : '维护用户交易详情'"></zj-top-header>
 
     <!--  交易信息  -->
     <trade-info :detailData="detailData" :dictionary="dictionary" />
 
-    <!-- 平台方 用户信息  -->
-    <user-update ref="userUpdate" :form="detailData" :dictionary="dictionary" :isEdit="isEdit" @formPass="formPass" v-if="type === 'PT'" />
+    <!-- 平台方 新增  -->
+    <user-add ref="userForm" :form="detailData" :dictionary="dictionary" :isEdit="isEdit" @formPass="formPass" v-if="row.startObject === 'PT' && row.applyType === '1'" />
 
-    <!-- 客户方 用户信息  -->
-    <user-info-kh ref="userInfoKH" :form="detailData" :dictionary="dictionary" v-if="type === 'KH'" />
+    <!-- 平台方 修改  -->
+    <user-update ref="userForm" :form="detailData" :dictionary="dictionary" :isEdit="isEdit" @formPass="formPass" v-if="row.startObject === 'PT' && row.applyType === '2'" />
+
+    <!-- 客户方  -->
+    <user-info-kh ref="userInfoKH" :form="detailData" :dictionary="dictionary" v-if="row.startObject === 'KH'" />
 
     <!--  操作记录  -->
     <operate-log ref="operateLog" :logList="logList"></operate-log>
 
     <!--  审核意见  -->
-    <audit-remark ref="auditRemark" v-if="pageType === 'audit'"></audit-remark>
+    <audit-remark ref="auditRemark" v-if=" pageType === 'audit' || pageType === 'edit'"></audit-remark>
 
     <zj-content-footer>
-      <zj-button type="primary" @click="toPass">复核通过</zj-button>
-      <zj-button @click="toReject" v-if="row.workflowState = 'U002'">驳回上一级</zj-button>
-      <zj-button @click="toReject" v-else-if="row.workflowState = 'U006'">作废</zj-button>
-      <zj-button @click="toReject" v-else>拒绝</zj-button>
+      <template v-if="pageType !== 'agendaDetail'">
+        <zj-button type="primary" @click="toPass">复核通过</zj-button>
+        <zj-button @click="toReject" v-if="row.workflowState === 'U002'">驳回上一级</zj-button>
+        <zj-button @click="toReject" v-else-if="row.workflowState === 'U006'">作废</zj-button>
+        <zj-button @click="toReject" v-else>拒绝</zj-button>
+      </template>
       <zj-button @click="goParent">返回</zj-button>
     </zj-content-footer>
   </zj-content-container>
@@ -34,13 +40,15 @@
 import tradeInfo from "../components/tradeInfo";
 import OperateLog from "../../components/operateLog";
 import AuditRemark from "../../components/auditRemark";
-import userUpdate from '@modules/base/views/entUserManage/userManage/userUpdate/userUpdate.vue'
+import userAdd from '@modules/base/views/entUserManage/userManage/workflow/userAdd.vue'
+import userUpdate from '@modules/base/views/entUserManage/userManage/workflow/userUpdate.vue'
 import userInfoKh from './userInfoKH.vue'
 export default {
   components: {
     tradeInfo,
     OperateLog,
     AuditRemark,
+    userAdd,
     userUpdate,
     userInfoKh
   },
@@ -55,19 +63,13 @@ export default {
       attachInfo: [{ fileId: "", type: "身份证影印件", fileName: "" }],
       logList: [],
       state: 'pass',
-      isEdit: false,
-      type: ""
+      isEdit: this.$route.meta.pageType === 'edit' || false,
     };
   },
   created() {
     this.getRow()
     this.getDictionary()
     this.getDetail()
-    // 驳回待处理可修改
-    if (this.row.workflowState === 'E005') {
-      this.isEdit = true
-    }
-    this.type = this.row.startObject
   },
   methods: {
     //获取字典
@@ -79,7 +81,7 @@ export default {
     //详情
     getDetail() {
       let autoApi = this.zjControl.getUserInformationDetail // 平台方详情接口
-      if (this.type === 'KH') {
+      if (this.row.startObject === 'KH') {
         autoApi = this.zjControl.getUserInformationKhDetail // 客户方详情接口
       }
       autoApi({ serialNo: this.row.serialNo }).then(res => {
@@ -94,8 +96,11 @@ export default {
     },
     //
     formPass(params) {
+      if (this.row.workflowState !== 'U006') {
+        params = { serialNo: params.serialNo }
+      }
+      this.$refs.auditRemark.getForm().clearValidate();
       if (this.state === 'pass') {
-        this.$refs.auditRemark.getForm().clearValidate();
         const { notes } = this.$refs.auditRemark.getData()
         this.passLoading = true;
         this.zjControl.todoUserSubmit({
@@ -111,9 +116,9 @@ export default {
           }
         }).catch(() => {
           this.passLoading = false;
+          this.$refs.auditRemark.getForm().clearValidate();
         })
-      }
-      if (this.state = 'reject') {
+      } else {
         this.$refs.auditRemark.getForm().validate((valid) => {
           if (valid) {
             const { notes } = this.$refs.auditRemark.getData()
@@ -132,6 +137,8 @@ export default {
             }).catch(() => {
               this.rejectLoading = false;
             })
+          } else {
+            this.$message.warning('请选输入审核意见!')
           }
         })
       }
@@ -140,20 +147,20 @@ export default {
     // 通过
     toPass() {
       this.state = 'pass'
-      if (this.type === 'PT') {
-        this.$refs.userUpdate.handleForm()
+      if (this.row.startObject === 'PT') {
+        this.$refs.userForm.handleForm()
       }
-      if (this.type === 'KH') {
+      if (this.row.startObject === 'KH') {
         this.formPass({ serialNo: this.row.serialNo })
       }
     },
     // 拒绝
     toReject() {
       this.state = 'reject'
-      if (this.type === 'PT') {
-        this.$refs.userUpdate.handleForm()
+      if (this.row.startObject === 'PT') {
+        this.$refs.userForm.handleForm()
       }
-      if (this.type === 'KH') {
+      if (this.row.startObject === 'KH') {
         this.formPass({ serialNo: this.row.serialNo })
       }
     },
