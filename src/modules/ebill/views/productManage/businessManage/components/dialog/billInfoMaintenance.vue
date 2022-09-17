@@ -105,7 +105,7 @@ export default {
   },
   methods: {
     show (obj,title) {
-      this.form = Object.assign({},obj);
+      this.form = this.XEUtils.clone(obj,true);
       this.title = title;
       this.dialogVisible = true;
     },
@@ -166,10 +166,15 @@ export default {
             content: `最后结束区间只能为${this.maxRdDateDay}天`
           })
         }
+      }else {
+        return this.$messageBox({
+          type:'warning',
+          content: '请新增并维护电子债权凭证参数'
+        })
       }
       this.$refs.form.validate((valid) => {
         if (valid) {
-          this.$emit('done', this.form);
+          this.$emit('done', {...this.form});
           this.close();
         }
       });
