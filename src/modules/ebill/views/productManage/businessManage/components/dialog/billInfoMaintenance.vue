@@ -156,6 +156,16 @@ export default {
       this.dialogVisible = false;
     },
     submit () {
+      if (this.form.billFactoringModelList.length) {
+        const len = this.form.billFactoringModelList.length;
+        const row = this.form.billFactoringModelList[len-1];
+        if (row && Number(row.rdDateEnd)!==365) {
+          return this.$messageBox({
+            type:'warning',
+            content: '最后结束区间只能为365天'
+          })
+        }
+      }
       this.$refs.form.validate((valid) => {
         if (valid) {
           this.$emit('done', this.form);
