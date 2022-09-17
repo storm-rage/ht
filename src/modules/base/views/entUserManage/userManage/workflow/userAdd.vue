@@ -87,7 +87,7 @@
               </el-form-item>
             </el-col>
             <el-col :span="24">
-              <el-form-item label="请选择开凭证对账单类型权限：" label-width="280px" v-if="isShowType">
+              <el-form-item label="请选择开凭证对账单类型权限：" label-width="280px" v-if="detailData.entType === 'B'">
                 <el-select v-model="statementAccountTypeArr" filterable placeholder="请选择" :popper-append-to-body="false" multiple :disabled="!isEdit || state < 2">
                   <el-option v-for="item in dictionary.statementAccountTypeList" :key="item.code" :label="item.desc" :value="item.code">
                   </el-option>
@@ -209,7 +209,6 @@ export default {
         ],
       },
       rolesActive: [],
-      isShowType: true,
       state: 0,
     };
   },
@@ -304,7 +303,7 @@ export default {
           if (this.statementAccountTypeArr) {
             params.statementAccountType = this.statementAccountTypeArr.join(',')
           }
-          if(this.attachInfo[0].fileId) {
+          if (this.attachInfo[0].fileId) {
             params.idCardAttach = this.attachInfo // 身份证附件
           } else {
             params.idCardAttach = []
