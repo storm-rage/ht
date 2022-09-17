@@ -174,7 +174,7 @@ export default {
       }
       this.$refs.form.validate((valid) => {
         if (valid) {
-          this.$emit('done', {...this.form});
+          this.$emit('done', this.form);
           this.close();
         }
       });
