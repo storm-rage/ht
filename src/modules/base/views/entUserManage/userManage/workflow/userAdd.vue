@@ -88,7 +88,7 @@
               </el-form-item>
             </el-col>
             <el-col :span="24">
-              <el-form-item label="请选择开凭证对账单类型权限：" label-width="280px" v-if="detailData.entType === 'B'">
+              <el-form-item label="请选择开凭证对账单类型权限：" label-width="280px" v-if="isSHowType">
                 <el-select v-model="form.statementAccountType" filterable placeholder="请选择" :popper-append-to-body="false" multiple :disabled="!isEdit || state < 2">
                   <el-option v-for="item in dictionary.statementAccountTypeList" :key="item.code" :label="item.desc" :value="item.code">
                   </el-option>
@@ -144,11 +144,19 @@ export default {
       }
       this.$nextTick(() => {
         this.form.roleIds = data.roleIds
+        this.form.statementAccountType = []
         if (typeof data.statementAccountType === 'string') {
           this.form.statementAccountType = data.statementAccountType.split(',')
         }
         this.$refs.form.clearValidate()
       })
+    },
+    'form.roleIds'(roleArr) {
+      this.isSHowType = false
+      if (this.detailData.entType !== 'B') return
+      if (roleArr.includes('5') || roleArr.includes('6') || roleArr.includes('8') || roleArr.includes('9') || roleArr.includes('11') || roleArr.includes('12') || roleArr.includes('14') || roleArr.includes('15')) {
+        this.isSHowType = true
+      }
     },
     'form.userName'(val) {
       this.state = 2
@@ -222,7 +230,7 @@ export default {
           },
         ],
       },
-      rolesActive: [],
+      isSHowType: false,
       state: 0,
     };
   },
