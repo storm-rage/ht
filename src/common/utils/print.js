@@ -53,7 +53,7 @@ function getLodop () {
     return
   }
   // 注册信息
-  LODOP.SET_LICENSES('深圳市前海泽金互联网金融服务有限公司', '8B7E7CA30068F815196A28FBFA05AA89', '', '')
+  LODOP.SET_LICENSES('广东海天集团股份有限公司', '8B7E7CA30068F815196A28FBFA05AA89', '', '')
   return LODOP
 }
 export default getLodop
