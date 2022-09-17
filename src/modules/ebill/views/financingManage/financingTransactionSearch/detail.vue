@@ -115,7 +115,7 @@
               <el-row>
                 <el-col :span="12">
                   <el-form-item label="申请转让金额：">
-                    {{money(form.tranferAmt)}}
+                    {{form.tranferAmt?moneyNoSynbol(form.tranferAmt):''}}
                     <div>
                       <zj-content-tip text="（申请转让金额=融资申请金额/折扣率）"/>
                     </div>
