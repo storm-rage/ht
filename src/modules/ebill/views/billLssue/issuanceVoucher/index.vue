@@ -4,7 +4,7 @@
     <zj-list-layout>
       <template slot="searchForm">
         <el-form ref="searchForm" :model="searchForm">
-          <el-form-item label="凭证编号：">
+          <el-form-item :label="$store.getters['user/productName'] + '编号：'">
             <el-input v-model="searchForm.ebillCode" />
           </el-form-item>
           <el-form-item label="原始持有人：">
@@ -35,7 +35,7 @@
         <vxe-button type="primary" icon="iconfont icon-daochu" class="zj-m-t-10" @click="exportData" :api="zjBtn.exportBill">导出数据</vxe-button>
       </template>
       <zj-table ref="searchTable" :params="searchForm" :api="zjControl.tableApi" @before-load="getDataList">
-        <zj-table-column field="ebillCode" title="凭证编号">
+        <zj-table-column field="ebillCode" :title="$store.getters['user/productName'] + '编号'">
           <template v-slot="{ row }">
             <span v-if="row.state === 'P001'">{{ row.ebillCode }}</span>
             <span v-else class="table-elbill-code" @click="goChild('myOpenBillDetail', row)">{{ row.ebillCode }}</span>
