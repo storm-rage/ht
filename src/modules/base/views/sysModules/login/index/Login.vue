@@ -42,7 +42,7 @@
                       <zj-button
                         class="sms-code-btn"
                         size="medium"
-                        style="width: 100%"
+                        style="width: 100%;font-size: 12px;"
                         :class="[isSmsCode ? '' :'sms-code-btn--disabled']"
                         @click="isSmsCode?getSmsCode():''">{{smsText}}
                       </zj-button>
