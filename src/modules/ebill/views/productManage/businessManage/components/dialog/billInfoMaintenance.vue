@@ -111,8 +111,8 @@ export default {
     },
     toAdd () {
       const row = {
-        rdDateStart: '',
-        rdDateEnd: '',
+        rdDateStart: 0,
+        rdDateEnd: 365,
         availableDiscountsRate: '',
         rdFinancingMonthRate: ''
       }
