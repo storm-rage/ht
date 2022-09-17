@@ -169,6 +169,18 @@ export default {
           center: true
         });
       }
+      const validBillConfirmAmtRecords = records.filter((item) => {
+        return !item.billConfirmAmt
+      })
+      if (validBillConfirmAmtRecords.length) {
+        return this.$messageBox({
+          type: 'warning',
+          content: `勾选记录存在尚未维护确认${this.productName}金额`,
+          title: '提示',
+          showConfirmButton: true,
+          center: true
+        });
+      }
       //若Σ勾选凭证确认金额<=资金流水收款金额-已关联金额。
       // 若大于则报错“已勾选的凭证确认金额合计：xxxx元大于资金流水金额：yyyy元，不允许提交！”
       const record = records[0];
