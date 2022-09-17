@@ -29,7 +29,7 @@
                                 {required: true,message: '请输入开始区间',trigger: ['change','blur']},
                                 { validator: validateRdDateStart, trigger: 'blur', rdDateEnd: item.rdDateEnd}
                               ]">
-                  <zj-number-input  v-model.trim="item.rdDateStart" :max="365" :precision="0">
+                  <zj-number-input  v-model.trim="item.rdDateStart" :max="maxRdDateDay" :precision="0">
                   </zj-number-input>
                 </el-form-item>
               </el-col>
@@ -42,7 +42,7 @@
                                 {required: true,message: '请输入结束区间',trigger: ['change','blur']},
                                 {validator: validateRdDateEnd, trigger: 'blur', rdDateStart: item.rdDateStart}
                               ]">
-                  <zj-number-input style="width: 82%" v-model.trim="item.rdDateEnd" :max="365" :precision="0">
+                  <zj-number-input style="width: 82%" v-model.trim="item.rdDateEnd" :max="maxRdDateDay" :precision="0">
                   </zj-number-input>&nbsp;天
                 </el-form-item>
               </el-col>
@@ -96,6 +96,7 @@ export default {
     return {
       dialogVisible: false,
       title: '业务设置',
+      maxRdDateDay: 365,
       form: {
         billFactoringModelList: [],
         openGraceDays: ''
@@ -123,8 +124,8 @@ export default {
         //  开始天数=上一个结束天数+1
         row.rdDateStart = Number(lastRow.rdDateEnd) + 1;
       }
-      if (rdDateEnd>=365) {
-        this.$message.error('区间最大为365天,无法再新增');
+      if (rdDateEnd>=this.maxRdDateDay) {
+        this.$message.error(`区间最大为${this.maxRdDateDay}天,无法再新增`);
       }else {
         this.form.billFactoringModelList.push(row);
       }
@@ -133,8 +134,8 @@ export default {
       const rdDateEnd = rule.rdDateEnd
       if(rdDateEnd&&value && value>rdDateEnd) {
         callback(new Error('开始区间不能大于结束区间'));
-      }else if(value && value>365) {
-        callback(new Error('区间最大为365天'));
+      }else if(value && value>this.maxRdDateDay) {
+        callback(new Error(`区间最大为${this.maxRdDateDay}天`));
       }else {
         callback();
       }
@@ -143,8 +144,8 @@ export default {
       const rdDateStart = rule.rdDateStart
       if(rdDateStart&&value && value<rdDateStart) {
         callback(new Error('结束区间不能小于开始区间'));
-      }else if(value && value>365) {
-        callback(new Error('区间最大为365天'));
+      }else if(value && value>this.maxRdDateDay) {
+        callback(new Error(`区间最大为${this.maxRdDateDay}天`));
       }else {
         callback();
       }
@@ -159,10 +160,10 @@ export default {
       if (this.form.billFactoringModelList.length) {
         const len = this.form.billFactoringModelList.length;
         const row = this.form.billFactoringModelList[len-1];
-        if (row && Number(row.rdDateEnd)!==365) {
+        if (row && Number(row.rdDateEnd)!==this.maxRdDateDay) {
           return this.$messageBox({
             type:'warning',
-            content: '最后结束区间只能为365天'
+            content: `最后结束区间只能为${this.maxRdDateDay}天`
           })
         }
       }
