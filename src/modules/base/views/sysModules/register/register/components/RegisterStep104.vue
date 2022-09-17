@@ -495,7 +495,7 @@ export default {
           this.entInfoObj.form.invoiceTaxpayerId = this.form.invoiceTaxpayerId
           this.entInfoObj.form.myBuyers = this.tradeInfoForm.myBuyers
           this.entInfoObj.form.entType = this.tradeInfoForm.supplier
-          this.entInfoObj.form.registerUserList = this.registerUserList//操作用户
+          this.entInfoObj.form.registerUserList = this.entInfoObj.form.registerUserList || this.registerUserList//操作用户
           let params = {
             ...this.entInfoObj.form,
             id: this.entInfoObj.form.id,
@@ -591,7 +591,7 @@ export default {
       this.entInfoObj.form.invoiceTaxpayerId = this.form.invoiceTaxpayerId
       this.entInfoObj.form.myBuyers = this.tradeInfoForm.myBuyers
       this.entInfoObj.form.entType = this.tradeInfoForm.supplier
-      this.entInfoObj.form.registerUserList = this.registerUserList//操作用户
+      this.entInfoObj.form.registerUserList = this.entInfoObj.form.registerUserList || this.registerUserList//操作用户
       this.zjControl.completeRegister(this.entInfoObj.form).then(res => {
         this.$message.success('提交企业资料成功！')
         let params = Object.assign({},this.entInfoObj)
