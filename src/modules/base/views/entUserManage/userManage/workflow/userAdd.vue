@@ -62,8 +62,9 @@
               </el-form-item>
             </el-col>
             <el-col :span="8">
-              <el-form-item label="证件有效期：">
-                <zj-date-range-picker class="el-form-item__regExpire" :startDate.sync="form.certStartDate" :endDate.sync="form.certEndDate" :disabled="!isEdit || state < 2" />
+              <el-form-item label="证件有效期：" prop="certEndDate">
+                <zj-date-range-picker class="el-form-item__regExpire" :startDate.sync="form.certStartDate" @startChange="valueChange('certStartDate')" :endDate.sync="form.certEndDate" @endChange="valueChange('certEndDate')" :disabled="!isEdit || state < 2" />
+                <el-form-item prop="certStartDate" />
               </el-form-item>
             </el-col>
             <el-col :span="8">
@@ -72,15 +73,15 @@
               </el-form-item>
             </el-col>
             <el-col :span="8">
-              <el-form-item label="邮箱：">
+              <el-form-item label="邮箱：" prop="email">
                 <el-input v-model="form.email" :disabled="!isEdit || state < 2" />
               </el-form-item>
             </el-col>
           </el-row>
           <el-row>
             <el-col :span="24">
-              <el-form-item label="用户角色：">
-                <el-select class="rolesSelect" v-model="roleIds" filterable placeholder="请选择" :popper-append-to-body="false" multiple :disabled="!isEdit || state < 2">
+              <el-form-item label="用户角色：" prop="roleIds">
+                <el-select class="rolesSelect" v-model="form.roleIds" filterable placeholder="请选择" :popper-append-to-body="false" multiple :disabled="!isEdit || state < 2">
                   <el-option v-for="item in dictionary.autoRoleList" :key="item.code" :label="item.desc" :value="item.code" :disabled="item.disabled">
                   </el-option>
                 </el-select>
@@ -88,7 +89,7 @@
             </el-col>
             <el-col :span="24">
               <el-form-item label="请选择开凭证对账单类型权限：" label-width="280px" v-if="detailData.entType === 'B'">
-                <el-select v-model="statementAccountTypeArr" filterable placeholder="请选择" :popper-append-to-body="false" multiple :disabled="!isEdit || state < 2">
+                <el-select v-model="form.statementAccountType" filterable placeholder="请选择" :popper-append-to-body="false" multiple :disabled="!isEdit || state < 2">
                   <el-option v-for="item in dictionary.statementAccountTypeList" :key="item.code" :label="item.desc" :value="item.code">
                   </el-option>
                 </el-select>
@@ -142,10 +143,11 @@ export default {
         this.form.certType = '01'
       }
       this.$nextTick(() => {
-        this.roleIds = data.roleIds
+        this.form.roleIds = data.roleIds
         if (typeof data.statementAccountType === 'string') {
-          this.statementAccountTypeArr = data.statementAccountType.split(',')
+          this.form.statementAccountType = data.statementAccountType.split(',')
         }
+        this.$refs.form.clearValidate()
       })
     },
     'form.userName'(val) {
@@ -158,8 +160,6 @@ export default {
         ...this.$api.userInfoManage,
         getEmployeeInfo: this.$api.entInfoManage.getEmployeeInfo
       },
-      roleIds: [],
-      statementAccountTypeArr: [],
       detailData: {},
       attachInfo: [{ fileId: "", type: "身份证影印件", fileName: "" }],
       rules: {
@@ -192,6 +192,12 @@ export default {
           },
           { validator: validateIdCard, trigger: ["blur"] },
         ],
+        certStartDate: [
+          { name: '用户', varName: 'reg', required: true, validator: this.regExpireValidator, trigger: 'change' }
+        ],
+        certEndDate: [
+          { name: '用户', varName: 'expire', required: true, validator: this.regExpireValidator, trigger: 'change' }
+        ],
         mobileNo: [
           {
             required: true,
@@ -202,9 +208,17 @@ export default {
         ],
         email: [
           {
+            required: true,
             type: "email",
             message: "请输入正确的邮箱",
             trigger: ["blur"],
+          },
+        ],
+        roleIds: [
+          {
+            required: true,
+            message: "请选择用户角色",
+            trigger: ["change"],
           },
         ],
       },
@@ -216,6 +230,24 @@ export default {
     this.getRow();
   },
   methods: {
+    //证件日期起止校验封装
+    regExpireValidator(rule, value, callback) {
+      if (rule.required && !value) {
+        callback(
+          new Error(
+            `请选择${rule.name}证件有效期${rule.varName === 'reg' ? '起始日' :
+              rule.varName === 'expire' ? '截止日' : ''
+            }`
+          )
+        )
+      } else {
+        callback()
+      }
+    },
+    //值发生改变封装
+    valueChange(varName) {
+      this.$refs.form.validateField(varName)
+    },
     //获取企业信息-确认
     getEnterpriseConfirm() {
       this.zjControl
@@ -254,13 +286,13 @@ export default {
             roleIds: res.data.roleIds,//操作员角色
             // statementAccountType: [], //对账单类型
           }
-          this.roleIds = res.data.roleIds
-          if (res.data.statementAccountType.split(',')) {
+          this.form.roleIds = res.data.roleIds || []
+          this.form.statementAccountType = []
+          if (typeof res.data.statementAccountType === 'string') {
             let statementAccountTypeArr = res.data.statementAccountType.split(',')
             statementAccountTypeArr.forEach((item, index) => {
-              this.$set(this.statementAccountTypeArr, index, item)
+              this.$set(this.form.statementAccountType, index, item)
             })
-            // this.statementAccountTypeArr = res.data.statementAccountType
           }
           // 返回的数据不能修改
           if (!!sysUserItem.htSysCode) sysUserItem.isHtSysCodeDis = true //是否禁用
@@ -270,7 +302,6 @@ export default {
           if (!!sysUserItem.email) sysUserItem.isEmailDis = true //是否禁用
           this.$emit('update:form', Object.assign(sysUserItem, this.form))
           console.log(this.form)
-
           this.$message.success('查询成功！')
         } else {
           this.$message.error('娅米账号/业务系统账号不存在！')
@@ -291,7 +322,7 @@ export default {
     handleForm() {
       this.$refs.form.validate((valid) => {
         if (valid) {
-          let roleArr = this.roleIds
+          let roleArr = this.form.roleIds
           if (roleArr) {
             if (roleArr.includes('5') && roleArr.includes('6') || roleArr.includes('8') && roleArr.includes('9') || roleArr.includes('11') && roleArr.includes('12') || roleArr.includes('14') && roleArr.includes('15')) {
               this.$message.error('不能同时选经办员和复核员！')
@@ -299,16 +330,15 @@ export default {
             }
           }
           let params = Object.assign(this.form, this.detailData);
-          params.roleIds = this.roleIds
-          if (this.statementAccountTypeArr) {
-            params.statementAccountType = this.statementAccountTypeArr.join(',')
+          if (Array.isArray(params.statementAccountType)) {
+            params.statementAccountType = params.statementAccountType.join(',')
           }
           if (this.attachInfo[0].fileId) {
             params.idCardAttach = this.attachInfo // 身份证附件
           } else {
             params.idCardAttach = []
           }
-          this.$emit('formPass', this.form)
+          this.$emit('formPass', params)
         }
       })
     },

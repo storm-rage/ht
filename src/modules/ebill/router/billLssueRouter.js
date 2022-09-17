@@ -79,7 +79,7 @@ const billLssueRouter = [
     name: 'myOpenBill',
     component: () => import('../views/billLssue/issuanceVoucher/index.vue'),
     meta: {
-      title: `我签发的凭证`,
+      title: `我签发的海诺单`,
       root: '电子债权凭证',
       keepAlive: true,
       refreshIndex: 0,
