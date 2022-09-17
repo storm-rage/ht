@@ -87,7 +87,7 @@
             <zj-table-column title="操作" fixed="right">
               <template v-slot="{ row }">
                 <zj-button type="text" :api="zjBtn.getBusinessParamDetail" @click="toContractDetail(row)">详情</zj-button>
-                <zj-button type="text" v-if="row.isFactoringContract==='1'" :api="zjBtn.applyContractRenewal" @click="toContractSign(row)">合同续签</zj-button>
+                <zj-button type="text" v-if="row.isFactoringContract==='1'&&!row.maintainOnline" :api="zjBtn.applyContractRenewal" @click="toContractSign(row)">合同续签</zj-button>
               </template>
             </zj-table-column>
           </zj-table>
@@ -114,7 +114,7 @@
           <zj-table-column width="230" title="操作" fixed="right">
             <template v-slot="{ row }">
               <!--贸易关系状态为“正常”时，才展示维护和额度管理-->
-              <template v-if="row.state === '1'">
+              <template v-if="row.state === '1'&&!currentContractRow.maintainOnline">
                 <zj-button type="text" :api="zjBtn.maintainTradeRelation" @click="toMaintenance(row)">维护</zj-button>
                 <zj-button type="text" v-if="isDDBL" :api="zjBtn.applyLimit" @click="toMaintenanceQuota(row, 'EDBG')">额度维护</zj-button>
                 <zj-button type="text" v-if="isDDBL" :api="zjBtn.applyLimit" @click="toMaintenanceQuota(row, 'EDXQ')">额度续签</zj-button>
