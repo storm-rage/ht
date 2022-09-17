@@ -253,7 +253,7 @@
                 name: '$select',
                 props: { multiple: true, disabled: isDstatementAccountType },
                 options: dictionary.statementAccountTypeListTable
-              }" />
+              }" v-if="form.entType === 'B'" />
             <zj-table-column title="操作" v-if="!isDetail">
               <template v-slot="{ row, rowIndex }">
                 <template v-if="!$refs.sysUser.isActiveByRow(row)">
