@@ -43,6 +43,13 @@
               @after-load="tableDataChange"
               @checkbox-change="tableCheckChange"
               @checkbox-all="tableCheckChange"
+              :edit-config="{
+              trigger: 'manual',
+              mode: 'row',
+              icon: '-',
+              autoClear: false,
+              showStatus: true,
+              }"
             >
               <zj-table-column fixed="left" type="checkbox" width="30"/>
               <zj-table-column field="voucherNo" title="凭证编号"/>
@@ -256,6 +263,7 @@ export default {
 
         LODOP.On_Return = function (TaskID, sValue) {
           that.printStatus = sValue;
+          console.info(sValue);
           setTimeout(function () {
             loading.close();
 
@@ -270,7 +278,8 @@ export default {
           if (that.printStatus !== -1) {
             if (that.printStatus > 0) {
               //增加次数
-               that.zjControl.updateVoucherPrintTimes(params).then(()=>{
+              console.info(params);
+               that.zjControl.printNum(params).then(()=>{
                  that.search(false)
                })
             }
