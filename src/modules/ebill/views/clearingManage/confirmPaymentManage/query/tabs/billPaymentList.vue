@@ -175,7 +175,7 @@ export default {
       if (validBillConfirmAmtRecords.length) {
         return this.$messageBox({
           type: 'warning',
-          content: `勾选记录存在尚未维护确认${this.productName}金额`,
+          content: `勾选记录存在尚未维护确认${this.productName}金额，请选维护再提交`,
           title: '提示',
           showConfirmButton: true,
           center: true
