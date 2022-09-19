@@ -9,7 +9,7 @@
       <zj-table-column field="buyerName" title="核心企业名称"/>
       <zj-table-column field="cactoringLogo" title="保理标识"/>
       <zj-table-column field="tradeState" title="贸易关系状态"/>
-      <zj-table-column field="isAgreementOnline" title="协议数据来源"/>
+      <zj-table-column field="isAgreementOnline" title="协议数据来源" :formatter="obj=>typeMap(dictionary.onlineList,obj.cellValue)" />
     </zj-table>
     <el-form :model="form" ref="form" :rules="rules" label-width="180px">
       <zj-content-block>
@@ -264,6 +264,11 @@ export default {
   methods: {
     show(row, title, tradeRelationList) {
       this.rows = [...tradeRelationList]
+      this.rows.forEach(item=>{
+        if(!(item.isAgreementOnline || item.isAgreementOnline=='0')) {
+          item.isAgreementOnline = row.isAgreementOnline || ''
+        }
+      })
       if(row) {
         this.row = row
         this.form = {...row}

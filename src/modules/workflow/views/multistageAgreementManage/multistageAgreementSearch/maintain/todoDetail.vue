@@ -6,7 +6,7 @@
     <business-detail :formData="detailData" :zjControl="zjControl" :rowData="row" />
     <!--  贸易合同附件  -->
     <trade-contract-atta :tableData="detailData.contractInfoList" :dictionary="dictionary"/>
-    <operator-log :tableData="[]" :dictionary="dictionary"/>
+    <!-- <operator-log :tableData="[]" :dictionary="dictionary"/> -->
 
     <zj-content-footer>
       <zj-button @click="goParent">返回</zj-button>
@@ -16,7 +16,7 @@
 <script>
 import BizApplyInfo from './components/bizApplyInfo';
 import tradeContractAtta from './components/tradeContractAtta';
-import operatorLog from './components/operatorLog';
+// import operatorLog from './components/operatorLog';
 import businessDetail from './workflow/businessDetail';
 
 export default {
@@ -24,7 +24,7 @@ export default {
     BizApplyInfo,
     tradeContractAtta,
     businessDetail,
-    operatorLog,
+    // operatorLog,
   },
   data () {
     return {

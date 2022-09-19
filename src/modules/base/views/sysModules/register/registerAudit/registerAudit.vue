@@ -363,10 +363,12 @@ export default {
           if (type === "3" || type === "4") {
             let flag = false;
             this.$refs.auditRemark.getForm().validate((valid) => {
-              console.log(this.$refs.auditRemark);
               flag = valid;
             });
-            if (!flag) return;
+            if (!flag) {
+              this.$message.warning('请输入审核意见!')
+              return
+            };
           }
           let message = "";
           if (type === "1") {

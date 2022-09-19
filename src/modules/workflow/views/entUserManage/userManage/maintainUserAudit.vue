@@ -69,13 +69,13 @@ export default {
   created() {
     this.getRow()
     this.getDictionary()
-    this.getDetail()
   },
   methods: {
     //获取字典
     getDictionary() {
       this.zjControl.getUserDictionary().then((res) => {
         this.dictionary = res.data;
+        this.getDetail()
       });
     },
     //详情
@@ -138,7 +138,7 @@ export default {
               this.rejectLoading = false;
             })
           } else {
-            this.$message.warning('请选输入审核意见!')
+            this.$message.warning('请输入审核意见!')
           }
         })
       }

@@ -25,7 +25,7 @@
             <el-input v-model.trim="searchForm.payEntNameLike" @keyup.enter.native="enterSearch"/>
           </el-form-item>
           <el-form-item label="业务系统单号：">
-            <el-input v-model.trim="searchForm.capitalSerialno" @keyup.enter.native="enterSearch"/>
+            <el-input v-model.trim="searchForm.outOrederNo" @keyup.enter.native="enterSearch"/>
           </el-form-item>
         </el-form>
       </template>
@@ -46,7 +46,7 @@
         <zj-table-column field="payableAmt" :title="`${productName}金额`" :formatter="money"/>
         <zj-table-column field="payableExpireDate" :title="`${productName}到期日`" :formatter="date"/>
         <zj-table-column field="remark" title="备注"/>
-        <zj-table-column field="capitalSerialno" title="业务系统单号"/>
+        <zj-table-column field="outOrederNo" title="业务系统单号"/>
         <zj-table-column field="billConfirmAmt" :title="`确认${productName}金额`" :formatter="money"/>
         <zj-table-column field="actualExpireDate" title="凭证实际到期日" :formatter="date"/>
         <zj-table-column title="操作" fixed="right">
@@ -97,7 +97,7 @@ export default {
         payableExpireDateEnd: '',
         receiptEntNameLike: '',
         payEntNameLike: '',
-        capitalSerialno: ''
+        outOrederNo: ''
       },
       //是否显示底部按钮
       showBottomBtn: false,
