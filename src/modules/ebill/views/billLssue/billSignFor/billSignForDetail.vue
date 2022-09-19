@@ -15,13 +15,13 @@
         width="100%"
       >
         <tr>
-          <td colspan="3" class="right">融单开立方</td>
+          <td colspan="3" class="right">{{productName}}开立方</td>
           <td colspan="3">{{ detailData.payEntName }}</td>
           <td colspan="3" class="right">统一社会信用代码</td>
           <td colspan="3">{{ detailData.payEntName }}</td>
         </tr>
         <tr>
-          <td rowspan="4" colspan="3">融单接收方</td>
+          <td rowspan="4" colspan="3">{{productName}}接收方</td>
           <td rowspan="4" colspan="3">{{ detailData.receiptEntName }}</td>
           <td colspan="3">统一社会信用代码</td>
           <td colspan="3"></td>

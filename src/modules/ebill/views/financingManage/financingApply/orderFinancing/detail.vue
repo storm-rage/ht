@@ -39,7 +39,7 @@
           </el-col>
           <el-col :span="12">
             <el-form-item label="应收账款转让比例：" prop="tranAmt">
-              <zj-number-input :precision="0" v-model="form.discountRate" :max="100" :min="0" @change="handleChange">
+              <zj-number-input v-model="form.discountRate" :max="100" :min="0" @change="handleChange">
                 <template slot="append">%</template>
               </zj-number-input>
             </el-form-item>
@@ -83,7 +83,7 @@
           </el-col>
           <el-col :span="12">
             <el-form-item label="预计利息：">
-              {{form.interestAmt?money(form.interestAmt):''}}
+              {{form.interestAmt?moneyNoSynbol(form.interestAmt):''}}
               <div>
                 <zj-content-tip text="（预计利息 = 融资申请金额*融资月利率/30*预计融资天数）" v-if="form.interestAmt"/>
               </div>

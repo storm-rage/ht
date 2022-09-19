@@ -50,6 +50,7 @@ export default {
         this.zjControl.rejectBillSign(params).then(res=>{
           this.$message.success(res.msg)
           this.dialogShow = false
+          this.search()
         })
       })
     },
