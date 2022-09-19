@@ -36,7 +36,7 @@
                   <!--     当为首次登录时      -->
                   <div class="form-item-title" v-if="isOneLogin||userData.pwdVerifyMode==='2'">手机验证码</div>
                   <el-form-item prop="smsCode" v-if="isOneLogin||userData.pwdVerifyMode==='2'" class="login-code">
-                    <el-input class="left-el-input" placeholder="请输入手机验证码" v-model="userData.smsCode" size="medium">
+                    <el-input class="left-el-input" autocomplete="off" placeholder="请输入手机验证码"  v-model="userData.smsCode" size="medium">
                     </el-input>
                     <div class="sms-code">
                       <zj-button

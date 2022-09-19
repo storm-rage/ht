@@ -30,7 +30,7 @@
                             :rules="[
                           {required: true,message: '请选择保理标识',trigger: ['change','blur']}
                         ]">
-                <el-select :disabled="!isEditCactoringLogo||!isEdit" v-model="form.cactoringLogo" @change="handleCactoringLogoChange">
+                <el-select :disabled="!isEditCactoringLogo||!isEdit" v-model="form.cactoringLogo">
                   <el-option v-for="(item,index) in cactoringLogoList"
                              :key="`${index}cactoringLogo`"
                              :label="item.desc"
@@ -190,6 +190,7 @@ export default {
             rdProductName: businessParamModel.rdProductName,
             ddProductName: businessParamModel.ddProductName
           }
+          this.clearCactoringLogo();
           this.isEdit = isEdit;
           this.dialogVisible = true;
         });
@@ -200,7 +201,10 @@ export default {
       }
 
     },
-    handleCactoringLogoChange() {
+    clearCactoringLogo() {
+      if (this.form.cactoringLogo&&this.form.cactoringLogo===CactoringLogo.BILLBL&&this.prodInfo.productTypes.includes(ProductType.RD)&&this.prodInfo.productTypes.includes(ProductType.DDBL)) {
+        this.$set(this.form, 'cactoringLogo', '');
+      }
     },
     save () {
       this.loading = true;
