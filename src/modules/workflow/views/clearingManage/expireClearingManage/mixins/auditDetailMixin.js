@@ -60,6 +60,7 @@ export default {
           operateFlag: OperResult.PASS,
           reviewOpinion: notes,
           serialNo: this.row.serialNo,
+          remark: this.bizInfo.basicInfo.remark,
           clearIds
         }).then(res => {
           this.passLoading = false;
@@ -91,6 +92,7 @@ export default {
               operateFlag: OperResult.BACK,
               reviewOpinion: notes,
               serialNo: this.row.serialNo,
+              remark: this.bizInfo.basicInfo.remark,
               clearIds
             }).then(res => {
               this.rejectLoading = false;

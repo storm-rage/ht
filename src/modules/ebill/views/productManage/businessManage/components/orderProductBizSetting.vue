@@ -87,7 +87,7 @@
                           :rules="[
                           {required: true,message: '请输入订单融资月利率',trigger: ['change','blur']}
                         ]">
-              <zj-number-input :disabled="!isEdit&&!isOnlyMonthRateEdit" :max="100" :precision="4" v-model.trim="form.factoringFinancingMonthRate">
+              <zj-number-input :disabled="!isEdit&&!isOnlyMonthRateEdit" :max="100" :precision="3" v-model.trim="form.factoringFinancingMonthRate">
                 <template slot="append">%</template>
               </zj-number-input><br/><zj-text-tip text="注：订单融资日利率=订单融资月利率/30"></zj-text-tip>
             </el-form-item>

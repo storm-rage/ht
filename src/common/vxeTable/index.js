@@ -18,7 +18,7 @@ export default {
         return XEUtils.commafy(XEUtils.toValueString(cellValue), { spaceNumber: 4, separator: ' ' })
       },
       // 格式化利率
-      formatColumnRate ({ cellValue }, digits = 4) {
+      formatColumnRate ({ cellValue }, digits = 3) {
         if (cellValue) {
           return XEUtils.commafy(XEUtils.toNumber(cellValue), {spaceNumber:0, digits })+'%'
         }
