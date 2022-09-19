@@ -142,13 +142,22 @@ export default {
       if (this.isEdit) {
         this.form.certType = '01'
       }
+      if (data.name) { //详情
+        this.detailData.name = data.name
+        this.detailData.customCode = data.customCode
+        this.detailData.entType = data.entType
+        this.detailData.isHtEnterprise = data.isHtEnterprise
+        this.dictionary.autoRoleList = this.dictionary.sysRoleList
+      }
+      this.form.roleIds = data.roleIds || []
+      this.form.statementAccountType = data.statementAccountType || []
+      if (typeof data.statementAccountType === 'string') {
+        this.form.statementAccountType = data.statementAccountType.split(',')
+      }
       this.$nextTick(() => {
-        this.form.roleIds = data.roleIds
-        this.form.statementAccountType = []
-        if (typeof data.statementAccountType === 'string') {
-          this.form.statementAccountType = data.statementAccountType.split(',')
+        if (this.$refs.form) {
+          this.$refs.form.clearValidate()
         }
-        this.$refs.form.clearValidate()
       })
     },
     'form.roleIds'(roleArr) {
@@ -234,7 +243,7 @@ export default {
       state: 0,
     };
   },
-  created() {
+  mounted() {
     this.getRow();
   },
   methods: {
