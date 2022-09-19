@@ -56,6 +56,20 @@
           </el-form-item>
         </el-form>
       </template>
+      <template slot="btnGroups">
+        <el-row style="margin-top: 5px;display: flex;align-item: center;">
+          <zj-button type="primary" @click="toIssuance" :api="zjBtn.passBillSignBatch"
+            >签发凭证</zj-button
+          >
+          <zj-content style="padding-top: 5px;padding-bottom: 5px;">
+            <zj-content-tip
+              text="注：1.预计还款日期为平台根据结算周期计算所得，支持修改。
+                      2.点击修改，可修改预计付款日、开单金额和备注
+                      3.海诺单到期日=预计付款日+开单宽限期限。"
+            ></zj-content-tip>
+          </zj-content>
+        </el-row>
+      </template>
       <div class="zj-search-response">
         <zj-table
           ref="searchTable"
@@ -165,22 +179,22 @@
           </zj-table-column>
         </zj-table>
 
-        <zj-content style="padding-top: 0">
+        <!-- <zj-content style="padding-top: 0">
           <zj-content-tip
             text="注：1.预计还款日期为平台根据结算周期计算所得，支持修改。
                     2.点击修改，可修改预计付款日、开单金额和备注
                     3.海诺单到期日=预计付款日+开单宽限期限。"
           ></zj-content-tip>
-        </zj-content>
+        </zj-content> -->
       </div>
       <!-- 工作流 -->
-      <zj-workflow v-model="workflow">
+      <!-- <zj-workflow v-model="workflow">
         <el-row slot="right">
           <zj-button @click="toIssuance" :api="zjBtn.passBillSignBatch"
             >签发凭证</zj-button
           >
         </el-row>
-      </zj-workflow>
+      </zj-workflow> -->
     </zj-list-layout>
   </div>
 </template>
