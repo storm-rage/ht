@@ -201,6 +201,9 @@ export default {
       }
 
     },
+    /**
+     * 在特殊场景下面需要重置，让用户重新选择，比如，凭证保理转订单保理开通
+     */
     clearCactoringLogo() {
       if (this.form.cactoringLogo&&this.form.cactoringLogo===CactoringLogo.BILLBL&&this.prodInfo.productTypes.includes(ProductType.RD)&&this.prodInfo.productTypes.includes(ProductType.DDBL)) {
         this.$set(this.form, 'cactoringLogo', '');
