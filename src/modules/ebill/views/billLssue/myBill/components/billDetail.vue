@@ -3,7 +3,7 @@
     <div class="zj-center mb-20">融单编号：{{ dataForm.ebillCode }}</div>
     <zj-content>
       <!--凭证详情-->
-      <zj-collapse :title="`根单编号${ dataForm.rootCode }`">
+      <zj-collapse :title="`根单编号：${ dataForm.rootCode }`">
         <table
           class="detail-table"
           border="0"

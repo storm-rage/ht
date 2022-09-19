@@ -134,23 +134,23 @@
                     <zj-button type="text" @click="attaDownLoad(row)">下载</zj-button>
                   </template>
                 </zj-table-column>
-                <el-row slot="pager-left" class="slotRows" >
-                  订单预估总额：{{moneyNoSynbol(form.totalAmt)}}
-                </el-row>
               </zj-table>
+              <el-row slot="pager-left" class="slotRows" v-if="row.financingProductType === '0'">
+                订单预估总额：{{moneyNoSynbol(form.totalAmt)}}
+              </el-row>
               <zj-table ref="searchTable" class="zj-search-table"
-                        :dataList="form.phasedAgreements"
+                        :dataList="form.ebBillInfo"
                         :pager="false"
                         v-if="row.financingProductType !== '0'"
               >
-                <zj-table-column field="agreementNo" :title="`${productName}编号`" />
-                <zj-table-column field="agreementName" :title="`原始${productName}编号`" />
-                <zj-table-column field="agreementStartDate" :title="`${productName}签发人`" />
-                <zj-table-column field="agreementEstimateEndDate" title="转让企业" />
-                <zj-table-column field="agreementNumber" :title="`${productName}金额`" :formatter="money"/>
-                <zj-table-column field="price" :title="`${productName}持有日期`" :formatter="date"/>
-                <zj-table-column field="agreementEstimatedPrice" :title="`${productName}到期日`" :formatter="date"/>
-                <el-row slot="pager-left" class="slotRows" >
+                <zj-table-column field="ebillCode" :title="`${productName}编号`" />
+                <zj-table-column field="sourceCode" :title="`原始${productName}编号`" />
+                <zj-table-column field="writerName" :title="`${productName}签发人`" />
+                <zj-table-column field="transferName" title="转让企业" />
+                <zj-table-column field="ebillAmt" :title="`${productName}金额`" :formatter="money"/>
+                <zj-table-column field="holderDate" :title="`${productName}持有日期`" :formatter="date"/>
+                <zj-table-column field="expireDate" :title="`${productName}到期日`" :formatter="date"/>
+                <el-row slot="bottom-total" class="slotRows" v-if="row.financingProductType !== '0'">
                   {{productName}}金额合计：{{moneyNoSynbol(form.totalAmt)}}
                 </el-row>
               </zj-table>
@@ -441,6 +441,7 @@ export default {
     this.getRow()
     this.getDictionary()
     this.getDetail()
+    console.log(this.row)
   }
 }
 </script>

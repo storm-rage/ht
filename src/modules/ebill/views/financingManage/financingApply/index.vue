@@ -4,7 +4,7 @@
     <el-tabs v-model="tabs" class="zj-tabs-card" @tab-click="tabHandle">
       <el-tab-pane label="订单融资" name="orderTab" v-if="tabInfo.orderTab">
         <orderFinancing :zjControl="zjControl" :dictionary="dictionary" :uBtn="zjBtn"
-          @nextStepParams="handelNextStepParams" />
+        @nextStepParamsOrder="handelNextStepParamsOrder"/>
       </el-tab-pane>
       <el-tab-pane :label="`${productName}融资`" name="billTab" v-if="tabInfo.billTab || tabInfo.warehouseTab">
         <keep-alive>
@@ -53,6 +53,7 @@ export default {
       tabs: 'orderTab',
       dictionary: {},
       nextStepParams: {},
+      nextStepParamsOrder: {},
       tabInfo: {
         orderTab: '',//订单融资Tab:0-不展示 1-展示
         billTab: '',//凭证融资Tab:0-不展示 1-展示
@@ -83,12 +84,11 @@ export default {
       this.zjBtn.userInfo ? this.tabAtive = 'orderFinancing' : this.tabAtive = 'voucherFinancing'
     },
     toNext() {
-      // console.log(JSON.stringify(this.nextStepParams))
-      console.log(this.nextStepParams.idList)
-      console.log(this.nextStepParams.entId);
-
+      console.log(JSON.stringify(this.nextStepParams))
+      // console.log(this.nextStepParams.idList.length==0)
+      // console.log(this.nextStepParams.entId);
       if (this.tabs === 'orderTab') {
-        this.goChild('orderFinancingDetail', { buyerId: this.nextStepParams.buyerId })
+        this.goChild('orderFinancingDetail', { buyerId: this.nextStepParamsOrder.buyerId })
       }
       if (this.tabs === 'billTab') {
         if (this.nextStepParams.nextStepFlag) {
@@ -97,15 +97,20 @@ export default {
         }
         if (this.nextStepParams.entId && this.nextStepParams.idList && this.nextStepParams.idList.length) {
           this.goChild('voucherFinancingDetail', { ...this.nextStepParams })
-        } else if (this.nextStepParams.entId && (!this.nextStepParams.idList||!this.nextStepParams.idList.length)) {
+        } else if ((this.nextStepParams.entId || this.nextStepParams.buyerId) && this.nextStepParams.idList && !this.nextStepParams.idList.length) {
           this.$message.error(`请选择${this.productName}信息!`)
-        } else if (!this.nextStepParams.entId) {
+        } else if (!this.nextStepParams.entId && !this.nextStepParams.buyerId) {
           this.$message.error(`请选择${this.productName}开单人/转让企业，并选择${this.productName}信息!`)
-        } 
+        } else if ((this.nextStepParams.entId || this.nextStepParams.buyerId) && !this.nextStepParams.idList) {
+          this.$message.error(`请选择${this.productName}信息!`)
+        }
       }
     },
     handelNextStepParams(val) {
       this.nextStepParams = { ...val }
+    },
+    handelNextStepParamsOrder(val) {
+      this.nextStepParamsOrder = { ...val }
     },
     tabLocal() {
       if (windowSSStorage.getItem('task') !== null) {
