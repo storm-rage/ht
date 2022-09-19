@@ -10,7 +10,6 @@ const billSearchRouter = [
       root: '查询统计',
       keepAlive: true,
       refreshIndex: 0,
-      notRequireAuth: true
     }
   },
   {
@@ -21,9 +20,8 @@ const billSearchRouter = [
       isMock:false,
       title:`对账单详情`,
       keepAlive:true,
-      parent:'billSearch',
+      parent:'queryAccountBill',
       refreshIndex:0,
-      notRequireAuth: true
     }
   },
 ]

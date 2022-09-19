@@ -40,7 +40,8 @@
             <zj-table-column field="financingProductType" title="融资产品名称"
               :formatter="obj => typeMap(dictionary.productTypeList, obj.cellValue)" />
             <zj-table-column field="fromEntName" title="融资企业名称" />
-            <zj-table-column field="applyDatetime" title="融资申请日期" :formatter="date" />
+            <zj-table-column field="applyDatetime" title="融资开始日" :formatter="date" />
+            <zj-table-column field="createDatetime" title="融资申请日期" :formatter="date" />
             <zj-table-column field="tranAmt" title="融资申请金额" :formatter="money" />
             <zj-table-column field="workflowState" title="融资业务状态"
               :formatter="obj => typeMap(dictionary.financingStateList, obj.cellValue)" />
