@@ -16,7 +16,7 @@
             </el-form-item>
           </el-col>
           <el-col :span="8">
-            <el-form-item :label="`待清算${productName}金额总计：`">
+            <el-form-item :label="`待清算${productName}金额总计：`" label-width="168px">
               {{money(baseInfo.totalEbillAmt)}}
             </el-form-item>
           </el-col>
