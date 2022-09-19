@@ -84,8 +84,9 @@ export default {
     },
     toNext() {
       // console.log(JSON.stringify(this.nextStepParams))
-      // console.log(this.nextStepParams.idList.length==0)
-      // console.log(this.nextStepParams.entId);
+      console.log(this.nextStepParams.idList)
+      console.log(this.nextStepParams.entId);
+
       if (this.tabs === 'orderTab') {
         this.goChild('orderFinancingDetail', { buyerId: this.nextStepParams.buyerId })
       }
@@ -96,7 +97,7 @@ export default {
         }
         if (this.nextStepParams.entId && this.nextStepParams.idList && this.nextStepParams.idList.length) {
           this.goChild('voucherFinancingDetail', { ...this.nextStepParams })
-        } else if (this.nextStepParams.entId && this.nextStepParams.idList.length==0) {
+        } else if (this.nextStepParams.entId && (!this.nextStepParams.idList||!this.nextStepParams.idList.length)) {
           this.$message.error(`请选择${this.productName}信息!`)
         } else if (!this.nextStepParams.entId) {
           this.$message.error(`请选择${this.productName}开单人/转让企业，并选择${this.productName}信息!`)
