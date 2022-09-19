@@ -138,6 +138,7 @@ export default {
             if (res.success) {
               this.$message.success(res.msg);
               this.$emit('done')
+              this.close();
             }
           }).catch(() => {
             this.loading = false
