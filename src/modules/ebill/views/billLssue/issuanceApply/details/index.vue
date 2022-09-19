@@ -81,17 +81,17 @@
           </template>
           <template v-else-if="rowList[0] && rowList[0].billSource.toUpperCase()=='TMS'">
             <zj-table-column field="dnNo" title="DN合并号" />
-            <zj-table-column field="poNo" title="客户编号" />
-            <zj-table-column field="poNo" title="客户名称" />
-            <zj-table-column field="poNo" title="放行日期" />
-            <zj-table-column field="poNo" title="运输方式" />
-            <zj-table-column field="poNo" title="路径描述" />
-            <zj-table-column field="poNo" title="重量" />
-            <zj-table-column field="poNo" title="数量" />
-            <zj-table-column field="poNo" title="单价" />
-            <zj-table-column field="poNo" title="基本运费" />
-            <zj-table-column field="poNo" title="扣罚金额" />
-            <zj-table-column field="poNo" title="实际总运费" />
+            <zj-table-column field="customerNo" title="客户编号" />
+            <zj-table-column field="customerName" title="客户名称" />
+            <zj-table-column field="passDate" title="放行日期" :formatter="date"/>
+            <zj-table-column field="transportMode" title="运输方式" />
+            <zj-table-column field="pathDesc" title="路径描述" />
+            <zj-table-column field="weight" title="重量" />
+            <zj-table-column field="number" title="数量" />
+            <zj-table-column field="price" title="单价" :formatter="money" />
+            <zj-table-column field="baseFareAmount" title="基本运费" :formatter="money" />
+            <zj-table-column field="deductionAmount" title="扣罚金额" :formatter="money" />
+            <zj-table-column field="actualTotalFareAmount" title="实际总运费" :formatter="money" />
           </template>
         </zj-table>
       </el-collapse-item>
@@ -151,7 +151,7 @@ export default {
         .then(res => {
           if (res.code === 200) {
             this.rowList = [res.data] || []
-            this.accountDetailInfo = this.rowList[0] && this.rowList[0].accountDetailInfo || []
+            this.accountDetailInfo = this.rowList[0] && this.rowList[0].billSource.toUpperCase()=='SRM'? (this.rowList[0].accountDetailInfo||[]) : (this.rowList[0].tmsdetailInfos||[])
             this.loading = false
           }
         })

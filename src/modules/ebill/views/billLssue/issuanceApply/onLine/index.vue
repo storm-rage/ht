@@ -102,13 +102,13 @@
             :formatter="date"
           />
           <zj-table-column
-            field="inputDate"
+            field="minDate"
             title="入库日期/放行日期"
             width="200"
           >
             <template v-slot="{ row }">
-              <div v-if="row.inputDate || row.passDate">
-                {{ dateFormat(row.inputDate) }} ~ {{ dateFormat(row.passDate) }}
+              <div v-if="row.minDate || row.minDate">
+                {{ dateFormat(row.minDate) }} ~ {{ dateFormat(row.minDate) }}
               </div>
               <div v-else>-</div>
             </template>
