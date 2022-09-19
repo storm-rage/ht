@@ -24,7 +24,7 @@
                   <el-form-item label="融资产品：">{{form.financingProductType?typeMap(dictionary.productTypeList,form.financingProductType):'-'}}</el-form-item>
                 </el-col>
                 <el-col :span="8">
-                  <el-form-item label="申请时间：">{{form.applyDatetime?date(form.applyDatetime):''}}</el-form-item>
+                  <el-form-item label="申请时间：">{{form.createDatetime?date(form.createDatetime):''}}</el-form-item>
                 </el-col>
               </el-row>
               <el-row>
@@ -67,7 +67,7 @@
                   </el-form-item>
                 </el-col>
                 <el-col :span="8" v-if="row.financingProductType === '0'">
-                  <el-form-item label="融资开始日：">{{form.loanDate?date(form.loanDate):''}}</el-form-item>
+                  <el-form-item label="融资开始日：">{{form.applyDatetime?date(form.applyDatetime):''}}</el-form-item>
                 </el-col>
                 <el-col :span="8" v-if="row.financingProductType === '0'">
                   <el-form-item label="融资到期日：">{{form.expireDate?date(form.expireDate):''}}</el-form-item>
@@ -76,7 +76,7 @@
                   <el-form-item label="融资月利率：">{{form.interestRate?`${form.interestRate}%`:''}}</el-form-item>
                 </el-col>
                 <el-col :span="8" v-if="row.financingProductType !== '0'">
-                  <el-form-item label="融资开始日：">{{form.loanDate?date(form.loanDate):''}}</el-form-item>
+                  <el-form-item label="融资开始日：">{{form.applyDatetime?date(form.applyDatetime):''}}</el-form-item>
                 </el-col>
               </el-row>
               <el-row>

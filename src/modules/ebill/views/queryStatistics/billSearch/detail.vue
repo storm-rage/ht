@@ -4,9 +4,9 @@
       <!--  对账单详情  -->
       <zj-top-header title="对账单详情"/>
       <zj-content-block>
-        <zj-header title="对账单信息"></zj-header>
+        <zj-header title="对账单信息"/>
+        <zj-content>
         <zj-table ref="searchTable" class="zj-search-table" :dataList="detail.row"
-
         >
           <zj-table-column field="acctBillCode" title="对账单编号" />
           <zj-table-column field="companyName" title="买方名称" />
@@ -22,10 +22,12 @@
           <zj-table-column field="billSource" title="对账单来源" :formatter="formatterCellVal"/>
 
         </zj-table>
+        </zj-content>
       </zj-content-block>
       <zj-content-block v-if="this.billSource">
         <zj-header title="对账单明细"></zj-header>
         <!--    SRM    -->
+        <zj-content>
         <zj-table ref="searchTable" class="zj-search-table" :dataList="detail.billDetailList" v-if="this.billSource === 'SRM'"
         >
           <zj-table-column field="poNo" title="po单号" />
@@ -62,10 +64,9 @@
           <zj-table-column field="deductionAmount" title="扣罚金额" :formatter="money" />
           <zj-table-column field="actualTotalFareAmount" title="实际总运费" :formatter="money" />
         </zj-table>
+        </zj-content>
       </zj-content-block>
     </zj-content-container>
-    <!-- <el-row style="position: relative;margin-top: 20px;">
-    </el-row> -->
     <zj-content-footer>
       <zj-button class="submit-button" @click="goParent">返回</zj-button>
     </zj-content-footer>
