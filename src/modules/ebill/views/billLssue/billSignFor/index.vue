@@ -6,7 +6,7 @@
             <zj-list-layout>
               <template slot="searchForm">
                 <el-form ref="searchForm" :model="searchForm">
-                  <el-form-item label="签发日期开立/转让日期：">
+                  <el-form-item label="签发日期/转让日期：">
                     <zj-date-range-picker
                       :startDate.sync="searchForm.stateChangeDateStart"
                       :endDate.sync="searchForm.stateChangeDateEnd"

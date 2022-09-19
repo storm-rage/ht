@@ -86,7 +86,7 @@ export default {
     handleRadioChange({row}) {
       this.activeEntParams = {...row}
       console.log(this.activeEntParams)
-      this.$emit('nextStepParams',this.activeEntParams)
+      this.$emit('nextStepParamsOrder',this.activeEntParams)
       //获取阶段性协议列表
       let params = {
         ...row
@@ -94,12 +94,6 @@ export default {
       this.zjControl.getPhasedAgreement(params).then(res=>{
         this.agreementList = res.data.rows
       })
-    },
-    toDetail (row) {
-      this.goChild('productInfoManageDetail', row)
-    },
-    toEdit (row) {
-      this.goChild('productInfoManageEdit', row)
     },
     download(row) {
       this.zjControl.downloadFile({

@@ -57,12 +57,12 @@
               >
                 <zj-table-column :title="`${productName}编号`">
                   <template v-slot="{row}">
-                    <zj-button type="text" @click="toDetail(row)">{{row.ebillCode}}</zj-button>
+                    <el-link type="primary" @click="toDetail(row)">{{row.ebillCode}}</el-link>
                   </template>
                 </zj-table-column>
                 <zj-table-column :title="`原始${productName}编号`">
                   <template v-slot="{row}">
-                    <zj-button type="text" @click="toDetail(row)">{{row.rootCode}}</zj-button>
+                    <el-link type="primary" @click="toDetail(row)">{{row.rootCode}}</el-link>
                   </template>
                 </zj-table-column>
                 <zj-table-column field="payEntName" title="签发人"/>

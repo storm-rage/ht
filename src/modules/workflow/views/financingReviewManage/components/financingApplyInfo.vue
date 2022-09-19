@@ -7,13 +7,13 @@
           <el-form-item label="融资企业：">{{form.fromEntName}}</el-form-item>
         </el-col>
         <el-col :span="8" v-if="proType === '0'">
-          <el-form-item label="买方企业名称：">{{form.fromEntName}}</el-form-item>
+          <el-form-item label="买方企业名称：">{{form.buyerEntName}}</el-form-item>
         </el-col>
         <el-col :span="8" v-if="proType !== '0'">
-          <el-form-item label="申请转让金额：">{{form.tranferAmt}}</el-form-item>
+          <el-form-item label="申请转让金额：">{{form.tranferAmt?`${moneyNoSynbol(form.tranferAmt)}`:''}}</el-form-item>
         </el-col>
         <el-col :span="8" v-if="proType === '0'">
-          <el-form-item label="融资月利率：">{{form.interestRate}}</el-form-item>
+          <el-form-item label="融资月利率：">{{form.interestRate?`${form.interestRate}%`:''}}</el-form-item>
         </el-col>
         <el-col :span="8" v-if="proType !== '0'">
           <el-form-item label="融资比例：">{{ form.discountRate?`${form.discountRate}%`:'-'}}</el-form-item>
@@ -21,31 +21,31 @@
       </el-row>
       <el-row>
         <el-col :span="8" v-if="proType === '0'">
-          <el-form-item label="应收账款金额：">{{form.tranferAmt?`${form.tranferAmt}元`:''}}</el-form-item>
+          <el-form-item label="应收账款金额：">{{form.tranferAmt?`${moneyNoSynbol(form.tranferAmt)}`:''}}</el-form-item>
         </el-col>
         <el-col :span="8" v-if="proType === '0'">
           <el-form-item label="应收账款转让比例：">{{form.discountRate?`${form.discountRate}%`:''}}</el-form-item>
         </el-col>
         <el-col :span="8" v-if="proType === '0'">
           <el-form-item label="融资申请金额：">
-            {{form.tranAmt}}
-            <div>
-              <zj-content-tip text="（融资申请金额=申请转让金额*融资比例）"/>
-            </div>
+            {{form.tranAmt?`${moneyNoSynbol(form.tranAmt)}`:''}}
+            &nbsp;<el-tooltip content="（融资申请金额=申请转让金额*融资比例）"  effect="dark" placement="top">
+            <i class="el-icon-info" style="color:#909399"></i>
+          </el-tooltip>
           </el-form-item>
         </el-col>
       </el-row>
       <el-row>
         <el-col :span="8" v-if="proType !== '0'">
           <el-form-item label="融资申请金额：">
-            {{form.tranAmt}}
-            <div>
-              <zj-content-tip text="（融资申请金额=申请转让金额*融资比例）"/>
-            </div>
+            {{form.tranAmt?`${moneyNoSynbol(form.tranAmt)}`:''}}
+            &nbsp;<el-tooltip content="（融资申请金额=申请转让金额*融资比例）"  effect="dark" placement="top">
+            <i class="el-icon-info" style="color:#909399"></i>
+          </el-tooltip>
           </el-form-item>
         </el-col>
         <el-col :span="8" v-if="proType !== '0'">
-          <el-form-item label="融资月利率：">{{form.interestRate}}</el-form-item>
+          <el-form-item label="融资月利率：">{{form.interestRate?`${form.interestRate}%`:''}}</el-form-item>
         </el-col>
         <el-col :span="8" v-if="proType === '0'">
           <el-form-item label="融资开始日：">{{form.loanDate?date(form.loanDate):''}}</el-form-item>
@@ -71,10 +71,10 @@
         </el-col>
         <el-col :span="8">
           <el-form-item label="预计利息：">
-            {{form.interestAmt}}
-            <div>
-              <zj-content-tip text="（预计利息 = 融资申请金额*融资月利率/30*预计融资天数）"/>
-            </div>
+            {{form.interestAmt?`${moneyNoSynbol(form.interestAmt)}`:''}}
+            &nbsp;<el-tooltip content="（预计利息 = 融资申请金额*融资月利率/30*预计融资天数）"  effect="dark" placement="top">
+            <i class="el-icon-info" style="color:#909399"></i>
+          </el-tooltip>
           </el-form-item>
         </el-col>
       </el-row>
@@ -152,17 +152,6 @@ export default {
     ddTotalAmt: String,
   },
   computed: {
-    totalAccount() {
-      let arr = []
-      if(this.voucherList) {
-        for(let i of this.voucherList) {
-          arr.push(i.ebillAmt)
-        }
-      }
-      return arr.reduce((pre,cur)=>
-        pre + cur , 0
-      )
-    },
     productName() {
       return this.$store.getters['user/productName']
     }
