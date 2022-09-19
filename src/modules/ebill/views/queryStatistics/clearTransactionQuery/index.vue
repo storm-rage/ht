@@ -59,7 +59,7 @@
               <zj-table ref="searchTable" :params="searchForm" :api="zjControl.queryExpireClearPage">
                 <zj-table-column title="申请流水号">
                   <template v-slot="{row}">
-                    <el-link type="text" @click="toDetail(row)"><span class="blue">{{row.serialNo}}</span></el-link>
+                    <span class="table-elbill-code" @click="toDetail(row)">{{ row.serialNo}}</span>
                   </template>
                 </zj-table-column>
                 <zj-table-column field="clearType" title="申请类型" :formatter="obj=>typeMap(dictionary.applyType,obj.cellValue)"/>
