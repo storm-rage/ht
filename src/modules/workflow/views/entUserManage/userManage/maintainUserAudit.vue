@@ -138,7 +138,7 @@ export default {
               this.rejectLoading = false;
             })
           } else {
-            this.$message.warning('请选输入审核意见!')
+            this.$message.warning('请输入审核意见!')
           }
         })
       }
