@@ -48,6 +48,21 @@
           </el-form-item>
         </el-form>
       </template>
+      <template slot="btnGroups">
+        <el-row style="margin-top: 5px;display: flex;align-item: center;">
+          <zj-button type="primary" @click="toIssuance" :api="zjBtn.passBillSignBatch"
+            >签发凭证</zj-button
+          >
+          <zj-content style="padding-top: 5px;padding-bottom: 5px;">
+            <zj-content-tip
+              text="注：1.海诺单到期日=付款日期+开单宽限期限。"
+            ></zj-content-tip>
+          </zj-content>
+          <zj-button type="danger" @click="remove" :api="zjBtn.passBillSignBatch"
+            >删除</zj-button
+          >
+        </el-row>
+      </template>
       <div class="zj-search-response">
         <zj-table
           :api="zjControl.offlineList"
@@ -85,14 +100,14 @@
             </template>
           </zj-table-column>
         </zj-table>
-        <zj-content style="padding-top: 0">
+        <!-- <zj-content style="padding-top: 0">
           <zj-content-tip
             text="注：1.海诺单到期日=付款日期+开单宽限期限。"
           ></zj-content-tip>
-        </zj-content>
+        </zj-content> -->
       </div>
       <!-- 工作流 -->
-      <zj-workflow>
+      <!-- <zj-workflow>
         <el-row slot="right">
           <zj-button @click="toIssuance" :api="zjBtn.passBillSignBatch"
             >签发凭证</zj-button
@@ -101,7 +116,7 @@
             >删除</zj-button
           >
         </el-row>
-      </zj-workflow>
+      </zj-workflow> -->
     </zj-list-layout>
   </div>
 </template>
@@ -200,8 +215,8 @@ export default {
       })
     },
     afterLoad(data) {
-      this.selection = data.filter(item=>item.checkBillStatus=='0')
-      this.$refs.searchTable.setCheckboxRow(this.selection, true)
+    //   this.selection = data.filter(item=>item.checkBillStatus=='0')
+    //   this.$refs.searchTable.setCheckboxRow(this.selection, true)
     },
     //勾选
     checkChange (row) {
