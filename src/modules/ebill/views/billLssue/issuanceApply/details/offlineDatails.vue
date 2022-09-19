@@ -1,6 +1,6 @@
 <template>
   <div id="transactionQueryDetails">
-    <ZjTopHeader>债权凭证签发申请</ZjTopHeader>
+    <ZjTopHeader>电子债权凭证签发申请</ZjTopHeader>
     <!-- 折叠面板 -->
     <el-collapse
       ref="elCollapse"
@@ -27,11 +27,11 @@
           </el-col>
 
           <el-col :span="8">
-            <label>凭证金额： </label>
+            <label>海诺单金额： </label>
             <span>{{ money(detailData.ebillAmt) }}</span>
           </el-col>
           <el-col :span="8">
-            <label>凭证到期日： </label>
+            <label>海诺单到期日： </label>
             <span>{{ date(detailData.dueBillDate) || '-' }}</span>
           </el-col>
           <el-col :span="8">

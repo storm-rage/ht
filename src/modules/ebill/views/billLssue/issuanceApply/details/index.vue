@@ -1,9 +1,6 @@
 <template>
   <div id="transactionQueryDetails">
-    <!-- <el-row class="ta-c mb-20">
-      <label class="jc20">产品开通申请</label>
-    </el-row> -->
-    <ZjTopHeader>产品开通申请</ZjTopHeader>
+    <ZjTopHeader>对账单详情</ZjTopHeader>
     <!-- 折叠面板 -->
     <el-collapse
       ref="elCollapse"
@@ -38,11 +35,12 @@
             :formatter="money"
           />
           <zj-table-column
-            field="isIssueVoucher"
+            field="isApplyVoucher"
             title="是否申请开立债权凭证"
             width="100"
             :formatter="obj => ifOrNot(obj.cellValue)"
           />
+          <zj-table-column v-if="rowList[0] && rowList[0].billSource.toUpperCase()=='SRM'" field="checkBillPerson" title="对账人" />
           <zj-table-column field="billSource" title="对账单来源" />
         </zj-table>
       </el-collapse-item>
@@ -58,27 +56,43 @@
           :params="searchForm"
           :dataList="accountDetailInfo"
         >
-          <zj-table-column field="poNo" title="po合并号" />
-          <zj-table-column field="dnNo" title="dn单号" />
-          <zj-table-column field="matterCode" title="物料编码" />
-          <zj-table-column field="matterName" title="物料名称" />
-          <zj-table-column field="unit" title="单位" />
-          <zj-table-column
-            field="inputDate"
-            title="入库日期"
-            :formatter="date"
-          />
-          <zj-table-column field="storeHouse" title="仓库" />
-          <zj-table-column field="inputNumber" title="入库数量" />
-          <zj-table-column field="returnDate" title="退货数量" />
-          <zj-table-column field="level" title="等级" />
-          <zj-table-column field="orderPrice" title="订单单价" />
-          <zj-table-column field="convertPrice" title="折价" />
-          <zj-table-column field="settleAccountPrice" title="结算单价" />
-          <zj-table-column field="taxRate" title="税率%" />
-          <zj-table-column field="netAmount" title="净额" />
-          <zj-table-column field="taxAmount" title="税额" />
-          <zj-table-column field="totalAmount" title="总计金额" />
+          <template v-if="rowList[0] && rowList[0].billSource.toUpperCase()=='SRM'">
+            <zj-table-column field="poNo" title="po合并号" />
+            <zj-table-column field="dnNo" title="dn单号" />
+            <zj-table-column field="matterCode" title="物料编码" />
+            <zj-table-column field="matterName" title="物料名称" />
+            <zj-table-column field="unit" title="单位" />
+            <zj-table-column
+              field="inputDate"
+              title="入库日期"
+              :formatter="date"
+            />
+            <zj-table-column field="storeHouse" title="仓库" />
+            <zj-table-column field="inputNumber" title="入库数量" />
+            <zj-table-column field="returnDate" title="退货数量" />
+            <zj-table-column field="level" title="等级" />
+            <zj-table-column field="orderPrice" title="订单单价" :formatter="money"/>
+            <zj-table-column field="convertPrice" title="折价" :formatter="money" />
+            <zj-table-column field="settleAccountPrice" title="结算单价" :formatter="money" />
+            <zj-table-column field="taxRate" title="税率%" />
+            <zj-table-column field="netAmount" title="净额" :formatter="money" />
+            <zj-table-column field="taxAmount" title="税额" :formatter="money" />
+            <zj-table-column field="totalAmount" title="总计金额" :formatter="money" />
+          </template>
+          <template v-else-if="rowList[0] && rowList[0].billSource.toUpperCase()=='TMS'">
+            <zj-table-column field="dnNo" title="DN合并号" />
+            <zj-table-column field="poNo" title="客户编号" />
+            <zj-table-column field="poNo" title="客户名称" />
+            <zj-table-column field="poNo" title="放行日期" />
+            <zj-table-column field="poNo" title="运输方式" />
+            <zj-table-column field="poNo" title="路径描述" />
+            <zj-table-column field="poNo" title="重量" />
+            <zj-table-column field="poNo" title="数量" />
+            <zj-table-column field="poNo" title="单价" />
+            <zj-table-column field="poNo" title="基本运费" />
+            <zj-table-column field="poNo" title="扣罚金额" />
+            <zj-table-column field="poNo" title="实际总运费" />
+          </template>
         </zj-table>
       </el-collapse-item>
     </el-collapse>
@@ -137,7 +151,7 @@ export default {
         .then(res => {
           if (res.code === 200) {
             this.rowList = [res.data] || []
-            this.accountDetailInfo = this.rowList[0].accountDetailInfo || []
+            this.accountDetailInfo = this.rowList[0] && this.rowList[0].accountDetailInfo || []
             this.loading = false
           }
         })
